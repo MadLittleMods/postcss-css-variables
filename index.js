@@ -1,0 +1,339 @@
+// For Debugging
+//var nomo = require('node-monkey').start({port: 50501});
+
+var postcss = require('postcss');
+var extend = require('extend');
+
+// A custom property is any property whose name starts with two dashes (U+002D HYPHEN-MINUS)
+// `--foo`
+// See: http://dev.w3.org/csswg/css-variables/#custom-property
+var RE_VAR_PROP = (/(--(.+))/);
+// matches `name[, fallback]`, captures "name" and "fallback"
+// var() = var( <custom-property-name> [, <any-value> ]? )
+// See: http://dev.w3.org/csswg/css-variables/#funcdef-var
+var RE_VAR_FUNC = (/var\((--[^,\s]+?)(?:\s*,\s*(.+))?\)/);
+
+
+// Pass in a value string to parse/resolve and a map of available values
+// and we can figure out the final value
+// 
+// Note: We do not modify the declaration
+// Note: Resolving a declaration value without any `var(...)` does not harm the final value. 
+//		This means, feel free to run everything through this function
+var resolveValue = function(decl, map, /*optional*/mimicChildOf) {
+	//console.log('');
+	//console.log(new Error().stack);
+	//console.log('Resolving value:', decl.parent.selector, decl.value);
+	// A list of parents that you want the decl to mimic being a child of as well
+	// Good for consuming other variables declared in different scopes
+	// Coerce into an array
+	// Add the declaration parent because we handle everything via this
+	mimicChildOfList = [].concat(decl.parent ? [decl.parent] : []);
+	// Then add on the additional list that was passed in
+	mimicChildOfList = mimicChildOfList.concat(mimicChildOf ?  mimicChildOf : []);
+
+	//console.log('mcflist', mimicChildOfList);
+	//console.log('mcflist', mimicChildOfList.map(function(mimicParentNode) {
+	//	return (mimicParentNode || {}).selector;
+	//}));
+
+	var resultantValue = decl.value;
+	var variablesUsedInValue = [];
+	var warnings = [];
+
+	// Resolve any var(...) substitutons
+	var isResultantValueUndefined = false;
+	resultantValue = resultantValue.replace(new RegExp(RE_VAR_FUNC.source, 'g'), function(match, variableName, fallback) {
+		variablesUsedInValue.push(variableName);
+
+		//console.log(variableName, 'with', mimicChildOfList.length, '(mimic)parents');
+		//console.log('================================================');
+
+		// Loop through the list of declarations for that value and find the one that best matches
+		// By best match, we mean, the variable actually applies. Criteria:
+		//		- At the root
+		//		- Defined in the same rule
+		//		- The latest defined `!important` if any
+		var matchingVarDeclMapItem;
+		var matchingVarDeclDepth;
+		var currentVarDeclDepth = 0;
+		mimicChildOfList.forEach(function(mimicParentNode) {
+			currentVarDeclDepth = 0;
+
+			while(mimicParentNode) {
+				(map[variableName] || []).forEach(function(varDeclMapItem) {
+					// Make sure the variable declaration came from the right spot
+					// And if the current matching variable is already important, a new one to replace it has to be important
+					var isRoot = varDeclMapItem.parent.type === 'root' || (varDeclMapItem.parent.selectors.length === 1 && varDeclMapItem.parent.selectors[0] === ':root');
+					
+					//console.log('mpn', mimicParentNode.selector || mimicParentNode.type, varDeclMapItem.parent.selector);
+					if(
+						(
+							// If it is a root declared variable, not under a @rule
+							(isRoot && !varDeclMapItem.isUnderAtRule) || 
+							// Or under the same parent scope
+							mimicParentNode === varDeclMapItem.parent
+						) &&
+						// And is at the same or closer depth as the currently matched declaration
+						(currentVarDeclDepth <= matchingVarDeclDepth || matchingVarDeclDepth === undefined) &&
+						// And if the currently matched declaration is `!important`, it will take another `!important` to override it
+						(!(matchingVarDeclMapItem || {}).isImportant || varDeclMapItem.isImportant)
+					) {
+						/* * /
+						console.log(
+							'most matching now:',  varDeclMapItem.value, 
+							'\n\t', currentVarDeclDepth, matchingVarDeclDepth
+						);
+						/* */
+
+						matchingVarDeclMapItem = varDeclMapItem;
+						matchingVarDeclDepth = currentVarDeclDepth;
+					}
+					else {
+						/* * /
+						console.log(
+							'rejected because', varDeclMapItem.value,
+							'\n\t', (isRoot && !varDeclMapItem.isUnderAtRule), mimicParentNode.toString() === varDeclMapItem.parent.toString(),
+							'\n\t', currentVarDeclDepth, matchingVarDeclDepth
+						);
+						/* */
+					}
+				});
+
+				mimicParentNode = mimicParentNode.parent;
+				currentVarDeclDepth++;
+			}
+		});
+
+		
+		var replaceValue = (matchingVarDeclMapItem || {}).value || fallback;
+		isResultantValueUndefined = replaceValue === undefined;
+		if(isResultantValueUndefined) {
+			warnings.push(["variable '" + variableName + "' is undefined and used without a fallback", { node: decl }]);
+		}
+
+		return replaceValue;
+	});
+
+	return {
+		// The resolved value
+		value: !isResultantValueUndefined ? resultantValue : undefined,
+		// Array of variable names used in resolving this value
+		variablesUsed: variablesUsedInValue,
+		// Any warnings generated from parsing this value
+		warnings: warnings
+	};
+};
+
+module.exports = postcss.plugin('postcss-css-variables', function (options) {
+	var defaults = {
+		// Allows you to preserve custom properties & var() usage in output.
+		// `true`, `false`, or `'computed'`
+		preserve: false,
+		// Define variables via JS
+		// Simple key-value pair
+		// or an object with a `value` property and an optional `isImportant` bool property
+		variables: {}
+	};
+	opts = extend({}, defaults, options);
+
+	// Work with opts here
+
+	return function (css, result) {
+		//console.log('css', css);
+		// Transform CSS AST here
+
+		// List of nodes to add at the end
+		// We use this so we don't add to the tree as we are processing it (infinite loop)
+		var createNodeCallbackList = [];
+		// List of nodes that if empty, will be removed
+		// We use this because we don't want to modify the AST when we still need to reference these later on
+		var nodesToRemoveAtEnd = [];
+
+		// Map of variable names to a list of declarations
+		var map = {};
+
+		// Add the js defined variables `opts.variables` to the map
+		map = extend(
+			map, 
+			Object.keys(opts.variables)
+				.reduce(function(prevVariableMap, variableName) {
+					var variableValue = opts.variables[variableName];
+					// If they didn't pass a object, lets construct one
+					if(typeof variableValue !== 'object') {
+						variableValue = {
+							value: variableValue,
+							isImportant: false,
+							parent: css.root(),
+							isUnderAtRule: false
+						};
+					}
+
+					prevVariableMap[variableName] = (prevVariableMap[variableName] || []).concat(extend({
+						value: undefined,
+						isImportant: false,
+						parent: css.root(),
+						isUnderAtRule: false
+					}, variableValue));
+
+					return prevVariableMap;
+				}, {})
+		);
+
+		// Chainable helper function to log any messages (warnings)
+		function logResolveValueResult(valueResult) {
+			// Log any warnings that might of popped up
+			var warningList = [].concat(valueResult.warnings);
+			warningList.forEach(function(warningArgs) {
+				warningArgs = [].concat(warningArgs);
+				result.warn.apply(result, warningArgs);
+			});
+
+			// Keep the chain going
+			return valueResult;
+		}
+
+
+		try {
+			// Collect all of the variables defined
+			css.eachRule(function(rule) {
+				var numberOfStartingChildren = rule.nodes.length;
+
+				// only variables declared for `:root` are supported for now
+				//var isRoot = rule.selectors.length === 1 && rule.selectors[0] === ':root';
+				//if(isRoot && (rule.parent.type === 'root' || rule.parent.type === 'atrule')) {
+					rule.each(function(decl, index) {
+						var prop = decl.prop;
+						// If declaration is a variable
+						if(RE_VAR_PROP.test(prop)) {
+							var resolvedValue = logResolveValueResult(resolveValue(decl, map)).value;
+							if(resolvedValue !== undefined) {
+								map[prop] = (map[prop] || []).concat({
+									prop: prop,
+									value: resolvedValue,
+									isImportant: decl.important,
+									// variables inside root or @rules (eg. @media, @support)
+									parent: decl.parent,
+									isUnderAtRule: decl.parent.parent.type === 'atrule'
+								});
+							}
+
+							// Remove the variable declaration because they are pretty much useless after we resolve them
+							if(!opts.preserve) {
+								decl.removeSelf();
+							}
+							// Or we can also just show the computed value used for that variable
+							else if(opts.preserve === 'computed') {
+								decl.value = resolvedValue;
+							}
+							// Otherwise just keep them as var declarations
+						}
+					});
+
+					// We don't want to mess up their code if they wrote a empty rule
+					// We add to the clean up list if we removed some variable declarations to make it become empty
+					if(numberOfStartingChildren > 0 && rule.nodes.length <= 0) {
+						nodesToRemoveAtEnd.push(rule);
+					}
+				//}
+			});
+
+
+			// Resolve variables everywhere
+			css.eachDecl(function(decl) {
+				// Ignore any variable declarations that we may be preserving from earlier
+				// Don't worry, they are already processed
+				if(!RE_VAR_PROP.test(decl.prop)) {
+					var valueResults = logResolveValueResult(resolveValue(decl, map));
+
+					/* */
+					// Resolve the cascade
+					// Now find any @rule declarations that need to be added below each rule
+					valueResults.variablesUsed.forEach(function(variableUsedName) {
+						(map[variableUsedName] || []).forEach(function(varDeclMapItem) {
+							if(varDeclMapItem.isUnderAtRule) {
+								// Create the clean atRule for which we place the declaration under
+								var atRuleNode = varDeclMapItem.parent.parent.clone().removeAll();
+
+								var ruleClone = decl.parent.clone().removeAll();
+								var declClone = decl.clone();
+								declClone.value = logResolveValueResult(resolveValue(decl, map, [varDeclMapItem.parent])).value;
+
+								ruleClone.append(declClone);
+								atRuleNode.append(ruleClone);
+
+
+								// Since that atRuleNode can be nested in other atRules, we need to make the appropriate structure
+								var parentAtRuleNode = atRuleNode;
+								var currentAtRuleNode = varDeclMapItem.parent.parent;
+								while(currentAtRuleNode.parent.type === 'atrule') {
+									// Create a new clean clone of that at rule to nest under
+									var newParentAtRuleNode = currentAtRuleNode.parent.clone().removeAll();
+
+									// Append the old parent
+									newParentAtRuleNode.append(parentAtRuleNode);
+									// Then set the new one as the current for next iteration
+									parentAtRuleNode = newParentAtRuleNode;
+
+									currentAtRuleNode = currentAtRuleNode.parent;
+								}
+
+								createNodeCallbackList.push(function() {
+									// Put the atRuleStructure after the declaration's rule
+									decl.parent.parent.insertAfter(decl.parent, parentAtRuleNode);
+								});
+							}
+						});
+					});
+					/* */
+
+
+					// If we are preserving var(...) usage and the value changed meaning it had some
+					if(opts.preserve === true && decl.value !== valueResults.value) {
+						createNodeCallbackList.push(function() {
+							decl.cloneAfter();
+
+							// Set the new value after we are done dealing with @rule stuff
+							decl.value = valueResults.value;
+						});
+					}
+					else {
+						// Set the new value after we are done dealing with @rule stuff
+						decl.value = valueResults.value;
+					}
+					
+				}
+			});
+
+
+
+			// Add some nodes that we need to add
+			// We use this so we don't add to the tree as we are processing it (infinite loop)
+			createNodeCallbackList.forEach(function(cb) {
+				cb();
+			});
+
+			// Clean up any nodes we don't want anymore
+			nodesToRemoveAtEnd.forEach(function(currentChildToRemove) {
+				// If we removed all of the declarations in the rule(making it empty), then just remove it
+				var currentNodeToPossiblyCleanUp = currentChildToRemove;
+				while(currentNodeToPossiblyCleanUp && currentNodeToPossiblyCleanUp.nodes.length <= 0) {
+					var nodeToRemove = currentNodeToPossiblyCleanUp;
+					// Get a reference to it before we remove and lose reference to the child after removing it
+					currentNodeToPossiblyCleanUp = currentNodeToPossiblyCleanUp.parent;
+
+					nodeToRemove.removeSelf();
+				}
+			});
+
+
+
+		}
+		catch(e) {
+			console.log('e', e.message, e.stack);
+		}
+
+		//console.log('map', map);
+
+	};
+});

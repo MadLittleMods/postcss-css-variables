@@ -1,0 +1,8 @@
+@media (max-width: 1000px) {
+	@media (max-height: 500px) {
+		:root {
+
+			background: #ff0000;
+		}
+	}
+}

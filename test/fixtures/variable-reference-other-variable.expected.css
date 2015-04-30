@@ -1,0 +1,3 @@
+.box-foo {
+	width: calc(150px + 15vw);
+}

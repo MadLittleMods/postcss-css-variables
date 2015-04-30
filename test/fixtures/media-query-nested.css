@@ -1,0 +1,21 @@
+:root {
+	--width: 150px;
+}
+
+@media print {
+	@media (max-width: 1250px) {
+		:root {
+			--width: 300px;
+		}
+
+		@media (max-width: 1000px) {
+			:root {
+				--width: 450px;
+			}
+		}
+	}
+}
+
+.box {
+	width: var(--width);
+}

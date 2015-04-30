@@ -1,0 +1,9 @@
+:root {
+	--width: 100px;
+}
+
+:root {
+	--height: 100px;
+
+	background: #ff0000;
+}

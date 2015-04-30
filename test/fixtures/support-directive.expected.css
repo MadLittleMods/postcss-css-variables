@@ -1,0 +1,10 @@
+.box {
+	width: 100px;
+}
+
+@supports (display: flex) {
+
+	.box {
+		width: 200px;
+	}
+}

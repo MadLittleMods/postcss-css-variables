@@ -1,0 +1,23 @@
+@media (max-width: 1000px) {
+	:root {
+		--width: 200px;
+	}
+}
+
+@media (max-width: 1000px) {
+	@media (max-height: 500px) {
+		:root {
+			--width: 200px;
+		}
+	}
+}
+
+@media (max-width: 1000px) {
+	@media (max-height: 500px) {
+		:root {
+			--height: 200px;
+
+			background: #ff0000;
+		}
+	}
+}

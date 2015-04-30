@@ -1,0 +1,7 @@
+:root {
+	--foo-width: 150px;
+}
+
+.box-foo {
+	width: var(--missing);
+}

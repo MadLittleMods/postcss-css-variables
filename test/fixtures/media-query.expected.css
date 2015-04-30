@@ -1,0 +1,10 @@
+.box {
+	width: 100px;
+}
+
+@media (max-width: 1000px) {
+
+	.box {
+		width: 200px;
+	}
+}

@@ -1,0 +1,32 @@
+{
+  "name": "postcss-css-variables",
+  "version": "0.1.0",
+  "description": "PostCSS plugin to transform CSS Custom Properties(CSS variables) syntax into a static representation",
+  "keywords": [
+    "postcss",
+    "css",
+    "postcssplugin"
+  ],
+  "author": "Eric Eastwood <contact@ericeastwood.com> (http://ericeastwood.com/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MadLittleMods/postcss-css-variables.git"
+  },
+  "dependencies": {
+    "extend": "^2.0.1",
+    "postcss": "^4.1.5"
+  },
+  "devDependencies": {
+    "bluebird": "^2.9.25",
+    "chai": "^2.3.0",
+    "chai-as-promised": "^5.0.0",
+    "gulp": "^3.8.11",
+    "gulp-eslint": "^0.11.1",
+    "gulp-mocha": "^2.0.1",
+    "mocha": "^2.2.4"
+  },
+  "scripts": {
+    "test": "gulp"
+  }
+}

@@ -1,0 +1,10 @@
+.gitignore
+
+node_modules/
+
+test/
+.travis.yml
+
+gulpfile.js
+
+todo.md

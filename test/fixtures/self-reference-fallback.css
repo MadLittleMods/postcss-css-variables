@@ -1,0 +1,8 @@
+:root {
+	--foo-color: var(--foo-color);
+	--bar-color: var(--bar-color, #aaa);
+}
+body {
+	color: var(--foo-color, #aaa);
+	color: var(--bar-color, #bbb);
+}

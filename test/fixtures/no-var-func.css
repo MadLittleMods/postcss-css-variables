@@ -1,0 +1,8 @@
+:root {
+	--foo-width: 150px;
+	--bar-width: 250px;
+}
+
+.box {
+	width: 100px;
+}

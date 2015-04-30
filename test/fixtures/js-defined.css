@@ -1,0 +1,4 @@
+.box1 {
+	width: var(--js-defined1);
+	height: var(--js-defined2);
+}

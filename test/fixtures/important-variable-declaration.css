@@ -1,0 +1,19 @@
+:root {
+	--foo-width: 110px;
+	--foo-width: 210px !important;
+	--foo-width: 310px;
+	
+	--bar-width: 120px;
+}
+
+.box-foo {
+	--foo-width: 410px;
+	width: var(--foo-width);
+}
+
+.box-bar {
+	--bar-width: 220px;
+	--bar-width: 320px !important;
+	--bar-width: 420px;
+	width: var(--bar-width);
+}

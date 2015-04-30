@@ -1,0 +1,12 @@
+:root {
+	--foo-width: 15vw;
+	--bar-width: 150px;
+}
+
+.box-foo {
+	width: var(--foo-width);
+}
+
+.box-bar {
+	width: var(--bar-width);
+}

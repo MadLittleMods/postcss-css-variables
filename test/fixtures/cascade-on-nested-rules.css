@@ -1,0 +1,17 @@
+:root {
+	--some-width: 150px;
+}
+
+.box-foo {
+	width: var(--some-width);
+
+	.box-bar {
+		width: var(--some-width);
+	}
+}
+
+@media (max-width: 800px) {
+	.box-foo {
+		--some-width: 300px;
+	}
+}
