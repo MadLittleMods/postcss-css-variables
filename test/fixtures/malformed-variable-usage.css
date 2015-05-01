@@ -1,8 +1,8 @@
 :root {
-	--test: red;
+	--foo: #00ff00;
 }
 
 div {
 	/* missing closing ')' */
-	color: var(--test, rgba(0,0,0,0.5);
+	color: var(--foo, rgba(0, 255, 0, 0.75);
 }

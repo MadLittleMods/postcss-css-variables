@@ -1,0 +1,12 @@
+.some-foo-group, .some-bar-group {
+	--foo-width: 150px;
+	--bar-width: 300px;
+}
+
+.some-foo-group .box-foo {
+	width: var(--foo-width);
+}
+
+.some-bar-group .box-bar {
+	width: var(--bar-width);
+}

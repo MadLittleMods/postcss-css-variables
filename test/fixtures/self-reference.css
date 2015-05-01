@@ -1,6 +1,6 @@
 :root {
-	--color: var(--color);
+	--foo: var(--foo);
 }
 body {
-	color: var(--color);
+	color: var(--foo);
 }

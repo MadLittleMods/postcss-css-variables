@@ -1,21 +1,21 @@
 :root {
-	--color-one: red;
-	--color-two: blue;
-	--color-three: blue;
+	--color-one: #0000ff;
+	--color-two: #00ff00;
+	--color-three: #00ff00;
 }
 
-.atthebeginning {
-	color: red;
+.before {
+	prop: before;
+	color: #0000ff;
+}
+
+.after {
+	color: #00ff00;
 	prop: after;
 }
 
-.attheend {
+.before-and-after {
 	prop: before;
-	color: blue;
-}
-
-.surrounded {
-	prop: before;
-	color: green;
+	color: #ff0000;
 	otherprop: after;
 }

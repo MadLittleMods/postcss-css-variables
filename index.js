@@ -1,5 +1,5 @@
 // PostCSS CSS Variables (postcss-css-variables)
-// v0.1.0
+// v0.2.1
 //
 // https://github.com/MadLittleMods/postcss-css-variables
 
@@ -17,6 +17,102 @@ var RE_VAR_PROP = (/(--(.+))/);
 // var() = var( <custom-property-name> [, <any-value> ]? )
 // See: http://dev.w3.org/csswg/css-variables/#funcdef-var
 var RE_VAR_FUNC = (/var\((--[^,\s]+?)(?:\s*,\s*(.+))?\)/);
+
+
+// Unit Tests: https://regex101.com/r/oP0fM9/13
+//
+// It is a shame the regex has to be this long. Maybe a CSS selector parser would be better.
+// We could almost use `/\b\s(?![><+~][\s]+?)/` to split the selector but this doesn't work with attribute selectors
+var RE_SELECTOR_DESCENDANT_SPLIT = (/(.*?(?:(?:\[[^\]]+\]|(?![><+~\s]).)+)(?:(?:(?:\s(?!>>))|(?:\t(?!>>))|(?:\s?>>\s?))(?!\s+))(?![><+~][\s]+?))/);
+
+
+
+function generateScopeList(node, /*optional*/includeSelf) {
+	includeSelf = includeSelf || false;
+
+	var selectorScopeList = [
+		// Start off with one branch
+		[]
+	];
+	var currentNodeParent = includeSelf ? node : node.parent;
+	while(currentNodeParent) {
+		// Loop through each comma separated piece
+		var selectorPieces = currentNodeParent.selectors || [];
+
+		if(currentNodeParent.type === 'root') {
+			selectorPieces = [':root'];
+		}
+		else if(currentNodeParent.type === 'atrule') {
+			selectorPieces = [].concat(currentNodeParent.params).map(function(param, index) {
+				return '@' + currentNodeParent.name + ' ' + param;
+			});
+		}
+
+		selectorPieces.forEach(function(selector, index) {
+			// Branch each current scope
+			if(index > 0) {
+				selectorScopeList.concat(selectorScopeList);
+			}
+
+			// Update each selector string with the new piece
+			selectorScopeList = selectorScopeList.map(function(scopeStringPieces) {
+				// Just make sure we don't repeat the root twice at the end
+				if(selector !== ':root' || (selector === ':root' && scopeStringPieces[0] !== ':root')) {
+					var descendantPieces = selector.split(RE_SELECTOR_DESCENDANT_SPLIT)
+						.filter(function(piece) {
+							if(piece.length > 0) {
+								return true;
+							}
+							return false;
+						})
+						.map(function(piece) {
+							return piece.trim();
+						});
+
+					// Add to the front of the array
+					scopeStringPieces.unshift.apply(scopeStringPieces, descendantPieces);
+				}
+				return scopeStringPieces;
+			});
+		});
+
+		currentNodeParent = currentNodeParent.parent;
+	}
+
+
+	/* * /
+	// Turn it into a string
+	var selectorScopeStringList = selectorScopeList.map(function(scopeStringPieces) {
+		return scopeStringPieces.join(' ');
+	})	
+	/* */
+
+	return selectorScopeList;
+}
+
+function isUnderScope(node, scopeNode) {
+
+	var nodeScopeList = generateScopeList(node, true);
+	var scopeNodeList = generateScopeList(scopeNode, true);
+
+	var matchesScope = scopeNodeList.some(function(scopeNodeScopePieces) {
+		return nodeScopeList.some(function(nodeScopePieces) {
+			var currentPieceOffset;
+			var wasEveryPieceFound = scopeNodeScopePieces.every(function(scopePiece) {
+				// Start from the previous index and make sure we can find it
+				var foundIndex = nodeScopePieces.indexOf(scopePiece, currentPieceOffset || 0);
+				var isFurther = currentPieceOffset === undefined || foundIndex > currentPieceOffset;
+
+				currentPieceOffset = foundIndex;
+				return isFurther;
+			});
+
+			return wasEveryPieceFound;
+		});
+	});
+
+	return matchesScope;
+}
 
 
 // Pass in a value string to parse/resolve and a map of available values
@@ -50,37 +146,24 @@ var resolveValue = function(decl, map, /*optional*/mimicChildOf) {
 		//		- Defined in the same rule
 		//		- The latest defined `!important` if any
 		var matchingVarDeclMapItem;
-		var matchingVarDeclDepth;
-		var currentVarDeclDepth = 0;
 		mimicChildOfList.forEach(function(mimicParentNode) {
-			currentVarDeclDepth = 0;
 
-			while(mimicParentNode) {
-				(map[variableName] || []).forEach(function(varDeclMapItem) {
-					// Make sure the variable declaration came from the right spot
-					// And if the current matching variable is already important, a new one to replace it has to be important
-					var isRoot = varDeclMapItem.parent.type === 'root' || (varDeclMapItem.parent.selectors.length === 1 && varDeclMapItem.parent.selectors[0] === ':root');
-					
-					if(
-						(
-							// If it is a root declared variable, not under a @rule
-							(isRoot && !varDeclMapItem.isUnderAtRule) || 
-							// Or under the same parent scope
-							mimicParentNode === varDeclMapItem.parent
-						) &&
-						// And is at the same or closer depth as the currently matched declaration
-						(currentVarDeclDepth <= matchingVarDeclDepth || matchingVarDeclDepth === undefined) &&
-						// And if the currently matched declaration is `!important`, it will take another `!important` to override it
-						(!(matchingVarDeclMapItem || {}).isImportant || varDeclMapItem.isImportant)
-					) {
-						matchingVarDeclMapItem = varDeclMapItem;
-						matchingVarDeclDepth = currentVarDeclDepth;
-					}
-				});
+			(map[variableName] || []).forEach(function(varDeclMapItem) {
+				// Make sure the variable declaration came from the right spot
+				// And if the current matching variable is already important, a new one to replace it has to be important
+				var isRoot = varDeclMapItem.parent.type === 'root' || varDeclMapItem.parent.selectors[0] === ':root';
 
-				mimicParentNode = mimicParentNode.parent;
-				currentVarDeclDepth++;
-			}
+				//console.log(generateScopeList(mimicParentNode, true));
+				//console.log(generateScopeList(varDeclMapItem.parent, true));
+				//console.log('isunderscope', isUnderScope(mimicParentNode, varDeclMapItem.parent), varDeclMapItem.value);
+				if(
+					isUnderScope(mimicParentNode, varDeclMapItem.parent) &&
+					// And if the currently matched declaration is `!important`, it will take another `!important` to override it
+					(!(matchingVarDeclMapItem || {}).isImportant || varDeclMapItem.isImportant)
+				) {
+					matchingVarDeclMapItem = varDeclMapItem;
+				}
+			});
 		});
 
 		
@@ -103,7 +186,7 @@ var resolveValue = function(decl, map, /*optional*/mimicChildOf) {
 	};
 };
 
-module.exports = postcss.plugin('postcss-css-variables', function (options) {
+module.exports = postcss.plugin('postcss-css-variables', function(options) {
 	var defaults = {
 		// Allows you to preserve custom properties & var() usage in output.
 		// `true`, `false`, or `'computed'`
@@ -176,7 +259,17 @@ module.exports = postcss.plugin('postcss-css-variables', function (options) {
 
 
 		// Collect all of the variables defined
+		var addedRules = [];
 		css.eachRule(function(rule) {
+			// We don't want infinite recursion possibly, so don't iterate over the rules we add inside
+			var shouldNotIterateOverThisRule = addedRules.some(function(addedRule) {
+				return addedRule === rule;
+			});
+			if(shouldNotIterateOverThisRule) {
+				return;
+			}
+
+
 			var numberOfStartingChildren = rule.nodes.length;
 
 			// Loop through all of the declarations and grab the variables and put them in the map
@@ -186,13 +279,21 @@ module.exports = postcss.plugin('postcss-css-variables', function (options) {
 				if(RE_VAR_PROP.test(prop)) {
 					var resolvedValue = logResolveValueResult(resolveValue(decl, map)).value;
 					if(resolvedValue !== undefined) {
-						map[prop] = (map[prop] || []).concat({
-							prop: prop,
-							value: resolvedValue,
-							isImportant: decl.important,
-							// variables inside root or @rules (eg. @media, @support)
-							parent: decl.parent,
-							isUnderAtRule: decl.parent.parent.type === 'atrule'
+						// Split out each selector piece into its own declaration for easier logic down the road
+						decl.parent.selectors.forEach(function(selector, index) {
+							// Create a detached clone
+							var splitOutRule = rule.clone();
+							rule.selector = selector;
+							splitOutRule.parent = rule.parent;
+
+							map[prop] = (map[prop] || []).concat({
+								prop: prop,
+								value: resolvedValue,
+								isImportant: decl.important || false,
+								// variables inside root or @rules (eg. @media, @support)
+								parent: splitOutRule,
+								isUnderAtRule: splitOutRule.parent.type === 'atrule'
+							});
 						});
 					}
 
@@ -304,6 +405,7 @@ module.exports = postcss.plugin('postcss-css-variables', function (options) {
 		});
 
 
+		//console.log(map);
 
 		/* * /
 		}

@@ -1,0 +1,7 @@
+.box-empty {
+	/* 
+	Not a valid `var(...)` call because no <custom-property-name> was provided. 
+	See: http://dev.w3.org/csswg/css-variables/#using-variables; 
+	*/
+	width: var();
+}

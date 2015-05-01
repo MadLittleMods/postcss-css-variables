@@ -37,6 +37,10 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/no-var-func.css', './test/fixtures/no-var-func.expected.css');
 	});
 
+	it('should work when no variable name passed to `var()`', function() {
+		return testPlugin('./test/fixtures/empty-var-func.css', './test/fixtures/empty-var-func.expected.css');
+	});
+
 	it('should work with variables declared in root', function() {
 		return testPlugin('./test/fixtures/root-variable.css', './test/fixtures/root-variable.expected.css');
 	});
@@ -45,6 +49,9 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/local-variable-non-root.css', './test/fixtures/local-variable-non-root.expected.css');
 	});
 
+	it('should work with descendant selector type "nesting"', function() {
+		return testPlugin('./test/fixtures/descendant-selector.css', './test/fixtures/descendant-selector.expected.css');
+	});
 
 	describe('with @rules', function() {
 		it('should add rule declaration of property in @media', function() {
