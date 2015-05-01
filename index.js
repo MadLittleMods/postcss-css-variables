@@ -1,5 +1,5 @@
 // PostCSS CSS Variables (postcss-css-variables)
-// v0.2.1
+// v0.2.2
 //
 // https://github.com/MadLittleMods/postcss-css-variables
 
@@ -78,14 +78,6 @@ function generateScopeList(node, /*optional*/includeSelf) {
 
 		currentNodeParent = currentNodeParent.parent;
 	}
-
-
-	/* * /
-	// Turn it into a string
-	var selectorScopeStringList = selectorScopeList.map(function(scopeStringPieces) {
-		return scopeStringPieces.join(' ');
-	})	
-	/* */
 
 	return selectorScopeList;
 }
@@ -186,6 +178,9 @@ var resolveValue = function(decl, map, /*optional*/mimicChildOf) {
 	};
 };
 
+
+
+
 module.exports = postcss.plugin('postcss-css-variables', function(options) {
 	var defaults = {
 		// Allows you to preserve custom properties & var() usage in output.
@@ -223,6 +218,10 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			Object.keys(opts.variables)
 				.reduce(function(prevVariableMap, variableName) {
 					var variableValue = opts.variables[variableName];
+					// Automatically prefix any variable with `--` (CSS custom property syntax) if it doesn't have it already
+					variableName = variableName.slice(0, 2) === '--' ? variableName : '--' + variableName;
+
+
 					// If they didn't pass a object, lets construct one
 					if(typeof variableValue !== 'object') {
 						variableValue = {

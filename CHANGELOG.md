@@ -1,4 +1,9 @@
 
+
+# 0.2.2 - 2015-5-1
+
+ - Automatically prefix any variables defined in `options.variables` with `--` (according to CSS custom property syntax).
+
 # 0.2.1 - 2015-4-30
 
  - Added support for descendant selector nesting instead of just physical space nesting

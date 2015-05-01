@@ -6,7 +6,7 @@ CSS variables or CSS Custom Properties limited subset polyfill/shim.
 
 We strive for the most complete transformation but we/no plugin can achieve true complete parity according to the [speficification](http://dev.w3.org/csswg/css-variables/) because of the DOM cascade unknowns.
 
-## Latest Version: 0.2.1
+## Latest Version: 0.2.2
 ### [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
 
 
@@ -245,9 +245,11 @@ Allowed values:
 
 ### `variables` (default: `{}`)
 
-Define variables in JavaScript.
+Define an object map of variables in JavaScript that will be declared at the `:root` scope.
 
 Can be a simple key-value pair or an object with a `value` property and an optional `isImportant` bool property
+
+The object keys are automatically prefixed with `--` (according to CSS custom property syntax) if you do not provide it. 
 
 
 ```
@@ -257,12 +259,12 @@ var cssvariables = require('postcss-css-variables');
 postcss([
 	cssvariables({
 		variables: {
-			'--some-var': 100pxpx,
+			'--some-var': '100px',
 			'--other-var': {
-				value: #00ff00
+				value: '#00ff00'
 			},
 			'--important-var': {
-				value: #ff0000,
+				value: '#ff0000',
 				isImportant: true
 			}
 		}

@@ -99,7 +99,9 @@ describe('postcss-css-variables', function() {
 						'--js-defined1': '75px',
 						'--js-defined2': {
 							value: '80px'
-						}
+						},
+						// Should be automatically prefixed with `--`
+						'js-defined-no-prefix': '#ff0000'
 					}
 				}
 			);
