@@ -11,6 +11,10 @@ We strive for the most complete transformation but we/no plugin can achieve true
 ## Latest Version: 0.2.2
 ### [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
 
+### Install
+
+`npm install postcss-css-variables --save-dev`
+
 
 # Usage
 
@@ -87,10 +91,10 @@ var mycss = fs.readFileSync('input.css', 'utf8');
 
 // Process your CSS with postcss-css-variables
 var output = postcss([
-		// Process any CSS variables
-		cssvariables(/*options*/),
-		// After we processed all of the variables, flatten/unnest rules
-		nestedcss
+		// Flatten/unnest rules
+		nestedcss,
+		// Then process any CSS variables
+		cssvariables(/*options*/)
 	])
 	.process(mycss)
 	.css;
