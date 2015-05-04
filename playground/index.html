@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>PostCSS CSS Variables Playground</title>
+</head>
+<body>
+
+	<div class="playground-app-entry-point"></div>
+
+	<script src="jspm_packages/system.js"></script>
+	<script src="config.js"></script>
+	<script>
+		// Change the config based on deployment
+		if(window.location.host === 'madlittlemods.github.io') {
+			System.baseURL = '/postcss-css-variables/playground/';
+		}
+	</script>
+	<script>
+		System.import('build/js/main');
+	</script>
+</body>
+</html>

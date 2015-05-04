@@ -1,0 +1,49 @@
+{
+  "jspm": {
+    "directories": {},
+    "dependencies": {
+      "classnames": "npm:classnames@^1.2.2",
+      "css": "github:systemjs/plugin-css@^0.1.10",
+      "events": "npm:events@^1.0.2",
+      "flux": "npm:flux@^2.0.3",
+      "immutable": "npm:immutable@^3.7.2",
+      "keymirror": "npm:keymirror@^0.1.1",
+      "object-assign": "npm:object-assign@^2.0.0",
+      "postcss": "npm:postcss@^4.1.8",
+      "postcss-css-variables": "npm:postcss-css-variables@^0.2.2",
+      "react": "npm:react@^0.13.2",
+      "wjbryant/taboverride": "github:wjbryant/taboverride@^4.0.2"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.1.13",
+      "babel-runtime": "npm:babel-runtime@^5.1.13",
+      "core-js": "npm:core-js@^0.9.4"
+    },
+    "overrides": {
+      "github:wjbryant/taboverride@4.0.2": {
+        "main": "build/output/taboverride.min.js"
+      }
+    }
+  },
+  "devDependencies": {
+    "autoprefixer-core": "^5.1.11",
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-cached": "^1.0.4",
+    "gulp-postcss": "^5.1.4",
+    "gulp-react": "^3.0.1",
+    "gulp-util": "^3.0.4",
+    "jspm": "^0.15.5",
+    "postcss": "^4.1.8",
+    "postcss-css-variables": "^0.2.2",
+    "postcss-inline-comment": "^1.0.3",
+    "postcss-mixins": "^0.1.1",
+    "postcss-nested": "^0.2.2",
+    "run-sequence": "^1.1.0"
+  },
+  "scripts": {
+    "setup": "npm install & iojs ./node_modules/jspm/jspm.js install",
+    "build": "iojs ./node_modules/gulp/bin/gulp.js",
+    "build-dev": "iojs ./node_modules/gulp/bin/gulp.js --dev"
+  }
+}

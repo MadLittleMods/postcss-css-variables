@@ -1,0 +1,380 @@
+
+
+
+
+
+
+
+
+html,
+body {
+	padding: 0;
+	margin: 0;
+}
+html {
+	width: 100%;
+	height: 100%;
+
+	box-sizing: border-box;
+}
+body {
+	width: 100%;
+	height: 100%;
+	min-width: 100%;
+	min-height: 100%;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+blockquote,
+figure,
+ol,
+ul,
+pre,
+code,
+form,
+input,
+label,
+button {
+	margin: 0;
+	padding: 0;
+}
+
+input,
+button,
+textarea,
+kbd {
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+ul,
+ol {
+	list-style: none;
+}
+
+li {
+	display: block;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-size: inherit;
+}
+
+a {
+	@mixin cursor-hand;
+
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	
+	color: inherit;
+	text-decoration: none;
+	
+	transition: all 0.3s ease;
+
+	&:visited {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	&:hover,
+	&:focus {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	&:active {
+		text-decoration: none;
+	}
+
+}
+
+img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+
+	border: 0;
+}
+
+
+
+
+
+
+
+body {
+	background-color: #dddddd;
+	
+	/*font: 400 95%/1 "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+	font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
+	font-size: 16px;
+	line-height: 1.5;
+
+	tab-size: 4;
+
+
+	@media (max-width: 760px) {
+		tab-size: 2;
+	}
+
+
+}
+
+
+/* Based on the StackExchange kbd styles */
+kbd {
+	display: inline-block;
+
+	padding: 0.1em 0.5em;
+
+	background-color: #f7f7f7;
+	border: 1px solid #cccccc;
+
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #ffffff inset;
+
+	white-space: nowrap;
+	text-shadow: 0 1px 0 #ffffff;
+
+	border-radius: 3px;
+}
+
+
+.playground-app-entry-point, .playground-app-wrapper {
+	width: 100%;
+	height: 100%;
+}
+
+.playground-app-wrapper {
+	display: flex;
+	flex-direction: column;
+}
+
+.postcss-editor-area {
+	flex: 1;
+
+	display: flex;
+
+	@media (max-width: 500px) {
+		flex-direction: column;
+	}
+
+}
+
+.postcss-editor-pane {
+	position: relative;
+
+	flex: 1;
+
+	display: flex;
+	flex-direction: column;
+
+	border: 0;
+	border-right: 2px solid rgba(0, 0, 0, 0.4);
+
+	&:last-child {
+		border-right: 0;
+	}
+
+	@media (max-width: 500px) {
+		min-height: 350px;
+	}
+
+}
+
+.postcss-editor-pane-label {
+	position: absolute;
+	top: 0;
+	right: 0;
+
+	padding: 4px 8px;
+
+	background: rgba(255, 255, 255, 0.75);
+	border-left: 1px solid rgba(0, 0, 0, 0.4);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+
+	line-height: 1;
+
+	pointer-events: none;
+
+	transition: opacity 0.2s ease;
+
+	/* Also slightly dim it when you are in that panel */
+	.postcss-editor-pane:hover > &,
+	.postcss-editor-pane:focus > & {
+		opacity: 0.5;
+	}
+}
+
+
+.postcss-textarea {
+	flex: 1;
+
+	padding: 8px;
+
+	border: 0;
+	background: #ffffff;
+
+	font-family: monospace;
+
+	resize: none;
+
+	&.is-not-current {
+		background: rgba(240, 220, 220, 0.8);
+
+		color: rgba(0, 0, 0, 0.6);
+	}
+}
+
+.postcss-editor-pane-error {
+	--background-color: #eeeeee;
+	--stripe-color: #ff0000;
+
+	overflow: hidden;
+
+	display: flex;
+	flex-direction: column;
+	min-height: 2em;
+
+	padding: 2px;
+
+	/* background-image: repeating-linear-gradient(45deg, var(--background-color), var(--background-color) 10px, var(--stripe-color) 10px, var(--stripe-color) 20px);
+	background-size: 50%;*/
+
+	background: linear-gradient(45deg, var(--background-color) 25%,
+		var(--stripe-color) 25%, var(--stripe-color) 50%, 
+		var(--background-color) 50%, var(--background-color) 75%, 
+		var(--stripe-color) 75%);
+	background-size: 40px 40px;
+
+	animation: postcss-editor-pane-error-flex-grow 0.15s ease forwards, error-stripe-loading 12s infinite linear;
+
+	.postcss-editor-pane-error-message {
+		flex: 1;
+
+		padding: 8px;
+
+		background: var(--background-color);
+
+		font-family: monospace;
+		white-space: pre;
+	}
+}
+
+@keyframes postcss-editor-pane-error-flex-grow {
+	from {
+		flex: 0.1;
+		flex: 0.00001;
+		min-height: 0;
+	}
+	to {
+		/* flex: 0.25; */
+	    flex: 0 1 auto;
+	}
+}
+
+@keyframes error-stripe-loading {
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 100% 0;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.playground-header {
+	display: flex;
+	align-items: center;
+
+	height: 40px;
+
+	background: #5f8da7;
+	border-bottom: 1px solid #555555;
+
+	color: #dddddd;
+}
+
+.playground-header-heading {
+	flex: 1;
+
+	margin-left: 0.5em;
+
+	font-size: 24px;
+	font-weight: normal;
+
+	& > a {
+		color: #a3d6f4;
+
+		&:hover,
+		&:focus {
+			outline: none;
+			text-decoration: underline;
+		}
+	}
+
+}
+
+.playground-header-heading-primary-title {
+	font-weight: bold;
+}
+
+.live-reload-toggle-checkbox {
+    @mixin toggle-checkbox-enclosed 'live reload' 'off';
+
+    margin-right: 1em;
+}
+
+
+.playground-header-save-button {
+	@mixin cursor-hand;
+
+	height: 100%;
+
+	padding: 0 2em;
+
+	border: 0;
+	background: #a3d6f4;
+	box-shadow: 0 0 8px 0 #9acae5;
+
+	transition: all 0.2s ease;
+
+	&:hover,
+	&:focus {
+		outline: none;
+		background: #abe0ff;
+	}
+
+	&:active {
+		background: #a3f4cd;
+		box-shadow: 0 0 8px 0 #9acae5, inset 0 0 4px 0 rgba(0, 0, 0, 0.25);
+	}
+
+}
+
+
+

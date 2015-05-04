@@ -5,6 +5,7 @@ node_modules/
 test/
 .travis.yml
 
-gulpfile.js
 
+playground/
 todo.md
+gulpfile.js
