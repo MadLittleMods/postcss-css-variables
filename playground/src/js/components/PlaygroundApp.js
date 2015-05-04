@@ -51,8 +51,17 @@ export default class PlaygroundApp extends React.Component {
 		var parsingErrorMarkup;
 		if(this.state.postcssOutputResult.error) {
 			parsingErrorMarkup = (
-				<div className="postcss-editor-pane-error">
-					<div className="postcss-editor-pane-error-message">{this.state.postcssOutputResult.error.toString()}</div>
+				<div
+					className="postcss-editor-pane-error"
+					// Live region attributes: http://www.smashingmagazine.com/2015/04/27/its-alive-apps-that-feed-back-accessibly/
+					aria-live="polite"
+					role="status"
+				>
+					<div
+						className="postcss-editor-pane-error-message"
+					>
+						{this.state.postcssOutputResult.error.toString()}
+					</div>
 				</div>
 			);
 		}

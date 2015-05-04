@@ -13948,7 +13948,7 @@ System.register("npm:postcss@4.1.8/lib/previous-map", ["npm:js-base64@2.1.8", "n
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.2.2/index", ["npm:postcss@4.1.8", "npm:extend@2.0.1", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.2.3/index", ["npm:postcss@4.1.8", "npm:extend@2.0.1", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -13983,7 +13983,9 @@ System.register("npm:postcss-css-variables@0.2.2/index", ["npm:postcss@4.1.8", "
                 }
                 return false;
               }).map(function(piece) {
-                return piece.trim();
+                return piece.trim().replace(/\s*?>>\s*?/, function(match) {
+                  return '';
+                });
               });
               scopeStringPieces.unshift.apply(scopeStringPieces, descendantPieces);
             }
@@ -15753,11 +15755,11 @@ System.register("npm:postcss@4.1.8/lib/input", ["npm:postcss@4.1.8/lib/css-synta
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.2.2", ["npm:postcss-css-variables@0.2.2/index"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.2.3", ["npm:postcss-css-variables@0.2.3/index"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  module.exports = require("npm:postcss-css-variables@0.2.2/index");
+  module.exports = require("npm:postcss-css-variables@0.2.3/index");
   global.define = __define;
   return module.exports;
 });
@@ -18833,7 +18835,7 @@ System.register('build/js/dispatcher/AppDispatcher', ['npm:flux@2.0.3'], functio
     }
   };
 });
-System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants', 'npm:events@1.0.2', 'npm:object-assign@2.0.0', 'npm:postcss@4.1.8', 'npm:postcss-css-variables@0.2.2'], function (_export) {
+System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants', 'npm:events@1.0.2', 'npm:object-assign@2.0.0', 'npm:postcss@4.1.8', 'npm:postcss-css-variables@0.2.3'], function (_export) {
 	var AppDispatcher, PlaygroundConstants, events, assign, postcss, cssvariables, EventEmitter, CHANGE_EVENT, playgroundProcessor, postcssInputText, postcssOutputResult, postcssProcessingError, PlaygroundStore;
 
 	function updateInput(input) {
@@ -18866,8 +18868,8 @@ System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDisp
 			assign = _npmObjectAssign200['default'];
 		}, function (_npmPostcss418) {
 			postcss = _npmPostcss418['default'];
-		}, function (_npmPostcssCssVariables022) {
-			cssvariables = _npmPostcssCssVariables022['default'];
+		}, function (_npmPostcssCssVariables023) {
+			cssvariables = _npmPostcssCssVariables023['default'];
 		}],
 		execute: function () {
 			'use strict';
@@ -18997,7 +18999,14 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 
 						var parsingErrorMarkup;
 						if (this.state.postcssOutputResult.error) {
-							parsingErrorMarkup = React.createElement('div', { className: 'postcss-editor-pane-error' }, React.createElement('div', { className: 'postcss-editor-pane-error-message' }, this.state.postcssOutputResult.error.toString()));
+							parsingErrorMarkup = React.createElement('div', {
+								className: 'postcss-editor-pane-error',
+								// Live region attributes: http://www.smashingmagazine.com/2015/04/27/its-alive-apps-that-feed-back-accessibly/
+								'aria-live': 'polite',
+								role: 'status'
+							}, React.createElement('div', {
+								className: 'postcss-editor-pane-error-message'
+							}, this.state.postcssOutputResult.error.toString()));
 						}
 
 						return React.createElement('div', { className: 'playground-app-wrapper' }, React.createElement('header', {

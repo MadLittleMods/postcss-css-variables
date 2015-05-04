@@ -8,7 +8,7 @@ CSS variables or CSS Custom Properties limited subset polyfill/shim.
 
 We strive for the most complete transformation but we/no plugin can achieve true complete parity according to the [speficification](http://dev.w3.org/csswg/css-variables/) because of the DOM cascade unknowns.
 
-## Latest Version: 0.2.2
+## Latest Version: 0.2.3
 ### [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
 
 ### Install

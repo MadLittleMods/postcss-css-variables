@@ -1,5 +1,5 @@
 // PostCSS CSS Variables (postcss-css-variables)
-// v0.2.2
+// v0.2.3
 //
 // https://github.com/MadLittleMods/postcss-css-variables
 

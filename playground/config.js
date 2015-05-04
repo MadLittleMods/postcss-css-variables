@@ -213,7 +213,7 @@ System.config({
       "github:jspm/nodelibs-path@0.1.0/index",
       "npm:postcss@4.1.8/lib/container",
       "npm:postcss@4.1.8/lib/previous-map",
-      "npm:postcss-css-variables@0.2.2/index",
+      "npm:postcss-css-variables@0.2.3/index",
       "build/js/components/EditorTextarea",
       "github:jspm/nodelibs-process@0.1.1",
       "npm:react@0.13.2/lib/ReactElement",
@@ -231,7 +231,7 @@ System.config({
       "github:jspm/nodelibs-path@0.1.0",
       "npm:postcss@4.1.8/lib/at-rule",
       "npm:postcss@4.1.8/lib/input",
-      "npm:postcss-css-variables@0.2.2",
+      "npm:postcss-css-variables@0.2.3",
       "npm:react@0.13.2/lib/invariant",
       "npm:react@0.13.2/lib/ReactFragment",
       "npm:react@0.13.2/lib/ReactUpdateQueue",
@@ -287,7 +287,7 @@ System.config({
     "keymirror": "npm:keymirror@0.1.1",
     "object-assign": "npm:object-assign@2.0.0",
     "postcss": "npm:postcss@4.1.8",
-    "postcss-css-variables": "npm:postcss-css-variables@0.2.2",
+    "postcss-css-variables": "npm:postcss-css-variables@0.2.3",
     "react": "npm:react@0.13.2",
     "wjbryant/taboverride": "github:wjbryant/taboverride@4.0.2",
     "github:jspm/nodelibs-assert@0.1.0": {
@@ -415,7 +415,7 @@ System.config({
     "npm:path-browserify@0.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.1"
     },
-    "npm:postcss-css-variables@0.2.2": {
+    "npm:postcss-css-variables@0.2.3": {
       "extend": "npm:extend@2.0.1",
       "postcss": "npm:postcss@4.1.8",
       "process": "github:jspm/nodelibs-process@0.1.1"

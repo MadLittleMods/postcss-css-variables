@@ -1,5 +1,10 @@
 
 
+# 0.2.3 - 2015-5-4
+
+ - Add support for CSS4 descendant selector `>>` syntax
+
+
 # 0.2.2 - 2015-5-1
 
  - Automatically prefix any variables defined in `options.variables` with `--` (according to CSS custom property syntax).
