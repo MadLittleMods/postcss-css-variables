@@ -25,7 +25,7 @@ Add some PostCSS and it will show you the transformed/compiled CSS.
 
 You can try any of these examples on the [code playground](https://madlittlemods.github.io/postcss-css-variables/playground/).
 
-```
+```js
 var postcss = require('postcss');
 var cssvariables = require('postcss-css-variables');
 
@@ -52,7 +52,7 @@ You can add rules that declare CSS variables nested inside at-rules. You can eve
 
 The following CSS:
 
-```
+```css
 :root {
 	--width: 100px;
 }
@@ -70,7 +70,7 @@ The following CSS:
 
 will be processed to:
 
-```
+```css
 .box {
 	width: 100px;
 }
@@ -87,7 +87,7 @@ will be processed to:
 
 When using this feature, `postcss-css-variables` will output invalid CSS by itself(but you did input invalid CSS anyway). This feature is best paired with [`postcss-nested`](https://github.com/postcss/postcss-nested) in order to properly expand the rules.
 
-```
+```js
 var postcss = require('postcss');
 var cssvariables = require('postcss-css-variables');
 var nestedcss = require('postcss-nested');
@@ -113,7 +113,7 @@ console.log(output);
 
 The following CSS:
 
-```
+```css
 .box-foo {
 	--some-width: 150px;
 	width: var(--some-width);
@@ -126,7 +126,7 @@ The following CSS:
 
 will be processed to:
 
-```
+```css
 .box-foo {
 	width: 150px;
 
@@ -140,7 +140,7 @@ will be processed to:
 
 The following CSS:
 
-```
+```css
 :root {
 	--some-width: 150px;
 }
@@ -162,7 +162,7 @@ The following CSS:
 
 will be processed to:
 
-```
+```css
 .box-foo {
 	width: 150px;
 
