@@ -2,5 +2,6 @@ node_modules/
 npm-debug.log
 
 playground/node_modules/
-playground/jspm_packages/
+playground/jspm_packages/github/
+playground/jspm_packages/npm/
 todo.md
