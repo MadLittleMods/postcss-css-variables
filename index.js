@@ -66,7 +66,11 @@ function generateScopeList(node, /*optional*/includeSelf) {
 							return false;
 						})
 						.map(function(piece) {
-							return piece.trim();
+							// Trim whitespace which would be a normal descendant selector
+							// and trim off the CSS4 descendant `>>` into a normal descendant selector
+							return piece.trim().replace(/\s*?>>\s*?/, function(match) {
+								return '';
+							});
 						});
 
 					// Add to the front of the array

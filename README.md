@@ -15,8 +15,15 @@ We strive for the most complete transformation but we/no plugin can achieve true
 
 `npm install postcss-css-variables --save-dev`
 
+# [Code Playground](https://madlittlemods.github.io/postcss-css-variables/playground/)
+
+[Try it](https://madlittlemods.github.io/postcss-css-variables/playground/) before you install it!
+
+Add some PostCSS and it will show you the transformed/compiled CSS.
 
 # Usage
+
+You can try any of these examples on the [code playground](https://madlittlemods.github.io/postcss-css-variables/playground/).
 
 ```
 var postcss = require('postcss');

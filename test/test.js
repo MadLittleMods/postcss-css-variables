@@ -53,6 +53,10 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/descendant-selector.css', './test/fixtures/descendant-selector.expected.css');
 	});
 
+	it('should work with css4 descendant selector type "nesting"', function() {
+		return testPlugin('./test/fixtures/css4-descendant-selector.css', './test/fixtures/css4-descendant-selector.expected.css');
+	});
+
 	describe('with @rules', function() {
 		it('should add rule declaration of property in @media', function() {
 			return testPlugin('./test/fixtures/media-query.css', './test/fixtures/media-query.expected.css');

@@ -1,0 +1,15 @@
+.some-foo-group >> .box-foo {
+	width: 180px;
+}
+
+.some-bar-group >> .box-bar {
+	width: 300px;
+}
+
+.some-foo-group {
+	width: 150px;
+
+	.box-foo {
+		width: 180px;
+	}
+}

@@ -12,10 +12,11 @@ The code playground for `postcss-css-variables` is [available live here](https:/
 
  ## Instructions:
 
+Run once to set everything up:
+
+`npm run setup`
+
 When developing run the following to build:
 
-`npm run build-dev`
-
-To bundle for production, run:
-
-`npm run build`
+ - `npm run build-dev`: Build
+ - `npm run build`: Build and bundle for production
