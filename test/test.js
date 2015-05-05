@@ -57,7 +57,11 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/css4-descendant-selector.css', './test/fixtures/css4-descendant-selector.expected.css');
 	});
 
-	describe('with @rules', function() {
+	it('should work with comma separated selector', function() {
+		return testPlugin('./test/fixtures/comma-separated-selector-use-proper-scope.css', './test/fixtures/comma-separated-selector-use-proper-scope.expected.css');
+	});
+
+	describe('with at-rules', function() {
 		it('should add rule declaration of property in @media', function() {
 			return testPlugin('./test/fixtures/media-query.css', './test/fixtures/media-query.expected.css');
 		});
@@ -72,6 +76,11 @@ describe('postcss-css-variables', function() {
 		it('should cascade to nested rules', function() {
 			return testPlugin('./test/fixtures/cascade-on-nested-rules.css', './test/fixtures/cascade-on-nested-rules.expected.css');
 		});
+
+		it('should cascade to nested rules in the proper scope. See issue #2', function() {
+			return testPlugin('./test/fixtures/cascade-on-nested-rules-in-proper-scope.css', './test/fixtures/cascade-on-nested-rules-in-proper-scope.expected.css');
+		});
+		
 	});
 
 	it('should work with `!important` variable declarations', function() {

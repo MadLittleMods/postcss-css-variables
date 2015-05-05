@@ -1,0 +1,18 @@
+.box-foo {
+	width: 333px;
+
+	.box-bar {
+		width: 333px;
+	}
+}
+
+.box-baz {
+	width: 200px;
+}
+
+@media (max-width: 800px) {
+
+	.box-baz {
+		width: 550px;
+	}
+}

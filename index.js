@@ -1,5 +1,5 @@
 // PostCSS CSS Variables (postcss-css-variables)
-// v0.2.3
+// v0.3.1
 //
 // https://github.com/MadLittleMods/postcss-css-variables
 
@@ -27,6 +27,96 @@ var RE_SELECTOR_DESCENDANT_SPLIT = (/(.*?(?:(?:\[[^\]]+\]|(?![><+~\s]).)+)(?:(?:
 
 
 
+// Splice on a parent scope onto a node
+// And return a detached clone
+function cloneSpliceParentOntoNodeWhen(node, parent, /*optional*/whenCb) {
+	whenCb = whenCb || function() {
+		return true;
+	};
+
+	var cloneList = [];
+
+	// Gather node ancestors and clone along the way
+	var current = node;
+	var isWhenNow = false;
+	while(current && !isWhenNow) {
+		if(current.type === 'decl') {
+			cloneList.push(current.clone());
+		}
+		else {
+			cloneList.push(current.clone().removeAll());
+		}
+
+		isWhenNow = whenCb(current);
+		current = current.parent;
+	}
+
+
+	// Gather parent ancestors all the way up and clone along the way
+	var cloneParentList = [];
+	var currentParent = parent;
+	while(currentParent) {
+		cloneParentList.push(currentParent.clone().removeAll());
+
+		currentParent = currentParent.parent;
+	}
+	// Assign parents to our parent clones
+	cloneParentList.forEach(function(parentClone, index, cloneParentList) {
+		// Keep assigning parents detached until the very end
+		if(index+1 < cloneParentList.length) {
+			parentClone.parent = cloneParentList[index+1];
+		}
+	});
+
+
+	// Assign parents to our node clones
+	cloneList.forEach(function(clone, index, cloneList) {
+		// Keep assigning parents detached until the very end
+		if(index+1 < cloneList.length) {
+			clone.parent = cloneList[index+1];
+		// Then splice on the new parent scope
+		} else {
+			// Set the highest parent ancestor to back to where we should splice in
+			cloneParentList.slice(-1)[0].parent = current;
+			// Set the node clone to the lowest parent ancestor
+			clone.parent = cloneParentList[0];
+		}
+	});
+
+	return cloneList[0];
+}
+
+
+// Find a node starting from the given node that matches
+function findNodeAncestorWithSelector(selector, node) {
+	var matchingNode;
+
+	var currentNode = node;
+	var stillFindingNode = true;
+	// Keep going until we run out of parents to search
+	// or we found the node
+	while(currentNode.parent && !matchingNode) {
+		// A trick to get the selector split up. Generate a scope list on a clone(clean parent)
+		var currentNodeScopeList = generateScopeList(currentNode.clone(), true);
+
+		currentNodeScopeList.some(function(scopePieces) {
+			return scopePieces.some(function(scopePiece) {
+				if(scopePiece === selector) {
+					matchingNode = currentNode;
+					return true;
+				}
+
+				return false;
+			});
+		});
+
+		currentNode = currentNode.parent;
+	}
+
+	return matchingNode;
+}
+
+
 function generateScopeList(node, /*optional*/includeSelf) {
 	includeSelf = includeSelf || false;
 
@@ -36,29 +126,41 @@ function generateScopeList(node, /*optional*/includeSelf) {
 	];
 	var currentNodeParent = includeSelf ? node : node.parent;
 	while(currentNodeParent) {
-		// Loop through each comma separated piece
-		var selectorPieces = currentNodeParent.selectors || [];
 
-		if(currentNodeParent.type === 'root') {
-			selectorPieces = [':root'];
-		}
-		else if(currentNodeParent.type === 'atrule') {
-			selectorPieces = [].concat(currentNodeParent.params).map(function(param, index) {
-				return '@' + currentNodeParent.name + ' ' + param;
+		// `currentNodeParent.selectors` is a list of each comma separated piece of the selector
+		var scopePieces = (currentNodeParent.selectors || []).map(function(selectorPiece) {
+			return {
+				value: selectorPiece,
+				type: 'selector'
+			};
+		});
+
+		// If it is a at-rule, then we need to construct the proper piece
+		if(currentNodeParent.type === 'atrule') {
+			scopePieces = [].concat(currentNodeParent.params).map(function(param, index) {
+				return {
+					value: '@' + currentNodeParent.name + ' ' + param,
+					type: 'atrule'
+				};
 			});
 		}
 
-		selectorPieces.forEach(function(selector, index) {
-			// Branch each current scope
-			if(index > 0) {
-				selectorScopeList.concat(selectorScopeList);
-			}
+		// Branch each current scope for each comma separated selector
+		// Otherwise just keep the [1] branch going
+		var branches = (scopePieces.length > 0 ? scopePieces : [1]).map(function() {
+			return selectorScopeList.map(function(scopePieces) {
+				return scopePieces.slice(0);
+			});
+		});
 
+		scopePieces.forEach(function(scopeObject, index) {
 			// Update each selector string with the new piece
-			selectorScopeList = selectorScopeList.map(function(scopeStringPieces) {
-				// Just make sure we don't repeat the root twice at the end
-				if(selector !== ':root' || (selector === ':root' && scopeStringPieces[0] !== ':root')) {
-					var descendantPieces = selector.split(RE_SELECTOR_DESCENDANT_SPLIT)
+			branches[index] = branches[index].map(function(scopeStringPieces) {
+
+				var descendantPieces = [scopeObject.value];
+				// Split at any descendant combinators to properly make the scope list
+				if(scopeObject.type === 'selector') {
+					descendantPieces = scopeObject.value.split(RE_SELECTOR_DESCENDANT_SPLIT)
 						.filter(function(piece) {
 							if(piece.length > 0) {
 								return true;
@@ -72,12 +174,18 @@ function generateScopeList(node, /*optional*/includeSelf) {
 								return '';
 							});
 						});
-
-					// Add to the front of the array
-					scopeStringPieces.unshift.apply(scopeStringPieces, descendantPieces);
 				}
+
+				// Add to the front of the array
+				scopeStringPieces.unshift.apply(scopeStringPieces, descendantPieces);
+				
 				return scopeStringPieces;
 			});
+		});
+
+		selectorScopeList = [];
+		branches.forEach(function(branch) {
+			selectorScopeList = selectorScopeList.concat(branch);
 		});
 
 		currentNodeParent = currentNodeParent.parent;
@@ -95,9 +203,16 @@ function isUnderScope(node, scopeNode) {
 		return nodeScopeList.some(function(nodeScopePieces) {
 			var currentPieceOffset;
 			var wasEveryPieceFound = scopeNodeScopePieces.every(function(scopePiece) {
+				var pieceOffset = currentPieceOffset || 0;
 				// Start from the previous index and make sure we can find it
-				var foundIndex = nodeScopePieces.indexOf(scopePiece, currentPieceOffset || 0);
-				var isFurther = currentPieceOffset === undefined || foundIndex > currentPieceOffset;
+				var foundIndex = nodeScopePieces.indexOf(scopePiece, pieceOffset);
+				// If it is a star or root, then it is valid no matter what
+				// We might consider adding `html` and `body` to this list as well
+				if(foundIndex < 0 && (scopePiece === '*' || scopePiece === ':root')) {
+					foundIndex = pieceOffset + 1;
+				}
+
+				var isFurther = foundIndex > pieceOffset || (foundIndex >= 0 && currentPieceOffset === undefined);
 
 				currentPieceOffset = foundIndex;
 				return isFurther;
@@ -117,15 +232,7 @@ function isUnderScope(node, scopeNode) {
 // Note: We do not modify the declaration
 // Note: Resolving a declaration value without any `var(...)` does not harm the final value. 
 //		This means, feel free to run everything through this function
-var resolveValue = function(decl, map, /*optional*/mimicChildOf) {
-	
-	// A list of parents that you want the decl to mimic being a child of as well
-	// Good for consuming other variables declared in different scopes
-	// Coerce into an array
-	// Add the declaration parent because we handle everything via this
-	mimicChildOfList = [].concat(decl.parent ? [decl.parent] : []);
-	// Then add on the additional list that was passed in
-	mimicChildOfList = mimicChildOfList.concat(mimicChildOf ?  mimicChildOf : []);
+var resolveValue = function(decl, map) {
 
 	var resultantValue = decl.value;
 	var variablesUsedInValue = [];
@@ -142,24 +249,23 @@ var resolveValue = function(decl, map, /*optional*/mimicChildOf) {
 		//		- Defined in the same rule
 		//		- The latest defined `!important` if any
 		var matchingVarDeclMapItem;
-		mimicChildOfList.forEach(function(mimicParentNode) {
+		(map[variableName] || []).forEach(function(varDeclMapItem) {
+			// Make sure the variable declaration came from the right spot
+			// And if the current matching variable is already important, a new one to replace it has to be important
+			var isRoot = varDeclMapItem.parent.type === 'root' || varDeclMapItem.parent.selectors[0] === ':root';
 
-			(map[variableName] || []).forEach(function(varDeclMapItem) {
-				// Make sure the variable declaration came from the right spot
-				// And if the current matching variable is already important, a new one to replace it has to be important
-				var isRoot = varDeclMapItem.parent.type === 'root' || varDeclMapItem.parent.selectors[0] === ':root';
+			var mimicDeclParent = decl.parent;
 
-				//console.log(generateScopeList(mimicParentNode, true));
-				//console.log(generateScopeList(varDeclMapItem.parent, true));
-				//console.log('isunderscope', isUnderScope(mimicParentNode, varDeclMapItem.parent), varDeclMapItem.value);
-				if(
-					isUnderScope(mimicParentNode, varDeclMapItem.parent) &&
-					// And if the currently matched declaration is `!important`, it will take another `!important` to override it
-					(!(matchingVarDeclMapItem || {}).isImportant || varDeclMapItem.isImportant)
-				) {
-					matchingVarDeclMapItem = varDeclMapItem;
-				}
-			});
+			//console.log(generateScopeList(mimicDeclParent, true));
+			//console.log(generateScopeList(varDeclMapItem.parent, true));
+			//console.log('isunderscope', isUnderScope(mimicDeclParent, varDeclMapItem.parent), varDeclMapItem.value);
+			if(
+				isUnderScope(mimicDeclParent, varDeclMapItem.parent) &&
+				// And if the currently matched declaration is `!important`, it will take another `!important` to override it
+				(!(matchingVarDeclMapItem || {}).isImportant || varDeclMapItem.isImportant)
+			) {
+				matchingVarDeclMapItem = varDeclMapItem;
+			}
 		});
 
 		
@@ -262,6 +368,8 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 
 		// Collect all of the variables defined
+		// ---------------------------------------------------------
+		// ---------------------------------------------------------
 		var addedRules = [];
 		css.eachRule(function(rule) {
 			// We don't want infinite recursion possibly, so don't iterate over the rules we add inside
@@ -293,7 +401,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 								prop: prop,
 								value: resolvedValue,
 								isImportant: decl.important || false,
-								// variables inside root or @rules (eg. @media, @support)
+								// variables inside root or at-rules (eg. @media, @support)
 								parent: splitOutRule,
 								isUnderAtRule: splitOutRule.parent.type === 'atrule'
 							});
@@ -320,50 +428,87 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		});
 
 
+
+
 		// Resolve variables everywhere
+		// ---------------------------------------------------------
+		// ---------------------------------------------------------
 		css.eachDecl(function(decl) {
 			// Ignore any variable declarations that we may be preserving from earlier
 			// Don't worry, they are already processed
+			// If not a variable decalaraton... then resolve
 			if(!RE_VAR_PROP.test(decl.prop)) {
+
+
+				// Grab the balue for this declarations
 				var valueResults = logResolveValueResult(resolveValue(decl, map));
 
 				// Resolve the cascade
-				// Now find any @rule declarations that need to be added below each rule
+				// Now find any at-rule declarations that need to be added below each rule
+				// Loop through the variables used
 				valueResults.variablesUsed.forEach(function(variableUsedName) {
+					// Find anything in the map that corresponds to that variable
 					(map[variableUsedName] || []).forEach(function(varDeclMapItem) {
 						if(varDeclMapItem.isUnderAtRule) {
-							// Create the clean atRule for which we place the declaration under
-							var atRuleNode = varDeclMapItem.parent.parent.clone().removeAll();
+							
 
-							var ruleClone = decl.parent.clone().removeAll();
-							var declClone = decl.clone();
-							declClone.value = logResolveValueResult(resolveValue(decl, map, [varDeclMapItem.parent])).value;
+							// Get the inner-most selector of the at-rule scope variable declaration we are matching
+							// Because the inner-most selector will be the same for each branch, we can look in any of them
+							var varDeclScopeList = generateScopeList(varDeclMapItem.parent, true);
+							var selector = varDeclScopeList[0].slice(-1)[0];
 
-							// Add the declaration to our new rule
-							ruleClone.append(declClone);
-							// Add the rule to the atRule
-							atRuleNode.append(ruleClone);
+							var currentNodeToSpliceParentOnto = findNodeAncestorWithSelector(selector, decl.parent);
 
-
-							// Since that atRuleNode can be nested in other atRules, we need to make the appropriate structure
-							var parentAtRuleNode = atRuleNode;
-							var currentAtRuleNode = varDeclMapItem.parent.parent;
-							while(currentAtRuleNode.parent.type === 'atrule') {
-								// Create a new clean clone of that at rule to nest under
-								var newParentAtRuleNode = currentAtRuleNode.parent.clone().removeAll();
-
-								// Append the old parent
-								newParentAtRuleNode.append(parentAtRuleNode);
-								// Then set the new one as the current for next iteration
-								parentAtRuleNode = newParentAtRuleNode;
-
-								currentAtRuleNode = currentAtRuleNode.parent;
-							}
-
-							createNodeCallbackList.push(function() {
-								// Put the atRuleStructure after the declaration's rule
-								decl.parent.parent.insertAfter(decl.parent, parentAtRuleNode);
+							var varDeclAtRule = varDeclMapItem.parent.parent;
+							var mimicDecl = cloneSpliceParentOntoNodeWhen(decl, varDeclAtRule, function(ancestor) {
+								return ancestor === currentNodeToSpliceParentOnto;
 							});
+
+
+
+							//console.log('amd og', generateScopeList(decl.parent, true));
+							//console.log('amd', generateScopeList(mimicDecl.parent, true));
+							//console.log(generateScopeList(varDeclMapItem.parent, true));
+							//console.log('amd isunderscope', isUnderScope(mimicDecl.parent, varDeclMapItem.parent), varDeclMapItem.value);
+							
+
+							// If it is under the proper scope
+							// Then lets create the new rules
+							if(isUnderScope(mimicDecl.parent, varDeclMapItem.parent)) {
+								// Create the clean atRule for which we place the declaration under
+								var atRuleNode = varDeclMapItem.parent.parent.clone().removeAll();
+
+								var ruleClone = decl.parent.clone().removeAll();
+								var declClone = decl.clone();
+								declClone.value = logResolveValueResult(resolveValue(mimicDecl, map)).value;
+
+								// Add the declaration to our new rule
+								ruleClone.append(declClone);
+								// Add the rule to the atRule
+								atRuleNode.append(ruleClone);
+
+
+								// Since that atRuleNode can be nested in other atRules, we need to make the appropriate structure
+								var parentAtRuleNode = atRuleNode;
+								var currentAtRuleNode = varDeclMapItem.parent.parent;
+								while(currentAtRuleNode.parent.type === 'atrule') {
+									// Create a new clean clone of that at rule to nest under
+									var newParentAtRuleNode = currentAtRuleNode.parent.clone().removeAll();
+
+									// Append the old parent
+									newParentAtRuleNode.append(parentAtRuleNode);
+									// Then set the new one as the current for next iteration
+									parentAtRuleNode = newParentAtRuleNode;
+
+									currentAtRuleNode = currentAtRuleNode.parent;
+								}
+
+								createNodeCallbackList.push(function() {
+									// Put the atRuleStructure after the declaration's rule
+									decl.parent.parent.insertAfter(decl.parent, parentAtRuleNode);
+								});
+							}
+							
 						}
 					});
 				});
@@ -374,12 +519,12 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 					createNodeCallbackList.push(function() {
 						decl.cloneAfter();
 
-						// Set the new value after we are done dealing with @rule stuff
+						// Set the new value after we are done dealing with at-rule stuff
 						decl.value = valueResults.value;
 					});
 				}
 				else {
-					// Set the new value after we are done dealing with @rule stuff
+					// Set the new value after we are done dealing with at-rule stuff
 					decl.value = valueResults.value;
 				}
 				

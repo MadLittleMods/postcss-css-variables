@@ -8,7 +8,7 @@ CSS variables or CSS Custom Properties limited subset polyfill/shim.
 
 We strive for the most complete transformation but we/no plugin can achieve true complete parity according to the [speficification](http://dev.w3.org/csswg/css-variables/) because of the DOM cascade unknowns.
 
-## Latest Version: 0.2.3
+## Latest Version: v0.3.1
 ### [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
 
 ### Install
@@ -86,6 +86,9 @@ will be processed to:
 ## Nested rules
 
 When using this feature, `postcss-css-variables` will output invalid CSS by itself(but you did input invalid CSS anyway). This feature is best paired with [`postcss-nested`](https://github.com/postcss/postcss-nested) in order to properly expand the rules.
+
+Run `postcss-nested` before `postcss-css-variables` so that `postcss-nested` can properly expand the `&` references before we start resolving variable values.
+
 
 ```js
 var postcss = require('postcss');
