@@ -61,6 +61,10 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/comma-separated-selector-use-proper-scope.css', './test/fixtures/comma-separated-selector-use-proper-scope.expected.css');
 	});
 
+	it('should work with star selector', function() {
+		return testPlugin('./test/fixtures/star-selector-scope.css', './test/fixtures/star-selector-scope.expected.css');
+	});
+
 	describe('with at-rules', function() {
 		it('should add rule declaration of property in @media', function() {
 			return testPlugin('./test/fixtures/media-query.css', './test/fixtures/media-query.expected.css');

@@ -1,0 +1,7 @@
+* {
+	--test: #0f0;
+}
+
+.foo {
+	background: var(--test);
+}
