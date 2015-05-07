@@ -2,7 +2,7 @@
 
 # PostCSS CSS Variables
 
-PostCSS plugin to transform [`CSS Custom Properties(CSS variables)`](http://dev.w3.org/csswg/css-variables/) syntax into a static representation. This plugin provides a future-proof way of using **most** of CSS variables featuers.
+[PostCSS](https://github.com/postcss/postcss) plugin to transform [`CSS Custom Properties(CSS variables)`](http://dev.w3.org/csswg/css-variables/) syntax into a static representation. This plugin provides a future-proof way of using **most** of CSS variables featuers.
 
 CSS variables or CSS Custom Properties limited subset polyfill/shim.
 
