@@ -1,11 +1,5 @@
 
 
-
-
-
-
-
-
 html,
 body {
 	padding: 0;
@@ -153,6 +147,96 @@ kbd {
 	border-radius: 3px;
 }
 
+input[type='checkbox'] {
+	@mixin cursor-hand;
+}
+
+input[type='range'] {
+	-webkit-appearance: none;
+	width: 140px;
+	height: 6px;
+	
+	background: transparent;
+	box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.50);
+	
+	outline: 0;
+	
+	border-radius: 3px;
+	
+	transition: all 0.3s ease-out;
+
+	&:focus {
+		box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.75);
+
+		&::-webkit-slider-thumb {
+			background: #ddddff;
+			box-shadow: 0 0 4px rgba(0, 0, 0, 0.50);
+		}
+
+	}
+
+	&:disabled {
+		box-shadow: inset 0 0 8px rgba(100, 0, 0, 0.30);
+
+		&::-webkit-slider-thumb {
+			background: rgba(230, 180, 180, 0.9);
+			border-color: rgba(110, 110, 110, 0.50);
+		}
+
+	}
+
+	&::-webkit-slider-thumb {
+		@mixin cursor-hand;
+
+		-webkit-appearance: none;
+		width: 20px;
+		height: 20px;
+		
+		background: #dddddd;
+		border: 1px solid rgba(110, 110, 110, 1);
+		box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+		
+		border-radius: 50%;
+		
+		transition: all 0.3s ease-out;
+
+		&:focus::-webkit-slider-thumb {    
+			box-shadow: 0 0 10px rgba(150, 150, 150, 0.50);
+		}
+
+	}
+
+}
+
+
+
+.hidden {
+	display: none;
+}
+
+.visually-hidden {
+	position: absolute;
+
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	width: 1px;
+	height: 1px;
+
+	margin: -1px;
+	padding: 0;
+
+	border: 0;
+}
+
+
+.icon {
+	width: 24px;
+	height: 24px;
+
+	fill: currentColor;
+}
+
+
 
 .playground-app-entry-point, .playground-app-wrapper {
 	width: 100%;
@@ -233,6 +317,13 @@ kbd {
 
 	resize: none;
 
+	transition: all 0.1s ease;
+
+	&:focus {
+		outline: none;
+		box-shadow: inset 0 0 6px 0 rgba(0, 0, 50, 0.35);
+	}
+
 	&.is-not-current {
 		background: rgba(240, 220, 220, 0.8);
 
@@ -264,7 +355,6 @@ kbd {
 	animation: postcss-editor-pane-error-flex-grow 0.15s ease forwards, error-stripe-loading 12s infinite linear;
 
 	.postcss-editor-pane-error-message {
-		flex: 1;
 
 		padding: 8px;
 
@@ -283,7 +373,7 @@ kbd {
 	}
 	to {
 		/* flex: 0.25; */
-	    flex: 0 1 auto;
+		flex: 0 1 auto;
 	}
 }
 
@@ -343,10 +433,138 @@ kbd {
 	font-weight: bold;
 }
 
-.live-reload-toggle-checkbox {
-    @mixin toggle-checkbox-enclosed 'live reload' 'off';
 
-    margin-right: 1em;
+.playground-options-holder {
+	position: relative;
+
+	height: 100%;
+}
+
+.playground-options-menu-toggle {
+	@mixin cursor-hand;
+
+	position: relative;
+
+	display: flex;
+	align-items: center;
+
+	height: 100%;
+
+	margin-right: 0.5em;
+	padding: 0 2em;
+
+	user-select: none;
+
+	transition: all 0.2s ease;
+
+	&:hover,
+	&:focus,
+	.playground-options-menu-toggle-checkbox:focus ~ &,
+	.playground-options-menu-toggle-checkbox:focus ~ * &,
+	.playground-options-menu-toggle-checkbox:checked ~ &,
+	.playground-options-menu-toggle-checkbox:checked ~ * & {
+		color: #cccccc;
+		background: rgba(0, 0, 0, 0.25);
+	}
+
+	&:active {
+		box-shadow: inset 0 0 12px 0 rgba(0, 0, 0, 0.25);
+	}
+
+	.playground-options-menu-toggle-checkbox:checked ~ & > .playground-options-menu-toggle-icon,
+	.playground-options-menu-toggle-checkbox:checked ~ * & > .playground-options-menu-toggle-icon {
+		animation: spin 5s infinite linear;
+	}
+}
+
+
+.playground-options-menu-wrapper {
+	z-index: 2;
+	overflow: hidden;
+
+	position: absolute;
+	top: 100%;
+	top: calc(100% + 1px);
+	left: 0;
+
+	pointer-events: none;
+
+	/* so shadow can peak through */
+	--menu-padding-for-shadow: 8px;
+	padding: var(--menu-padding-for-shadow);
+	padding-top: 0;
+
+	/* Offset the padding on the left to make it still left align with the toggle button */
+	transform: translateX(-var(--menu-padding-for-shadow));
+
+	.playground-options-menu-toggle-checkbox:checked ~ &,
+	.playground-options-menu-toggle-checkbox:checked ~ * & {
+		pointer-events: auto;
+	}
+
+}
+
+.playground-options-menu {
+	visibility: hidden;
+	display: inline-block;
+	
+	background: #eeeeff;
+	border-left: 1px solid #555555;
+	border-bottom: 1px solid #555555;
+	border-right: 1px solid #555555;
+	box-shadow:
+		/* outside shadow */
+		0 3px 8px 0 rgba(0, 0, 0, 0.20), 
+		/* top inner shadow */
+		inset 0 4px 4px -4px rgba(0, 0, 0, 0.25);
+
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+
+	color: #000000;
+
+	transform: translateY(-110%);
+
+	transition: all 0.2s ease;
+
+	.playground-options-menu-toggle-checkbox:checked ~ &,
+	.playground-options-menu-toggle-checkbox:checked ~ * & {
+		visibility: visible;
+		transform: translateY(0);
+	}
+}
+
+.playground-options-menu-options-group {
+	display: inline-block;
+
+	padding: 10px;
+
+}
+
+.playground-options-menu-item, .playground-options-menu-item-secondary {
+	display: flex;
+	align-items: center;
+
+	white-space: nowrap;
+
+	& > * + * {
+		margin-left: 0.5em;
+	}
+}
+
+.playground-options-menu-item-label, .playground-options-menu-item-label-secondary {
+	align-self: flex-start;
+}
+
+.playground-options-menu-item-label-secondary {
+	font-size: 80%;
+	font-weight: bold;
+}
+
+.playground-live-reload-toggle-togglebox {
+	@mixin toggle-checkbox-enclosed .playground-live-reload-toggle-checkbox 'live reload' 'off';
+
+	margin-right: 1em;
 }
 
 
@@ -355,11 +573,12 @@ kbd {
 
 	height: 100%;
 
-	padding: 0 2em;
+	padding: 0 2.5em;
 
 	border: 0;
+	border-left: 1px solid #555;
 	background: #a3d6f4;
-	box-shadow: 0 0 8px 0 #9acae5;
+	box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.5);
 
 	transition: all 0.2s ease;
 
@@ -378,3 +597,13 @@ kbd {
 
 
 
+
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(359.9deg);
+	}
+}

@@ -3686,6 +3686,3884 @@ System.register("npm:keymirror@0.1.1/index", [], true, function(require, exports
   return module.exports;
 });
 
+System.register("npm:immutable@3.7.2/dist/immutable", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  "format cjs";
+  (function(global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : global.Immutable = factory();
+  }(this, function() {
+    'use strict';
+    var SLICE$0 = Array.prototype.slice;
+    function createClass(ctor, superClass) {
+      if (superClass) {
+        ctor.prototype = Object.create(superClass.prototype);
+      }
+      ctor.prototype.constructor = ctor;
+    }
+    var DELETE = 'delete';
+    var SHIFT = 5;
+    var SIZE = 1 << SHIFT;
+    var MASK = SIZE - 1;
+    var NOT_SET = {};
+    var CHANGE_LENGTH = {value: false};
+    var DID_ALTER = {value: false};
+    function MakeRef(ref) {
+      ref.value = false;
+      return ref;
+    }
+    function SetRef(ref) {
+      ref && (ref.value = true);
+    }
+    function OwnerID() {}
+    function arrCopy(arr, offset) {
+      offset = offset || 0;
+      var len = Math.max(0, arr.length - offset);
+      var newArr = new Array(len);
+      for (var ii = 0; ii < len; ii++) {
+        newArr[ii] = arr[ii + offset];
+      }
+      return newArr;
+    }
+    function ensureSize(iter) {
+      if (iter.size === undefined) {
+        iter.size = iter.__iterate(returnTrue);
+      }
+      return iter.size;
+    }
+    function wrapIndex(iter, index) {
+      return index >= 0 ? (+index) : ensureSize(iter) + (+index);
+    }
+    function returnTrue() {
+      return true;
+    }
+    function wholeSlice(begin, end, size) {
+      return (begin === 0 || (size !== undefined && begin <= -size)) && (end === undefined || (size !== undefined && end >= size));
+    }
+    function resolveBegin(begin, size) {
+      return resolveIndex(begin, size, 0);
+    }
+    function resolveEnd(end, size) {
+      return resolveIndex(end, size, size);
+    }
+    function resolveIndex(index, size, defaultIndex) {
+      return index === undefined ? defaultIndex : index < 0 ? Math.max(0, size + index) : size === undefined ? index : Math.min(size, index);
+    }
+    function Iterable(value) {
+      return isIterable(value) ? value : Seq(value);
+    }
+    createClass(KeyedIterable, Iterable);
+    function KeyedIterable(value) {
+      return isKeyed(value) ? value : KeyedSeq(value);
+    }
+    createClass(IndexedIterable, Iterable);
+    function IndexedIterable(value) {
+      return isIndexed(value) ? value : IndexedSeq(value);
+    }
+    createClass(SetIterable, Iterable);
+    function SetIterable(value) {
+      return isIterable(value) && !isAssociative(value) ? value : SetSeq(value);
+    }
+    function isIterable(maybeIterable) {
+      return !!(maybeIterable && maybeIterable[IS_ITERABLE_SENTINEL]);
+    }
+    function isKeyed(maybeKeyed) {
+      return !!(maybeKeyed && maybeKeyed[IS_KEYED_SENTINEL]);
+    }
+    function isIndexed(maybeIndexed) {
+      return !!(maybeIndexed && maybeIndexed[IS_INDEXED_SENTINEL]);
+    }
+    function isAssociative(maybeAssociative) {
+      return isKeyed(maybeAssociative) || isIndexed(maybeAssociative);
+    }
+    function isOrdered(maybeOrdered) {
+      return !!(maybeOrdered && maybeOrdered[IS_ORDERED_SENTINEL]);
+    }
+    Iterable.isIterable = isIterable;
+    Iterable.isKeyed = isKeyed;
+    Iterable.isIndexed = isIndexed;
+    Iterable.isAssociative = isAssociative;
+    Iterable.isOrdered = isOrdered;
+    Iterable.Keyed = KeyedIterable;
+    Iterable.Indexed = IndexedIterable;
+    Iterable.Set = SetIterable;
+    var IS_ITERABLE_SENTINEL = '@@__IMMUTABLE_ITERABLE__@@';
+    var IS_KEYED_SENTINEL = '@@__IMMUTABLE_KEYED__@@';
+    var IS_INDEXED_SENTINEL = '@@__IMMUTABLE_INDEXED__@@';
+    var IS_ORDERED_SENTINEL = '@@__IMMUTABLE_ORDERED__@@';
+    var ITERATE_KEYS = 0;
+    var ITERATE_VALUES = 1;
+    var ITERATE_ENTRIES = 2;
+    var REAL_ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+    var FAUX_ITERATOR_SYMBOL = '@@iterator';
+    var ITERATOR_SYMBOL = REAL_ITERATOR_SYMBOL || FAUX_ITERATOR_SYMBOL;
+    function src_Iterator__Iterator(next) {
+      this.next = next;
+    }
+    src_Iterator__Iterator.prototype.toString = function() {
+      return '[Iterator]';
+    };
+    src_Iterator__Iterator.KEYS = ITERATE_KEYS;
+    src_Iterator__Iterator.VALUES = ITERATE_VALUES;
+    src_Iterator__Iterator.ENTRIES = ITERATE_ENTRIES;
+    src_Iterator__Iterator.prototype.inspect = src_Iterator__Iterator.prototype.toSource = function() {
+      return this.toString();
+    };
+    src_Iterator__Iterator.prototype[ITERATOR_SYMBOL] = function() {
+      return this;
+    };
+    function iteratorValue(type, k, v, iteratorResult) {
+      var value = type === 0 ? k : type === 1 ? v : [k, v];
+      iteratorResult ? (iteratorResult.value = value) : (iteratorResult = {
+        value: value,
+        done: false
+      });
+      return iteratorResult;
+    }
+    function iteratorDone() {
+      return {
+        value: undefined,
+        done: true
+      };
+    }
+    function hasIterator(maybeIterable) {
+      return !!getIteratorFn(maybeIterable);
+    }
+    function isIterator(maybeIterator) {
+      return maybeIterator && typeof maybeIterator.next === 'function';
+    }
+    function getIterator(iterable) {
+      var iteratorFn = getIteratorFn(iterable);
+      return iteratorFn && iteratorFn.call(iterable);
+    }
+    function getIteratorFn(iterable) {
+      var iteratorFn = iterable && ((REAL_ITERATOR_SYMBOL && iterable[REAL_ITERATOR_SYMBOL]) || iterable[FAUX_ITERATOR_SYMBOL]);
+      if (typeof iteratorFn === 'function') {
+        return iteratorFn;
+      }
+    }
+    function isArrayLike(value) {
+      return value && typeof value.length === 'number';
+    }
+    createClass(Seq, Iterable);
+    function Seq(value) {
+      return value === null || value === undefined ? emptySequence() : isIterable(value) ? value.toSeq() : seqFromValue(value);
+    }
+    Seq.of = function() {
+      return Seq(arguments);
+    };
+    Seq.prototype.toSeq = function() {
+      return this;
+    };
+    Seq.prototype.toString = function() {
+      return this.__toString('Seq {', '}');
+    };
+    Seq.prototype.cacheResult = function() {
+      if (!this._cache && this.__iterateUncached) {
+        this._cache = this.entrySeq().toArray();
+        this.size = this._cache.length;
+      }
+      return this;
+    };
+    Seq.prototype.__iterate = function(fn, reverse) {
+      return seqIterate(this, fn, reverse, true);
+    };
+    Seq.prototype.__iterator = function(type, reverse) {
+      return seqIterator(this, type, reverse, true);
+    };
+    createClass(KeyedSeq, Seq);
+    function KeyedSeq(value) {
+      return value === null || value === undefined ? emptySequence().toKeyedSeq() : isIterable(value) ? (isKeyed(value) ? value.toSeq() : value.fromEntrySeq()) : keyedSeqFromValue(value);
+    }
+    KeyedSeq.prototype.toKeyedSeq = function() {
+      return this;
+    };
+    createClass(IndexedSeq, Seq);
+    function IndexedSeq(value) {
+      return value === null || value === undefined ? emptySequence() : !isIterable(value) ? indexedSeqFromValue(value) : isKeyed(value) ? value.entrySeq() : value.toIndexedSeq();
+    }
+    IndexedSeq.of = function() {
+      return IndexedSeq(arguments);
+    };
+    IndexedSeq.prototype.toIndexedSeq = function() {
+      return this;
+    };
+    IndexedSeq.prototype.toString = function() {
+      return this.__toString('Seq [', ']');
+    };
+    IndexedSeq.prototype.__iterate = function(fn, reverse) {
+      return seqIterate(this, fn, reverse, false);
+    };
+    IndexedSeq.prototype.__iterator = function(type, reverse) {
+      return seqIterator(this, type, reverse, false);
+    };
+    createClass(SetSeq, Seq);
+    function SetSeq(value) {
+      return (value === null || value === undefined ? emptySequence() : !isIterable(value) ? indexedSeqFromValue(value) : isKeyed(value) ? value.entrySeq() : value).toSetSeq();
+    }
+    SetSeq.of = function() {
+      return SetSeq(arguments);
+    };
+    SetSeq.prototype.toSetSeq = function() {
+      return this;
+    };
+    Seq.isSeq = isSeq;
+    Seq.Keyed = KeyedSeq;
+    Seq.Set = SetSeq;
+    Seq.Indexed = IndexedSeq;
+    var IS_SEQ_SENTINEL = '@@__IMMUTABLE_SEQ__@@';
+    Seq.prototype[IS_SEQ_SENTINEL] = true;
+    createClass(ArraySeq, IndexedSeq);
+    function ArraySeq(array) {
+      this._array = array;
+      this.size = array.length;
+    }
+    ArraySeq.prototype.get = function(index, notSetValue) {
+      return this.has(index) ? this._array[wrapIndex(this, index)] : notSetValue;
+    };
+    ArraySeq.prototype.__iterate = function(fn, reverse) {
+      var array = this._array;
+      var maxIndex = array.length - 1;
+      for (var ii = 0; ii <= maxIndex; ii++) {
+        if (fn(array[reverse ? maxIndex - ii : ii], ii, this) === false) {
+          return ii + 1;
+        }
+      }
+      return ii;
+    };
+    ArraySeq.prototype.__iterator = function(type, reverse) {
+      var array = this._array;
+      var maxIndex = array.length - 1;
+      var ii = 0;
+      return new src_Iterator__Iterator(function() {
+        return ii > maxIndex ? iteratorDone() : iteratorValue(type, ii, array[reverse ? maxIndex - ii++ : ii++]);
+      });
+    };
+    createClass(ObjectSeq, KeyedSeq);
+    function ObjectSeq(object) {
+      var keys = Object.keys(object);
+      this._object = object;
+      this._keys = keys;
+      this.size = keys.length;
+    }
+    ObjectSeq.prototype.get = function(key, notSetValue) {
+      if (notSetValue !== undefined && !this.has(key)) {
+        return notSetValue;
+      }
+      return this._object[key];
+    };
+    ObjectSeq.prototype.has = function(key) {
+      return this._object.hasOwnProperty(key);
+    };
+    ObjectSeq.prototype.__iterate = function(fn, reverse) {
+      var object = this._object;
+      var keys = this._keys;
+      var maxIndex = keys.length - 1;
+      for (var ii = 0; ii <= maxIndex; ii++) {
+        var key = keys[reverse ? maxIndex - ii : ii];
+        if (fn(object[key], key, this) === false) {
+          return ii + 1;
+        }
+      }
+      return ii;
+    };
+    ObjectSeq.prototype.__iterator = function(type, reverse) {
+      var object = this._object;
+      var keys = this._keys;
+      var maxIndex = keys.length - 1;
+      var ii = 0;
+      return new src_Iterator__Iterator(function() {
+        var key = keys[reverse ? maxIndex - ii : ii];
+        return ii++ > maxIndex ? iteratorDone() : iteratorValue(type, key, object[key]);
+      });
+    };
+    ObjectSeq.prototype[IS_ORDERED_SENTINEL] = true;
+    createClass(IterableSeq, IndexedSeq);
+    function IterableSeq(iterable) {
+      this._iterable = iterable;
+      this.size = iterable.length || iterable.size;
+    }
+    IterableSeq.prototype.__iterateUncached = function(fn, reverse) {
+      if (reverse) {
+        return this.cacheResult().__iterate(fn, reverse);
+      }
+      var iterable = this._iterable;
+      var iterator = getIterator(iterable);
+      var iterations = 0;
+      if (isIterator(iterator)) {
+        var step;
+        while (!(step = iterator.next()).done) {
+          if (fn(step.value, iterations++, this) === false) {
+            break;
+          }
+        }
+      }
+      return iterations;
+    };
+    IterableSeq.prototype.__iteratorUncached = function(type, reverse) {
+      if (reverse) {
+        return this.cacheResult().__iterator(type, reverse);
+      }
+      var iterable = this._iterable;
+      var iterator = getIterator(iterable);
+      if (!isIterator(iterator)) {
+        return new src_Iterator__Iterator(iteratorDone);
+      }
+      var iterations = 0;
+      return new src_Iterator__Iterator(function() {
+        var step = iterator.next();
+        return step.done ? step : iteratorValue(type, iterations++, step.value);
+      });
+    };
+    createClass(IteratorSeq, IndexedSeq);
+    function IteratorSeq(iterator) {
+      this._iterator = iterator;
+      this._iteratorCache = [];
+    }
+    IteratorSeq.prototype.__iterateUncached = function(fn, reverse) {
+      if (reverse) {
+        return this.cacheResult().__iterate(fn, reverse);
+      }
+      var iterator = this._iterator;
+      var cache = this._iteratorCache;
+      var iterations = 0;
+      while (iterations < cache.length) {
+        if (fn(cache[iterations], iterations++, this) === false) {
+          return iterations;
+        }
+      }
+      var step;
+      while (!(step = iterator.next()).done) {
+        var val = step.value;
+        cache[iterations] = val;
+        if (fn(val, iterations++, this) === false) {
+          break;
+        }
+      }
+      return iterations;
+    };
+    IteratorSeq.prototype.__iteratorUncached = function(type, reverse) {
+      if (reverse) {
+        return this.cacheResult().__iterator(type, reverse);
+      }
+      var iterator = this._iterator;
+      var cache = this._iteratorCache;
+      var iterations = 0;
+      return new src_Iterator__Iterator(function() {
+        if (iterations >= cache.length) {
+          var step = iterator.next();
+          if (step.done) {
+            return step;
+          }
+          cache[iterations] = step.value;
+        }
+        return iteratorValue(type, iterations, cache[iterations++]);
+      });
+    };
+    function isSeq(maybeSeq) {
+      return !!(maybeSeq && maybeSeq[IS_SEQ_SENTINEL]);
+    }
+    var EMPTY_SEQ;
+    function emptySequence() {
+      return EMPTY_SEQ || (EMPTY_SEQ = new ArraySeq([]));
+    }
+    function keyedSeqFromValue(value) {
+      var seq = Array.isArray(value) ? new ArraySeq(value).fromEntrySeq() : isIterator(value) ? new IteratorSeq(value).fromEntrySeq() : hasIterator(value) ? new IterableSeq(value).fromEntrySeq() : typeof value === 'object' ? new ObjectSeq(value) : undefined;
+      if (!seq) {
+        throw new TypeError('Expected Array or iterable object of [k, v] entries, ' + 'or keyed object: ' + value);
+      }
+      return seq;
+    }
+    function indexedSeqFromValue(value) {
+      var seq = maybeIndexedSeqFromValue(value);
+      if (!seq) {
+        throw new TypeError('Expected Array or iterable object of values: ' + value);
+      }
+      return seq;
+    }
+    function seqFromValue(value) {
+      var seq = maybeIndexedSeqFromValue(value) || (typeof value === 'object' && new ObjectSeq(value));
+      if (!seq) {
+        throw new TypeError('Expected Array or iterable object of values, or keyed object: ' + value);
+      }
+      return seq;
+    }
+    function maybeIndexedSeqFromValue(value) {
+      return (isArrayLike(value) ? new ArraySeq(value) : isIterator(value) ? new IteratorSeq(value) : hasIterator(value) ? new IterableSeq(value) : undefined);
+    }
+    function seqIterate(seq, fn, reverse, useKeys) {
+      var cache = seq._cache;
+      if (cache) {
+        var maxIndex = cache.length - 1;
+        for (var ii = 0; ii <= maxIndex; ii++) {
+          var entry = cache[reverse ? maxIndex - ii : ii];
+          if (fn(entry[1], useKeys ? entry[0] : ii, seq) === false) {
+            return ii + 1;
+          }
+        }
+        return ii;
+      }
+      return seq.__iterateUncached(fn, reverse);
+    }
+    function seqIterator(seq, type, reverse, useKeys) {
+      var cache = seq._cache;
+      if (cache) {
+        var maxIndex = cache.length - 1;
+        var ii = 0;
+        return new src_Iterator__Iterator(function() {
+          var entry = cache[reverse ? maxIndex - ii : ii];
+          return ii++ > maxIndex ? iteratorDone() : iteratorValue(type, useKeys ? entry[0] : ii - 1, entry[1]);
+        });
+      }
+      return seq.__iteratorUncached(type, reverse);
+    }
+    createClass(Collection, Iterable);
+    function Collection() {
+      throw TypeError('Abstract');
+    }
+    createClass(KeyedCollection, Collection);
+    function KeyedCollection() {}
+    createClass(IndexedCollection, Collection);
+    function IndexedCollection() {}
+    createClass(SetCollection, Collection);
+    function SetCollection() {}
+    Collection.Keyed = KeyedCollection;
+    Collection.Indexed = IndexedCollection;
+    Collection.Set = SetCollection;
+    function is(valueA, valueB) {
+      if (valueA === valueB || (valueA !== valueA && valueB !== valueB)) {
+        return true;
+      }
+      if (!valueA || !valueB) {
+        return false;
+      }
+      if (typeof valueA.valueOf === 'function' && typeof valueB.valueOf === 'function') {
+        valueA = valueA.valueOf();
+        valueB = valueB.valueOf();
+        if (valueA === valueB || (valueA !== valueA && valueB !== valueB)) {
+          return true;
+        }
+        if (!valueA || !valueB) {
+          return false;
+        }
+      }
+      if (typeof valueA.equals === 'function' && typeof valueB.equals === 'function' && valueA.equals(valueB)) {
+        return true;
+      }
+      return false;
+    }
+    function fromJS(json, converter) {
+      return converter ? fromJSWith(converter, json, '', {'': json}) : fromJSDefault(json);
+    }
+    function fromJSWith(converter, json, key, parentJSON) {
+      if (Array.isArray(json)) {
+        return converter.call(parentJSON, key, IndexedSeq(json).map(function(v, k) {
+          return fromJSWith(converter, v, k, json);
+        }));
+      }
+      if (isPlainObj(json)) {
+        return converter.call(parentJSON, key, KeyedSeq(json).map(function(v, k) {
+          return fromJSWith(converter, v, k, json);
+        }));
+      }
+      return json;
+    }
+    function fromJSDefault(json) {
+      if (Array.isArray(json)) {
+        return IndexedSeq(json).map(fromJSDefault).toList();
+      }
+      if (isPlainObj(json)) {
+        return KeyedSeq(json).map(fromJSDefault).toMap();
+      }
+      return json;
+    }
+    function isPlainObj(value) {
+      return value && (value.constructor === Object || value.constructor === undefined);
+    }
+    var src_Math__imul = typeof Math.imul === 'function' && Math.imul(0xffffffff, 2) === -2 ? Math.imul : function imul(a, b) {
+      a = a | 0;
+      b = b | 0;
+      var c = a & 0xffff;
+      var d = b & 0xffff;
+      return (c * d) + ((((a >>> 16) * d + c * (b >>> 16)) << 16) >>> 0) | 0;
+    };
+    function smi(i32) {
+      return ((i32 >>> 1) & 0x40000000) | (i32 & 0xBFFFFFFF);
+    }
+    function hash(o) {
+      if (o === false || o === null || o === undefined) {
+        return 0;
+      }
+      if (typeof o.valueOf === 'function') {
+        o = o.valueOf();
+        if (o === false || o === null || o === undefined) {
+          return 0;
+        }
+      }
+      if (o === true) {
+        return 1;
+      }
+      var type = typeof o;
+      if (type === 'number') {
+        var h = o | 0;
+        if (h !== o) {
+          h ^= o * 0xFFFFFFFF;
+        }
+        while (o > 0xFFFFFFFF) {
+          o /= 0xFFFFFFFF;
+          h ^= o;
+        }
+        return smi(h);
+      }
+      if (type === 'string') {
+        return o.length > STRING_HASH_CACHE_MIN_STRLEN ? cachedHashString(o) : hashString(o);
+      }
+      if (typeof o.hashCode === 'function') {
+        return o.hashCode();
+      }
+      return hashJSObj(o);
+    }
+    function cachedHashString(string) {
+      var hash = stringHashCache[string];
+      if (hash === undefined) {
+        hash = hashString(string);
+        if (STRING_HASH_CACHE_SIZE === STRING_HASH_CACHE_MAX_SIZE) {
+          STRING_HASH_CACHE_SIZE = 0;
+          stringHashCache = {};
+        }
+        STRING_HASH_CACHE_SIZE++;
+        stringHashCache[string] = hash;
+      }
+      return hash;
+    }
+    function hashString(string) {
+      var hash = 0;
+      for (var ii = 0; ii < string.length; ii++) {
+        hash = 31 * hash + string.charCodeAt(ii) | 0;
+      }
+      return smi(hash);
+    }
+    function hashJSObj(obj) {
+      var hash;
+      if (usingWeakMap) {
+        hash = weakMap.get(obj);
+        if (hash !== undefined) {
+          return hash;
+        }
+      }
+      hash = obj[UID_HASH_KEY];
+      if (hash !== undefined) {
+        return hash;
+      }
+      if (!canDefineProperty) {
+        hash = obj.propertyIsEnumerable && obj.propertyIsEnumerable[UID_HASH_KEY];
+        if (hash !== undefined) {
+          return hash;
+        }
+        hash = getIENodeHash(obj);
+        if (hash !== undefined) {
+          return hash;
+        }
+      }
+      hash = ++objHashUID;
+      if (objHashUID & 0x40000000) {
+        objHashUID = 0;
+      }
+      if (usingWeakMap) {
+        weakMap.set(obj, hash);
+      } else if (isExtensible !== undefined && isExtensible(obj) === false) {
+        throw new Error('Non-extensible objects are not allowed as keys.');
+      } else if (canDefineProperty) {
+        Object.defineProperty(obj, UID_HASH_KEY, {
+          'enumerable': false,
+          'configurable': false,
+          'writable': false,
+          'value': hash
+        });
+      } else if (obj.propertyIsEnumerable !== undefined && obj.propertyIsEnumerable === obj.constructor.prototype.propertyIsEnumerable) {
+        obj.propertyIsEnumerable = function() {
+          return this.constructor.prototype.propertyIsEnumerable.apply(this, arguments);
+        };
+        obj.propertyIsEnumerable[UID_HASH_KEY] = hash;
+      } else if (obj.nodeType !== undefined) {
+        obj[UID_HASH_KEY] = hash;
+      } else {
+        throw new Error('Unable to set a non-enumerable property on object.');
+      }
+      return hash;
+    }
+    var isExtensible = Object.isExtensible;
+    var canDefineProperty = (function() {
+      try {
+        Object.defineProperty({}, '@', {});
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }());
+    function getIENodeHash(node) {
+      if (node && node.nodeType > 0) {
+        switch (node.nodeType) {
+          case 1:
+            return node.uniqueID;
+          case 9:
+            return node.documentElement && node.documentElement.uniqueID;
+        }
+      }
+    }
+    var usingWeakMap = typeof WeakMap === 'function';
+    var weakMap;
+    if (usingWeakMap) {
+      weakMap = new WeakMap();
+    }
+    var objHashUID = 0;
+    var UID_HASH_KEY = '__immutablehash__';
+    if (typeof Symbol === 'function') {
+      UID_HASH_KEY = Symbol(UID_HASH_KEY);
+    }
+    var STRING_HASH_CACHE_MIN_STRLEN = 16;
+    var STRING_HASH_CACHE_MAX_SIZE = 255;
+    var STRING_HASH_CACHE_SIZE = 0;
+    var stringHashCache = {};
+    function invariant(condition, error) {
+      if (!condition)
+        throw new Error(error);
+    }
+    function assertNotInfinite(size) {
+      invariant(size !== Infinity, 'Cannot perform this action with an infinite size.');
+    }
+    createClass(ToKeyedSequence, KeyedSeq);
+    function ToKeyedSequence(indexed, useKeys) {
+      this._iter = indexed;
+      this._useKeys = useKeys;
+      this.size = indexed.size;
+    }
+    ToKeyedSequence.prototype.get = function(key, notSetValue) {
+      return this._iter.get(key, notSetValue);
+    };
+    ToKeyedSequence.prototype.has = function(key) {
+      return this._iter.has(key);
+    };
+    ToKeyedSequence.prototype.valueSeq = function() {
+      return this._iter.valueSeq();
+    };
+    ToKeyedSequence.prototype.reverse = function() {
+      var this$0 = this;
+      var reversedSequence = reverseFactory(this, true);
+      if (!this._useKeys) {
+        reversedSequence.valueSeq = function() {
+          return this$0._iter.toSeq().reverse();
+        };
+      }
+      return reversedSequence;
+    };
+    ToKeyedSequence.prototype.map = function(mapper, context) {
+      var this$0 = this;
+      var mappedSequence = mapFactory(this, mapper, context);
+      if (!this._useKeys) {
+        mappedSequence.valueSeq = function() {
+          return this$0._iter.toSeq().map(mapper, context);
+        };
+      }
+      return mappedSequence;
+    };
+    ToKeyedSequence.prototype.__iterate = function(fn, reverse) {
+      var this$0 = this;
+      var ii;
+      return this._iter.__iterate(this._useKeys ? function(v, k) {
+        return fn(v, k, this$0);
+      } : ((ii = reverse ? resolveSize(this) : 0), function(v) {
+        return fn(v, reverse ? --ii : ii++, this$0);
+      }), reverse);
+    };
+    ToKeyedSequence.prototype.__iterator = function(type, reverse) {
+      if (this._useKeys) {
+        return this._iter.__iterator(type, reverse);
+      }
+      var iterator = this._iter.__iterator(ITERATE_VALUES, reverse);
+      var ii = reverse ? resolveSize(this) : 0;
+      return new src_Iterator__Iterator(function() {
+        var step = iterator.next();
+        return step.done ? step : iteratorValue(type, reverse ? --ii : ii++, step.value, step);
+      });
+    };
+    ToKeyedSequence.prototype[IS_ORDERED_SENTINEL] = true;
+    createClass(ToIndexedSequence, IndexedSeq);
+    function ToIndexedSequence(iter) {
+      this._iter = iter;
+      this.size = iter.size;
+    }
+    ToIndexedSequence.prototype.includes = function(value) {
+      return this._iter.includes(value);
+    };
+    ToIndexedSequence.prototype.__iterate = function(fn, reverse) {
+      var this$0 = this;
+      var iterations = 0;
+      return this._iter.__iterate(function(v) {
+        return fn(v, iterations++, this$0);
+      }, reverse);
+    };
+    ToIndexedSequence.prototype.__iterator = function(type, reverse) {
+      var iterator = this._iter.__iterator(ITERATE_VALUES, reverse);
+      var iterations = 0;
+      return new src_Iterator__Iterator(function() {
+        var step = iterator.next();
+        return step.done ? step : iteratorValue(type, iterations++, step.value, step);
+      });
+    };
+    createClass(ToSetSequence, SetSeq);
+    function ToSetSequence(iter) {
+      this._iter = iter;
+      this.size = iter.size;
+    }
+    ToSetSequence.prototype.has = function(key) {
+      return this._iter.includes(key);
+    };
+    ToSetSequence.prototype.__iterate = function(fn, reverse) {
+      var this$0 = this;
+      return this._iter.__iterate(function(v) {
+        return fn(v, v, this$0);
+      }, reverse);
+    };
+    ToSetSequence.prototype.__iterator = function(type, reverse) {
+      var iterator = this._iter.__iterator(ITERATE_VALUES, reverse);
+      return new src_Iterator__Iterator(function() {
+        var step = iterator.next();
+        return step.done ? step : iteratorValue(type, step.value, step.value, step);
+      });
+    };
+    createClass(FromEntriesSequence, KeyedSeq);
+    function FromEntriesSequence(entries) {
+      this._iter = entries;
+      this.size = entries.size;
+    }
+    FromEntriesSequence.prototype.entrySeq = function() {
+      return this._iter.toSeq();
+    };
+    FromEntriesSequence.prototype.__iterate = function(fn, reverse) {
+      var this$0 = this;
+      return this._iter.__iterate(function(entry) {
+        if (entry) {
+          validateEntry(entry);
+          var indexedIterable = isIterable(entry);
+          return fn(indexedIterable ? entry.get(1) : entry[1], indexedIterable ? entry.get(0) : entry[0], this$0);
+        }
+      }, reverse);
+    };
+    FromEntriesSequence.prototype.__iterator = function(type, reverse) {
+      var iterator = this._iter.__iterator(ITERATE_VALUES, reverse);
+      return new src_Iterator__Iterator(function() {
+        while (true) {
+          var step = iterator.next();
+          if (step.done) {
+            return step;
+          }
+          var entry = step.value;
+          if (entry) {
+            validateEntry(entry);
+            var indexedIterable = isIterable(entry);
+            return iteratorValue(type, indexedIterable ? entry.get(0) : entry[0], indexedIterable ? entry.get(1) : entry[1], step);
+          }
+        }
+      });
+    };
+    ToIndexedSequence.prototype.cacheResult = ToKeyedSequence.prototype.cacheResult = ToSetSequence.prototype.cacheResult = FromEntriesSequence.prototype.cacheResult = cacheResultThrough;
+    function flipFactory(iterable) {
+      var flipSequence = makeSequence(iterable);
+      flipSequence._iter = iterable;
+      flipSequence.size = iterable.size;
+      flipSequence.flip = function() {
+        return iterable;
+      };
+      flipSequence.reverse = function() {
+        var reversedSequence = iterable.reverse.apply(this);
+        reversedSequence.flip = function() {
+          return iterable.reverse();
+        };
+        return reversedSequence;
+      };
+      flipSequence.has = function(key) {
+        return iterable.includes(key);
+      };
+      flipSequence.includes = function(key) {
+        return iterable.has(key);
+      };
+      flipSequence.cacheResult = cacheResultThrough;
+      flipSequence.__iterateUncached = function(fn, reverse) {
+        var this$0 = this;
+        return iterable.__iterate(function(v, k) {
+          return fn(k, v, this$0) !== false;
+        }, reverse);
+      };
+      flipSequence.__iteratorUncached = function(type, reverse) {
+        if (type === ITERATE_ENTRIES) {
+          var iterator = iterable.__iterator(type, reverse);
+          return new src_Iterator__Iterator(function() {
+            var step = iterator.next();
+            if (!step.done) {
+              var k = step.value[0];
+              step.value[0] = step.value[1];
+              step.value[1] = k;
+            }
+            return step;
+          });
+        }
+        return iterable.__iterator(type === ITERATE_VALUES ? ITERATE_KEYS : ITERATE_VALUES, reverse);
+      };
+      return flipSequence;
+    }
+    function mapFactory(iterable, mapper, context) {
+      var mappedSequence = makeSequence(iterable);
+      mappedSequence.size = iterable.size;
+      mappedSequence.has = function(key) {
+        return iterable.has(key);
+      };
+      mappedSequence.get = function(key, notSetValue) {
+        var v = iterable.get(key, NOT_SET);
+        return v === NOT_SET ? notSetValue : mapper.call(context, v, key, iterable);
+      };
+      mappedSequence.__iterateUncached = function(fn, reverse) {
+        var this$0 = this;
+        return iterable.__iterate(function(v, k, c) {
+          return fn(mapper.call(context, v, k, c), k, this$0) !== false;
+        }, reverse);
+      };
+      mappedSequence.__iteratorUncached = function(type, reverse) {
+        var iterator = iterable.__iterator(ITERATE_ENTRIES, reverse);
+        return new src_Iterator__Iterator(function() {
+          var step = iterator.next();
+          if (step.done) {
+            return step;
+          }
+          var entry = step.value;
+          var key = entry[0];
+          return iteratorValue(type, key, mapper.call(context, entry[1], key, iterable), step);
+        });
+      };
+      return mappedSequence;
+    }
+    function reverseFactory(iterable, useKeys) {
+      var reversedSequence = makeSequence(iterable);
+      reversedSequence._iter = iterable;
+      reversedSequence.size = iterable.size;
+      reversedSequence.reverse = function() {
+        return iterable;
+      };
+      if (iterable.flip) {
+        reversedSequence.flip = function() {
+          var flipSequence = flipFactory(iterable);
+          flipSequence.reverse = function() {
+            return iterable.flip();
+          };
+          return flipSequence;
+        };
+      }
+      reversedSequence.get = function(key, notSetValue) {
+        return iterable.get(useKeys ? key : -1 - key, notSetValue);
+      };
+      reversedSequence.has = function(key) {
+        return iterable.has(useKeys ? key : -1 - key);
+      };
+      reversedSequence.includes = function(value) {
+        return iterable.includes(value);
+      };
+      reversedSequence.cacheResult = cacheResultThrough;
+      reversedSequence.__iterate = function(fn, reverse) {
+        var this$0 = this;
+        return iterable.__iterate(function(v, k) {
+          return fn(v, k, this$0);
+        }, !reverse);
+      };
+      reversedSequence.__iterator = function(type, reverse) {
+        return iterable.__iterator(type, !reverse);
+      };
+      return reversedSequence;
+    }
+    function filterFactory(iterable, predicate, context, useKeys) {
+      var filterSequence = makeSequence(iterable);
+      if (useKeys) {
+        filterSequence.has = function(key) {
+          var v = iterable.get(key, NOT_SET);
+          return v !== NOT_SET && !!predicate.call(context, v, key, iterable);
+        };
+        filterSequence.get = function(key, notSetValue) {
+          var v = iterable.get(key, NOT_SET);
+          return v !== NOT_SET && predicate.call(context, v, key, iterable) ? v : notSetValue;
+        };
+      }
+      filterSequence.__iterateUncached = function(fn, reverse) {
+        var this$0 = this;
+        var iterations = 0;
+        iterable.__iterate(function(v, k, c) {
+          if (predicate.call(context, v, k, c)) {
+            iterations++;
+            return fn(v, useKeys ? k : iterations - 1, this$0);
+          }
+        }, reverse);
+        return iterations;
+      };
+      filterSequence.__iteratorUncached = function(type, reverse) {
+        var iterator = iterable.__iterator(ITERATE_ENTRIES, reverse);
+        var iterations = 0;
+        return new src_Iterator__Iterator(function() {
+          while (true) {
+            var step = iterator.next();
+            if (step.done) {
+              return step;
+            }
+            var entry = step.value;
+            var key = entry[0];
+            var value = entry[1];
+            if (predicate.call(context, value, key, iterable)) {
+              return iteratorValue(type, useKeys ? key : iterations++, value, step);
+            }
+          }
+        });
+      };
+      return filterSequence;
+    }
+    function countByFactory(iterable, grouper, context) {
+      var groups = src_Map__Map().asMutable();
+      iterable.__iterate(function(v, k) {
+        groups.update(grouper.call(context, v, k, iterable), 0, function(a) {
+          return a + 1;
+        });
+      });
+      return groups.asImmutable();
+    }
+    function groupByFactory(iterable, grouper, context) {
+      var isKeyedIter = isKeyed(iterable);
+      var groups = (isOrdered(iterable) ? OrderedMap() : src_Map__Map()).asMutable();
+      iterable.__iterate(function(v, k) {
+        groups.update(grouper.call(context, v, k, iterable), function(a) {
+          return (a = a || [], a.push(isKeyedIter ? [k, v] : v), a);
+        });
+      });
+      var coerce = iterableClass(iterable);
+      return groups.map(function(arr) {
+        return reify(iterable, coerce(arr));
+      });
+    }
+    function sliceFactory(iterable, begin, end, useKeys) {
+      var originalSize = iterable.size;
+      if (wholeSlice(begin, end, originalSize)) {
+        return iterable;
+      }
+      var resolvedBegin = resolveBegin(begin, originalSize);
+      var resolvedEnd = resolveEnd(end, originalSize);
+      if (resolvedBegin !== resolvedBegin || resolvedEnd !== resolvedEnd) {
+        return sliceFactory(iterable.toSeq().cacheResult(), begin, end, useKeys);
+      }
+      var sliceSize = resolvedEnd - resolvedBegin;
+      if (sliceSize < 0) {
+        sliceSize = 0;
+      }
+      var sliceSeq = makeSequence(iterable);
+      sliceSeq.size = sliceSize === 0 ? sliceSize : iterable.size && sliceSize || undefined;
+      if (!useKeys && isSeq(iterable) && sliceSize >= 0) {
+        sliceSeq.get = function(index, notSetValue) {
+          index = wrapIndex(this, index);
+          return index >= 0 && index < sliceSize ? iterable.get(index + resolvedBegin, notSetValue) : notSetValue;
+        };
+      }
+      sliceSeq.__iterateUncached = function(fn, reverse) {
+        var this$0 = this;
+        if (sliceSize === 0) {
+          return 0;
+        }
+        if (reverse) {
+          return this.cacheResult().__iterate(fn, reverse);
+        }
+        var skipped = 0;
+        var isSkipping = true;
+        var iterations = 0;
+        iterable.__iterate(function(v, k) {
+          if (!(isSkipping && (isSkipping = skipped++ < resolvedBegin))) {
+            iterations++;
+            return fn(v, useKeys ? k : iterations - 1, this$0) !== false && iterations !== sliceSize;
+          }
+        });
+        return iterations;
+      };
+      sliceSeq.__iteratorUncached = function(type, reverse) {
+        if (sliceSize && reverse) {
+          return this.cacheResult().__iterator(type, reverse);
+        }
+        var iterator = sliceSize && iterable.__iterator(type, reverse);
+        var skipped = 0;
+        var iterations = 0;
+        return new src_Iterator__Iterator(function() {
+          while (skipped++ < resolvedBegin) {
+            iterator.next();
+          }
+          if (++iterations > sliceSize) {
+            return iteratorDone();
+          }
+          var step = iterator.next();
+          if (useKeys || type === ITERATE_VALUES) {
+            return step;
+          } else if (type === ITERATE_KEYS) {
+            return iteratorValue(type, iterations - 1, undefined, step);
+          } else {
+            return iteratorValue(type, iterations - 1, step.value[1], step);
+          }
+        });
+      };
+      return sliceSeq;
+    }
+    function takeWhileFactory(iterable, predicate, context) {
+      var takeSequence = makeSequence(iterable);
+      takeSequence.__iterateUncached = function(fn, reverse) {
+        var this$0 = this;
+        if (reverse) {
+          return this.cacheResult().__iterate(fn, reverse);
+        }
+        var iterations = 0;
+        iterable.__iterate(function(v, k, c) {
+          return predicate.call(context, v, k, c) && ++iterations && fn(v, k, this$0);
+        });
+        return iterations;
+      };
+      takeSequence.__iteratorUncached = function(type, reverse) {
+        var this$0 = this;
+        if (reverse) {
+          return this.cacheResult().__iterator(type, reverse);
+        }
+        var iterator = iterable.__iterator(ITERATE_ENTRIES, reverse);
+        var iterating = true;
+        return new src_Iterator__Iterator(function() {
+          if (!iterating) {
+            return iteratorDone();
+          }
+          var step = iterator.next();
+          if (step.done) {
+            return step;
+          }
+          var entry = step.value;
+          var k = entry[0];
+          var v = entry[1];
+          if (!predicate.call(context, v, k, this$0)) {
+            iterating = false;
+            return iteratorDone();
+          }
+          return type === ITERATE_ENTRIES ? step : iteratorValue(type, k, v, step);
+        });
+      };
+      return takeSequence;
+    }
+    function skipWhileFactory(iterable, predicate, context, useKeys) {
+      var skipSequence = makeSequence(iterable);
+      skipSequence.__iterateUncached = function(fn, reverse) {
+        var this$0 = this;
+        if (reverse) {
+          return this.cacheResult().__iterate(fn, reverse);
+        }
+        var isSkipping = true;
+        var iterations = 0;
+        iterable.__iterate(function(v, k, c) {
+          if (!(isSkipping && (isSkipping = predicate.call(context, v, k, c)))) {
+            iterations++;
+            return fn(v, useKeys ? k : iterations - 1, this$0);
+          }
+        });
+        return iterations;
+      };
+      skipSequence.__iteratorUncached = function(type, reverse) {
+        var this$0 = this;
+        if (reverse) {
+          return this.cacheResult().__iterator(type, reverse);
+        }
+        var iterator = iterable.__iterator(ITERATE_ENTRIES, reverse);
+        var skipping = true;
+        var iterations = 0;
+        return new src_Iterator__Iterator(function() {
+          var step,
+              k,
+              v;
+          do {
+            step = iterator.next();
+            if (step.done) {
+              if (useKeys || type === ITERATE_VALUES) {
+                return step;
+              } else if (type === ITERATE_KEYS) {
+                return iteratorValue(type, iterations++, undefined, step);
+              } else {
+                return iteratorValue(type, iterations++, step.value[1], step);
+              }
+            }
+            var entry = step.value;
+            k = entry[0];
+            v = entry[1];
+            skipping && (skipping = predicate.call(context, v, k, this$0));
+          } while (skipping);
+          return type === ITERATE_ENTRIES ? step : iteratorValue(type, k, v, step);
+        });
+      };
+      return skipSequence;
+    }
+    function concatFactory(iterable, values) {
+      var isKeyedIterable = isKeyed(iterable);
+      var iters = [iterable].concat(values).map(function(v) {
+        if (!isIterable(v)) {
+          v = isKeyedIterable ? keyedSeqFromValue(v) : indexedSeqFromValue(Array.isArray(v) ? v : [v]);
+        } else if (isKeyedIterable) {
+          v = KeyedIterable(v);
+        }
+        return v;
+      }).filter(function(v) {
+        return v.size !== 0;
+      });
+      if (iters.length === 0) {
+        return iterable;
+      }
+      if (iters.length === 1) {
+        var singleton = iters[0];
+        if (singleton === iterable || isKeyedIterable && isKeyed(singleton) || isIndexed(iterable) && isIndexed(singleton)) {
+          return singleton;
+        }
+      }
+      var concatSeq = new ArraySeq(iters);
+      if (isKeyedIterable) {
+        concatSeq = concatSeq.toKeyedSeq();
+      } else if (!isIndexed(iterable)) {
+        concatSeq = concatSeq.toSetSeq();
+      }
+      concatSeq = concatSeq.flatten(true);
+      concatSeq.size = iters.reduce(function(sum, seq) {
+        if (sum !== undefined) {
+          var size = seq.size;
+          if (size !== undefined) {
+            return sum + size;
+          }
+        }
+      }, 0);
+      return concatSeq;
+    }
+    function flattenFactory(iterable, depth, useKeys) {
+      var flatSequence = makeSequence(iterable);
+      flatSequence.__iterateUncached = function(fn, reverse) {
+        var iterations = 0;
+        var stopped = false;
+        function flatDeep(iter, currentDepth) {
+          var this$0 = this;
+          iter.__iterate(function(v, k) {
+            if ((!depth || currentDepth < depth) && isIterable(v)) {
+              flatDeep(v, currentDepth + 1);
+            } else if (fn(v, useKeys ? k : iterations++, this$0) === false) {
+              stopped = true;
+            }
+            return !stopped;
+          }, reverse);
+        }
+        flatDeep(iterable, 0);
+        return iterations;
+      };
+      flatSequence.__iteratorUncached = function(type, reverse) {
+        var iterator = iterable.__iterator(type, reverse);
+        var stack = [];
+        var iterations = 0;
+        return new src_Iterator__Iterator(function() {
+          while (iterator) {
+            var step = iterator.next();
+            if (step.done !== false) {
+              iterator = stack.pop();
+              continue;
+            }
+            var v = step.value;
+            if (type === ITERATE_ENTRIES) {
+              v = v[1];
+            }
+            if ((!depth || stack.length < depth) && isIterable(v)) {
+              stack.push(iterator);
+              iterator = v.__iterator(type, reverse);
+            } else {
+              return useKeys ? step : iteratorValue(type, iterations++, v, step);
+            }
+          }
+          return iteratorDone();
+        });
+      };
+      return flatSequence;
+    }
+    function flatMapFactory(iterable, mapper, context) {
+      var coerce = iterableClass(iterable);
+      return iterable.toSeq().map(function(v, k) {
+        return coerce(mapper.call(context, v, k, iterable));
+      }).flatten(true);
+    }
+    function interposeFactory(iterable, separator) {
+      var interposedSequence = makeSequence(iterable);
+      interposedSequence.size = iterable.size && iterable.size * 2 - 1;
+      interposedSequence.__iterateUncached = function(fn, reverse) {
+        var this$0 = this;
+        var iterations = 0;
+        iterable.__iterate(function(v, k) {
+          return (!iterations || fn(separator, iterations++, this$0) !== false) && fn(v, iterations++, this$0) !== false;
+        }, reverse);
+        return iterations;
+      };
+      interposedSequence.__iteratorUncached = function(type, reverse) {
+        var iterator = iterable.__iterator(ITERATE_VALUES, reverse);
+        var iterations = 0;
+        var step;
+        return new src_Iterator__Iterator(function() {
+          if (!step || iterations % 2) {
+            step = iterator.next();
+            if (step.done) {
+              return step;
+            }
+          }
+          return iterations % 2 ? iteratorValue(type, iterations++, separator) : iteratorValue(type, iterations++, step.value, step);
+        });
+      };
+      return interposedSequence;
+    }
+    function sortFactory(iterable, comparator, mapper) {
+      if (!comparator) {
+        comparator = defaultComparator;
+      }
+      var isKeyedIterable = isKeyed(iterable);
+      var index = 0;
+      var entries = iterable.toSeq().map(function(v, k) {
+        return [k, v, index++, mapper ? mapper(v, k, iterable) : v];
+      }).toArray();
+      entries.sort(function(a, b) {
+        return comparator(a[3], b[3]) || a[2] - b[2];
+      }).forEach(isKeyedIterable ? function(v, i) {
+        entries[i].length = 2;
+      } : function(v, i) {
+        entries[i] = v[1];
+      });
+      return isKeyedIterable ? KeyedSeq(entries) : isIndexed(iterable) ? IndexedSeq(entries) : SetSeq(entries);
+    }
+    function maxFactory(iterable, comparator, mapper) {
+      if (!comparator) {
+        comparator = defaultComparator;
+      }
+      if (mapper) {
+        var entry = iterable.toSeq().map(function(v, k) {
+          return [v, mapper(v, k, iterable)];
+        }).reduce(function(a, b) {
+          return maxCompare(comparator, a[1], b[1]) ? b : a;
+        });
+        return entry && entry[0];
+      } else {
+        return iterable.reduce(function(a, b) {
+          return maxCompare(comparator, a, b) ? b : a;
+        });
+      }
+    }
+    function maxCompare(comparator, a, b) {
+      var comp = comparator(b, a);
+      return (comp === 0 && b !== a && (b === undefined || b === null || b !== b)) || comp > 0;
+    }
+    function zipWithFactory(keyIter, zipper, iters) {
+      var zipSequence = makeSequence(keyIter);
+      zipSequence.size = new ArraySeq(iters).map(function(i) {
+        return i.size;
+      }).min();
+      zipSequence.__iterate = function(fn, reverse) {
+        var iterator = this.__iterator(ITERATE_VALUES, reverse);
+        var step;
+        var iterations = 0;
+        while (!(step = iterator.next()).done) {
+          if (fn(step.value, iterations++, this) === false) {
+            break;
+          }
+        }
+        return iterations;
+      };
+      zipSequence.__iteratorUncached = function(type, reverse) {
+        var iterators = iters.map(function(i) {
+          return (i = Iterable(i), getIterator(reverse ? i.reverse() : i));
+        });
+        var iterations = 0;
+        var isDone = false;
+        return new src_Iterator__Iterator(function() {
+          var steps;
+          if (!isDone) {
+            steps = iterators.map(function(i) {
+              return i.next();
+            });
+            isDone = steps.some(function(s) {
+              return s.done;
+            });
+          }
+          if (isDone) {
+            return iteratorDone();
+          }
+          return iteratorValue(type, iterations++, zipper.apply(null, steps.map(function(s) {
+            return s.value;
+          })));
+        });
+      };
+      return zipSequence;
+    }
+    function reify(iter, seq) {
+      return isSeq(iter) ? seq : iter.constructor(seq);
+    }
+    function validateEntry(entry) {
+      if (entry !== Object(entry)) {
+        throw new TypeError('Expected [K, V] tuple: ' + entry);
+      }
+    }
+    function resolveSize(iter) {
+      assertNotInfinite(iter.size);
+      return ensureSize(iter);
+    }
+    function iterableClass(iterable) {
+      return isKeyed(iterable) ? KeyedIterable : isIndexed(iterable) ? IndexedIterable : SetIterable;
+    }
+    function makeSequence(iterable) {
+      return Object.create((isKeyed(iterable) ? KeyedSeq : isIndexed(iterable) ? IndexedSeq : SetSeq).prototype);
+    }
+    function cacheResultThrough() {
+      if (this._iter.cacheResult) {
+        this._iter.cacheResult();
+        this.size = this._iter.size;
+        return this;
+      } else {
+        return Seq.prototype.cacheResult.call(this);
+      }
+    }
+    function defaultComparator(a, b) {
+      return a > b ? 1 : a < b ? -1 : 0;
+    }
+    function forceIterator(keyPath) {
+      var iter = getIterator(keyPath);
+      if (!iter) {
+        if (!isArrayLike(keyPath)) {
+          throw new TypeError('Expected iterable or array-like: ' + keyPath);
+        }
+        iter = getIterator(Iterable(keyPath));
+      }
+      return iter;
+    }
+    createClass(src_Map__Map, KeyedCollection);
+    function src_Map__Map(value) {
+      return value === null || value === undefined ? emptyMap() : isMap(value) ? value : emptyMap().withMutations(function(map) {
+        var iter = KeyedIterable(value);
+        assertNotInfinite(iter.size);
+        iter.forEach(function(v, k) {
+          return map.set(k, v);
+        });
+      });
+    }
+    src_Map__Map.prototype.toString = function() {
+      return this.__toString('Map {', '}');
+    };
+    src_Map__Map.prototype.get = function(k, notSetValue) {
+      return this._root ? this._root.get(0, undefined, k, notSetValue) : notSetValue;
+    };
+    src_Map__Map.prototype.set = function(k, v) {
+      return updateMap(this, k, v);
+    };
+    src_Map__Map.prototype.setIn = function(keyPath, v) {
+      return this.updateIn(keyPath, NOT_SET, function() {
+        return v;
+      });
+    };
+    src_Map__Map.prototype.remove = function(k) {
+      return updateMap(this, k, NOT_SET);
+    };
+    src_Map__Map.prototype.deleteIn = function(keyPath) {
+      return this.updateIn(keyPath, function() {
+        return NOT_SET;
+      });
+    };
+    src_Map__Map.prototype.update = function(k, notSetValue, updater) {
+      return arguments.length === 1 ? k(this) : this.updateIn([k], notSetValue, updater);
+    };
+    src_Map__Map.prototype.updateIn = function(keyPath, notSetValue, updater) {
+      if (!updater) {
+        updater = notSetValue;
+        notSetValue = undefined;
+      }
+      var updatedValue = updateInDeepMap(this, forceIterator(keyPath), notSetValue, updater);
+      return updatedValue === NOT_SET ? undefined : updatedValue;
+    };
+    src_Map__Map.prototype.clear = function() {
+      if (this.size === 0) {
+        return this;
+      }
+      if (this.__ownerID) {
+        this.size = 0;
+        this._root = null;
+        this.__hash = undefined;
+        this.__altered = true;
+        return this;
+      }
+      return emptyMap();
+    };
+    src_Map__Map.prototype.merge = function() {
+      return mergeIntoMapWith(this, undefined, arguments);
+    };
+    src_Map__Map.prototype.mergeWith = function(merger) {
+      var iters = SLICE$0.call(arguments, 1);
+      return mergeIntoMapWith(this, merger, iters);
+    };
+    src_Map__Map.prototype.mergeIn = function(keyPath) {
+      var iters = SLICE$0.call(arguments, 1);
+      return this.updateIn(keyPath, emptyMap(), function(m) {
+        return m.merge.apply(m, iters);
+      });
+    };
+    src_Map__Map.prototype.mergeDeep = function() {
+      return mergeIntoMapWith(this, deepMerger(undefined), arguments);
+    };
+    src_Map__Map.prototype.mergeDeepWith = function(merger) {
+      var iters = SLICE$0.call(arguments, 1);
+      return mergeIntoMapWith(this, deepMerger(merger), iters);
+    };
+    src_Map__Map.prototype.mergeDeepIn = function(keyPath) {
+      var iters = SLICE$0.call(arguments, 1);
+      return this.updateIn(keyPath, emptyMap(), function(m) {
+        return m.mergeDeep.apply(m, iters);
+      });
+    };
+    src_Map__Map.prototype.sort = function(comparator) {
+      return OrderedMap(sortFactory(this, comparator));
+    };
+    src_Map__Map.prototype.sortBy = function(mapper, comparator) {
+      return OrderedMap(sortFactory(this, comparator, mapper));
+    };
+    src_Map__Map.prototype.withMutations = function(fn) {
+      var mutable = this.asMutable();
+      fn(mutable);
+      return mutable.wasAltered() ? mutable.__ensureOwner(this.__ownerID) : this;
+    };
+    src_Map__Map.prototype.asMutable = function() {
+      return this.__ownerID ? this : this.__ensureOwner(new OwnerID());
+    };
+    src_Map__Map.prototype.asImmutable = function() {
+      return this.__ensureOwner();
+    };
+    src_Map__Map.prototype.wasAltered = function() {
+      return this.__altered;
+    };
+    src_Map__Map.prototype.__iterator = function(type, reverse) {
+      return new MapIterator(this, type, reverse);
+    };
+    src_Map__Map.prototype.__iterate = function(fn, reverse) {
+      var this$0 = this;
+      var iterations = 0;
+      this._root && this._root.iterate(function(entry) {
+        iterations++;
+        return fn(entry[1], entry[0], this$0);
+      }, reverse);
+      return iterations;
+    };
+    src_Map__Map.prototype.__ensureOwner = function(ownerID) {
+      if (ownerID === this.__ownerID) {
+        return this;
+      }
+      if (!ownerID) {
+        this.__ownerID = ownerID;
+        this.__altered = false;
+        return this;
+      }
+      return makeMap(this.size, this._root, ownerID, this.__hash);
+    };
+    function isMap(maybeMap) {
+      return !!(maybeMap && maybeMap[IS_MAP_SENTINEL]);
+    }
+    src_Map__Map.isMap = isMap;
+    var IS_MAP_SENTINEL = '@@__IMMUTABLE_MAP__@@';
+    var MapPrototype = src_Map__Map.prototype;
+    MapPrototype[IS_MAP_SENTINEL] = true;
+    MapPrototype[DELETE] = MapPrototype.remove;
+    MapPrototype.removeIn = MapPrototype.deleteIn;
+    function ArrayMapNode(ownerID, entries) {
+      this.ownerID = ownerID;
+      this.entries = entries;
+    }
+    ArrayMapNode.prototype.get = function(shift, keyHash, key, notSetValue) {
+      var entries = this.entries;
+      for (var ii = 0,
+          len = entries.length; ii < len; ii++) {
+        if (is(key, entries[ii][0])) {
+          return entries[ii][1];
+        }
+      }
+      return notSetValue;
+    };
+    ArrayMapNode.prototype.update = function(ownerID, shift, keyHash, key, value, didChangeSize, didAlter) {
+      var removed = value === NOT_SET;
+      var entries = this.entries;
+      var idx = 0;
+      for (var len = entries.length; idx < len; idx++) {
+        if (is(key, entries[idx][0])) {
+          break;
+        }
+      }
+      var exists = idx < len;
+      if (exists ? entries[idx][1] === value : removed) {
+        return this;
+      }
+      SetRef(didAlter);
+      (removed || !exists) && SetRef(didChangeSize);
+      if (removed && entries.length === 1) {
+        return ;
+      }
+      if (!exists && !removed && entries.length >= MAX_ARRAY_MAP_SIZE) {
+        return createNodes(ownerID, entries, key, value);
+      }
+      var isEditable = ownerID && ownerID === this.ownerID;
+      var newEntries = isEditable ? entries : arrCopy(entries);
+      if (exists) {
+        if (removed) {
+          idx === len - 1 ? newEntries.pop() : (newEntries[idx] = newEntries.pop());
+        } else {
+          newEntries[idx] = [key, value];
+        }
+      } else {
+        newEntries.push([key, value]);
+      }
+      if (isEditable) {
+        this.entries = newEntries;
+        return this;
+      }
+      return new ArrayMapNode(ownerID, newEntries);
+    };
+    function BitmapIndexedNode(ownerID, bitmap, nodes) {
+      this.ownerID = ownerID;
+      this.bitmap = bitmap;
+      this.nodes = nodes;
+    }
+    BitmapIndexedNode.prototype.get = function(shift, keyHash, key, notSetValue) {
+      if (keyHash === undefined) {
+        keyHash = hash(key);
+      }
+      var bit = (1 << ((shift === 0 ? keyHash : keyHash >>> shift) & MASK));
+      var bitmap = this.bitmap;
+      return (bitmap & bit) === 0 ? notSetValue : this.nodes[popCount(bitmap & (bit - 1))].get(shift + SHIFT, keyHash, key, notSetValue);
+    };
+    BitmapIndexedNode.prototype.update = function(ownerID, shift, keyHash, key, value, didChangeSize, didAlter) {
+      if (keyHash === undefined) {
+        keyHash = hash(key);
+      }
+      var keyHashFrag = (shift === 0 ? keyHash : keyHash >>> shift) & MASK;
+      var bit = 1 << keyHashFrag;
+      var bitmap = this.bitmap;
+      var exists = (bitmap & bit) !== 0;
+      if (!exists && value === NOT_SET) {
+        return this;
+      }
+      var idx = popCount(bitmap & (bit - 1));
+      var nodes = this.nodes;
+      var node = exists ? nodes[idx] : undefined;
+      var newNode = updateNode(node, ownerID, shift + SHIFT, keyHash, key, value, didChangeSize, didAlter);
+      if (newNode === node) {
+        return this;
+      }
+      if (!exists && newNode && nodes.length >= MAX_BITMAP_INDEXED_SIZE) {
+        return expandNodes(ownerID, nodes, bitmap, keyHashFrag, newNode);
+      }
+      if (exists && !newNode && nodes.length === 2 && isLeafNode(nodes[idx ^ 1])) {
+        return nodes[idx ^ 1];
+      }
+      if (exists && newNode && nodes.length === 1 && isLeafNode(newNode)) {
+        return newNode;
+      }
+      var isEditable = ownerID && ownerID === this.ownerID;
+      var newBitmap = exists ? newNode ? bitmap : bitmap ^ bit : bitmap | bit;
+      var newNodes = exists ? newNode ? setIn(nodes, idx, newNode, isEditable) : spliceOut(nodes, idx, isEditable) : spliceIn(nodes, idx, newNode, isEditable);
+      if (isEditable) {
+        this.bitmap = newBitmap;
+        this.nodes = newNodes;
+        return this;
+      }
+      return new BitmapIndexedNode(ownerID, newBitmap, newNodes);
+    };
+    function HashArrayMapNode(ownerID, count, nodes) {
+      this.ownerID = ownerID;
+      this.count = count;
+      this.nodes = nodes;
+    }
+    HashArrayMapNode.prototype.get = function(shift, keyHash, key, notSetValue) {
+      if (keyHash === undefined) {
+        keyHash = hash(key);
+      }
+      var idx = (shift === 0 ? keyHash : keyHash >>> shift) & MASK;
+      var node = this.nodes[idx];
+      return node ? node.get(shift + SHIFT, keyHash, key, notSetValue) : notSetValue;
+    };
+    HashArrayMapNode.prototype.update = function(ownerID, shift, keyHash, key, value, didChangeSize, didAlter) {
+      if (keyHash === undefined) {
+        keyHash = hash(key);
+      }
+      var idx = (shift === 0 ? keyHash : keyHash >>> shift) & MASK;
+      var removed = value === NOT_SET;
+      var nodes = this.nodes;
+      var node = nodes[idx];
+      if (removed && !node) {
+        return this;
+      }
+      var newNode = updateNode(node, ownerID, shift + SHIFT, keyHash, key, value, didChangeSize, didAlter);
+      if (newNode === node) {
+        return this;
+      }
+      var newCount = this.count;
+      if (!node) {
+        newCount++;
+      } else if (!newNode) {
+        newCount--;
+        if (newCount < MIN_HASH_ARRAY_MAP_SIZE) {
+          return packNodes(ownerID, nodes, newCount, idx);
+        }
+      }
+      var isEditable = ownerID && ownerID === this.ownerID;
+      var newNodes = setIn(nodes, idx, newNode, isEditable);
+      if (isEditable) {
+        this.count = newCount;
+        this.nodes = newNodes;
+        return this;
+      }
+      return new HashArrayMapNode(ownerID, newCount, newNodes);
+    };
+    function HashCollisionNode(ownerID, keyHash, entries) {
+      this.ownerID = ownerID;
+      this.keyHash = keyHash;
+      this.entries = entries;
+    }
+    HashCollisionNode.prototype.get = function(shift, keyHash, key, notSetValue) {
+      var entries = this.entries;
+      for (var ii = 0,
+          len = entries.length; ii < len; ii++) {
+        if (is(key, entries[ii][0])) {
+          return entries[ii][1];
+        }
+      }
+      return notSetValue;
+    };
+    HashCollisionNode.prototype.update = function(ownerID, shift, keyHash, key, value, didChangeSize, didAlter) {
+      if (keyHash === undefined) {
+        keyHash = hash(key);
+      }
+      var removed = value === NOT_SET;
+      if (keyHash !== this.keyHash) {
+        if (removed) {
+          return this;
+        }
+        SetRef(didAlter);
+        SetRef(didChangeSize);
+        return mergeIntoNode(this, ownerID, shift, keyHash, [key, value]);
+      }
+      var entries = this.entries;
+      var idx = 0;
+      for (var len = entries.length; idx < len; idx++) {
+        if (is(key, entries[idx][0])) {
+          break;
+        }
+      }
+      var exists = idx < len;
+      if (exists ? entries[idx][1] === value : removed) {
+        return this;
+      }
+      SetRef(didAlter);
+      (removed || !exists) && SetRef(didChangeSize);
+      if (removed && len === 2) {
+        return new ValueNode(ownerID, this.keyHash, entries[idx ^ 1]);
+      }
+      var isEditable = ownerID && ownerID === this.ownerID;
+      var newEntries = isEditable ? entries : arrCopy(entries);
+      if (exists) {
+        if (removed) {
+          idx === len - 1 ? newEntries.pop() : (newEntries[idx] = newEntries.pop());
+        } else {
+          newEntries[idx] = [key, value];
+        }
+      } else {
+        newEntries.push([key, value]);
+      }
+      if (isEditable) {
+        this.entries = newEntries;
+        return this;
+      }
+      return new HashCollisionNode(ownerID, this.keyHash, newEntries);
+    };
+    function ValueNode(ownerID, keyHash, entry) {
+      this.ownerID = ownerID;
+      this.keyHash = keyHash;
+      this.entry = entry;
+    }
+    ValueNode.prototype.get = function(shift, keyHash, key, notSetValue) {
+      return is(key, this.entry[0]) ? this.entry[1] : notSetValue;
+    };
+    ValueNode.prototype.update = function(ownerID, shift, keyHash, key, value, didChangeSize, didAlter) {
+      var removed = value === NOT_SET;
+      var keyMatch = is(key, this.entry[0]);
+      if (keyMatch ? value === this.entry[1] : removed) {
+        return this;
+      }
+      SetRef(didAlter);
+      if (removed) {
+        SetRef(didChangeSize);
+        return ;
+      }
+      if (keyMatch) {
+        if (ownerID && ownerID === this.ownerID) {
+          this.entry[1] = value;
+          return this;
+        }
+        return new ValueNode(ownerID, this.keyHash, [key, value]);
+      }
+      SetRef(didChangeSize);
+      return mergeIntoNode(this, ownerID, shift, hash(key), [key, value]);
+    };
+    ArrayMapNode.prototype.iterate = HashCollisionNode.prototype.iterate = function(fn, reverse) {
+      var entries = this.entries;
+      for (var ii = 0,
+          maxIndex = entries.length - 1; ii <= maxIndex; ii++) {
+        if (fn(entries[reverse ? maxIndex - ii : ii]) === false) {
+          return false;
+        }
+      }
+    };
+    BitmapIndexedNode.prototype.iterate = HashArrayMapNode.prototype.iterate = function(fn, reverse) {
+      var nodes = this.nodes;
+      for (var ii = 0,
+          maxIndex = nodes.length - 1; ii <= maxIndex; ii++) {
+        var node = nodes[reverse ? maxIndex - ii : ii];
+        if (node && node.iterate(fn, reverse) === false) {
+          return false;
+        }
+      }
+    };
+    ValueNode.prototype.iterate = function(fn, reverse) {
+      return fn(this.entry);
+    };
+    createClass(MapIterator, src_Iterator__Iterator);
+    function MapIterator(map, type, reverse) {
+      this._type = type;
+      this._reverse = reverse;
+      this._stack = map._root && mapIteratorFrame(map._root);
+    }
+    MapIterator.prototype.next = function() {
+      var type = this._type;
+      var stack = this._stack;
+      while (stack) {
+        var node = stack.node;
+        var index = stack.index++;
+        var maxIndex;
+        if (node.entry) {
+          if (index === 0) {
+            return mapIteratorValue(type, node.entry);
+          }
+        } else if (node.entries) {
+          maxIndex = node.entries.length - 1;
+          if (index <= maxIndex) {
+            return mapIteratorValue(type, node.entries[this._reverse ? maxIndex - index : index]);
+          }
+        } else {
+          maxIndex = node.nodes.length - 1;
+          if (index <= maxIndex) {
+            var subNode = node.nodes[this._reverse ? maxIndex - index : index];
+            if (subNode) {
+              if (subNode.entry) {
+                return mapIteratorValue(type, subNode.entry);
+              }
+              stack = this._stack = mapIteratorFrame(subNode, stack);
+            }
+            continue;
+          }
+        }
+        stack = this._stack = this._stack.__prev;
+      }
+      return iteratorDone();
+    };
+    function mapIteratorValue(type, entry) {
+      return iteratorValue(type, entry[0], entry[1]);
+    }
+    function mapIteratorFrame(node, prev) {
+      return {
+        node: node,
+        index: 0,
+        __prev: prev
+      };
+    }
+    function makeMap(size, root, ownerID, hash) {
+      var map = Object.create(MapPrototype);
+      map.size = size;
+      map._root = root;
+      map.__ownerID = ownerID;
+      map.__hash = hash;
+      map.__altered = false;
+      return map;
+    }
+    var EMPTY_MAP;
+    function emptyMap() {
+      return EMPTY_MAP || (EMPTY_MAP = makeMap(0));
+    }
+    function updateMap(map, k, v) {
+      var newRoot;
+      var newSize;
+      if (!map._root) {
+        if (v === NOT_SET) {
+          return map;
+        }
+        newSize = 1;
+        newRoot = new ArrayMapNode(map.__ownerID, [[k, v]]);
+      } else {
+        var didChangeSize = MakeRef(CHANGE_LENGTH);
+        var didAlter = MakeRef(DID_ALTER);
+        newRoot = updateNode(map._root, map.__ownerID, 0, undefined, k, v, didChangeSize, didAlter);
+        if (!didAlter.value) {
+          return map;
+        }
+        newSize = map.size + (didChangeSize.value ? v === NOT_SET ? -1 : 1 : 0);
+      }
+      if (map.__ownerID) {
+        map.size = newSize;
+        map._root = newRoot;
+        map.__hash = undefined;
+        map.__altered = true;
+        return map;
+      }
+      return newRoot ? makeMap(newSize, newRoot) : emptyMap();
+    }
+    function updateNode(node, ownerID, shift, keyHash, key, value, didChangeSize, didAlter) {
+      if (!node) {
+        if (value === NOT_SET) {
+          return node;
+        }
+        SetRef(didAlter);
+        SetRef(didChangeSize);
+        return new ValueNode(ownerID, keyHash, [key, value]);
+      }
+      return node.update(ownerID, shift, keyHash, key, value, didChangeSize, didAlter);
+    }
+    function isLeafNode(node) {
+      return node.constructor === ValueNode || node.constructor === HashCollisionNode;
+    }
+    function mergeIntoNode(node, ownerID, shift, keyHash, entry) {
+      if (node.keyHash === keyHash) {
+        return new HashCollisionNode(ownerID, keyHash, [node.entry, entry]);
+      }
+      var idx1 = (shift === 0 ? node.keyHash : node.keyHash >>> shift) & MASK;
+      var idx2 = (shift === 0 ? keyHash : keyHash >>> shift) & MASK;
+      var newNode;
+      var nodes = idx1 === idx2 ? [mergeIntoNode(node, ownerID, shift + SHIFT, keyHash, entry)] : ((newNode = new ValueNode(ownerID, keyHash, entry)), idx1 < idx2 ? [node, newNode] : [newNode, node]);
+      return new BitmapIndexedNode(ownerID, (1 << idx1) | (1 << idx2), nodes);
+    }
+    function createNodes(ownerID, entries, key, value) {
+      if (!ownerID) {
+        ownerID = new OwnerID();
+      }
+      var node = new ValueNode(ownerID, hash(key), [key, value]);
+      for (var ii = 0; ii < entries.length; ii++) {
+        var entry = entries[ii];
+        node = node.update(ownerID, 0, undefined, entry[0], entry[1]);
+      }
+      return node;
+    }
+    function packNodes(ownerID, nodes, count, excluding) {
+      var bitmap = 0;
+      var packedII = 0;
+      var packedNodes = new Array(count);
+      for (var ii = 0,
+          bit = 1,
+          len = nodes.length; ii < len; ii++, bit <<= 1) {
+        var node = nodes[ii];
+        if (node !== undefined && ii !== excluding) {
+          bitmap |= bit;
+          packedNodes[packedII++] = node;
+        }
+      }
+      return new BitmapIndexedNode(ownerID, bitmap, packedNodes);
+    }
+    function expandNodes(ownerID, nodes, bitmap, including, node) {
+      var count = 0;
+      var expandedNodes = new Array(SIZE);
+      for (var ii = 0; bitmap !== 0; ii++, bitmap >>>= 1) {
+        expandedNodes[ii] = bitmap & 1 ? nodes[count++] : undefined;
+      }
+      expandedNodes[including] = node;
+      return new HashArrayMapNode(ownerID, count + 1, expandedNodes);
+    }
+    function mergeIntoMapWith(map, merger, iterables) {
+      var iters = [];
+      for (var ii = 0; ii < iterables.length; ii++) {
+        var value = iterables[ii];
+        var iter = KeyedIterable(value);
+        if (!isIterable(value)) {
+          iter = iter.map(function(v) {
+            return fromJS(v);
+          });
+        }
+        iters.push(iter);
+      }
+      return mergeIntoCollectionWith(map, merger, iters);
+    }
+    function deepMerger(merger) {
+      return function(existing, value, key) {
+        return existing && existing.mergeDeepWith && isIterable(value) ? existing.mergeDeepWith(merger, value) : merger ? merger(existing, value, key) : value;
+      };
+    }
+    function mergeIntoCollectionWith(collection, merger, iters) {
+      iters = iters.filter(function(x) {
+        return x.size !== 0;
+      });
+      if (iters.length === 0) {
+        return collection;
+      }
+      if (collection.size === 0 && !collection.__ownerID && iters.length === 1) {
+        return collection.constructor(iters[0]);
+      }
+      return collection.withMutations(function(collection) {
+        var mergeIntoMap = merger ? function(value, key) {
+          collection.update(key, NOT_SET, function(existing) {
+            return existing === NOT_SET ? value : merger(existing, value, key);
+          });
+        } : function(value, key) {
+          collection.set(key, value);
+        };
+        for (var ii = 0; ii < iters.length; ii++) {
+          iters[ii].forEach(mergeIntoMap);
+        }
+      });
+    }
+    function updateInDeepMap(existing, keyPathIter, notSetValue, updater) {
+      var isNotSet = existing === NOT_SET;
+      var step = keyPathIter.next();
+      if (step.done) {
+        var existingValue = isNotSet ? notSetValue : existing;
+        var newValue = updater(existingValue);
+        return newValue === existingValue ? existing : newValue;
+      }
+      invariant(isNotSet || (existing && existing.set), 'invalid keyPath');
+      var key = step.value;
+      var nextExisting = isNotSet ? NOT_SET : existing.get(key, NOT_SET);
+      var nextUpdated = updateInDeepMap(nextExisting, keyPathIter, notSetValue, updater);
+      return nextUpdated === nextExisting ? existing : nextUpdated === NOT_SET ? existing.remove(key) : (isNotSet ? emptyMap() : existing).set(key, nextUpdated);
+    }
+    function popCount(x) {
+      x = x - ((x >> 1) & 0x55555555);
+      x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
+      x = (x + (x >> 4)) & 0x0f0f0f0f;
+      x = x + (x >> 8);
+      x = x + (x >> 16);
+      return x & 0x7f;
+    }
+    function setIn(array, idx, val, canEdit) {
+      var newArray = canEdit ? array : arrCopy(array);
+      newArray[idx] = val;
+      return newArray;
+    }
+    function spliceIn(array, idx, val, canEdit) {
+      var newLen = array.length + 1;
+      if (canEdit && idx + 1 === newLen) {
+        array[idx] = val;
+        return array;
+      }
+      var newArray = new Array(newLen);
+      var after = 0;
+      for (var ii = 0; ii < newLen; ii++) {
+        if (ii === idx) {
+          newArray[ii] = val;
+          after = -1;
+        } else {
+          newArray[ii] = array[ii + after];
+        }
+      }
+      return newArray;
+    }
+    function spliceOut(array, idx, canEdit) {
+      var newLen = array.length - 1;
+      if (canEdit && idx === newLen) {
+        array.pop();
+        return array;
+      }
+      var newArray = new Array(newLen);
+      var after = 0;
+      for (var ii = 0; ii < newLen; ii++) {
+        if (ii === idx) {
+          after = 1;
+        }
+        newArray[ii] = array[ii + after];
+      }
+      return newArray;
+    }
+    var MAX_ARRAY_MAP_SIZE = SIZE / 4;
+    var MAX_BITMAP_INDEXED_SIZE = SIZE / 2;
+    var MIN_HASH_ARRAY_MAP_SIZE = SIZE / 4;
+    createClass(List, IndexedCollection);
+    function List(value) {
+      var empty = emptyList();
+      if (value === null || value === undefined) {
+        return empty;
+      }
+      if (isList(value)) {
+        return value;
+      }
+      var iter = IndexedIterable(value);
+      var size = iter.size;
+      if (size === 0) {
+        return empty;
+      }
+      assertNotInfinite(size);
+      if (size > 0 && size < SIZE) {
+        return makeList(0, size, SHIFT, null, new VNode(iter.toArray()));
+      }
+      return empty.withMutations(function(list) {
+        list.setSize(size);
+        iter.forEach(function(v, i) {
+          return list.set(i, v);
+        });
+      });
+    }
+    List.of = function() {
+      return this(arguments);
+    };
+    List.prototype.toString = function() {
+      return this.__toString('List [', ']');
+    };
+    List.prototype.get = function(index, notSetValue) {
+      index = wrapIndex(this, index);
+      if (index < 0 || index >= this.size) {
+        return notSetValue;
+      }
+      index += this._origin;
+      var node = listNodeFor(this, index);
+      return node && node.array[index & MASK];
+    };
+    List.prototype.set = function(index, value) {
+      return updateList(this, index, value);
+    };
+    List.prototype.remove = function(index) {
+      return !this.has(index) ? this : index === 0 ? this.shift() : index === this.size - 1 ? this.pop() : this.splice(index, 1);
+    };
+    List.prototype.clear = function() {
+      if (this.size === 0) {
+        return this;
+      }
+      if (this.__ownerID) {
+        this.size = this._origin = this._capacity = 0;
+        this._level = SHIFT;
+        this._root = this._tail = null;
+        this.__hash = undefined;
+        this.__altered = true;
+        return this;
+      }
+      return emptyList();
+    };
+    List.prototype.push = function() {
+      var values = arguments;
+      var oldSize = this.size;
+      return this.withMutations(function(list) {
+        setListBounds(list, 0, oldSize + values.length);
+        for (var ii = 0; ii < values.length; ii++) {
+          list.set(oldSize + ii, values[ii]);
+        }
+      });
+    };
+    List.prototype.pop = function() {
+      return setListBounds(this, 0, -1);
+    };
+    List.prototype.unshift = function() {
+      var values = arguments;
+      return this.withMutations(function(list) {
+        setListBounds(list, -values.length);
+        for (var ii = 0; ii < values.length; ii++) {
+          list.set(ii, values[ii]);
+        }
+      });
+    };
+    List.prototype.shift = function() {
+      return setListBounds(this, 1);
+    };
+    List.prototype.merge = function() {
+      return mergeIntoListWith(this, undefined, arguments);
+    };
+    List.prototype.mergeWith = function(merger) {
+      var iters = SLICE$0.call(arguments, 1);
+      return mergeIntoListWith(this, merger, iters);
+    };
+    List.prototype.mergeDeep = function() {
+      return mergeIntoListWith(this, deepMerger(undefined), arguments);
+    };
+    List.prototype.mergeDeepWith = function(merger) {
+      var iters = SLICE$0.call(arguments, 1);
+      return mergeIntoListWith(this, deepMerger(merger), iters);
+    };
+    List.prototype.setSize = function(size) {
+      return setListBounds(this, 0, size);
+    };
+    List.prototype.slice = function(begin, end) {
+      var size = this.size;
+      if (wholeSlice(begin, end, size)) {
+        return this;
+      }
+      return setListBounds(this, resolveBegin(begin, size), resolveEnd(end, size));
+    };
+    List.prototype.__iterator = function(type, reverse) {
+      var index = 0;
+      var values = iterateList(this, reverse);
+      return new src_Iterator__Iterator(function() {
+        var value = values();
+        return value === DONE ? iteratorDone() : iteratorValue(type, index++, value);
+      });
+    };
+    List.prototype.__iterate = function(fn, reverse) {
+      var index = 0;
+      var values = iterateList(this, reverse);
+      var value;
+      while ((value = values()) !== DONE) {
+        if (fn(value, index++, this) === false) {
+          break;
+        }
+      }
+      return index;
+    };
+    List.prototype.__ensureOwner = function(ownerID) {
+      if (ownerID === this.__ownerID) {
+        return this;
+      }
+      if (!ownerID) {
+        this.__ownerID = ownerID;
+        return this;
+      }
+      return makeList(this._origin, this._capacity, this._level, this._root, this._tail, ownerID, this.__hash);
+    };
+    function isList(maybeList) {
+      return !!(maybeList && maybeList[IS_LIST_SENTINEL]);
+    }
+    List.isList = isList;
+    var IS_LIST_SENTINEL = '@@__IMMUTABLE_LIST__@@';
+    var ListPrototype = List.prototype;
+    ListPrototype[IS_LIST_SENTINEL] = true;
+    ListPrototype[DELETE] = ListPrototype.remove;
+    ListPrototype.setIn = MapPrototype.setIn;
+    ListPrototype.deleteIn = ListPrototype.removeIn = MapPrototype.removeIn;
+    ListPrototype.update = MapPrototype.update;
+    ListPrototype.updateIn = MapPrototype.updateIn;
+    ListPrototype.mergeIn = MapPrototype.mergeIn;
+    ListPrototype.mergeDeepIn = MapPrototype.mergeDeepIn;
+    ListPrototype.withMutations = MapPrototype.withMutations;
+    ListPrototype.asMutable = MapPrototype.asMutable;
+    ListPrototype.asImmutable = MapPrototype.asImmutable;
+    ListPrototype.wasAltered = MapPrototype.wasAltered;
+    function VNode(array, ownerID) {
+      this.array = array;
+      this.ownerID = ownerID;
+    }
+    VNode.prototype.removeBefore = function(ownerID, level, index) {
+      if (index === level ? 1 << level : 0 || this.array.length === 0) {
+        return this;
+      }
+      var originIndex = (index >>> level) & MASK;
+      if (originIndex >= this.array.length) {
+        return new VNode([], ownerID);
+      }
+      var removingFirst = originIndex === 0;
+      var newChild;
+      if (level > 0) {
+        var oldChild = this.array[originIndex];
+        newChild = oldChild && oldChild.removeBefore(ownerID, level - SHIFT, index);
+        if (newChild === oldChild && removingFirst) {
+          return this;
+        }
+      }
+      if (removingFirst && !newChild) {
+        return this;
+      }
+      var editable = editableVNode(this, ownerID);
+      if (!removingFirst) {
+        for (var ii = 0; ii < originIndex; ii++) {
+          editable.array[ii] = undefined;
+        }
+      }
+      if (newChild) {
+        editable.array[originIndex] = newChild;
+      }
+      return editable;
+    };
+    VNode.prototype.removeAfter = function(ownerID, level, index) {
+      if (index === level ? 1 << level : 0 || this.array.length === 0) {
+        return this;
+      }
+      var sizeIndex = ((index - 1) >>> level) & MASK;
+      if (sizeIndex >= this.array.length) {
+        return this;
+      }
+      var removingLast = sizeIndex === this.array.length - 1;
+      var newChild;
+      if (level > 0) {
+        var oldChild = this.array[sizeIndex];
+        newChild = oldChild && oldChild.removeAfter(ownerID, level - SHIFT, index);
+        if (newChild === oldChild && removingLast) {
+          return this;
+        }
+      }
+      if (removingLast && !newChild) {
+        return this;
+      }
+      var editable = editableVNode(this, ownerID);
+      if (!removingLast) {
+        editable.array.pop();
+      }
+      if (newChild) {
+        editable.array[sizeIndex] = newChild;
+      }
+      return editable;
+    };
+    var DONE = {};
+    function iterateList(list, reverse) {
+      var left = list._origin;
+      var right = list._capacity;
+      var tailPos = getTailOffset(right);
+      var tail = list._tail;
+      return iterateNodeOrLeaf(list._root, list._level, 0);
+      function iterateNodeOrLeaf(node, level, offset) {
+        return level === 0 ? iterateLeaf(node, offset) : iterateNode(node, level, offset);
+      }
+      function iterateLeaf(node, offset) {
+        var array = offset === tailPos ? tail && tail.array : node && node.array;
+        var from = offset > left ? 0 : left - offset;
+        var to = right - offset;
+        if (to > SIZE) {
+          to = SIZE;
+        }
+        return function() {
+          if (from === to) {
+            return DONE;
+          }
+          var idx = reverse ? --to : from++;
+          return array && array[idx];
+        };
+      }
+      function iterateNode(node, level, offset) {
+        var values;
+        var array = node && node.array;
+        var from = offset > left ? 0 : (left - offset) >> level;
+        var to = ((right - offset) >> level) + 1;
+        if (to > SIZE) {
+          to = SIZE;
+        }
+        return function() {
+          do {
+            if (values) {
+              var value = values();
+              if (value !== DONE) {
+                return value;
+              }
+              values = null;
+            }
+            if (from === to) {
+              return DONE;
+            }
+            var idx = reverse ? --to : from++;
+            values = iterateNodeOrLeaf(array && array[idx], level - SHIFT, offset + (idx << level));
+          } while (true);
+        };
+      }
+    }
+    function makeList(origin, capacity, level, root, tail, ownerID, hash) {
+      var list = Object.create(ListPrototype);
+      list.size = capacity - origin;
+      list._origin = origin;
+      list._capacity = capacity;
+      list._level = level;
+      list._root = root;
+      list._tail = tail;
+      list.__ownerID = ownerID;
+      list.__hash = hash;
+      list.__altered = false;
+      return list;
+    }
+    var EMPTY_LIST;
+    function emptyList() {
+      return EMPTY_LIST || (EMPTY_LIST = makeList(0, 0, SHIFT));
+    }
+    function updateList(list, index, value) {
+      index = wrapIndex(list, index);
+      if (index >= list.size || index < 0) {
+        return list.withMutations(function(list) {
+          index < 0 ? setListBounds(list, index).set(0, value) : setListBounds(list, 0, index + 1).set(index, value);
+        });
+      }
+      index += list._origin;
+      var newTail = list._tail;
+      var newRoot = list._root;
+      var didAlter = MakeRef(DID_ALTER);
+      if (index >= getTailOffset(list._capacity)) {
+        newTail = updateVNode(newTail, list.__ownerID, 0, index, value, didAlter);
+      } else {
+        newRoot = updateVNode(newRoot, list.__ownerID, list._level, index, value, didAlter);
+      }
+      if (!didAlter.value) {
+        return list;
+      }
+      if (list.__ownerID) {
+        list._root = newRoot;
+        list._tail = newTail;
+        list.__hash = undefined;
+        list.__altered = true;
+        return list;
+      }
+      return makeList(list._origin, list._capacity, list._level, newRoot, newTail);
+    }
+    function updateVNode(node, ownerID, level, index, value, didAlter) {
+      var idx = (index >>> level) & MASK;
+      var nodeHas = node && idx < node.array.length;
+      if (!nodeHas && value === undefined) {
+        return node;
+      }
+      var newNode;
+      if (level > 0) {
+        var lowerNode = node && node.array[idx];
+        var newLowerNode = updateVNode(lowerNode, ownerID, level - SHIFT, index, value, didAlter);
+        if (newLowerNode === lowerNode) {
+          return node;
+        }
+        newNode = editableVNode(node, ownerID);
+        newNode.array[idx] = newLowerNode;
+        return newNode;
+      }
+      if (nodeHas && node.array[idx] === value) {
+        return node;
+      }
+      SetRef(didAlter);
+      newNode = editableVNode(node, ownerID);
+      if (value === undefined && idx === newNode.array.length - 1) {
+        newNode.array.pop();
+      } else {
+        newNode.array[idx] = value;
+      }
+      return newNode;
+    }
+    function editableVNode(node, ownerID) {
+      if (ownerID && node && ownerID === node.ownerID) {
+        return node;
+      }
+      return new VNode(node ? node.array.slice() : [], ownerID);
+    }
+    function listNodeFor(list, rawIndex) {
+      if (rawIndex >= getTailOffset(list._capacity)) {
+        return list._tail;
+      }
+      if (rawIndex < 1 << (list._level + SHIFT)) {
+        var node = list._root;
+        var level = list._level;
+        while (node && level > 0) {
+          node = node.array[(rawIndex >>> level) & MASK];
+          level -= SHIFT;
+        }
+        return node;
+      }
+    }
+    function setListBounds(list, begin, end) {
+      var owner = list.__ownerID || new OwnerID();
+      var oldOrigin = list._origin;
+      var oldCapacity = list._capacity;
+      var newOrigin = oldOrigin + begin;
+      var newCapacity = end === undefined ? oldCapacity : end < 0 ? oldCapacity + end : oldOrigin + end;
+      if (newOrigin === oldOrigin && newCapacity === oldCapacity) {
+        return list;
+      }
+      if (newOrigin >= newCapacity) {
+        return list.clear();
+      }
+      var newLevel = list._level;
+      var newRoot = list._root;
+      var offsetShift = 0;
+      while (newOrigin + offsetShift < 0) {
+        newRoot = new VNode(newRoot && newRoot.array.length ? [undefined, newRoot] : [], owner);
+        newLevel += SHIFT;
+        offsetShift += 1 << newLevel;
+      }
+      if (offsetShift) {
+        newOrigin += offsetShift;
+        oldOrigin += offsetShift;
+        newCapacity += offsetShift;
+        oldCapacity += offsetShift;
+      }
+      var oldTailOffset = getTailOffset(oldCapacity);
+      var newTailOffset = getTailOffset(newCapacity);
+      while (newTailOffset >= 1 << (newLevel + SHIFT)) {
+        newRoot = new VNode(newRoot && newRoot.array.length ? [newRoot] : [], owner);
+        newLevel += SHIFT;
+      }
+      var oldTail = list._tail;
+      var newTail = newTailOffset < oldTailOffset ? listNodeFor(list, newCapacity - 1) : newTailOffset > oldTailOffset ? new VNode([], owner) : oldTail;
+      if (oldTail && newTailOffset > oldTailOffset && newOrigin < oldCapacity && oldTail.array.length) {
+        newRoot = editableVNode(newRoot, owner);
+        var node = newRoot;
+        for (var level = newLevel; level > SHIFT; level -= SHIFT) {
+          var idx = (oldTailOffset >>> level) & MASK;
+          node = node.array[idx] = editableVNode(node.array[idx], owner);
+        }
+        node.array[(oldTailOffset >>> SHIFT) & MASK] = oldTail;
+      }
+      if (newCapacity < oldCapacity) {
+        newTail = newTail && newTail.removeAfter(owner, 0, newCapacity);
+      }
+      if (newOrigin >= newTailOffset) {
+        newOrigin -= newTailOffset;
+        newCapacity -= newTailOffset;
+        newLevel = SHIFT;
+        newRoot = null;
+        newTail = newTail && newTail.removeBefore(owner, 0, newOrigin);
+      } else if (newOrigin > oldOrigin || newTailOffset < oldTailOffset) {
+        offsetShift = 0;
+        while (newRoot) {
+          var beginIndex = (newOrigin >>> newLevel) & MASK;
+          if (beginIndex !== (newTailOffset >>> newLevel) & MASK) {
+            break;
+          }
+          if (beginIndex) {
+            offsetShift += (1 << newLevel) * beginIndex;
+          }
+          newLevel -= SHIFT;
+          newRoot = newRoot.array[beginIndex];
+        }
+        if (newRoot && newOrigin > oldOrigin) {
+          newRoot = newRoot.removeBefore(owner, newLevel, newOrigin - offsetShift);
+        }
+        if (newRoot && newTailOffset < oldTailOffset) {
+          newRoot = newRoot.removeAfter(owner, newLevel, newTailOffset - offsetShift);
+        }
+        if (offsetShift) {
+          newOrigin -= offsetShift;
+          newCapacity -= offsetShift;
+        }
+      }
+      if (list.__ownerID) {
+        list.size = newCapacity - newOrigin;
+        list._origin = newOrigin;
+        list._capacity = newCapacity;
+        list._level = newLevel;
+        list._root = newRoot;
+        list._tail = newTail;
+        list.__hash = undefined;
+        list.__altered = true;
+        return list;
+      }
+      return makeList(newOrigin, newCapacity, newLevel, newRoot, newTail);
+    }
+    function mergeIntoListWith(list, merger, iterables) {
+      var iters = [];
+      var maxSize = 0;
+      for (var ii = 0; ii < iterables.length; ii++) {
+        var value = iterables[ii];
+        var iter = IndexedIterable(value);
+        if (iter.size > maxSize) {
+          maxSize = iter.size;
+        }
+        if (!isIterable(value)) {
+          iter = iter.map(function(v) {
+            return fromJS(v);
+          });
+        }
+        iters.push(iter);
+      }
+      if (maxSize > list.size) {
+        list = list.setSize(maxSize);
+      }
+      return mergeIntoCollectionWith(list, merger, iters);
+    }
+    function getTailOffset(size) {
+      return size < SIZE ? 0 : (((size - 1) >>> SHIFT) << SHIFT);
+    }
+    createClass(OrderedMap, src_Map__Map);
+    function OrderedMap(value) {
+      return value === null || value === undefined ? emptyOrderedMap() : isOrderedMap(value) ? value : emptyOrderedMap().withMutations(function(map) {
+        var iter = KeyedIterable(value);
+        assertNotInfinite(iter.size);
+        iter.forEach(function(v, k) {
+          return map.set(k, v);
+        });
+      });
+    }
+    OrderedMap.of = function() {
+      return this(arguments);
+    };
+    OrderedMap.prototype.toString = function() {
+      return this.__toString('OrderedMap {', '}');
+    };
+    OrderedMap.prototype.get = function(k, notSetValue) {
+      var index = this._map.get(k);
+      return index !== undefined ? this._list.get(index)[1] : notSetValue;
+    };
+    OrderedMap.prototype.clear = function() {
+      if (this.size === 0) {
+        return this;
+      }
+      if (this.__ownerID) {
+        this.size = 0;
+        this._map.clear();
+        this._list.clear();
+        return this;
+      }
+      return emptyOrderedMap();
+    };
+    OrderedMap.prototype.set = function(k, v) {
+      return updateOrderedMap(this, k, v);
+    };
+    OrderedMap.prototype.remove = function(k) {
+      return updateOrderedMap(this, k, NOT_SET);
+    };
+    OrderedMap.prototype.wasAltered = function() {
+      return this._map.wasAltered() || this._list.wasAltered();
+    };
+    OrderedMap.prototype.__iterate = function(fn, reverse) {
+      var this$0 = this;
+      return this._list.__iterate(function(entry) {
+        return entry && fn(entry[1], entry[0], this$0);
+      }, reverse);
+    };
+    OrderedMap.prototype.__iterator = function(type, reverse) {
+      return this._list.fromEntrySeq().__iterator(type, reverse);
+    };
+    OrderedMap.prototype.__ensureOwner = function(ownerID) {
+      if (ownerID === this.__ownerID) {
+        return this;
+      }
+      var newMap = this._map.__ensureOwner(ownerID);
+      var newList = this._list.__ensureOwner(ownerID);
+      if (!ownerID) {
+        this.__ownerID = ownerID;
+        this._map = newMap;
+        this._list = newList;
+        return this;
+      }
+      return makeOrderedMap(newMap, newList, ownerID, this.__hash);
+    };
+    function isOrderedMap(maybeOrderedMap) {
+      return isMap(maybeOrderedMap) && isOrdered(maybeOrderedMap);
+    }
+    OrderedMap.isOrderedMap = isOrderedMap;
+    OrderedMap.prototype[IS_ORDERED_SENTINEL] = true;
+    OrderedMap.prototype[DELETE] = OrderedMap.prototype.remove;
+    function makeOrderedMap(map, list, ownerID, hash) {
+      var omap = Object.create(OrderedMap.prototype);
+      omap.size = map ? map.size : 0;
+      omap._map = map;
+      omap._list = list;
+      omap.__ownerID = ownerID;
+      omap.__hash = hash;
+      return omap;
+    }
+    var EMPTY_ORDERED_MAP;
+    function emptyOrderedMap() {
+      return EMPTY_ORDERED_MAP || (EMPTY_ORDERED_MAP = makeOrderedMap(emptyMap(), emptyList()));
+    }
+    function updateOrderedMap(omap, k, v) {
+      var map = omap._map;
+      var list = omap._list;
+      var i = map.get(k);
+      var has = i !== undefined;
+      var newMap;
+      var newList;
+      if (v === NOT_SET) {
+        if (!has) {
+          return omap;
+        }
+        if (list.size >= SIZE && list.size >= map.size * 2) {
+          newList = list.filter(function(entry, idx) {
+            return entry !== undefined && i !== idx;
+          });
+          newMap = newList.toKeyedSeq().map(function(entry) {
+            return entry[0];
+          }).flip().toMap();
+          if (omap.__ownerID) {
+            newMap.__ownerID = newList.__ownerID = omap.__ownerID;
+          }
+        } else {
+          newMap = map.remove(k);
+          newList = i === list.size - 1 ? list.pop() : list.set(i, undefined);
+        }
+      } else {
+        if (has) {
+          if (v === list.get(i)[1]) {
+            return omap;
+          }
+          newMap = map;
+          newList = list.set(i, [k, v]);
+        } else {
+          newMap = map.set(k, list.size);
+          newList = list.set(list.size, [k, v]);
+        }
+      }
+      if (omap.__ownerID) {
+        omap.size = newMap.size;
+        omap._map = newMap;
+        omap._list = newList;
+        omap.__hash = undefined;
+        return omap;
+      }
+      return makeOrderedMap(newMap, newList);
+    }
+    createClass(Stack, IndexedCollection);
+    function Stack(value) {
+      return value === null || value === undefined ? emptyStack() : isStack(value) ? value : emptyStack().unshiftAll(value);
+    }
+    Stack.of = function() {
+      return this(arguments);
+    };
+    Stack.prototype.toString = function() {
+      return this.__toString('Stack [', ']');
+    };
+    Stack.prototype.get = function(index, notSetValue) {
+      var head = this._head;
+      index = wrapIndex(this, index);
+      while (head && index--) {
+        head = head.next;
+      }
+      return head ? head.value : notSetValue;
+    };
+    Stack.prototype.peek = function() {
+      return this._head && this._head.value;
+    };
+    Stack.prototype.push = function() {
+      if (arguments.length === 0) {
+        return this;
+      }
+      var newSize = this.size + arguments.length;
+      var head = this._head;
+      for (var ii = arguments.length - 1; ii >= 0; ii--) {
+        head = {
+          value: arguments[ii],
+          next: head
+        };
+      }
+      if (this.__ownerID) {
+        this.size = newSize;
+        this._head = head;
+        this.__hash = undefined;
+        this.__altered = true;
+        return this;
+      }
+      return makeStack(newSize, head);
+    };
+    Stack.prototype.pushAll = function(iter) {
+      iter = IndexedIterable(iter);
+      if (iter.size === 0) {
+        return this;
+      }
+      assertNotInfinite(iter.size);
+      var newSize = this.size;
+      var head = this._head;
+      iter.reverse().forEach(function(value) {
+        newSize++;
+        head = {
+          value: value,
+          next: head
+        };
+      });
+      if (this.__ownerID) {
+        this.size = newSize;
+        this._head = head;
+        this.__hash = undefined;
+        this.__altered = true;
+        return this;
+      }
+      return makeStack(newSize, head);
+    };
+    Stack.prototype.pop = function() {
+      return this.slice(1);
+    };
+    Stack.prototype.unshift = function() {
+      return this.push.apply(this, arguments);
+    };
+    Stack.prototype.unshiftAll = function(iter) {
+      return this.pushAll(iter);
+    };
+    Stack.prototype.shift = function() {
+      return this.pop.apply(this, arguments);
+    };
+    Stack.prototype.clear = function() {
+      if (this.size === 0) {
+        return this;
+      }
+      if (this.__ownerID) {
+        this.size = 0;
+        this._head = undefined;
+        this.__hash = undefined;
+        this.__altered = true;
+        return this;
+      }
+      return emptyStack();
+    };
+    Stack.prototype.slice = function(begin, end) {
+      if (wholeSlice(begin, end, this.size)) {
+        return this;
+      }
+      var resolvedBegin = resolveBegin(begin, this.size);
+      var resolvedEnd = resolveEnd(end, this.size);
+      if (resolvedEnd !== this.size) {
+        return IndexedCollection.prototype.slice.call(this, begin, end);
+      }
+      var newSize = this.size - resolvedBegin;
+      var head = this._head;
+      while (resolvedBegin--) {
+        head = head.next;
+      }
+      if (this.__ownerID) {
+        this.size = newSize;
+        this._head = head;
+        this.__hash = undefined;
+        this.__altered = true;
+        return this;
+      }
+      return makeStack(newSize, head);
+    };
+    Stack.prototype.__ensureOwner = function(ownerID) {
+      if (ownerID === this.__ownerID) {
+        return this;
+      }
+      if (!ownerID) {
+        this.__ownerID = ownerID;
+        this.__altered = false;
+        return this;
+      }
+      return makeStack(this.size, this._head, ownerID, this.__hash);
+    };
+    Stack.prototype.__iterate = function(fn, reverse) {
+      if (reverse) {
+        return this.reverse().__iterate(fn);
+      }
+      var iterations = 0;
+      var node = this._head;
+      while (node) {
+        if (fn(node.value, iterations++, this) === false) {
+          break;
+        }
+        node = node.next;
+      }
+      return iterations;
+    };
+    Stack.prototype.__iterator = function(type, reverse) {
+      if (reverse) {
+        return this.reverse().__iterator(type);
+      }
+      var iterations = 0;
+      var node = this._head;
+      return new src_Iterator__Iterator(function() {
+        if (node) {
+          var value = node.value;
+          node = node.next;
+          return iteratorValue(type, iterations++, value);
+        }
+        return iteratorDone();
+      });
+    };
+    function isStack(maybeStack) {
+      return !!(maybeStack && maybeStack[IS_STACK_SENTINEL]);
+    }
+    Stack.isStack = isStack;
+    var IS_STACK_SENTINEL = '@@__IMMUTABLE_STACK__@@';
+    var StackPrototype = Stack.prototype;
+    StackPrototype[IS_STACK_SENTINEL] = true;
+    StackPrototype.withMutations = MapPrototype.withMutations;
+    StackPrototype.asMutable = MapPrototype.asMutable;
+    StackPrototype.asImmutable = MapPrototype.asImmutable;
+    StackPrototype.wasAltered = MapPrototype.wasAltered;
+    function makeStack(size, head, ownerID, hash) {
+      var map = Object.create(StackPrototype);
+      map.size = size;
+      map._head = head;
+      map.__ownerID = ownerID;
+      map.__hash = hash;
+      map.__altered = false;
+      return map;
+    }
+    var EMPTY_STACK;
+    function emptyStack() {
+      return EMPTY_STACK || (EMPTY_STACK = makeStack(0));
+    }
+    createClass(src_Set__Set, SetCollection);
+    function src_Set__Set(value) {
+      return value === null || value === undefined ? emptySet() : isSet(value) ? value : emptySet().withMutations(function(set) {
+        var iter = SetIterable(value);
+        assertNotInfinite(iter.size);
+        iter.forEach(function(v) {
+          return set.add(v);
+        });
+      });
+    }
+    src_Set__Set.of = function() {
+      return this(arguments);
+    };
+    src_Set__Set.fromKeys = function(value) {
+      return this(KeyedIterable(value).keySeq());
+    };
+    src_Set__Set.prototype.toString = function() {
+      return this.__toString('Set {', '}');
+    };
+    src_Set__Set.prototype.has = function(value) {
+      return this._map.has(value);
+    };
+    src_Set__Set.prototype.add = function(value) {
+      return updateSet(this, this._map.set(value, true));
+    };
+    src_Set__Set.prototype.remove = function(value) {
+      return updateSet(this, this._map.remove(value));
+    };
+    src_Set__Set.prototype.clear = function() {
+      return updateSet(this, this._map.clear());
+    };
+    src_Set__Set.prototype.union = function() {
+      var iters = SLICE$0.call(arguments, 0);
+      iters = iters.filter(function(x) {
+        return x.size !== 0;
+      });
+      if (iters.length === 0) {
+        return this;
+      }
+      if (this.size === 0 && !this.__ownerID && iters.length === 1) {
+        return this.constructor(iters[0]);
+      }
+      return this.withMutations(function(set) {
+        for (var ii = 0; ii < iters.length; ii++) {
+          SetIterable(iters[ii]).forEach(function(value) {
+            return set.add(value);
+          });
+        }
+      });
+    };
+    src_Set__Set.prototype.intersect = function() {
+      var iters = SLICE$0.call(arguments, 0);
+      if (iters.length === 0) {
+        return this;
+      }
+      iters = iters.map(function(iter) {
+        return SetIterable(iter);
+      });
+      var originalSet = this;
+      return this.withMutations(function(set) {
+        originalSet.forEach(function(value) {
+          if (!iters.every(function(iter) {
+            return iter.includes(value);
+          })) {
+            set.remove(value);
+          }
+        });
+      });
+    };
+    src_Set__Set.prototype.subtract = function() {
+      var iters = SLICE$0.call(arguments, 0);
+      if (iters.length === 0) {
+        return this;
+      }
+      iters = iters.map(function(iter) {
+        return SetIterable(iter);
+      });
+      var originalSet = this;
+      return this.withMutations(function(set) {
+        originalSet.forEach(function(value) {
+          if (iters.some(function(iter) {
+            return iter.includes(value);
+          })) {
+            set.remove(value);
+          }
+        });
+      });
+    };
+    src_Set__Set.prototype.merge = function() {
+      return this.union.apply(this, arguments);
+    };
+    src_Set__Set.prototype.mergeWith = function(merger) {
+      var iters = SLICE$0.call(arguments, 1);
+      return this.union.apply(this, iters);
+    };
+    src_Set__Set.prototype.sort = function(comparator) {
+      return OrderedSet(sortFactory(this, comparator));
+    };
+    src_Set__Set.prototype.sortBy = function(mapper, comparator) {
+      return OrderedSet(sortFactory(this, comparator, mapper));
+    };
+    src_Set__Set.prototype.wasAltered = function() {
+      return this._map.wasAltered();
+    };
+    src_Set__Set.prototype.__iterate = function(fn, reverse) {
+      var this$0 = this;
+      return this._map.__iterate(function(_, k) {
+        return fn(k, k, this$0);
+      }, reverse);
+    };
+    src_Set__Set.prototype.__iterator = function(type, reverse) {
+      return this._map.map(function(_, k) {
+        return k;
+      }).__iterator(type, reverse);
+    };
+    src_Set__Set.prototype.__ensureOwner = function(ownerID) {
+      if (ownerID === this.__ownerID) {
+        return this;
+      }
+      var newMap = this._map.__ensureOwner(ownerID);
+      if (!ownerID) {
+        this.__ownerID = ownerID;
+        this._map = newMap;
+        return this;
+      }
+      return this.__make(newMap, ownerID);
+    };
+    function isSet(maybeSet) {
+      return !!(maybeSet && maybeSet[IS_SET_SENTINEL]);
+    }
+    src_Set__Set.isSet = isSet;
+    var IS_SET_SENTINEL = '@@__IMMUTABLE_SET__@@';
+    var SetPrototype = src_Set__Set.prototype;
+    SetPrototype[IS_SET_SENTINEL] = true;
+    SetPrototype[DELETE] = SetPrototype.remove;
+    SetPrototype.mergeDeep = SetPrototype.merge;
+    SetPrototype.mergeDeepWith = SetPrototype.mergeWith;
+    SetPrototype.withMutations = MapPrototype.withMutations;
+    SetPrototype.asMutable = MapPrototype.asMutable;
+    SetPrototype.asImmutable = MapPrototype.asImmutable;
+    SetPrototype.__empty = emptySet;
+    SetPrototype.__make = makeSet;
+    function updateSet(set, newMap) {
+      if (set.__ownerID) {
+        set.size = newMap.size;
+        set._map = newMap;
+        return set;
+      }
+      return newMap === set._map ? set : newMap.size === 0 ? set.__empty() : set.__make(newMap);
+    }
+    function makeSet(map, ownerID) {
+      var set = Object.create(SetPrototype);
+      set.size = map ? map.size : 0;
+      set._map = map;
+      set.__ownerID = ownerID;
+      return set;
+    }
+    var EMPTY_SET;
+    function emptySet() {
+      return EMPTY_SET || (EMPTY_SET = makeSet(emptyMap()));
+    }
+    createClass(OrderedSet, src_Set__Set);
+    function OrderedSet(value) {
+      return value === null || value === undefined ? emptyOrderedSet() : isOrderedSet(value) ? value : emptyOrderedSet().withMutations(function(set) {
+        var iter = SetIterable(value);
+        assertNotInfinite(iter.size);
+        iter.forEach(function(v) {
+          return set.add(v);
+        });
+      });
+    }
+    OrderedSet.of = function() {
+      return this(arguments);
+    };
+    OrderedSet.fromKeys = function(value) {
+      return this(KeyedIterable(value).keySeq());
+    };
+    OrderedSet.prototype.toString = function() {
+      return this.__toString('OrderedSet {', '}');
+    };
+    function isOrderedSet(maybeOrderedSet) {
+      return isSet(maybeOrderedSet) && isOrdered(maybeOrderedSet);
+    }
+    OrderedSet.isOrderedSet = isOrderedSet;
+    var OrderedSetPrototype = OrderedSet.prototype;
+    OrderedSetPrototype[IS_ORDERED_SENTINEL] = true;
+    OrderedSetPrototype.__empty = emptyOrderedSet;
+    OrderedSetPrototype.__make = makeOrderedSet;
+    function makeOrderedSet(map, ownerID) {
+      var set = Object.create(OrderedSetPrototype);
+      set.size = map ? map.size : 0;
+      set._map = map;
+      set.__ownerID = ownerID;
+      return set;
+    }
+    var EMPTY_ORDERED_SET;
+    function emptyOrderedSet() {
+      return EMPTY_ORDERED_SET || (EMPTY_ORDERED_SET = makeOrderedSet(emptyOrderedMap()));
+    }
+    createClass(Record, KeyedCollection);
+    function Record(defaultValues, name) {
+      var hasInitialized;
+      var RecordType = function Record(values) {
+        if (values instanceof RecordType) {
+          return values;
+        }
+        if (!(this instanceof RecordType)) {
+          return new RecordType(values);
+        }
+        if (!hasInitialized) {
+          hasInitialized = true;
+          var keys = Object.keys(defaultValues);
+          setProps(RecordTypePrototype, keys);
+          RecordTypePrototype.size = keys.length;
+          RecordTypePrototype._name = name;
+          RecordTypePrototype._keys = keys;
+          RecordTypePrototype._defaultValues = defaultValues;
+        }
+        this._map = src_Map__Map(values);
+      };
+      var RecordTypePrototype = RecordType.prototype = Object.create(RecordPrototype);
+      RecordTypePrototype.constructor = RecordType;
+      return RecordType;
+    }
+    Record.prototype.toString = function() {
+      return this.__toString(recordName(this) + ' {', '}');
+    };
+    Record.prototype.has = function(k) {
+      return this._defaultValues.hasOwnProperty(k);
+    };
+    Record.prototype.get = function(k, notSetValue) {
+      if (!this.has(k)) {
+        return notSetValue;
+      }
+      var defaultVal = this._defaultValues[k];
+      return this._map ? this._map.get(k, defaultVal) : defaultVal;
+    };
+    Record.prototype.clear = function() {
+      if (this.__ownerID) {
+        this._map && this._map.clear();
+        return this;
+      }
+      var RecordType = this.constructor;
+      return RecordType._empty || (RecordType._empty = makeRecord(this, emptyMap()));
+    };
+    Record.prototype.set = function(k, v) {
+      if (!this.has(k)) {
+        throw new Error('Cannot set unknown key "' + k + '" on ' + recordName(this));
+      }
+      var newMap = this._map && this._map.set(k, v);
+      if (this.__ownerID || newMap === this._map) {
+        return this;
+      }
+      return makeRecord(this, newMap);
+    };
+    Record.prototype.remove = function(k) {
+      if (!this.has(k)) {
+        return this;
+      }
+      var newMap = this._map && this._map.remove(k);
+      if (this.__ownerID || newMap === this._map) {
+        return this;
+      }
+      return makeRecord(this, newMap);
+    };
+    Record.prototype.wasAltered = function() {
+      return this._map.wasAltered();
+    };
+    Record.prototype.__iterator = function(type, reverse) {
+      var this$0 = this;
+      return KeyedIterable(this._defaultValues).map(function(_, k) {
+        return this$0.get(k);
+      }).__iterator(type, reverse);
+    };
+    Record.prototype.__iterate = function(fn, reverse) {
+      var this$0 = this;
+      return KeyedIterable(this._defaultValues).map(function(_, k) {
+        return this$0.get(k);
+      }).__iterate(fn, reverse);
+    };
+    Record.prototype.__ensureOwner = function(ownerID) {
+      if (ownerID === this.__ownerID) {
+        return this;
+      }
+      var newMap = this._map && this._map.__ensureOwner(ownerID);
+      if (!ownerID) {
+        this.__ownerID = ownerID;
+        this._map = newMap;
+        return this;
+      }
+      return makeRecord(this, newMap, ownerID);
+    };
+    var RecordPrototype = Record.prototype;
+    RecordPrototype[DELETE] = RecordPrototype.remove;
+    RecordPrototype.deleteIn = RecordPrototype.removeIn = MapPrototype.removeIn;
+    RecordPrototype.merge = MapPrototype.merge;
+    RecordPrototype.mergeWith = MapPrototype.mergeWith;
+    RecordPrototype.mergeIn = MapPrototype.mergeIn;
+    RecordPrototype.mergeDeep = MapPrototype.mergeDeep;
+    RecordPrototype.mergeDeepWith = MapPrototype.mergeDeepWith;
+    RecordPrototype.mergeDeepIn = MapPrototype.mergeDeepIn;
+    RecordPrototype.setIn = MapPrototype.setIn;
+    RecordPrototype.update = MapPrototype.update;
+    RecordPrototype.updateIn = MapPrototype.updateIn;
+    RecordPrototype.withMutations = MapPrototype.withMutations;
+    RecordPrototype.asMutable = MapPrototype.asMutable;
+    RecordPrototype.asImmutable = MapPrototype.asImmutable;
+    function makeRecord(likeRecord, map, ownerID) {
+      var record = Object.create(Object.getPrototypeOf(likeRecord));
+      record._map = map;
+      record.__ownerID = ownerID;
+      return record;
+    }
+    function recordName(record) {
+      return record._name || record.constructor.name || 'Record';
+    }
+    function setProps(prototype, names) {
+      try {
+        names.forEach(setProp.bind(undefined, prototype));
+      } catch (error) {}
+    }
+    function setProp(prototype, name) {
+      Object.defineProperty(prototype, name, {
+        get: function() {
+          return this.get(name);
+        },
+        set: function(value) {
+          invariant(this.__ownerID, 'Cannot set on an immutable record.');
+          this.set(name, value);
+        }
+      });
+    }
+    function deepEqual(a, b) {
+      if (a === b) {
+        return true;
+      }
+      if (!isIterable(b) || a.size !== undefined && b.size !== undefined && a.size !== b.size || a.__hash !== undefined && b.__hash !== undefined && a.__hash !== b.__hash || isKeyed(a) !== isKeyed(b) || isIndexed(a) !== isIndexed(b) || isOrdered(a) !== isOrdered(b)) {
+        return false;
+      }
+      if (a.size === 0 && b.size === 0) {
+        return true;
+      }
+      var notAssociative = !isAssociative(a);
+      if (isOrdered(a)) {
+        var entries = a.entries();
+        return b.every(function(v, k) {
+          var entry = entries.next().value;
+          return entry && is(entry[1], v) && (notAssociative || is(entry[0], k));
+        }) && entries.next().done;
+      }
+      var flipped = false;
+      if (a.size === undefined) {
+        if (b.size === undefined) {
+          if (typeof a.cacheResult === 'function') {
+            a.cacheResult();
+          }
+        } else {
+          flipped = true;
+          var _ = a;
+          a = b;
+          b = _;
+        }
+      }
+      var allEqual = true;
+      var bSize = b.__iterate(function(v, k) {
+        if (notAssociative ? !a.has(v) : flipped ? !is(v, a.get(k, NOT_SET)) : !is(a.get(k, NOT_SET), v)) {
+          allEqual = false;
+          return false;
+        }
+      });
+      return allEqual && a.size === bSize;
+    }
+    createClass(Range, IndexedSeq);
+    function Range(start, end, step) {
+      if (!(this instanceof Range)) {
+        return new Range(start, end, step);
+      }
+      invariant(step !== 0, 'Cannot step a Range by 0');
+      start = start || 0;
+      if (end === undefined) {
+        end = Infinity;
+      }
+      step = step === undefined ? 1 : Math.abs(step);
+      if (end < start) {
+        step = -step;
+      }
+      this._start = start;
+      this._end = end;
+      this._step = step;
+      this.size = Math.max(0, Math.ceil((end - start) / step - 1) + 1);
+      if (this.size === 0) {
+        if (EMPTY_RANGE) {
+          return EMPTY_RANGE;
+        }
+        EMPTY_RANGE = this;
+      }
+    }
+    Range.prototype.toString = function() {
+      if (this.size === 0) {
+        return 'Range []';
+      }
+      return 'Range [ ' + this._start + '...' + this._end + (this._step > 1 ? ' by ' + this._step : '') + ' ]';
+    };
+    Range.prototype.get = function(index, notSetValue) {
+      return this.has(index) ? this._start + wrapIndex(this, index) * this._step : notSetValue;
+    };
+    Range.prototype.includes = function(searchValue) {
+      var possibleIndex = (searchValue - this._start) / this._step;
+      return possibleIndex >= 0 && possibleIndex < this.size && possibleIndex === Math.floor(possibleIndex);
+    };
+    Range.prototype.slice = function(begin, end) {
+      if (wholeSlice(begin, end, this.size)) {
+        return this;
+      }
+      begin = resolveBegin(begin, this.size);
+      end = resolveEnd(end, this.size);
+      if (end <= begin) {
+        return new Range(0, 0);
+      }
+      return new Range(this.get(begin, this._end), this.get(end, this._end), this._step);
+    };
+    Range.prototype.indexOf = function(searchValue) {
+      var offsetValue = searchValue - this._start;
+      if (offsetValue % this._step === 0) {
+        var index = offsetValue / this._step;
+        if (index >= 0 && index < this.size) {
+          return index;
+        }
+      }
+      return -1;
+    };
+    Range.prototype.lastIndexOf = function(searchValue) {
+      return this.indexOf(searchValue);
+    };
+    Range.prototype.__iterate = function(fn, reverse) {
+      var maxIndex = this.size - 1;
+      var step = this._step;
+      var value = reverse ? this._start + maxIndex * step : this._start;
+      for (var ii = 0; ii <= maxIndex; ii++) {
+        if (fn(value, ii, this) === false) {
+          return ii + 1;
+        }
+        value += reverse ? -step : step;
+      }
+      return ii;
+    };
+    Range.prototype.__iterator = function(type, reverse) {
+      var maxIndex = this.size - 1;
+      var step = this._step;
+      var value = reverse ? this._start + maxIndex * step : this._start;
+      var ii = 0;
+      return new src_Iterator__Iterator(function() {
+        var v = value;
+        value += reverse ? -step : step;
+        return ii > maxIndex ? iteratorDone() : iteratorValue(type, ii++, v);
+      });
+    };
+    Range.prototype.equals = function(other) {
+      return other instanceof Range ? this._start === other._start && this._end === other._end && this._step === other._step : deepEqual(this, other);
+    };
+    var EMPTY_RANGE;
+    createClass(Repeat, IndexedSeq);
+    function Repeat(value, times) {
+      if (!(this instanceof Repeat)) {
+        return new Repeat(value, times);
+      }
+      this._value = value;
+      this.size = times === undefined ? Infinity : Math.max(0, times);
+      if (this.size === 0) {
+        if (EMPTY_REPEAT) {
+          return EMPTY_REPEAT;
+        }
+        EMPTY_REPEAT = this;
+      }
+    }
+    Repeat.prototype.toString = function() {
+      if (this.size === 0) {
+        return 'Repeat []';
+      }
+      return 'Repeat [ ' + this._value + ' ' + this.size + ' times ]';
+    };
+    Repeat.prototype.get = function(index, notSetValue) {
+      return this.has(index) ? this._value : notSetValue;
+    };
+    Repeat.prototype.includes = function(searchValue) {
+      return is(this._value, searchValue);
+    };
+    Repeat.prototype.slice = function(begin, end) {
+      var size = this.size;
+      return wholeSlice(begin, end, size) ? this : new Repeat(this._value, resolveEnd(end, size) - resolveBegin(begin, size));
+    };
+    Repeat.prototype.reverse = function() {
+      return this;
+    };
+    Repeat.prototype.indexOf = function(searchValue) {
+      if (is(this._value, searchValue)) {
+        return 0;
+      }
+      return -1;
+    };
+    Repeat.prototype.lastIndexOf = function(searchValue) {
+      if (is(this._value, searchValue)) {
+        return this.size;
+      }
+      return -1;
+    };
+    Repeat.prototype.__iterate = function(fn, reverse) {
+      for (var ii = 0; ii < this.size; ii++) {
+        if (fn(this._value, ii, this) === false) {
+          return ii + 1;
+        }
+      }
+      return ii;
+    };
+    Repeat.prototype.__iterator = function(type, reverse) {
+      var this$0 = this;
+      var ii = 0;
+      return new src_Iterator__Iterator(function() {
+        return ii < this$0.size ? iteratorValue(type, ii++, this$0._value) : iteratorDone();
+      });
+    };
+    Repeat.prototype.equals = function(other) {
+      return other instanceof Repeat ? is(this._value, other._value) : deepEqual(other);
+    };
+    var EMPTY_REPEAT;
+    function mixin(ctor, methods) {
+      var keyCopier = function(key) {
+        ctor.prototype[key] = methods[key];
+      };
+      Object.keys(methods).forEach(keyCopier);
+      Object.getOwnPropertySymbols && Object.getOwnPropertySymbols(methods).forEach(keyCopier);
+      return ctor;
+    }
+    Iterable.Iterator = src_Iterator__Iterator;
+    mixin(Iterable, {
+      toArray: function() {
+        assertNotInfinite(this.size);
+        var array = new Array(this.size || 0);
+        this.valueSeq().__iterate(function(v, i) {
+          array[i] = v;
+        });
+        return array;
+      },
+      toIndexedSeq: function() {
+        return new ToIndexedSequence(this);
+      },
+      toJS: function() {
+        return this.toSeq().map(function(value) {
+          return value && typeof value.toJS === 'function' ? value.toJS() : value;
+        }).__toJS();
+      },
+      toJSON: function() {
+        return this.toSeq().map(function(value) {
+          return value && typeof value.toJSON === 'function' ? value.toJSON() : value;
+        }).__toJS();
+      },
+      toKeyedSeq: function() {
+        return new ToKeyedSequence(this, true);
+      },
+      toMap: function() {
+        return src_Map__Map(this.toKeyedSeq());
+      },
+      toObject: function() {
+        assertNotInfinite(this.size);
+        var object = {};
+        this.__iterate(function(v, k) {
+          object[k] = v;
+        });
+        return object;
+      },
+      toOrderedMap: function() {
+        return OrderedMap(this.toKeyedSeq());
+      },
+      toOrderedSet: function() {
+        return OrderedSet(isKeyed(this) ? this.valueSeq() : this);
+      },
+      toSet: function() {
+        return src_Set__Set(isKeyed(this) ? this.valueSeq() : this);
+      },
+      toSetSeq: function() {
+        return new ToSetSequence(this);
+      },
+      toSeq: function() {
+        return isIndexed(this) ? this.toIndexedSeq() : isKeyed(this) ? this.toKeyedSeq() : this.toSetSeq();
+      },
+      toStack: function() {
+        return Stack(isKeyed(this) ? this.valueSeq() : this);
+      },
+      toList: function() {
+        return List(isKeyed(this) ? this.valueSeq() : this);
+      },
+      toString: function() {
+        return '[Iterable]';
+      },
+      __toString: function(head, tail) {
+        if (this.size === 0) {
+          return head + tail;
+        }
+        return head + ' ' + this.toSeq().map(this.__toStringMapper).join(', ') + ' ' + tail;
+      },
+      concat: function() {
+        var values = SLICE$0.call(arguments, 0);
+        return reify(this, concatFactory(this, values));
+      },
+      contains: function(searchValue) {
+        return this.includes(searchValue);
+      },
+      includes: function(searchValue) {
+        return this.some(function(value) {
+          return is(value, searchValue);
+        });
+      },
+      entries: function() {
+        return this.__iterator(ITERATE_ENTRIES);
+      },
+      every: function(predicate, context) {
+        assertNotInfinite(this.size);
+        var returnValue = true;
+        this.__iterate(function(v, k, c) {
+          if (!predicate.call(context, v, k, c)) {
+            returnValue = false;
+            return false;
+          }
+        });
+        return returnValue;
+      },
+      filter: function(predicate, context) {
+        return reify(this, filterFactory(this, predicate, context, true));
+      },
+      find: function(predicate, context, notSetValue) {
+        var entry = this.findEntry(predicate, context);
+        return entry ? entry[1] : notSetValue;
+      },
+      findEntry: function(predicate, context) {
+        var found;
+        this.__iterate(function(v, k, c) {
+          if (predicate.call(context, v, k, c)) {
+            found = [k, v];
+            return false;
+          }
+        });
+        return found;
+      },
+      findLastEntry: function(predicate, context) {
+        return this.toSeq().reverse().findEntry(predicate, context);
+      },
+      forEach: function(sideEffect, context) {
+        assertNotInfinite(this.size);
+        return this.__iterate(context ? sideEffect.bind(context) : sideEffect);
+      },
+      join: function(separator) {
+        assertNotInfinite(this.size);
+        separator = separator !== undefined ? '' + separator : ',';
+        var joined = '';
+        var isFirst = true;
+        this.__iterate(function(v) {
+          isFirst ? (isFirst = false) : (joined += separator);
+          joined += v !== null && v !== undefined ? v.toString() : '';
+        });
+        return joined;
+      },
+      keys: function() {
+        return this.__iterator(ITERATE_KEYS);
+      },
+      map: function(mapper, context) {
+        return reify(this, mapFactory(this, mapper, context));
+      },
+      reduce: function(reducer, initialReduction, context) {
+        assertNotInfinite(this.size);
+        var reduction;
+        var useFirst;
+        if (arguments.length < 2) {
+          useFirst = true;
+        } else {
+          reduction = initialReduction;
+        }
+        this.__iterate(function(v, k, c) {
+          if (useFirst) {
+            useFirst = false;
+            reduction = v;
+          } else {
+            reduction = reducer.call(context, reduction, v, k, c);
+          }
+        });
+        return reduction;
+      },
+      reduceRight: function(reducer, initialReduction, context) {
+        var reversed = this.toKeyedSeq().reverse();
+        return reversed.reduce.apply(reversed, arguments);
+      },
+      reverse: function() {
+        return reify(this, reverseFactory(this, true));
+      },
+      slice: function(begin, end) {
+        return reify(this, sliceFactory(this, begin, end, true));
+      },
+      some: function(predicate, context) {
+        return !this.every(not(predicate), context);
+      },
+      sort: function(comparator) {
+        return reify(this, sortFactory(this, comparator));
+      },
+      values: function() {
+        return this.__iterator(ITERATE_VALUES);
+      },
+      butLast: function() {
+        return this.slice(0, -1);
+      },
+      isEmpty: function() {
+        return this.size !== undefined ? this.size === 0 : !this.some(function() {
+          return true;
+        });
+      },
+      count: function(predicate, context) {
+        return ensureSize(predicate ? this.toSeq().filter(predicate, context) : this);
+      },
+      countBy: function(grouper, context) {
+        return countByFactory(this, grouper, context);
+      },
+      equals: function(other) {
+        return deepEqual(this, other);
+      },
+      entrySeq: function() {
+        var iterable = this;
+        if (iterable._cache) {
+          return new ArraySeq(iterable._cache);
+        }
+        var entriesSequence = iterable.toSeq().map(entryMapper).toIndexedSeq();
+        entriesSequence.fromEntrySeq = function() {
+          return iterable.toSeq();
+        };
+        return entriesSequence;
+      },
+      filterNot: function(predicate, context) {
+        return this.filter(not(predicate), context);
+      },
+      findLast: function(predicate, context, notSetValue) {
+        return this.toKeyedSeq().reverse().find(predicate, context, notSetValue);
+      },
+      first: function() {
+        return this.find(returnTrue);
+      },
+      flatMap: function(mapper, context) {
+        return reify(this, flatMapFactory(this, mapper, context));
+      },
+      flatten: function(depth) {
+        return reify(this, flattenFactory(this, depth, true));
+      },
+      fromEntrySeq: function() {
+        return new FromEntriesSequence(this);
+      },
+      get: function(searchKey, notSetValue) {
+        return this.find(function(_, key) {
+          return is(key, searchKey);
+        }, undefined, notSetValue);
+      },
+      getIn: function(searchKeyPath, notSetValue) {
+        var nested = this;
+        var iter = forceIterator(searchKeyPath);
+        var step;
+        while (!(step = iter.next()).done) {
+          var key = step.value;
+          nested = nested && nested.get ? nested.get(key, NOT_SET) : NOT_SET;
+          if (nested === NOT_SET) {
+            return notSetValue;
+          }
+        }
+        return nested;
+      },
+      groupBy: function(grouper, context) {
+        return groupByFactory(this, grouper, context);
+      },
+      has: function(searchKey) {
+        return this.get(searchKey, NOT_SET) !== NOT_SET;
+      },
+      hasIn: function(searchKeyPath) {
+        return this.getIn(searchKeyPath, NOT_SET) !== NOT_SET;
+      },
+      isSubset: function(iter) {
+        iter = typeof iter.includes === 'function' ? iter : Iterable(iter);
+        return this.every(function(value) {
+          return iter.includes(value);
+        });
+      },
+      isSuperset: function(iter) {
+        return iter.isSubset(this);
+      },
+      keySeq: function() {
+        return this.toSeq().map(keyMapper).toIndexedSeq();
+      },
+      last: function() {
+        return this.toSeq().reverse().first();
+      },
+      max: function(comparator) {
+        return maxFactory(this, comparator);
+      },
+      maxBy: function(mapper, comparator) {
+        return maxFactory(this, comparator, mapper);
+      },
+      min: function(comparator) {
+        return maxFactory(this, comparator ? neg(comparator) : defaultNegComparator);
+      },
+      minBy: function(mapper, comparator) {
+        return maxFactory(this, comparator ? neg(comparator) : defaultNegComparator, mapper);
+      },
+      rest: function() {
+        return this.slice(1);
+      },
+      skip: function(amount) {
+        return this.slice(Math.max(0, amount));
+      },
+      skipLast: function(amount) {
+        return reify(this, this.toSeq().reverse().skip(amount).reverse());
+      },
+      skipWhile: function(predicate, context) {
+        return reify(this, skipWhileFactory(this, predicate, context, true));
+      },
+      skipUntil: function(predicate, context) {
+        return this.skipWhile(not(predicate), context);
+      },
+      sortBy: function(mapper, comparator) {
+        return reify(this, sortFactory(this, comparator, mapper));
+      },
+      take: function(amount) {
+        return this.slice(0, Math.max(0, amount));
+      },
+      takeLast: function(amount) {
+        return reify(this, this.toSeq().reverse().take(amount).reverse());
+      },
+      takeWhile: function(predicate, context) {
+        return reify(this, takeWhileFactory(this, predicate, context));
+      },
+      takeUntil: function(predicate, context) {
+        return this.takeWhile(not(predicate), context);
+      },
+      valueSeq: function() {
+        return this.toIndexedSeq();
+      },
+      hashCode: function() {
+        return this.__hash || (this.__hash = hashIterable(this));
+      }
+    });
+    var IterablePrototype = Iterable.prototype;
+    IterablePrototype[IS_ITERABLE_SENTINEL] = true;
+    IterablePrototype[ITERATOR_SYMBOL] = IterablePrototype.values;
+    IterablePrototype.__toJS = IterablePrototype.toArray;
+    IterablePrototype.__toStringMapper = quoteString;
+    IterablePrototype.inspect = IterablePrototype.toSource = function() {
+      return this.toString();
+    };
+    IterablePrototype.chain = IterablePrototype.flatMap;
+    (function() {
+      try {
+        Object.defineProperty(IterablePrototype, 'length', {get: function() {
+            if (!Iterable.noLengthWarning) {
+              var stack;
+              try {
+                throw new Error();
+              } catch (error) {
+                stack = error.stack;
+              }
+              if (stack.indexOf('_wrapObject') === -1) {
+                console && console.warn && console.warn('iterable.length has been deprecated, ' + 'use iterable.size or iterable.count(). ' + 'This warning will become a silent error in a future version. ' + stack);
+                return this.size;
+              }
+            }
+          }});
+      } catch (e) {}
+    })();
+    mixin(KeyedIterable, {
+      flip: function() {
+        return reify(this, flipFactory(this));
+      },
+      findKey: function(predicate, context) {
+        var entry = this.findEntry(predicate, context);
+        return entry && entry[0];
+      },
+      findLastKey: function(predicate, context) {
+        return this.toSeq().reverse().findKey(predicate, context);
+      },
+      keyOf: function(searchValue) {
+        return this.findKey(function(value) {
+          return is(value, searchValue);
+        });
+      },
+      lastKeyOf: function(searchValue) {
+        return this.findLastKey(function(value) {
+          return is(value, searchValue);
+        });
+      },
+      mapEntries: function(mapper, context) {
+        var this$0 = this;
+        var iterations = 0;
+        return reify(this, this.toSeq().map(function(v, k) {
+          return mapper.call(context, [k, v], iterations++, this$0);
+        }).fromEntrySeq());
+      },
+      mapKeys: function(mapper, context) {
+        var this$0 = this;
+        return reify(this, this.toSeq().flip().map(function(k, v) {
+          return mapper.call(context, k, v, this$0);
+        }).flip());
+      }
+    });
+    var KeyedIterablePrototype = KeyedIterable.prototype;
+    KeyedIterablePrototype[IS_KEYED_SENTINEL] = true;
+    KeyedIterablePrototype[ITERATOR_SYMBOL] = IterablePrototype.entries;
+    KeyedIterablePrototype.__toJS = IterablePrototype.toObject;
+    KeyedIterablePrototype.__toStringMapper = function(v, k) {
+      return JSON.stringify(k) + ': ' + quoteString(v);
+    };
+    mixin(IndexedIterable, {
+      toKeyedSeq: function() {
+        return new ToKeyedSequence(this, false);
+      },
+      filter: function(predicate, context) {
+        return reify(this, filterFactory(this, predicate, context, false));
+      },
+      findIndex: function(predicate, context) {
+        var entry = this.findEntry(predicate, context);
+        return entry ? entry[0] : -1;
+      },
+      indexOf: function(searchValue) {
+        var key = this.toKeyedSeq().keyOf(searchValue);
+        return key === undefined ? -1 : key;
+      },
+      lastIndexOf: function(searchValue) {
+        return this.toSeq().reverse().indexOf(searchValue);
+      },
+      reverse: function() {
+        return reify(this, reverseFactory(this, false));
+      },
+      slice: function(begin, end) {
+        return reify(this, sliceFactory(this, begin, end, false));
+      },
+      splice: function(index, removeNum) {
+        var numArgs = arguments.length;
+        removeNum = Math.max(removeNum | 0, 0);
+        if (numArgs === 0 || (numArgs === 2 && !removeNum)) {
+          return this;
+        }
+        index = resolveBegin(index, this.size);
+        var spliced = this.slice(0, index);
+        return reify(this, numArgs === 1 ? spliced : spliced.concat(arrCopy(arguments, 2), this.slice(index + removeNum)));
+      },
+      findLastIndex: function(predicate, context) {
+        var key = this.toKeyedSeq().findLastKey(predicate, context);
+        return key === undefined ? -1 : key;
+      },
+      first: function() {
+        return this.get(0);
+      },
+      flatten: function(depth) {
+        return reify(this, flattenFactory(this, depth, false));
+      },
+      get: function(index, notSetValue) {
+        index = wrapIndex(this, index);
+        return (index < 0 || (this.size === Infinity || (this.size !== undefined && index > this.size))) ? notSetValue : this.find(function(_, key) {
+          return key === index;
+        }, undefined, notSetValue);
+      },
+      has: function(index) {
+        index = wrapIndex(this, index);
+        return index >= 0 && (this.size !== undefined ? this.size === Infinity || index < this.size : this.indexOf(index) !== -1);
+      },
+      interpose: function(separator) {
+        return reify(this, interposeFactory(this, separator));
+      },
+      interleave: function() {
+        var iterables = [this].concat(arrCopy(arguments));
+        var zipped = zipWithFactory(this.toSeq(), IndexedSeq.of, iterables);
+        var interleaved = zipped.flatten(true);
+        if (zipped.size) {
+          interleaved.size = zipped.size * iterables.length;
+        }
+        return reify(this, interleaved);
+      },
+      last: function() {
+        return this.get(-1);
+      },
+      skipWhile: function(predicate, context) {
+        return reify(this, skipWhileFactory(this, predicate, context, false));
+      },
+      zip: function() {
+        var iterables = [this].concat(arrCopy(arguments));
+        return reify(this, zipWithFactory(this, defaultZipper, iterables));
+      },
+      zipWith: function(zipper) {
+        var iterables = arrCopy(arguments);
+        iterables[0] = this;
+        return reify(this, zipWithFactory(this, zipper, iterables));
+      }
+    });
+    IndexedIterable.prototype[IS_INDEXED_SENTINEL] = true;
+    IndexedIterable.prototype[IS_ORDERED_SENTINEL] = true;
+    mixin(SetIterable, {
+      get: function(value, notSetValue) {
+        return this.has(value) ? value : notSetValue;
+      },
+      includes: function(value) {
+        return this.has(value);
+      },
+      keySeq: function() {
+        return this.valueSeq();
+      }
+    });
+    SetIterable.prototype.has = IterablePrototype.includes;
+    mixin(KeyedSeq, KeyedIterable.prototype);
+    mixin(IndexedSeq, IndexedIterable.prototype);
+    mixin(SetSeq, SetIterable.prototype);
+    mixin(KeyedCollection, KeyedIterable.prototype);
+    mixin(IndexedCollection, IndexedIterable.prototype);
+    mixin(SetCollection, SetIterable.prototype);
+    function keyMapper(v, k) {
+      return k;
+    }
+    function entryMapper(v, k) {
+      return [k, v];
+    }
+    function not(predicate) {
+      return function() {
+        return !predicate.apply(this, arguments);
+      };
+    }
+    function neg(predicate) {
+      return function() {
+        return -predicate.apply(this, arguments);
+      };
+    }
+    function quoteString(value) {
+      return typeof value === 'string' ? JSON.stringify(value) : value;
+    }
+    function defaultZipper() {
+      return arrCopy(arguments);
+    }
+    function defaultNegComparator(a, b) {
+      return a < b ? 1 : a > b ? -1 : 0;
+    }
+    function hashIterable(iterable) {
+      if (iterable.size === Infinity) {
+        return 0;
+      }
+      var ordered = isOrdered(iterable);
+      var keyed = isKeyed(iterable);
+      var h = ordered ? 1 : 0;
+      var size = iterable.__iterate(keyed ? ordered ? function(v, k) {
+        h = 31 * h + hashMerge(hash(v), hash(k)) | 0;
+      } : function(v, k) {
+        h = h + hashMerge(hash(v), hash(k)) | 0;
+      } : ordered ? function(v) {
+        h = 31 * h + hash(v) | 0;
+      } : function(v) {
+        h = h + hash(v) | 0;
+      });
+      return murmurHashOfSize(size, h);
+    }
+    function murmurHashOfSize(size, h) {
+      h = src_Math__imul(h, 0xCC9E2D51);
+      h = src_Math__imul(h << 15 | h >>> -15, 0x1B873593);
+      h = src_Math__imul(h << 13 | h >>> -13, 5);
+      h = (h + 0xE6546B64 | 0) ^ size;
+      h = src_Math__imul(h ^ h >>> 16, 0x85EBCA6B);
+      h = src_Math__imul(h ^ h >>> 13, 0xC2B2AE35);
+      h = smi(h ^ h >>> 16);
+      return h;
+    }
+    function hashMerge(a, b) {
+      return a ^ b + 0x9E3779B9 + (a << 6) + (a >> 2) | 0;
+    }
+    var Immutable = {
+      Iterable: Iterable,
+      Seq: Seq,
+      Collection: Collection,
+      Map: src_Map__Map,
+      OrderedMap: OrderedMap,
+      List: List,
+      Stack: Stack,
+      Set: src_Set__Set,
+      OrderedSet: OrderedSet,
+      Record: Record,
+      Range: Range,
+      Repeat: Repeat,
+      is: is,
+      fromJS: fromJS
+    };
+    return Immutable;
+  }));
+  global.define = __define;
+  return module.exports;
+});
+
 System.register("npm:events@1.0.2/events", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -3903,6 +7781,5309 @@ System.register("npm:events@1.0.2/events", [], true, function(require, exports, 
   function isUndefined(arg) {
     return arg === void 0;
   }
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:asap@1.0.0/asap", ["github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  (function(process) {
+    var head = {
+      task: void 0,
+      next: null
+    };
+    var tail = head;
+    var flushing = false;
+    var requestFlush = void 0;
+    var isNodeJS = false;
+    function flush() {
+      while (head.next) {
+        head = head.next;
+        var task = head.task;
+        head.task = void 0;
+        var domain = head.domain;
+        if (domain) {
+          head.domain = void 0;
+          domain.enter();
+        }
+        try {
+          task();
+        } catch (e) {
+          if (isNodeJS) {
+            if (domain) {
+              domain.exit();
+            }
+            setTimeout(flush, 0);
+            if (domain) {
+              domain.enter();
+            }
+            throw e;
+          } else {
+            setTimeout(function() {
+              throw e;
+            }, 0);
+          }
+        }
+        if (domain) {
+          domain.exit();
+        }
+      }
+      flushing = false;
+    }
+    if (typeof process !== "undefined" && process.nextTick) {
+      isNodeJS = true;
+      requestFlush = function() {
+        process.nextTick(flush);
+      };
+    } else if (typeof setImmediate === "function") {
+      if (typeof window !== "undefined") {
+        requestFlush = setImmediate.bind(window, flush);
+      } else {
+        requestFlush = function() {
+          setImmediate(flush);
+        };
+      }
+    } else if (typeof MessageChannel !== "undefined") {
+      var channel = new MessageChannel();
+      channel.port1.onmessage = flush;
+      requestFlush = function() {
+        channel.port2.postMessage(0);
+      };
+    } else {
+      requestFlush = function() {
+        setTimeout(flush, 0);
+      };
+    }
+    function asap(task) {
+      tail = tail.next = {
+        task: task,
+        domain: isNodeJS && process.domain,
+        next: null
+      };
+      if (!flushing) {
+        flushing = true;
+        requestFlush();
+      }
+    }
+    ;
+    module.exports = asap;
+  })(require("github:jspm/nodelibs-process@0.1.1"));
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:localforage@1.2.2/src/drivers/indexeddb", ["npm:promise@5.0.0"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  "format cjs";
+  (function() {
+    'use strict';
+    var Promise = (typeof module !== 'undefined' && module.exports) ? require("npm:promise@5.0.0") : this.Promise;
+    var indexedDB = indexedDB || this.indexedDB || this.webkitIndexedDB || this.mozIndexedDB || this.OIndexedDB || this.msIndexedDB;
+    if (!indexedDB) {
+      return ;
+    }
+    function _initStorage(options) {
+      var self = this;
+      var dbInfo = {db: null};
+      if (options) {
+        for (var i in options) {
+          dbInfo[i] = options[i];
+        }
+      }
+      return new Promise(function(resolve, reject) {
+        var openreq = indexedDB.open(dbInfo.name, dbInfo.version);
+        openreq.onerror = function() {
+          reject(openreq.error);
+        };
+        openreq.onupgradeneeded = function() {
+          openreq.result.createObjectStore(dbInfo.storeName);
+        };
+        openreq.onsuccess = function() {
+          dbInfo.db = openreq.result;
+          self._dbInfo = dbInfo;
+          resolve();
+        };
+      });
+    }
+    function getItem(key, callback) {
+      var self = this;
+      if (typeof key !== 'string') {
+        window.console.warn(key + ' used as a key, but it is not a string.');
+        key = String(key);
+      }
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          var store = dbInfo.db.transaction(dbInfo.storeName, 'readonly').objectStore(dbInfo.storeName);
+          var req = store.get(key);
+          req.onsuccess = function() {
+            var value = req.result;
+            if (value === undefined) {
+              value = null;
+            }
+            resolve(value);
+          };
+          req.onerror = function() {
+            reject(req.error);
+          };
+        }).catch(reject);
+      });
+      executeDeferedCallback(promise, callback);
+      return promise;
+    }
+    function iterate(iterator, callback) {
+      var self = this;
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          var store = dbInfo.db.transaction(dbInfo.storeName, 'readonly').objectStore(dbInfo.storeName);
+          var req = store.openCursor();
+          var iterationNumber = 1;
+          req.onsuccess = function() {
+            var cursor = req.result;
+            if (cursor) {
+              var result = iterator(cursor.value, cursor.key, iterationNumber++);
+              if (result !== void(0)) {
+                resolve(result);
+              } else {
+                cursor.continue();
+              }
+            } else {
+              resolve();
+            }
+          };
+          req.onerror = function() {
+            reject(req.error);
+          };
+        }).catch(reject);
+      });
+      executeDeferedCallback(promise, callback);
+      return promise;
+    }
+    function setItem(key, value, callback) {
+      var self = this;
+      if (typeof key !== 'string') {
+        window.console.warn(key + ' used as a key, but it is not a string.');
+        key = String(key);
+      }
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          var transaction = dbInfo.db.transaction(dbInfo.storeName, 'readwrite');
+          var store = transaction.objectStore(dbInfo.storeName);
+          if (value === null) {
+            value = undefined;
+          }
+          var req = store.put(value, key);
+          transaction.oncomplete = function() {
+            if (value === undefined) {
+              value = null;
+            }
+            resolve(value);
+          };
+          transaction.onabort = transaction.onerror = function() {
+            reject(req.error);
+          };
+        }).catch(reject);
+      });
+      executeDeferedCallback(promise, callback);
+      return promise;
+    }
+    function removeItem(key, callback) {
+      var self = this;
+      if (typeof key !== 'string') {
+        window.console.warn(key + ' used as a key, but it is not a string.');
+        key = String(key);
+      }
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          var transaction = dbInfo.db.transaction(dbInfo.storeName, 'readwrite');
+          var store = transaction.objectStore(dbInfo.storeName);
+          var req = store.delete(key);
+          transaction.oncomplete = function() {
+            resolve();
+          };
+          transaction.onerror = function() {
+            reject(req.error);
+          };
+          transaction.onabort = function(event) {
+            var error = event.target.error;
+            if (error === 'QuotaExceededError') {
+              reject(error);
+            }
+          };
+        }).catch(reject);
+      });
+      executeDeferedCallback(promise, callback);
+      return promise;
+    }
+    function clear(callback) {
+      var self = this;
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          var transaction = dbInfo.db.transaction(dbInfo.storeName, 'readwrite');
+          var store = transaction.objectStore(dbInfo.storeName);
+          var req = store.clear();
+          transaction.oncomplete = function() {
+            resolve();
+          };
+          transaction.onabort = transaction.onerror = function() {
+            reject(req.error);
+          };
+        }).catch(reject);
+      });
+      executeDeferedCallback(promise, callback);
+      return promise;
+    }
+    function length(callback) {
+      var self = this;
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          var store = dbInfo.db.transaction(dbInfo.storeName, 'readonly').objectStore(dbInfo.storeName);
+          var req = store.count();
+          req.onsuccess = function() {
+            resolve(req.result);
+          };
+          req.onerror = function() {
+            reject(req.error);
+          };
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function key(n, callback) {
+      var self = this;
+      var promise = new Promise(function(resolve, reject) {
+        if (n < 0) {
+          resolve(null);
+          return ;
+        }
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          var store = dbInfo.db.transaction(dbInfo.storeName, 'readonly').objectStore(dbInfo.storeName);
+          var advanced = false;
+          var req = store.openCursor();
+          req.onsuccess = function() {
+            var cursor = req.result;
+            if (!cursor) {
+              resolve(null);
+              return ;
+            }
+            if (n === 0) {
+              resolve(cursor.key);
+            } else {
+              if (!advanced) {
+                advanced = true;
+                cursor.advance(n);
+              } else {
+                resolve(cursor.key);
+              }
+            }
+          };
+          req.onerror = function() {
+            reject(req.error);
+          };
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function keys(callback) {
+      var self = this;
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          var store = dbInfo.db.transaction(dbInfo.storeName, 'readonly').objectStore(dbInfo.storeName);
+          var req = store.openCursor();
+          var keys = [];
+          req.onsuccess = function() {
+            var cursor = req.result;
+            if (!cursor) {
+              resolve(keys);
+              return ;
+            }
+            keys.push(cursor.key);
+            cursor.continue();
+          };
+          req.onerror = function() {
+            reject(req.error);
+          };
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function executeCallback(promise, callback) {
+      if (callback) {
+        promise.then(function(result) {
+          callback(null, result);
+        }, function(error) {
+          callback(error);
+        });
+      }
+    }
+    function executeDeferedCallback(promise, callback) {
+      if (callback) {
+        promise.then(function(result) {
+          deferCallback(callback, result);
+        }, function(error) {
+          callback(error);
+        });
+      }
+    }
+    function deferCallback(callback, result) {
+      if (callback) {
+        return setTimeout(function() {
+          return callback(null, result);
+        }, 0);
+      }
+    }
+    var asyncStorage = {
+      _driver: 'asyncStorage',
+      _initStorage: _initStorage,
+      iterate: iterate,
+      getItem: getItem,
+      setItem: setItem,
+      removeItem: removeItem,
+      clear: clear,
+      length: length,
+      key: key,
+      keys: keys
+    };
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = asyncStorage;
+    } else if (typeof define === 'function' && define.amd) {
+      define('asyncStorage', function() {
+        return asyncStorage;
+      });
+    } else {
+      this.asyncStorage = asyncStorage;
+    }
+  }).call(window);
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:localforage@1.2.2/src/utils/serializer", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  "format cjs";
+  (function() {
+    'use strict';
+    var BASE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    var SERIALIZED_MARKER = '__lfsc__:';
+    var SERIALIZED_MARKER_LENGTH = SERIALIZED_MARKER.length;
+    var TYPE_ARRAYBUFFER = 'arbf';
+    var TYPE_BLOB = 'blob';
+    var TYPE_INT8ARRAY = 'si08';
+    var TYPE_UINT8ARRAY = 'ui08';
+    var TYPE_UINT8CLAMPEDARRAY = 'uic8';
+    var TYPE_INT16ARRAY = 'si16';
+    var TYPE_INT32ARRAY = 'si32';
+    var TYPE_UINT16ARRAY = 'ur16';
+    var TYPE_UINT32ARRAY = 'ui32';
+    var TYPE_FLOAT32ARRAY = 'fl32';
+    var TYPE_FLOAT64ARRAY = 'fl64';
+    var TYPE_SERIALIZED_MARKER_LENGTH = SERIALIZED_MARKER_LENGTH + TYPE_ARRAYBUFFER.length;
+    function serialize(value, callback) {
+      var valueString = '';
+      if (value) {
+        valueString = value.toString();
+      }
+      if (value && (value.toString() === '[object ArrayBuffer]' || value.buffer && value.buffer.toString() === '[object ArrayBuffer]')) {
+        var buffer;
+        var marker = SERIALIZED_MARKER;
+        if (value instanceof ArrayBuffer) {
+          buffer = value;
+          marker += TYPE_ARRAYBUFFER;
+        } else {
+          buffer = value.buffer;
+          if (valueString === '[object Int8Array]') {
+            marker += TYPE_INT8ARRAY;
+          } else if (valueString === '[object Uint8Array]') {
+            marker += TYPE_UINT8ARRAY;
+          } else if (valueString === '[object Uint8ClampedArray]') {
+            marker += TYPE_UINT8CLAMPEDARRAY;
+          } else if (valueString === '[object Int16Array]') {
+            marker += TYPE_INT16ARRAY;
+          } else if (valueString === '[object Uint16Array]') {
+            marker += TYPE_UINT16ARRAY;
+          } else if (valueString === '[object Int32Array]') {
+            marker += TYPE_INT32ARRAY;
+          } else if (valueString === '[object Uint32Array]') {
+            marker += TYPE_UINT32ARRAY;
+          } else if (valueString === '[object Float32Array]') {
+            marker += TYPE_FLOAT32ARRAY;
+          } else if (valueString === '[object Float64Array]') {
+            marker += TYPE_FLOAT64ARRAY;
+          } else {
+            callback(new Error('Failed to get type for BinaryArray'));
+          }
+        }
+        callback(marker + bufferToString(buffer));
+      } else if (valueString === '[object Blob]') {
+        var fileReader = new FileReader();
+        fileReader.onload = function() {
+          var str = bufferToString(this.result);
+          callback(SERIALIZED_MARKER + TYPE_BLOB + str);
+        };
+        fileReader.readAsArrayBuffer(value);
+      } else {
+        try {
+          callback(JSON.stringify(value));
+        } catch (e) {
+          window.console.error("Couldn't convert value into a JSON " + 'string: ', value);
+          callback(null, e);
+        }
+      }
+    }
+    function deserialize(value) {
+      if (value.substring(0, SERIALIZED_MARKER_LENGTH) !== SERIALIZED_MARKER) {
+        return JSON.parse(value);
+      }
+      var serializedString = value.substring(TYPE_SERIALIZED_MARKER_LENGTH);
+      var type = value.substring(SERIALIZED_MARKER_LENGTH, TYPE_SERIALIZED_MARKER_LENGTH);
+      var buffer = stringToBuffer(serializedString);
+      switch (type) {
+        case TYPE_ARRAYBUFFER:
+          return buffer;
+        case TYPE_BLOB:
+          return new Blob([buffer]);
+        case TYPE_INT8ARRAY:
+          return new Int8Array(buffer);
+        case TYPE_UINT8ARRAY:
+          return new Uint8Array(buffer);
+        case TYPE_UINT8CLAMPEDARRAY:
+          return new Uint8ClampedArray(buffer);
+        case TYPE_INT16ARRAY:
+          return new Int16Array(buffer);
+        case TYPE_UINT16ARRAY:
+          return new Uint16Array(buffer);
+        case TYPE_INT32ARRAY:
+          return new Int32Array(buffer);
+        case TYPE_UINT32ARRAY:
+          return new Uint32Array(buffer);
+        case TYPE_FLOAT32ARRAY:
+          return new Float32Array(buffer);
+        case TYPE_FLOAT64ARRAY:
+          return new Float64Array(buffer);
+        default:
+          throw new Error('Unkown type: ' + type);
+      }
+    }
+    function stringToBuffer(serializedString) {
+      var bufferLength = serializedString.length * 0.75;
+      var len = serializedString.length;
+      var i;
+      var p = 0;
+      var encoded1,
+          encoded2,
+          encoded3,
+          encoded4;
+      if (serializedString[serializedString.length - 1] === '=') {
+        bufferLength--;
+        if (serializedString[serializedString.length - 2] === '=') {
+          bufferLength--;
+        }
+      }
+      var buffer = new ArrayBuffer(bufferLength);
+      var bytes = new Uint8Array(buffer);
+      for (i = 0; i < len; i += 4) {
+        encoded1 = BASE_CHARS.indexOf(serializedString[i]);
+        encoded2 = BASE_CHARS.indexOf(serializedString[i + 1]);
+        encoded3 = BASE_CHARS.indexOf(serializedString[i + 2]);
+        encoded4 = BASE_CHARS.indexOf(serializedString[i + 3]);
+        bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
+        bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
+        bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
+      }
+      return buffer;
+    }
+    function bufferToString(buffer) {
+      var bytes = new Uint8Array(buffer);
+      var base64String = '';
+      var i;
+      for (i = 0; i < bytes.length; i += 3) {
+        base64String += BASE_CHARS[bytes[i] >> 2];
+        base64String += BASE_CHARS[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
+        base64String += BASE_CHARS[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
+        base64String += BASE_CHARS[bytes[i + 2] & 63];
+      }
+      if ((bytes.length % 3) === 2) {
+        base64String = base64String.substring(0, base64String.length - 1) + '=';
+      } else if (bytes.length % 3 === 1) {
+        base64String = base64String.substring(0, base64String.length - 2) + '==';
+      }
+      return base64String;
+    }
+    var localforageSerializer = {
+      serialize: serialize,
+      deserialize: deserialize,
+      stringToBuffer: stringToBuffer,
+      bufferToString: bufferToString
+    };
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = localforageSerializer;
+    } else if (typeof define === 'function' && define.amd) {
+      define('localforageSerializer', function() {
+        return localforageSerializer;
+      });
+    } else {
+      this.localforageSerializer = localforageSerializer;
+    }
+  }).call(window);
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:localforage@1.2.2/src/drivers/websql", ["npm:promise@5.0.0", "npm:localforage@1.2.2/src/utils/serializer"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  "format cjs";
+  (function() {
+    'use strict';
+    var Promise = (typeof module !== 'undefined' && module.exports) ? require("npm:promise@5.0.0") : this.Promise;
+    var globalObject = this;
+    var serializer = null;
+    var openDatabase = this.openDatabase;
+    if (!openDatabase) {
+      return ;
+    }
+    var ModuleType = {
+      DEFINE: 1,
+      EXPORT: 2,
+      WINDOW: 3
+    };
+    var moduleType = ModuleType.WINDOW;
+    if (typeof module !== 'undefined' && module.exports) {
+      moduleType = ModuleType.EXPORT;
+    } else if (typeof define === 'function' && define.amd) {
+      moduleType = ModuleType.DEFINE;
+    }
+    function _initStorage(options) {
+      var self = this;
+      var dbInfo = {db: null};
+      if (options) {
+        for (var i in options) {
+          dbInfo[i] = typeof(options[i]) !== 'string' ? options[i].toString() : options[i];
+        }
+      }
+      var serializerPromise = new Promise(function(resolve) {
+        if (moduleType === ModuleType.DEFINE) {
+          require(['localforageSerializer'], resolve);
+        } else if (moduleType === ModuleType.EXPORT) {
+          resolve(require("npm:localforage@1.2.2/src/utils/serializer"));
+        } else {
+          resolve(globalObject.localforageSerializer);
+        }
+      });
+      var dbInfoPromise = new Promise(function(resolve, reject) {
+        try {
+          dbInfo.db = openDatabase(dbInfo.name, String(dbInfo.version), dbInfo.description, dbInfo.size);
+        } catch (e) {
+          return self.setDriver(self.LOCALSTORAGE).then(function() {
+            return self._initStorage(options);
+          }).then(resolve).catch(reject);
+        }
+        dbInfo.db.transaction(function(t) {
+          t.executeSql('CREATE TABLE IF NOT EXISTS ' + dbInfo.storeName + ' (id INTEGER PRIMARY KEY, key unique, value)', [], function() {
+            self._dbInfo = dbInfo;
+            resolve();
+          }, function(t, error) {
+            reject(error);
+          });
+        });
+      });
+      return serializerPromise.then(function(lib) {
+        serializer = lib;
+        return dbInfoPromise;
+      });
+    }
+    function getItem(key, callback) {
+      var self = this;
+      if (typeof key !== 'string') {
+        window.console.warn(key + ' used as a key, but it is not a string.');
+        key = String(key);
+      }
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          dbInfo.db.transaction(function(t) {
+            t.executeSql('SELECT * FROM ' + dbInfo.storeName + ' WHERE key = ? LIMIT 1', [key], function(t, results) {
+              var result = results.rows.length ? results.rows.item(0).value : null;
+              if (result) {
+                result = serializer.deserialize(result);
+              }
+              resolve(result);
+            }, function(t, error) {
+              reject(error);
+            });
+          });
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function iterate(iterator, callback) {
+      var self = this;
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          dbInfo.db.transaction(function(t) {
+            t.executeSql('SELECT * FROM ' + dbInfo.storeName, [], function(t, results) {
+              var rows = results.rows;
+              var length = rows.length;
+              for (var i = 0; i < length; i++) {
+                var item = rows.item(i);
+                var result = item.value;
+                if (result) {
+                  result = serializer.deserialize(result);
+                }
+                result = iterator(result, item.key, i + 1);
+                if (result !== void(0)) {
+                  resolve(result);
+                  return ;
+                }
+              }
+              resolve();
+            }, function(t, error) {
+              reject(error);
+            });
+          });
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function setItem(key, value, callback) {
+      var self = this;
+      if (typeof key !== 'string') {
+        window.console.warn(key + ' used as a key, but it is not a string.');
+        key = String(key);
+      }
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          if (value === undefined) {
+            value = null;
+          }
+          var originalValue = value;
+          serializer.serialize(value, function(value, error) {
+            if (error) {
+              reject(error);
+            } else {
+              var dbInfo = self._dbInfo;
+              dbInfo.db.transaction(function(t) {
+                t.executeSql('INSERT OR REPLACE INTO ' + dbInfo.storeName + ' (key, value) VALUES (?, ?)', [key, value], function() {
+                  resolve(originalValue);
+                }, function(t, error) {
+                  reject(error);
+                });
+              }, function(sqlError) {
+                if (sqlError.code === sqlError.QUOTA_ERR) {
+                  reject(sqlError);
+                }
+              });
+            }
+          });
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function removeItem(key, callback) {
+      var self = this;
+      if (typeof key !== 'string') {
+        window.console.warn(key + ' used as a key, but it is not a string.');
+        key = String(key);
+      }
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          dbInfo.db.transaction(function(t) {
+            t.executeSql('DELETE FROM ' + dbInfo.storeName + ' WHERE key = ?', [key], function() {
+              resolve();
+            }, function(t, error) {
+              reject(error);
+            });
+          });
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function clear(callback) {
+      var self = this;
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          dbInfo.db.transaction(function(t) {
+            t.executeSql('DELETE FROM ' + dbInfo.storeName, [], function() {
+              resolve();
+            }, function(t, error) {
+              reject(error);
+            });
+          });
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function length(callback) {
+      var self = this;
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          dbInfo.db.transaction(function(t) {
+            t.executeSql('SELECT COUNT(key) as c FROM ' + dbInfo.storeName, [], function(t, results) {
+              var result = results.rows.item(0).c;
+              resolve(result);
+            }, function(t, error) {
+              reject(error);
+            });
+          });
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function key(n, callback) {
+      var self = this;
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          dbInfo.db.transaction(function(t) {
+            t.executeSql('SELECT key FROM ' + dbInfo.storeName + ' WHERE id = ? LIMIT 1', [n + 1], function(t, results) {
+              var result = results.rows.length ? results.rows.item(0).key : null;
+              resolve(result);
+            }, function(t, error) {
+              reject(error);
+            });
+          });
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function keys(callback) {
+      var self = this;
+      var promise = new Promise(function(resolve, reject) {
+        self.ready().then(function() {
+          var dbInfo = self._dbInfo;
+          dbInfo.db.transaction(function(t) {
+            t.executeSql('SELECT key FROM ' + dbInfo.storeName, [], function(t, results) {
+              var keys = [];
+              for (var i = 0; i < results.rows.length; i++) {
+                keys.push(results.rows.item(i).key);
+              }
+              resolve(keys);
+            }, function(t, error) {
+              reject(error);
+            });
+          });
+        }).catch(reject);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function executeCallback(promise, callback) {
+      if (callback) {
+        promise.then(function(result) {
+          callback(null, result);
+        }, function(error) {
+          callback(error);
+        });
+      }
+    }
+    var webSQLStorage = {
+      _driver: 'webSQLStorage',
+      _initStorage: _initStorage,
+      iterate: iterate,
+      getItem: getItem,
+      setItem: setItem,
+      removeItem: removeItem,
+      clear: clear,
+      length: length,
+      key: key,
+      keys: keys
+    };
+    if (moduleType === ModuleType.DEFINE) {
+      define('webSQLStorage', function() {
+        return webSQLStorage;
+      });
+    } else if (moduleType === ModuleType.EXPORT) {
+      module.exports = webSQLStorage;
+    } else {
+      this.webSQLStorage = webSQLStorage;
+    }
+  }).call(window);
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:bluebird@2.9.25/js/browser/bluebird", ["github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  "format cjs";
+  (function(process) {
+    !function(e) {
+      if ("object" == typeof exports && "undefined" != typeof module)
+        module.exports = e();
+      else if ("function" == typeof define && define.amd)
+        define([], e);
+      else {
+        var f;
+        "undefined" != typeof window ? f = window : "undefined" != typeof global ? f = global : "undefined" != typeof self && (f = self), f.Promise = e();
+      }
+    }(function() {
+      var define,
+          module,
+          exports;
+      return (function e(t, n, r) {
+        function s(o, u) {
+          if (!n[o]) {
+            if (!t[o]) {
+              var a = typeof _dereq_ == "function" && _dereq_;
+              if (!u && a)
+                return a(o, !0);
+              if (i)
+                return i(o, !0);
+              var f = new Error("Cannot find module '" + o + "'");
+              throw f.code = "MODULE_NOT_FOUND", f;
+            }
+            var l = n[o] = {exports: {}};
+            t[o][0].call(l.exports, function(e) {
+              var n = t[o][1][e];
+              return s(n ? n : e);
+            }, l, l.exports, e, t, n, r);
+          }
+          return n[o].exports;
+        }
+        var i = typeof _dereq_ == "function" && _dereq_;
+        for (var o = 0; o < r.length; o++)
+          s(r[o]);
+        return s;
+      })({
+        1: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise) {
+            var SomePromiseArray = Promise._SomePromiseArray;
+            function any(promises) {
+              var ret = new SomePromiseArray(promises);
+              var promise = ret.promise();
+              ret.setHowMany(1);
+              ret.setUnwrap();
+              ret.init();
+              return promise;
+            }
+            Promise.any = function(promises) {
+              return any(promises);
+            };
+            Promise.prototype.any = function() {
+              return any(this);
+            };
+          };
+        }, {}],
+        2: [function(_dereq_, module, exports) {
+          "use strict";
+          var firstLineError;
+          try {
+            throw new Error();
+          } catch (e) {
+            firstLineError = e;
+          }
+          var schedule = _dereq_("./schedule.js");
+          var Queue = _dereq_("./queue.js");
+          var util = _dereq_("./util.js");
+          function Async() {
+            this._isTickUsed = false;
+            this._lateQueue = new Queue(16);
+            this._normalQueue = new Queue(16);
+            this._trampolineEnabled = true;
+            var self = this;
+            this.drainQueues = function() {
+              self._drainQueues();
+            };
+            this._schedule = schedule.isStatic ? schedule(this.drainQueues) : schedule;
+          }
+          Async.prototype.disableTrampolineIfNecessary = function() {
+            if (util.hasDevTools) {
+              this._trampolineEnabled = false;
+            }
+          };
+          Async.prototype.enableTrampoline = function() {
+            if (!this._trampolineEnabled) {
+              this._trampolineEnabled = true;
+              this._schedule = function(fn) {
+                setTimeout(fn, 0);
+              };
+            }
+          };
+          Async.prototype.haveItemsQueued = function() {
+            return this._normalQueue.length() > 0;
+          };
+          Async.prototype.throwLater = function(fn, arg) {
+            if (arguments.length === 1) {
+              arg = fn;
+              fn = function() {
+                throw arg;
+              };
+            }
+            var domain = this._getDomain();
+            if (domain !== undefined)
+              fn = domain.bind(fn);
+            if (typeof setTimeout !== "undefined") {
+              setTimeout(function() {
+                fn(arg);
+              }, 0);
+            } else
+              try {
+                this._schedule(function() {
+                  fn(arg);
+                });
+              } catch (e) {
+                throw new Error("No async scheduler available\u000a\u000a    See http://goo.gl/m3OTXk\u000a");
+              }
+          };
+          Async.prototype._getDomain = function() {};
+          if (!true) {
+            if (util.isNode) {
+              var EventsModule = _dereq_("events");
+              var domainGetter = function() {
+                var domain = process.domain;
+                if (domain === null)
+                  return undefined;
+                return domain;
+              };
+              if (EventsModule.usingDomains) {
+                Async.prototype._getDomain = domainGetter;
+              } else {
+                var descriptor = Object.getOwnPropertyDescriptor(EventsModule, "usingDomains");
+                if (descriptor) {
+                  if (!descriptor.configurable) {
+                    process.on("domainsActivated", function() {
+                      Async.prototype._getDomain = domainGetter;
+                    });
+                  } else {
+                    var usingDomains = false;
+                    Object.defineProperty(EventsModule, "usingDomains", {
+                      configurable: false,
+                      enumerable: true,
+                      get: function() {
+                        return usingDomains;
+                      },
+                      set: function(value) {
+                        if (usingDomains || !value)
+                          return ;
+                        usingDomains = true;
+                        Async.prototype._getDomain = domainGetter;
+                        util.toFastProperties(process);
+                        process.emit("domainsActivated");
+                      }
+                    });
+                  }
+                }
+              }
+            }
+          }
+          function AsyncInvokeLater(fn, receiver, arg) {
+            var domain = this._getDomain();
+            if (domain !== undefined)
+              fn = domain.bind(fn);
+            this._lateQueue.push(fn, receiver, arg);
+            this._queueTick();
+          }
+          function AsyncInvoke(fn, receiver, arg) {
+            var domain = this._getDomain();
+            if (domain !== undefined)
+              fn = domain.bind(fn);
+            this._normalQueue.push(fn, receiver, arg);
+            this._queueTick();
+          }
+          function AsyncSettlePromises(promise) {
+            var domain = this._getDomain();
+            if (domain !== undefined) {
+              var fn = domain.bind(promise._settlePromises);
+              this._normalQueue.push(fn, promise, undefined);
+            } else {
+              this._normalQueue._pushOne(promise);
+            }
+            this._queueTick();
+          }
+          if (!util.hasDevTools) {
+            Async.prototype.invokeLater = AsyncInvokeLater;
+            Async.prototype.invoke = AsyncInvoke;
+            Async.prototype.settlePromises = AsyncSettlePromises;
+          } else {
+            Async.prototype.invokeLater = function(fn, receiver, arg) {
+              if (this._trampolineEnabled) {
+                AsyncInvokeLater.call(this, fn, receiver, arg);
+              } else {
+                setTimeout(function() {
+                  fn.call(receiver, arg);
+                }, 100);
+              }
+            };
+            Async.prototype.invoke = function(fn, receiver, arg) {
+              if (this._trampolineEnabled) {
+                AsyncInvoke.call(this, fn, receiver, arg);
+              } else {
+                setTimeout(function() {
+                  fn.call(receiver, arg);
+                }, 0);
+              }
+            };
+            Async.prototype.settlePromises = function(promise) {
+              if (this._trampolineEnabled) {
+                AsyncSettlePromises.call(this, promise);
+              } else {
+                setTimeout(function() {
+                  promise._settlePromises();
+                }, 0);
+              }
+            };
+          }
+          Async.prototype.invokeFirst = function(fn, receiver, arg) {
+            var domain = this._getDomain();
+            if (domain !== undefined)
+              fn = domain.bind(fn);
+            this._normalQueue.unshift(fn, receiver, arg);
+            this._queueTick();
+          };
+          Async.prototype._drainQueue = function(queue) {
+            while (queue.length() > 0) {
+              var fn = queue.shift();
+              if (typeof fn !== "function") {
+                fn._settlePromises();
+                continue;
+              }
+              var receiver = queue.shift();
+              var arg = queue.shift();
+              fn.call(receiver, arg);
+            }
+          };
+          Async.prototype._drainQueues = function() {
+            this._drainQueue(this._normalQueue);
+            this._reset();
+            this._drainQueue(this._lateQueue);
+          };
+          Async.prototype._queueTick = function() {
+            if (!this._isTickUsed) {
+              this._isTickUsed = true;
+              this._schedule(this.drainQueues);
+            }
+          };
+          Async.prototype._reset = function() {
+            this._isTickUsed = false;
+          };
+          module.exports = new Async();
+          module.exports.firstLineError = firstLineError;
+        }, {
+          "./queue.js": 28,
+          "./schedule.js": 31,
+          "./util.js": 38,
+          "events": 39
+        }],
+        3: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, INTERNAL, tryConvertToPromise) {
+            var rejectThis = function(_, e) {
+              this._reject(e);
+            };
+            var targetRejected = function(e, context) {
+              context.promiseRejectionQueued = true;
+              context.bindingPromise._then(rejectThis, rejectThis, null, this, e);
+            };
+            var bindingResolved = function(thisArg, context) {
+              this._setBoundTo(thisArg);
+              if (this._isPending()) {
+                this._resolveCallback(context.target);
+              }
+            };
+            var bindingRejected = function(e, context) {
+              if (!context.promiseRejectionQueued)
+                this._reject(e);
+            };
+            Promise.prototype.bind = function(thisArg) {
+              var maybePromise = tryConvertToPromise(thisArg);
+              var ret = new Promise(INTERNAL);
+              ret._propagateFrom(this, 1);
+              var target = this._target();
+              if (maybePromise instanceof Promise) {
+                var context = {
+                  promiseRejectionQueued: false,
+                  promise: ret,
+                  target: target,
+                  bindingPromise: maybePromise
+                };
+                target._then(INTERNAL, targetRejected, ret._progress, ret, context);
+                maybePromise._then(bindingResolved, bindingRejected, ret._progress, ret, context);
+              } else {
+                ret._setBoundTo(thisArg);
+                ret._resolveCallback(target);
+              }
+              return ret;
+            };
+            Promise.prototype._setBoundTo = function(obj) {
+              if (obj !== undefined) {
+                this._bitField = this._bitField | 131072;
+                this._boundTo = obj;
+              } else {
+                this._bitField = this._bitField & (~131072);
+              }
+            };
+            Promise.prototype._isBound = function() {
+              return (this._bitField & 131072) === 131072;
+            };
+            Promise.bind = function(thisArg, value) {
+              var maybePromise = tryConvertToPromise(thisArg);
+              var ret = new Promise(INTERNAL);
+              if (maybePromise instanceof Promise) {
+                maybePromise._then(function(thisArg) {
+                  ret._setBoundTo(thisArg);
+                  ret._resolveCallback(value);
+                }, ret._reject, ret._progress, ret, null);
+              } else {
+                ret._setBoundTo(thisArg);
+                ret._resolveCallback(value);
+              }
+              return ret;
+            };
+          };
+        }, {}],
+        4: [function(_dereq_, module, exports) {
+          "use strict";
+          var old;
+          if (typeof Promise !== "undefined")
+            old = Promise;
+          function noConflict() {
+            try {
+              if (Promise === bluebird)
+                Promise = old;
+            } catch (e) {}
+            return bluebird;
+          }
+          var bluebird = _dereq_("./promise.js")();
+          bluebird.noConflict = noConflict;
+          module.exports = bluebird;
+        }, {"./promise.js": 23}],
+        5: [function(_dereq_, module, exports) {
+          "use strict";
+          var cr = Object.create;
+          if (cr) {
+            var callerCache = cr(null);
+            var getterCache = cr(null);
+            callerCache[" size"] = getterCache[" size"] = 0;
+          }
+          module.exports = function(Promise) {
+            var util = _dereq_("./util.js");
+            var canEvaluate = util.canEvaluate;
+            var isIdentifier = util.isIdentifier;
+            var getMethodCaller;
+            var getGetter;
+            if (!true) {
+              var makeMethodCaller = function(methodName) {
+                return new Function("ensureMethod", "                                    \n\
+        return function(obj) {                                               \n\
+            'use strict'                                                     \n\
+            var len = this.length;                                           \n\
+            ensureMethod(obj, 'methodName');                                 \n\
+            switch(len) {                                                    \n\
+                case 1: return obj.methodName(this[0]);                      \n\
+                case 2: return obj.methodName(this[0], this[1]);             \n\
+                case 3: return obj.methodName(this[0], this[1], this[2]);    \n\
+                case 0: return obj.methodName();                             \n\
+                default:                                                     \n\
+                    return obj.methodName.apply(obj, this);                  \n\
+            }                                                                \n\
+        };                                                                   \n\
+        ".replace(/methodName/g, methodName))(ensureMethod);
+              };
+              var makeGetter = function(propertyName) {
+                return new Function("obj", "                                             \n\
+        'use strict';                                                        \n\
+        return obj.propertyName;                                             \n\
+        ".replace("propertyName", propertyName));
+              };
+              var getCompiled = function(name, compiler, cache) {
+                var ret = cache[name];
+                if (typeof ret !== "function") {
+                  if (!isIdentifier(name)) {
+                    return null;
+                  }
+                  ret = compiler(name);
+                  cache[name] = ret;
+                  cache[" size"]++;
+                  if (cache[" size"] > 512) {
+                    var keys = Object.keys(cache);
+                    for (var i = 0; i < 256; ++i)
+                      delete cache[keys[i]];
+                    cache[" size"] = keys.length - 256;
+                  }
+                }
+                return ret;
+              };
+              getMethodCaller = function(name) {
+                return getCompiled(name, makeMethodCaller, callerCache);
+              };
+              getGetter = function(name) {
+                return getCompiled(name, makeGetter, getterCache);
+              };
+            }
+            function ensureMethod(obj, methodName) {
+              var fn;
+              if (obj != null)
+                fn = obj[methodName];
+              if (typeof fn !== "function") {
+                var message = "Object " + util.classString(obj) + " has no method '" + util.toString(methodName) + "'";
+                throw new Promise.TypeError(message);
+              }
+              return fn;
+            }
+            function caller(obj) {
+              var methodName = this.pop();
+              var fn = ensureMethod(obj, methodName);
+              return fn.apply(obj, this);
+            }
+            Promise.prototype.call = function(methodName) {
+              var $_len = arguments.length;
+              var args = new Array($_len - 1);
+              for (var $_i = 1; $_i < $_len; ++$_i) {
+                args[$_i - 1] = arguments[$_i];
+              }
+              if (!true) {
+                if (canEvaluate) {
+                  var maybeCaller = getMethodCaller(methodName);
+                  if (maybeCaller !== null) {
+                    return this._then(maybeCaller, undefined, undefined, args, undefined);
+                  }
+                }
+              }
+              args.push(methodName);
+              return this._then(caller, undefined, undefined, args, undefined);
+            };
+            function namedGetter(obj) {
+              return obj[this];
+            }
+            function indexedGetter(obj) {
+              var index = +this;
+              if (index < 0)
+                index = Math.max(0, index + obj.length);
+              return obj[index];
+            }
+            Promise.prototype.get = function(propertyName) {
+              var isIndex = (typeof propertyName === "number");
+              var getter;
+              if (!isIndex) {
+                if (canEvaluate) {
+                  var maybeGetter = getGetter(propertyName);
+                  getter = maybeGetter !== null ? maybeGetter : namedGetter;
+                } else {
+                  getter = namedGetter;
+                }
+              } else {
+                getter = indexedGetter;
+              }
+              return this._then(getter, undefined, undefined, propertyName, undefined);
+            };
+          };
+        }, {"./util.js": 38}],
+        6: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise) {
+            var errors = _dereq_("./errors.js");
+            var async = _dereq_("./async.js");
+            var CancellationError = errors.CancellationError;
+            Promise.prototype._cancel = function(reason) {
+              if (!this.isCancellable())
+                return this;
+              var parent;
+              var promiseToReject = this;
+              while ((parent = promiseToReject._cancellationParent) !== undefined && parent.isCancellable()) {
+                promiseToReject = parent;
+              }
+              this._unsetCancellable();
+              promiseToReject._target()._rejectCallback(reason, false, true);
+            };
+            Promise.prototype.cancel = function(reason) {
+              if (!this.isCancellable())
+                return this;
+              if (reason === undefined)
+                reason = new CancellationError();
+              async.invokeLater(this._cancel, this, reason);
+              return this;
+            };
+            Promise.prototype.cancellable = function() {
+              if (this._cancellable())
+                return this;
+              async.enableTrampoline();
+              this._setCancellable();
+              this._cancellationParent = undefined;
+              return this;
+            };
+            Promise.prototype.uncancellable = function() {
+              var ret = this.then();
+              ret._unsetCancellable();
+              return ret;
+            };
+            Promise.prototype.fork = function(didFulfill, didReject, didProgress) {
+              var ret = this._then(didFulfill, didReject, didProgress, undefined, undefined);
+              ret._setCancellable();
+              ret._cancellationParent = undefined;
+              return ret;
+            };
+          };
+        }, {
+          "./async.js": 2,
+          "./errors.js": 13
+        }],
+        7: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function() {
+            var async = _dereq_("./async.js");
+            var util = _dereq_("./util.js");
+            var bluebirdFramePattern = /[\\\/]bluebird[\\\/]js[\\\/](main|debug|zalgo|instrumented)/;
+            var stackFramePattern = null;
+            var formatStack = null;
+            var indentStackFrames = false;
+            var warn;
+            function CapturedTrace(parent) {
+              this._parent = parent;
+              var length = this._length = 1 + (parent === undefined ? 0 : parent._length);
+              captureStackTrace(this, CapturedTrace);
+              if (length > 32)
+                this.uncycle();
+            }
+            util.inherits(CapturedTrace, Error);
+            CapturedTrace.prototype.uncycle = function() {
+              var length = this._length;
+              if (length < 2)
+                return ;
+              var nodes = [];
+              var stackToIndex = {};
+              for (var i = 0,
+                  node = this; node !== undefined; ++i) {
+                nodes.push(node);
+                node = node._parent;
+              }
+              length = this._length = i;
+              for (var i = length - 1; i >= 0; --i) {
+                var stack = nodes[i].stack;
+                if (stackToIndex[stack] === undefined) {
+                  stackToIndex[stack] = i;
+                }
+              }
+              for (var i = 0; i < length; ++i) {
+                var currentStack = nodes[i].stack;
+                var index = stackToIndex[currentStack];
+                if (index !== undefined && index !== i) {
+                  if (index > 0) {
+                    nodes[index - 1]._parent = undefined;
+                    nodes[index - 1]._length = 1;
+                  }
+                  nodes[i]._parent = undefined;
+                  nodes[i]._length = 1;
+                  var cycleEdgeNode = i > 0 ? nodes[i - 1] : this;
+                  if (index < length - 1) {
+                    cycleEdgeNode._parent = nodes[index + 1];
+                    cycleEdgeNode._parent.uncycle();
+                    cycleEdgeNode._length = cycleEdgeNode._parent._length + 1;
+                  } else {
+                    cycleEdgeNode._parent = undefined;
+                    cycleEdgeNode._length = 1;
+                  }
+                  var currentChildLength = cycleEdgeNode._length + 1;
+                  for (var j = i - 2; j >= 0; --j) {
+                    nodes[j]._length = currentChildLength;
+                    currentChildLength++;
+                  }
+                  return ;
+                }
+              }
+            };
+            CapturedTrace.prototype.parent = function() {
+              return this._parent;
+            };
+            CapturedTrace.prototype.hasParent = function() {
+              return this._parent !== undefined;
+            };
+            CapturedTrace.prototype.attachExtraTrace = function(error) {
+              if (error.__stackCleaned__)
+                return ;
+              this.uncycle();
+              var parsed = CapturedTrace.parseStackAndMessage(error);
+              var message = parsed.message;
+              var stacks = [parsed.stack];
+              var trace = this;
+              while (trace !== undefined) {
+                stacks.push(cleanStack(trace.stack.split("\n")));
+                trace = trace._parent;
+              }
+              removeCommonRoots(stacks);
+              removeDuplicateOrEmptyJumps(stacks);
+              util.notEnumerableProp(error, "stack", reconstructStack(message, stacks));
+              util.notEnumerableProp(error, "__stackCleaned__", true);
+            };
+            function reconstructStack(message, stacks) {
+              for (var i = 0; i < stacks.length - 1; ++i) {
+                stacks[i].push("From previous event:");
+                stacks[i] = stacks[i].join("\n");
+              }
+              if (i < stacks.length) {
+                stacks[i] = stacks[i].join("\n");
+              }
+              return message + "\n" + stacks.join("\n");
+            }
+            function removeDuplicateOrEmptyJumps(stacks) {
+              for (var i = 0; i < stacks.length; ++i) {
+                if (stacks[i].length === 0 || ((i + 1 < stacks.length) && stacks[i][0] === stacks[i + 1][0])) {
+                  stacks.splice(i, 1);
+                  i--;
+                }
+              }
+            }
+            function removeCommonRoots(stacks) {
+              var current = stacks[0];
+              for (var i = 1; i < stacks.length; ++i) {
+                var prev = stacks[i];
+                var currentLastIndex = current.length - 1;
+                var currentLastLine = current[currentLastIndex];
+                var commonRootMeetPoint = -1;
+                for (var j = prev.length - 1; j >= 0; --j) {
+                  if (prev[j] === currentLastLine) {
+                    commonRootMeetPoint = j;
+                    break;
+                  }
+                }
+                for (var j = commonRootMeetPoint; j >= 0; --j) {
+                  var line = prev[j];
+                  if (current[currentLastIndex] === line) {
+                    current.pop();
+                    currentLastIndex--;
+                  } else {
+                    break;
+                  }
+                }
+                current = prev;
+              }
+            }
+            function cleanStack(stack) {
+              var ret = [];
+              for (var i = 0; i < stack.length; ++i) {
+                var line = stack[i];
+                var isTraceLine = stackFramePattern.test(line) || "    (No stack trace)" === line;
+                var isInternalFrame = isTraceLine && shouldIgnore(line);
+                if (isTraceLine && !isInternalFrame) {
+                  if (indentStackFrames && line.charAt(0) !== " ") {
+                    line = "    " + line;
+                  }
+                  ret.push(line);
+                }
+              }
+              return ret;
+            }
+            function stackFramesAsArray(error) {
+              var stack = error.stack.replace(/\s+$/g, "").split("\n");
+              for (var i = 0; i < stack.length; ++i) {
+                var line = stack[i];
+                if ("    (No stack trace)" === line || stackFramePattern.test(line)) {
+                  break;
+                }
+              }
+              if (i > 0) {
+                stack = stack.slice(i);
+              }
+              return stack;
+            }
+            CapturedTrace.parseStackAndMessage = function(error) {
+              var stack = error.stack;
+              var message = error.toString();
+              stack = typeof stack === "string" && stack.length > 0 ? stackFramesAsArray(error) : ["    (No stack trace)"];
+              return {
+                message: message,
+                stack: cleanStack(stack)
+              };
+            };
+            CapturedTrace.formatAndLogError = function(error, title) {
+              if (typeof console !== "undefined") {
+                var message;
+                if (typeof error === "object" || typeof error === "function") {
+                  var stack = error.stack;
+                  message = title + formatStack(stack, error);
+                } else {
+                  message = title + String(error);
+                }
+                if (typeof warn === "function") {
+                  warn(message);
+                } else if (typeof console.log === "function" || typeof console.log === "object") {
+                  console.log(message);
+                }
+              }
+            };
+            CapturedTrace.unhandledRejection = function(reason) {
+              CapturedTrace.formatAndLogError(reason, "^--- With additional stack trace: ");
+            };
+            CapturedTrace.isSupported = function() {
+              return typeof captureStackTrace === "function";
+            };
+            CapturedTrace.fireRejectionEvent = function(name, localHandler, reason, promise) {
+              var localEventFired = false;
+              try {
+                if (typeof localHandler === "function") {
+                  localEventFired = true;
+                  if (name === "rejectionHandled") {
+                    localHandler(promise);
+                  } else {
+                    localHandler(reason, promise);
+                  }
+                }
+              } catch (e) {
+                async.throwLater(e);
+              }
+              var globalEventFired = false;
+              try {
+                globalEventFired = fireGlobalEvent(name, reason, promise);
+              } catch (e) {
+                globalEventFired = true;
+                async.throwLater(e);
+              }
+              var domEventFired = false;
+              if (fireDomEvent) {
+                try {
+                  domEventFired = fireDomEvent(name.toLowerCase(), {
+                    reason: reason,
+                    promise: promise
+                  });
+                } catch (e) {
+                  domEventFired = true;
+                  async.throwLater(e);
+                }
+              }
+              if (!globalEventFired && !localEventFired && !domEventFired && name === "unhandledRejection") {
+                CapturedTrace.formatAndLogError(reason, "Unhandled rejection ");
+              }
+            };
+            function formatNonError(obj) {
+              var str;
+              if (typeof obj === "function") {
+                str = "[function " + (obj.name || "anonymous") + "]";
+              } else {
+                str = obj.toString();
+                var ruselessToString = /\[object [a-zA-Z0-9$_]+\]/;
+                if (ruselessToString.test(str)) {
+                  try {
+                    var newStr = JSON.stringify(obj);
+                    str = newStr;
+                  } catch (e) {}
+                }
+                if (str.length === 0) {
+                  str = "(empty array)";
+                }
+              }
+              return ("(<" + snip(str) + ">, no stack trace)");
+            }
+            function snip(str) {
+              var maxChars = 41;
+              if (str.length < maxChars) {
+                return str;
+              }
+              return str.substr(0, maxChars - 3) + "...";
+            }
+            var shouldIgnore = function() {
+              return false;
+            };
+            var parseLineInfoRegex = /[\/<\(]([^:\/]+):(\d+):(?:\d+)\)?\s*$/;
+            function parseLineInfo(line) {
+              var matches = line.match(parseLineInfoRegex);
+              if (matches) {
+                return {
+                  fileName: matches[1],
+                  line: parseInt(matches[2], 10)
+                };
+              }
+            }
+            CapturedTrace.setBounds = function(firstLineError, lastLineError) {
+              if (!CapturedTrace.isSupported())
+                return ;
+              var firstStackLines = firstLineError.stack.split("\n");
+              var lastStackLines = lastLineError.stack.split("\n");
+              var firstIndex = -1;
+              var lastIndex = -1;
+              var firstFileName;
+              var lastFileName;
+              for (var i = 0; i < firstStackLines.length; ++i) {
+                var result = parseLineInfo(firstStackLines[i]);
+                if (result) {
+                  firstFileName = result.fileName;
+                  firstIndex = result.line;
+                  break;
+                }
+              }
+              for (var i = 0; i < lastStackLines.length; ++i) {
+                var result = parseLineInfo(lastStackLines[i]);
+                if (result) {
+                  lastFileName = result.fileName;
+                  lastIndex = result.line;
+                  break;
+                }
+              }
+              if (firstIndex < 0 || lastIndex < 0 || !firstFileName || !lastFileName || firstFileName !== lastFileName || firstIndex >= lastIndex) {
+                return ;
+              }
+              shouldIgnore = function(line) {
+                if (bluebirdFramePattern.test(line))
+                  return true;
+                var info = parseLineInfo(line);
+                if (info) {
+                  if (info.fileName === firstFileName && (firstIndex <= info.line && info.line <= lastIndex)) {
+                    return true;
+                  }
+                }
+                return false;
+              };
+            };
+            var captureStackTrace = (function stackDetection() {
+              var v8stackFramePattern = /^\s*at\s*/;
+              var v8stackFormatter = function(stack, error) {
+                if (typeof stack === "string")
+                  return stack;
+                if (error.name !== undefined && error.message !== undefined) {
+                  return error.toString();
+                }
+                return formatNonError(error);
+              };
+              if (typeof Error.stackTraceLimit === "number" && typeof Error.captureStackTrace === "function") {
+                Error.stackTraceLimit = Error.stackTraceLimit + 6;
+                stackFramePattern = v8stackFramePattern;
+                formatStack = v8stackFormatter;
+                var captureStackTrace = Error.captureStackTrace;
+                shouldIgnore = function(line) {
+                  return bluebirdFramePattern.test(line);
+                };
+                return function(receiver, ignoreUntil) {
+                  Error.stackTraceLimit = Error.stackTraceLimit + 6;
+                  captureStackTrace(receiver, ignoreUntil);
+                  Error.stackTraceLimit = Error.stackTraceLimit - 6;
+                };
+              }
+              var err = new Error();
+              if (typeof err.stack === "string" && err.stack.split("\n")[0].indexOf("stackDetection@") >= 0) {
+                stackFramePattern = /@/;
+                formatStack = v8stackFormatter;
+                indentStackFrames = true;
+                return function captureStackTrace(o) {
+                  o.stack = new Error().stack;
+                };
+              }
+              var hasStackAfterThrow;
+              try {
+                throw new Error();
+              } catch (e) {
+                hasStackAfterThrow = ("stack" in e);
+              }
+              if (!("stack" in err) && hasStackAfterThrow) {
+                stackFramePattern = v8stackFramePattern;
+                formatStack = v8stackFormatter;
+                return function captureStackTrace(o) {
+                  Error.stackTraceLimit = Error.stackTraceLimit + 6;
+                  try {
+                    throw new Error();
+                  } catch (e) {
+                    o.stack = e.stack;
+                  }
+                  Error.stackTraceLimit = Error.stackTraceLimit - 6;
+                };
+              }
+              formatStack = function(stack, error) {
+                if (typeof stack === "string")
+                  return stack;
+                if ((typeof error === "object" || typeof error === "function") && error.name !== undefined && error.message !== undefined) {
+                  return error.toString();
+                }
+                return formatNonError(error);
+              };
+              return null;
+            })([]);
+            var fireDomEvent;
+            var fireGlobalEvent = (function() {
+              if (util.isNode) {
+                return function(name, reason, promise) {
+                  if (name === "rejectionHandled") {
+                    return process.emit(name, promise);
+                  } else {
+                    return process.emit(name, reason, promise);
+                  }
+                };
+              } else {
+                var customEventWorks = false;
+                var anyEventWorks = true;
+                try {
+                  var ev = new self.CustomEvent("test");
+                  customEventWorks = ev instanceof CustomEvent;
+                } catch (e) {}
+                if (!customEventWorks) {
+                  try {
+                    var event = document.createEvent("CustomEvent");
+                    event.initCustomEvent("testingtheevent", false, true, {});
+                    self.dispatchEvent(event);
+                  } catch (e) {
+                    anyEventWorks = false;
+                  }
+                }
+                if (anyEventWorks) {
+                  fireDomEvent = function(type, detail) {
+                    var event;
+                    if (customEventWorks) {
+                      event = new self.CustomEvent(type, {
+                        detail: detail,
+                        bubbles: false,
+                        cancelable: true
+                      });
+                    } else if (self.dispatchEvent) {
+                      event = document.createEvent("CustomEvent");
+                      event.initCustomEvent(type, false, true, detail);
+                    }
+                    return event ? !self.dispatchEvent(event) : false;
+                  };
+                }
+                var toWindowMethodNameMap = {};
+                toWindowMethodNameMap["unhandledRejection"] = ("on" + "unhandledRejection").toLowerCase();
+                toWindowMethodNameMap["rejectionHandled"] = ("on" + "rejectionHandled").toLowerCase();
+                return function(name, reason, promise) {
+                  var methodName = toWindowMethodNameMap[name];
+                  var method = self[methodName];
+                  if (!method)
+                    return false;
+                  if (name === "rejectionHandled") {
+                    method.call(self, promise);
+                  } else {
+                    method.call(self, reason, promise);
+                  }
+                  return true;
+                };
+              }
+            })();
+            if (typeof console !== "undefined" && typeof console.warn !== "undefined") {
+              warn = function(message) {
+                console.warn(message);
+              };
+              if (util.isNode && process.stderr.isTTY) {
+                warn = function(message) {
+                  process.stderr.write("\u001b[31m" + message + "\u001b[39m\n");
+                };
+              } else if (!util.isNode && typeof(new Error().stack) === "string") {
+                warn = function(message) {
+                  console.warn("%c" + message, "color: red");
+                };
+              }
+            }
+            return CapturedTrace;
+          };
+        }, {
+          "./async.js": 2,
+          "./util.js": 38
+        }],
+        8: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(NEXT_FILTER) {
+            var util = _dereq_("./util.js");
+            var errors = _dereq_("./errors.js");
+            var tryCatch = util.tryCatch;
+            var errorObj = util.errorObj;
+            var keys = _dereq_("./es5.js").keys;
+            var TypeError = errors.TypeError;
+            function CatchFilter(instances, callback, promise) {
+              this._instances = instances;
+              this._callback = callback;
+              this._promise = promise;
+            }
+            function safePredicate(predicate, e) {
+              var safeObject = {};
+              var retfilter = tryCatch(predicate).call(safeObject, e);
+              if (retfilter === errorObj)
+                return retfilter;
+              var safeKeys = keys(safeObject);
+              if (safeKeys.length) {
+                errorObj.e = new TypeError("Catch filter must inherit from Error or be a simple predicate function\u000a\u000a    See http://goo.gl/o84o68\u000a");
+                return errorObj;
+              }
+              return retfilter;
+            }
+            CatchFilter.prototype.doFilter = function(e) {
+              var cb = this._callback;
+              var promise = this._promise;
+              var boundTo = promise._boundTo;
+              for (var i = 0,
+                  len = this._instances.length; i < len; ++i) {
+                var item = this._instances[i];
+                var itemIsErrorType = item === Error || (item != null && item.prototype instanceof Error);
+                if (itemIsErrorType && e instanceof item) {
+                  var ret = tryCatch(cb).call(boundTo, e);
+                  if (ret === errorObj) {
+                    NEXT_FILTER.e = ret.e;
+                    return NEXT_FILTER;
+                  }
+                  return ret;
+                } else if (typeof item === "function" && !itemIsErrorType) {
+                  var shouldHandle = safePredicate(item, e);
+                  if (shouldHandle === errorObj) {
+                    e = errorObj.e;
+                    break;
+                  } else if (shouldHandle) {
+                    var ret = tryCatch(cb).call(boundTo, e);
+                    if (ret === errorObj) {
+                      NEXT_FILTER.e = ret.e;
+                      return NEXT_FILTER;
+                    }
+                    return ret;
+                  }
+                }
+              }
+              NEXT_FILTER.e = e;
+              return NEXT_FILTER;
+            };
+            return CatchFilter;
+          };
+        }, {
+          "./errors.js": 13,
+          "./es5.js": 14,
+          "./util.js": 38
+        }],
+        9: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, CapturedTrace, isDebugging) {
+            var contextStack = [];
+            function Context() {
+              this._trace = new CapturedTrace(peekContext());
+            }
+            Context.prototype._pushContext = function() {
+              if (!isDebugging())
+                return ;
+              if (this._trace !== undefined) {
+                contextStack.push(this._trace);
+              }
+            };
+            Context.prototype._popContext = function() {
+              if (!isDebugging())
+                return ;
+              if (this._trace !== undefined) {
+                contextStack.pop();
+              }
+            };
+            function createContext() {
+              if (isDebugging())
+                return new Context();
+            }
+            function peekContext() {
+              var lastIndex = contextStack.length - 1;
+              if (lastIndex >= 0) {
+                return contextStack[lastIndex];
+              }
+              return undefined;
+            }
+            Promise.prototype._peekContext = peekContext;
+            Promise.prototype._pushContext = Context.prototype._pushContext;
+            Promise.prototype._popContext = Context.prototype._popContext;
+            return createContext;
+          };
+        }, {}],
+        10: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, CapturedTrace) {
+            var async = _dereq_("./async.js");
+            var Warning = _dereq_("./errors.js").Warning;
+            var util = _dereq_("./util.js");
+            var canAttachTrace = util.canAttachTrace;
+            var unhandledRejectionHandled;
+            var possiblyUnhandledRejection;
+            var debugging = false || (util.isNode && (!!process.env["BLUEBIRD_DEBUG"] || process.env["NODE_ENV"] === "development"));
+            if (debugging) {
+              async.disableTrampolineIfNecessary();
+            }
+            Promise.prototype._ensurePossibleRejectionHandled = function() {
+              this._setRejectionIsUnhandled();
+              async.invokeLater(this._notifyUnhandledRejection, this, undefined);
+            };
+            Promise.prototype._notifyUnhandledRejectionIsHandled = function() {
+              CapturedTrace.fireRejectionEvent("rejectionHandled", unhandledRejectionHandled, undefined, this);
+            };
+            Promise.prototype._notifyUnhandledRejection = function() {
+              if (this._isRejectionUnhandled()) {
+                var reason = this._getCarriedStackTrace() || this._settledValue;
+                this._setUnhandledRejectionIsNotified();
+                CapturedTrace.fireRejectionEvent("unhandledRejection", possiblyUnhandledRejection, reason, this);
+              }
+            };
+            Promise.prototype._setUnhandledRejectionIsNotified = function() {
+              this._bitField = this._bitField | 524288;
+            };
+            Promise.prototype._unsetUnhandledRejectionIsNotified = function() {
+              this._bitField = this._bitField & (~524288);
+            };
+            Promise.prototype._isUnhandledRejectionNotified = function() {
+              return (this._bitField & 524288) > 0;
+            };
+            Promise.prototype._setRejectionIsUnhandled = function() {
+              this._bitField = this._bitField | 2097152;
+            };
+            Promise.prototype._unsetRejectionIsUnhandled = function() {
+              this._bitField = this._bitField & (~2097152);
+              if (this._isUnhandledRejectionNotified()) {
+                this._unsetUnhandledRejectionIsNotified();
+                this._notifyUnhandledRejectionIsHandled();
+              }
+            };
+            Promise.prototype._isRejectionUnhandled = function() {
+              return (this._bitField & 2097152) > 0;
+            };
+            Promise.prototype._setCarriedStackTrace = function(capturedTrace) {
+              this._bitField = this._bitField | 1048576;
+              this._fulfillmentHandler0 = capturedTrace;
+            };
+            Promise.prototype._isCarryingStackTrace = function() {
+              return (this._bitField & 1048576) > 0;
+            };
+            Promise.prototype._getCarriedStackTrace = function() {
+              return this._isCarryingStackTrace() ? this._fulfillmentHandler0 : undefined;
+            };
+            Promise.prototype._captureStackTrace = function() {
+              if (debugging) {
+                this._trace = new CapturedTrace(this._peekContext());
+              }
+              return this;
+            };
+            Promise.prototype._attachExtraTrace = function(error, ignoreSelf) {
+              if (debugging && canAttachTrace(error)) {
+                var trace = this._trace;
+                if (trace !== undefined) {
+                  if (ignoreSelf)
+                    trace = trace._parent;
+                }
+                if (trace !== undefined) {
+                  trace.attachExtraTrace(error);
+                } else if (!error.__stackCleaned__) {
+                  var parsed = CapturedTrace.parseStackAndMessage(error);
+                  util.notEnumerableProp(error, "stack", parsed.message + "\n" + parsed.stack.join("\n"));
+                  util.notEnumerableProp(error, "__stackCleaned__", true);
+                }
+              }
+            };
+            Promise.prototype._warn = function(message) {
+              var warning = new Warning(message);
+              var ctx = this._peekContext();
+              if (ctx) {
+                ctx.attachExtraTrace(warning);
+              } else {
+                var parsed = CapturedTrace.parseStackAndMessage(warning);
+                warning.stack = parsed.message + "\n" + parsed.stack.join("\n");
+              }
+              CapturedTrace.formatAndLogError(warning, "");
+            };
+            Promise.onPossiblyUnhandledRejection = function(fn) {
+              possiblyUnhandledRejection = typeof fn === "function" ? fn : undefined;
+            };
+            Promise.onUnhandledRejectionHandled = function(fn) {
+              unhandledRejectionHandled = typeof fn === "function" ? fn : undefined;
+            };
+            Promise.longStackTraces = function() {
+              if (async.haveItemsQueued() && debugging === false) {
+                throw new Error("cannot enable long stack traces after promises have been created\u000a\u000a    See http://goo.gl/DT1qyG\u000a");
+              }
+              debugging = CapturedTrace.isSupported();
+              if (debugging) {
+                async.disableTrampolineIfNecessary();
+              }
+            };
+            Promise.hasLongStackTraces = function() {
+              return debugging && CapturedTrace.isSupported();
+            };
+            if (!CapturedTrace.isSupported()) {
+              Promise.longStackTraces = function() {};
+              debugging = false;
+            }
+            return function() {
+              return debugging;
+            };
+          };
+        }, {
+          "./async.js": 2,
+          "./errors.js": 13,
+          "./util.js": 38
+        }],
+        11: [function(_dereq_, module, exports) {
+          "use strict";
+          var util = _dereq_("./util.js");
+          var isPrimitive = util.isPrimitive;
+          var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
+          module.exports = function(Promise) {
+            var returner = function() {
+              return this;
+            };
+            var thrower = function() {
+              throw this;
+            };
+            var wrapper = function(value, action) {
+              if (action === 1) {
+                return function() {
+                  throw value;
+                };
+              } else if (action === 2) {
+                return function() {
+                  return value;
+                };
+              }
+            };
+            Promise.prototype["return"] = Promise.prototype.thenReturn = function(value) {
+              if (wrapsPrimitiveReceiver && isPrimitive(value)) {
+                return this._then(wrapper(value, 2), undefined, undefined, undefined, undefined);
+              }
+              return this._then(returner, undefined, undefined, value, undefined);
+            };
+            Promise.prototype["throw"] = Promise.prototype.thenThrow = function(reason) {
+              if (wrapsPrimitiveReceiver && isPrimitive(reason)) {
+                return this._then(wrapper(reason, 1), undefined, undefined, undefined, undefined);
+              }
+              return this._then(thrower, undefined, undefined, reason, undefined);
+            };
+          };
+        }, {"./util.js": 38}],
+        12: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, INTERNAL) {
+            var PromiseReduce = Promise.reduce;
+            Promise.prototype.each = function(fn) {
+              return PromiseReduce(this, fn, null, INTERNAL);
+            };
+            Promise.each = function(promises, fn) {
+              return PromiseReduce(promises, fn, null, INTERNAL);
+            };
+          };
+        }, {}],
+        13: [function(_dereq_, module, exports) {
+          "use strict";
+          var es5 = _dereq_("./es5.js");
+          var Objectfreeze = es5.freeze;
+          var util = _dereq_("./util.js");
+          var inherits = util.inherits;
+          var notEnumerableProp = util.notEnumerableProp;
+          function subError(nameProperty, defaultMessage) {
+            function SubError(message) {
+              if (!(this instanceof SubError))
+                return new SubError(message);
+              notEnumerableProp(this, "message", typeof message === "string" ? message : defaultMessage);
+              notEnumerableProp(this, "name", nameProperty);
+              if (Error.captureStackTrace) {
+                Error.captureStackTrace(this, this.constructor);
+              } else {
+                Error.call(this);
+              }
+            }
+            inherits(SubError, Error);
+            return SubError;
+          }
+          var _TypeError,
+              _RangeError;
+          var Warning = subError("Warning", "warning");
+          var CancellationError = subError("CancellationError", "cancellation error");
+          var TimeoutError = subError("TimeoutError", "timeout error");
+          var AggregateError = subError("AggregateError", "aggregate error");
+          try {
+            _TypeError = TypeError;
+            _RangeError = RangeError;
+          } catch (e) {
+            _TypeError = subError("TypeError", "type error");
+            _RangeError = subError("RangeError", "range error");
+          }
+          var methods = ("join pop push shift unshift slice filter forEach some " + "every map indexOf lastIndexOf reduce reduceRight sort reverse").split(" ");
+          for (var i = 0; i < methods.length; ++i) {
+            if (typeof Array.prototype[methods[i]] === "function") {
+              AggregateError.prototype[methods[i]] = Array.prototype[methods[i]];
+            }
+          }
+          es5.defineProperty(AggregateError.prototype, "length", {
+            value: 0,
+            configurable: false,
+            writable: true,
+            enumerable: true
+          });
+          AggregateError.prototype["isOperational"] = true;
+          var level = 0;
+          AggregateError.prototype.toString = function() {
+            var indent = Array(level * 4 + 1).join(" ");
+            var ret = "\n" + indent + "AggregateError of:" + "\n";
+            level++;
+            indent = Array(level * 4 + 1).join(" ");
+            for (var i = 0; i < this.length; ++i) {
+              var str = this[i] === this ? "[Circular AggregateError]" : this[i] + "";
+              var lines = str.split("\n");
+              for (var j = 0; j < lines.length; ++j) {
+                lines[j] = indent + lines[j];
+              }
+              str = lines.join("\n");
+              ret += str + "\n";
+            }
+            level--;
+            return ret;
+          };
+          function OperationalError(message) {
+            if (!(this instanceof OperationalError))
+              return new OperationalError(message);
+            notEnumerableProp(this, "name", "OperationalError");
+            notEnumerableProp(this, "message", message);
+            this.cause = message;
+            this["isOperational"] = true;
+            if (message instanceof Error) {
+              notEnumerableProp(this, "message", message.message);
+              notEnumerableProp(this, "stack", message.stack);
+            } else if (Error.captureStackTrace) {
+              Error.captureStackTrace(this, this.constructor);
+            }
+          }
+          inherits(OperationalError, Error);
+          var errorTypes = Error["__BluebirdErrorTypes__"];
+          if (!errorTypes) {
+            errorTypes = Objectfreeze({
+              CancellationError: CancellationError,
+              TimeoutError: TimeoutError,
+              OperationalError: OperationalError,
+              RejectionError: OperationalError,
+              AggregateError: AggregateError
+            });
+            notEnumerableProp(Error, "__BluebirdErrorTypes__", errorTypes);
+          }
+          module.exports = {
+            Error: Error,
+            TypeError: _TypeError,
+            RangeError: _RangeError,
+            CancellationError: errorTypes.CancellationError,
+            OperationalError: errorTypes.OperationalError,
+            TimeoutError: errorTypes.TimeoutError,
+            AggregateError: errorTypes.AggregateError,
+            Warning: Warning
+          };
+        }, {
+          "./es5.js": 14,
+          "./util.js": 38
+        }],
+        14: [function(_dereq_, module, exports) {
+          var isES5 = (function() {
+            "use strict";
+            return this === undefined;
+          })();
+          if (isES5) {
+            module.exports = {
+              freeze: Object.freeze,
+              defineProperty: Object.defineProperty,
+              getDescriptor: Object.getOwnPropertyDescriptor,
+              keys: Object.keys,
+              names: Object.getOwnPropertyNames,
+              getPrototypeOf: Object.getPrototypeOf,
+              isArray: Array.isArray,
+              isES5: isES5,
+              propertyIsWritable: function(obj, prop) {
+                var descriptor = Object.getOwnPropertyDescriptor(obj, prop);
+                return !!(!descriptor || descriptor.writable || descriptor.set);
+              }
+            };
+          } else {
+            var has = {}.hasOwnProperty;
+            var str = {}.toString;
+            var proto = {}.constructor.prototype;
+            var ObjectKeys = function(o) {
+              var ret = [];
+              for (var key in o) {
+                if (has.call(o, key)) {
+                  ret.push(key);
+                }
+              }
+              return ret;
+            };
+            var ObjectGetDescriptor = function(o, key) {
+              return {value: o[key]};
+            };
+            var ObjectDefineProperty = function(o, key, desc) {
+              o[key] = desc.value;
+              return o;
+            };
+            var ObjectFreeze = function(obj) {
+              return obj;
+            };
+            var ObjectGetPrototypeOf = function(obj) {
+              try {
+                return Object(obj).constructor.prototype;
+              } catch (e) {
+                return proto;
+              }
+            };
+            var ArrayIsArray = function(obj) {
+              try {
+                return str.call(obj) === "[object Array]";
+              } catch (e) {
+                return false;
+              }
+            };
+            module.exports = {
+              isArray: ArrayIsArray,
+              keys: ObjectKeys,
+              names: ObjectKeys,
+              defineProperty: ObjectDefineProperty,
+              getDescriptor: ObjectGetDescriptor,
+              freeze: ObjectFreeze,
+              getPrototypeOf: ObjectGetPrototypeOf,
+              isES5: isES5,
+              propertyIsWritable: function() {
+                return true;
+              }
+            };
+          }
+        }, {}],
+        15: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, INTERNAL) {
+            var PromiseMap = Promise.map;
+            Promise.prototype.filter = function(fn, options) {
+              return PromiseMap(this, fn, options, INTERNAL);
+            };
+            Promise.filter = function(promises, fn, options) {
+              return PromiseMap(promises, fn, options, INTERNAL);
+            };
+          };
+        }, {}],
+        16: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, NEXT_FILTER, tryConvertToPromise) {
+            var util = _dereq_("./util.js");
+            var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
+            var isPrimitive = util.isPrimitive;
+            var thrower = util.thrower;
+            function returnThis() {
+              return this;
+            }
+            function throwThis() {
+              throw this;
+            }
+            function return$(r) {
+              return function() {
+                return r;
+              };
+            }
+            function throw$(r) {
+              return function() {
+                throw r;
+              };
+            }
+            function promisedFinally(ret, reasonOrValue, isFulfilled) {
+              var then;
+              if (wrapsPrimitiveReceiver && isPrimitive(reasonOrValue)) {
+                then = isFulfilled ? return$(reasonOrValue) : throw$(reasonOrValue);
+              } else {
+                then = isFulfilled ? returnThis : throwThis;
+              }
+              return ret._then(then, thrower, undefined, reasonOrValue, undefined);
+            }
+            function finallyHandler(reasonOrValue) {
+              var promise = this.promise;
+              var handler = this.handler;
+              var ret = promise._isBound() ? handler.call(promise._boundTo) : handler();
+              if (ret !== undefined) {
+                var maybePromise = tryConvertToPromise(ret, promise);
+                if (maybePromise instanceof Promise) {
+                  maybePromise = maybePromise._target();
+                  return promisedFinally(maybePromise, reasonOrValue, promise.isFulfilled());
+                }
+              }
+              if (promise.isRejected()) {
+                NEXT_FILTER.e = reasonOrValue;
+                return NEXT_FILTER;
+              } else {
+                return reasonOrValue;
+              }
+            }
+            function tapHandler(value) {
+              var promise = this.promise;
+              var handler = this.handler;
+              var ret = promise._isBound() ? handler.call(promise._boundTo, value) : handler(value);
+              if (ret !== undefined) {
+                var maybePromise = tryConvertToPromise(ret, promise);
+                if (maybePromise instanceof Promise) {
+                  maybePromise = maybePromise._target();
+                  return promisedFinally(maybePromise, value, true);
+                }
+              }
+              return value;
+            }
+            Promise.prototype._passThroughHandler = function(handler, isFinally) {
+              if (typeof handler !== "function")
+                return this.then();
+              var promiseAndHandler = {
+                promise: this,
+                handler: handler
+              };
+              return this._then(isFinally ? finallyHandler : tapHandler, isFinally ? finallyHandler : undefined, undefined, promiseAndHandler, undefined);
+            };
+            Promise.prototype.lastly = Promise.prototype["finally"] = function(handler) {
+              return this._passThroughHandler(handler, true);
+            };
+            Promise.prototype.tap = function(handler) {
+              return this._passThroughHandler(handler, false);
+            };
+          };
+        }, {"./util.js": 38}],
+        17: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, apiRejection, INTERNAL, tryConvertToPromise) {
+            var errors = _dereq_("./errors.js");
+            var TypeError = errors.TypeError;
+            var util = _dereq_("./util.js");
+            var errorObj = util.errorObj;
+            var tryCatch = util.tryCatch;
+            var yieldHandlers = [];
+            function promiseFromYieldHandler(value, yieldHandlers, traceParent) {
+              for (var i = 0; i < yieldHandlers.length; ++i) {
+                traceParent._pushContext();
+                var result = tryCatch(yieldHandlers[i])(value);
+                traceParent._popContext();
+                if (result === errorObj) {
+                  traceParent._pushContext();
+                  var ret = Promise.reject(errorObj.e);
+                  traceParent._popContext();
+                  return ret;
+                }
+                var maybePromise = tryConvertToPromise(result, traceParent);
+                if (maybePromise instanceof Promise)
+                  return maybePromise;
+              }
+              return null;
+            }
+            function PromiseSpawn(generatorFunction, receiver, yieldHandler, stack) {
+              var promise = this._promise = new Promise(INTERNAL);
+              promise._captureStackTrace();
+              this._stack = stack;
+              this._generatorFunction = generatorFunction;
+              this._receiver = receiver;
+              this._generator = undefined;
+              this._yieldHandlers = typeof yieldHandler === "function" ? [yieldHandler].concat(yieldHandlers) : yieldHandlers;
+            }
+            PromiseSpawn.prototype.promise = function() {
+              return this._promise;
+            };
+            PromiseSpawn.prototype._run = function() {
+              this._generator = this._generatorFunction.call(this._receiver);
+              this._receiver = this._generatorFunction = undefined;
+              this._next(undefined);
+            };
+            PromiseSpawn.prototype._continue = function(result) {
+              if (result === errorObj) {
+                return this._promise._rejectCallback(result.e, false, true);
+              }
+              var value = result.value;
+              if (result.done === true) {
+                this._promise._resolveCallback(value);
+              } else {
+                var maybePromise = tryConvertToPromise(value, this._promise);
+                if (!(maybePromise instanceof Promise)) {
+                  maybePromise = promiseFromYieldHandler(maybePromise, this._yieldHandlers, this._promise);
+                  if (maybePromise === null) {
+                    this._throw(new TypeError("A value %s was yielded that could not be treated as a promise\u000a\u000a    See http://goo.gl/4Y4pDk\u000a\u000a".replace("%s", value) + "From coroutine:\u000a" + this._stack.split("\n").slice(1, -7).join("\n")));
+                    return ;
+                  }
+                }
+                maybePromise._then(this._next, this._throw, undefined, this, null);
+              }
+            };
+            PromiseSpawn.prototype._throw = function(reason) {
+              this._promise._attachExtraTrace(reason);
+              this._promise._pushContext();
+              var result = tryCatch(this._generator["throw"]).call(this._generator, reason);
+              this._promise._popContext();
+              this._continue(result);
+            };
+            PromiseSpawn.prototype._next = function(value) {
+              this._promise._pushContext();
+              var result = tryCatch(this._generator.next).call(this._generator, value);
+              this._promise._popContext();
+              this._continue(result);
+            };
+            Promise.coroutine = function(generatorFunction, options) {
+              if (typeof generatorFunction !== "function") {
+                throw new TypeError("generatorFunction must be a function\u000a\u000a    See http://goo.gl/6Vqhm0\u000a");
+              }
+              var yieldHandler = Object(options).yieldHandler;
+              var PromiseSpawn$ = PromiseSpawn;
+              var stack = new Error().stack;
+              return function() {
+                var generator = generatorFunction.apply(this, arguments);
+                var spawn = new PromiseSpawn$(undefined, undefined, yieldHandler, stack);
+                spawn._generator = generator;
+                spawn._next(undefined);
+                return spawn.promise();
+              };
+            };
+            Promise.coroutine.addYieldHandler = function(fn) {
+              if (typeof fn !== "function")
+                throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+              yieldHandlers.push(fn);
+            };
+            Promise.spawn = function(generatorFunction) {
+              if (typeof generatorFunction !== "function") {
+                return apiRejection("generatorFunction must be a function\u000a\u000a    See http://goo.gl/6Vqhm0\u000a");
+              }
+              var spawn = new PromiseSpawn(generatorFunction, this);
+              var ret = spawn.promise();
+              spawn._run(Promise.spawn);
+              return ret;
+            };
+          };
+        }, {
+          "./errors.js": 13,
+          "./util.js": 38
+        }],
+        18: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, PromiseArray, tryConvertToPromise, INTERNAL) {
+            var util = _dereq_("./util.js");
+            var canEvaluate = util.canEvaluate;
+            var tryCatch = util.tryCatch;
+            var errorObj = util.errorObj;
+            var reject;
+            if (!true) {
+              if (canEvaluate) {
+                var thenCallback = function(i) {
+                  return new Function("value", "holder", "                             \n\
+            'use strict';                                                    \n\
+            holder.pIndex = value;                                           \n\
+            holder.checkFulfillment(this);                                   \n\
+            ".replace(/Index/g, i));
+                };
+                var caller = function(count) {
+                  var values = [];
+                  for (var i = 1; i <= count; ++i)
+                    values.push("holder.p" + i);
+                  return new Function("holder", "                                      \n\
+            'use strict';                                                    \n\
+            var callback = holder.fn;                                        \n\
+            return callback(values);                                         \n\
+            ".replace(/values/g, values.join(", ")));
+                };
+                var thenCallbacks = [];
+                var callers = [undefined];
+                for (var i = 1; i <= 5; ++i) {
+                  thenCallbacks.push(thenCallback(i));
+                  callers.push(caller(i));
+                }
+                var Holder = function(total, fn) {
+                  this.p1 = this.p2 = this.p3 = this.p4 = this.p5 = null;
+                  this.fn = fn;
+                  this.total = total;
+                  this.now = 0;
+                };
+                Holder.prototype.callers = callers;
+                Holder.prototype.checkFulfillment = function(promise) {
+                  var now = this.now;
+                  now++;
+                  var total = this.total;
+                  if (now >= total) {
+                    var handler = this.callers[total];
+                    promise._pushContext();
+                    var ret = tryCatch(handler)(this);
+                    promise._popContext();
+                    if (ret === errorObj) {
+                      promise._rejectCallback(ret.e, false, true);
+                    } else {
+                      promise._resolveCallback(ret);
+                    }
+                  } else {
+                    this.now = now;
+                  }
+                };
+                var reject = function(reason) {
+                  this._reject(reason);
+                };
+              }
+            }
+            Promise.join = function() {
+              var last = arguments.length - 1;
+              var fn;
+              if (last > 0 && typeof arguments[last] === "function") {
+                fn = arguments[last];
+                if (!true) {
+                  if (last < 6 && canEvaluate) {
+                    var ret = new Promise(INTERNAL);
+                    ret._captureStackTrace();
+                    var holder = new Holder(last, fn);
+                    var callbacks = thenCallbacks;
+                    for (var i = 0; i < last; ++i) {
+                      var maybePromise = tryConvertToPromise(arguments[i], ret);
+                      if (maybePromise instanceof Promise) {
+                        maybePromise = maybePromise._target();
+                        if (maybePromise._isPending()) {
+                          maybePromise._then(callbacks[i], reject, undefined, ret, holder);
+                        } else if (maybePromise._isFulfilled()) {
+                          callbacks[i].call(ret, maybePromise._value(), holder);
+                        } else {
+                          ret._reject(maybePromise._reason());
+                        }
+                      } else {
+                        callbacks[i].call(ret, maybePromise, holder);
+                      }
+                    }
+                    return ret;
+                  }
+                }
+              }
+              var $_len = arguments.length;
+              var args = new Array($_len);
+              for (var $_i = 0; $_i < $_len; ++$_i) {
+                args[$_i] = arguments[$_i];
+              }
+              if (fn)
+                args.pop();
+              var ret = new PromiseArray(args).promise();
+              return fn !== undefined ? ret.spread(fn) : ret;
+            };
+          };
+        }, {"./util.js": 38}],
+        19: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL) {
+            var async = _dereq_("./async.js");
+            var util = _dereq_("./util.js");
+            var tryCatch = util.tryCatch;
+            var errorObj = util.errorObj;
+            var PENDING = {};
+            var EMPTY_ARRAY = [];
+            function MappingPromiseArray(promises, fn, limit, _filter) {
+              this.constructor$(promises);
+              this._promise._captureStackTrace();
+              this._callback = fn;
+              this._preservedValues = _filter === INTERNAL ? new Array(this.length()) : null;
+              this._limit = limit;
+              this._inFlight = 0;
+              this._queue = limit >= 1 ? [] : EMPTY_ARRAY;
+              async.invoke(init, this, undefined);
+            }
+            util.inherits(MappingPromiseArray, PromiseArray);
+            function init() {
+              this._init$(undefined, -2);
+            }
+            MappingPromiseArray.prototype._init = function() {};
+            MappingPromiseArray.prototype._promiseFulfilled = function(value, index) {
+              var values = this._values;
+              var length = this.length();
+              var preservedValues = this._preservedValues;
+              var limit = this._limit;
+              if (values[index] === PENDING) {
+                values[index] = value;
+                if (limit >= 1) {
+                  this._inFlight--;
+                  this._drainQueue();
+                  if (this._isResolved())
+                    return ;
+                }
+              } else {
+                if (limit >= 1 && this._inFlight >= limit) {
+                  values[index] = value;
+                  this._queue.push(index);
+                  return ;
+                }
+                if (preservedValues !== null)
+                  preservedValues[index] = value;
+                var callback = this._callback;
+                var receiver = this._promise._boundTo;
+                this._promise._pushContext();
+                var ret = tryCatch(callback).call(receiver, value, index, length);
+                this._promise._popContext();
+                if (ret === errorObj)
+                  return this._reject(ret.e);
+                var maybePromise = tryConvertToPromise(ret, this._promise);
+                if (maybePromise instanceof Promise) {
+                  maybePromise = maybePromise._target();
+                  if (maybePromise._isPending()) {
+                    if (limit >= 1)
+                      this._inFlight++;
+                    values[index] = PENDING;
+                    return maybePromise._proxyPromiseArray(this, index);
+                  } else if (maybePromise._isFulfilled()) {
+                    ret = maybePromise._value();
+                  } else {
+                    return this._reject(maybePromise._reason());
+                  }
+                }
+                values[index] = ret;
+              }
+              var totalResolved = ++this._totalResolved;
+              if (totalResolved >= length) {
+                if (preservedValues !== null) {
+                  this._filter(values, preservedValues);
+                } else {
+                  this._resolve(values);
+                }
+              }
+            };
+            MappingPromiseArray.prototype._drainQueue = function() {
+              var queue = this._queue;
+              var limit = this._limit;
+              var values = this._values;
+              while (queue.length > 0 && this._inFlight < limit) {
+                if (this._isResolved())
+                  return ;
+                var index = queue.pop();
+                this._promiseFulfilled(values[index], index);
+              }
+            };
+            MappingPromiseArray.prototype._filter = function(booleans, values) {
+              var len = values.length;
+              var ret = new Array(len);
+              var j = 0;
+              for (var i = 0; i < len; ++i) {
+                if (booleans[i])
+                  ret[j++] = values[i];
+              }
+              ret.length = j;
+              this._resolve(ret);
+            };
+            MappingPromiseArray.prototype.preservedValues = function() {
+              return this._preservedValues;
+            };
+            function map(promises, fn, options, _filter) {
+              var limit = typeof options === "object" && options !== null ? options.concurrency : 0;
+              limit = typeof limit === "number" && isFinite(limit) && limit >= 1 ? limit : 0;
+              return new MappingPromiseArray(promises, fn, limit, _filter);
+            }
+            Promise.prototype.map = function(fn, options) {
+              if (typeof fn !== "function")
+                return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+              return map(this, fn, options, null).promise();
+            };
+            Promise.map = function(promises, fn, options, _filter) {
+              if (typeof fn !== "function")
+                return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+              return map(promises, fn, options, _filter).promise();
+            };
+          };
+        }, {
+          "./async.js": 2,
+          "./util.js": 38
+        }],
+        20: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, INTERNAL, tryConvertToPromise, apiRejection) {
+            var util = _dereq_("./util.js");
+            var tryCatch = util.tryCatch;
+            Promise.method = function(fn) {
+              if (typeof fn !== "function") {
+                throw new Promise.TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+              }
+              return function() {
+                var ret = new Promise(INTERNAL);
+                ret._captureStackTrace();
+                ret._pushContext();
+                var value = tryCatch(fn).apply(this, arguments);
+                ret._popContext();
+                ret._resolveFromSyncValue(value);
+                return ret;
+              };
+            };
+            Promise.attempt = Promise["try"] = function(fn, args, ctx) {
+              if (typeof fn !== "function") {
+                return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+              }
+              var ret = new Promise(INTERNAL);
+              ret._captureStackTrace();
+              ret._pushContext();
+              var value = util.isArray(args) ? tryCatch(fn).apply(ctx, args) : tryCatch(fn).call(ctx, args);
+              ret._popContext();
+              ret._resolveFromSyncValue(value);
+              return ret;
+            };
+            Promise.prototype._resolveFromSyncValue = function(value) {
+              if (value === util.errorObj) {
+                this._rejectCallback(value.e, false, true);
+              } else {
+                this._resolveCallback(value, true);
+              }
+            };
+          };
+        }, {"./util.js": 38}],
+        21: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise) {
+            var util = _dereq_("./util.js");
+            var async = _dereq_("./async.js");
+            var tryCatch = util.tryCatch;
+            var errorObj = util.errorObj;
+            function spreadAdapter(val, nodeback) {
+              var promise = this;
+              if (!util.isArray(val))
+                return successAdapter.call(promise, val, nodeback);
+              var ret = tryCatch(nodeback).apply(promise._boundTo, [null].concat(val));
+              if (ret === errorObj) {
+                async.throwLater(ret.e);
+              }
+            }
+            function successAdapter(val, nodeback) {
+              var promise = this;
+              var receiver = promise._boundTo;
+              var ret = val === undefined ? tryCatch(nodeback).call(receiver, null) : tryCatch(nodeback).call(receiver, null, val);
+              if (ret === errorObj) {
+                async.throwLater(ret.e);
+              }
+            }
+            function errorAdapter(reason, nodeback) {
+              var promise = this;
+              if (!reason) {
+                var target = promise._target();
+                var newReason = target._getCarriedStackTrace();
+                newReason.cause = reason;
+                reason = newReason;
+              }
+              var ret = tryCatch(nodeback).call(promise._boundTo, reason);
+              if (ret === errorObj) {
+                async.throwLater(ret.e);
+              }
+            }
+            Promise.prototype.asCallback = Promise.prototype.nodeify = function(nodeback, options) {
+              if (typeof nodeback == "function") {
+                var adapter = successAdapter;
+                if (options !== undefined && Object(options).spread) {
+                  adapter = spreadAdapter;
+                }
+                this._then(adapter, errorAdapter, undefined, this, nodeback);
+              }
+              return this;
+            };
+          };
+        }, {
+          "./async.js": 2,
+          "./util.js": 38
+        }],
+        22: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, PromiseArray) {
+            var util = _dereq_("./util.js");
+            var async = _dereq_("./async.js");
+            var tryCatch = util.tryCatch;
+            var errorObj = util.errorObj;
+            Promise.prototype.progressed = function(handler) {
+              return this._then(undefined, undefined, handler, undefined, undefined);
+            };
+            Promise.prototype._progress = function(progressValue) {
+              if (this._isFollowingOrFulfilledOrRejected())
+                return ;
+              this._target()._progressUnchecked(progressValue);
+            };
+            Promise.prototype._progressHandlerAt = function(index) {
+              return index === 0 ? this._progressHandler0 : this[(index << 2) + index - 5 + 2];
+            };
+            Promise.prototype._doProgressWith = function(progression) {
+              var progressValue = progression.value;
+              var handler = progression.handler;
+              var promise = progression.promise;
+              var receiver = progression.receiver;
+              var ret = tryCatch(handler).call(receiver, progressValue);
+              if (ret === errorObj) {
+                if (ret.e != null && ret.e.name !== "StopProgressPropagation") {
+                  var trace = util.canAttachTrace(ret.e) ? ret.e : new Error(util.toString(ret.e));
+                  promise._attachExtraTrace(trace);
+                  promise._progress(ret.e);
+                }
+              } else if (ret instanceof Promise) {
+                ret._then(promise._progress, null, null, promise, undefined);
+              } else {
+                promise._progress(ret);
+              }
+            };
+            Promise.prototype._progressUnchecked = function(progressValue) {
+              var len = this._length();
+              var progress = this._progress;
+              for (var i = 0; i < len; i++) {
+                var handler = this._progressHandlerAt(i);
+                var promise = this._promiseAt(i);
+                if (!(promise instanceof Promise)) {
+                  var receiver = this._receiverAt(i);
+                  if (typeof handler === "function") {
+                    handler.call(receiver, progressValue, promise);
+                  } else if (receiver instanceof PromiseArray && !receiver._isResolved()) {
+                    receiver._promiseProgressed(progressValue, promise);
+                  }
+                  continue;
+                }
+                if (typeof handler === "function") {
+                  async.invoke(this._doProgressWith, this, {
+                    handler: handler,
+                    promise: promise,
+                    receiver: this._receiverAt(i),
+                    value: progressValue
+                  });
+                } else {
+                  async.invoke(progress, promise, progressValue);
+                }
+              }
+            };
+          };
+        }, {
+          "./async.js": 2,
+          "./util.js": 38
+        }],
+        23: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function() {
+            var makeSelfResolutionError = function() {
+              return new TypeError("circular promise resolution chain\u000a\u000a    See http://goo.gl/LhFpo0\u000a");
+            };
+            var reflect = function() {
+              return new Promise.PromiseInspection(this._target());
+            };
+            var apiRejection = function(msg) {
+              return Promise.reject(new TypeError(msg));
+            };
+            var util = _dereq_("./util.js");
+            var async = _dereq_("./async.js");
+            var errors = _dereq_("./errors.js");
+            var TypeError = Promise.TypeError = errors.TypeError;
+            Promise.RangeError = errors.RangeError;
+            Promise.CancellationError = errors.CancellationError;
+            Promise.TimeoutError = errors.TimeoutError;
+            Promise.OperationalError = errors.OperationalError;
+            Promise.RejectionError = errors.OperationalError;
+            Promise.AggregateError = errors.AggregateError;
+            var INTERNAL = function() {};
+            var APPLY = {};
+            var NEXT_FILTER = {e: null};
+            var tryConvertToPromise = _dereq_("./thenables.js")(Promise, INTERNAL);
+            var PromiseArray = _dereq_("./promise_array.js")(Promise, INTERNAL, tryConvertToPromise, apiRejection);
+            var CapturedTrace = _dereq_("./captured_trace.js")();
+            var isDebugging = _dereq_("./debuggability.js")(Promise, CapturedTrace);
+            var createContext = _dereq_("./context.js")(Promise, CapturedTrace, isDebugging);
+            var CatchFilter = _dereq_("./catch_filter.js")(NEXT_FILTER);
+            var PromiseResolver = _dereq_("./promise_resolver.js");
+            var nodebackForPromise = PromiseResolver._nodebackForPromise;
+            var errorObj = util.errorObj;
+            var tryCatch = util.tryCatch;
+            function Promise(resolver) {
+              if (typeof resolver !== "function") {
+                throw new TypeError("the promise constructor requires a resolver function\u000a\u000a    See http://goo.gl/EC22Yn\u000a");
+              }
+              if (this.constructor !== Promise) {
+                throw new TypeError("the promise constructor cannot be invoked directly\u000a\u000a    See http://goo.gl/KsIlge\u000a");
+              }
+              this._bitField = 0;
+              this._fulfillmentHandler0 = undefined;
+              this._rejectionHandler0 = undefined;
+              this._progressHandler0 = undefined;
+              this._promise0 = undefined;
+              this._receiver0 = undefined;
+              this._settledValue = undefined;
+              if (resolver !== INTERNAL)
+                this._resolveFromResolver(resolver);
+            }
+            Promise.prototype.toString = function() {
+              return "[object Promise]";
+            };
+            Promise.prototype.caught = Promise.prototype["catch"] = function(fn) {
+              var len = arguments.length;
+              if (len > 1) {
+                var catchInstances = new Array(len - 1),
+                    j = 0,
+                    i;
+                for (i = 0; i < len - 1; ++i) {
+                  var item = arguments[i];
+                  if (typeof item === "function") {
+                    catchInstances[j++] = item;
+                  } else {
+                    return Promise.reject(new TypeError("Catch filter must inherit from Error or be a simple predicate function\u000a\u000a    See http://goo.gl/o84o68\u000a"));
+                  }
+                }
+                catchInstances.length = j;
+                fn = arguments[i];
+                var catchFilter = new CatchFilter(catchInstances, fn, this);
+                return this._then(undefined, catchFilter.doFilter, undefined, catchFilter, undefined);
+              }
+              return this._then(undefined, fn, undefined, undefined, undefined);
+            };
+            Promise.prototype.reflect = function() {
+              return this._then(reflect, reflect, undefined, this, undefined);
+            };
+            Promise.prototype.then = function(didFulfill, didReject, didProgress) {
+              if (isDebugging() && arguments.length > 0 && typeof didFulfill !== "function" && typeof didReject !== "function") {
+                var msg = ".then() only accepts functions but was passed: " + util.classString(didFulfill);
+                if (arguments.length > 1) {
+                  msg += ", " + util.classString(didReject);
+                }
+                this._warn(msg);
+              }
+              return this._then(didFulfill, didReject, didProgress, undefined, undefined);
+            };
+            Promise.prototype.done = function(didFulfill, didReject, didProgress) {
+              var promise = this._then(didFulfill, didReject, didProgress, undefined, undefined);
+              promise._setIsFinal();
+            };
+            Promise.prototype.spread = function(didFulfill, didReject) {
+              return this.all()._then(didFulfill, didReject, undefined, APPLY, undefined);
+            };
+            Promise.prototype.isCancellable = function() {
+              return !this.isResolved() && this._cancellable();
+            };
+            Promise.prototype.toJSON = function() {
+              var ret = {
+                isFulfilled: false,
+                isRejected: false,
+                fulfillmentValue: undefined,
+                rejectionReason: undefined
+              };
+              if (this.isFulfilled()) {
+                ret.fulfillmentValue = this.value();
+                ret.isFulfilled = true;
+              } else if (this.isRejected()) {
+                ret.rejectionReason = this.reason();
+                ret.isRejected = true;
+              }
+              return ret;
+            };
+            Promise.prototype.all = function() {
+              return new PromiseArray(this).promise();
+            };
+            Promise.prototype.error = function(fn) {
+              return this.caught(util.originatesFromRejection, fn);
+            };
+            Promise.is = function(val) {
+              return val instanceof Promise;
+            };
+            Promise.fromNode = function(fn) {
+              var ret = new Promise(INTERNAL);
+              var result = tryCatch(fn)(nodebackForPromise(ret));
+              if (result === errorObj) {
+                ret._rejectCallback(result.e, true, true);
+              }
+              return ret;
+            };
+            Promise.all = function(promises) {
+              return new PromiseArray(promises).promise();
+            };
+            Promise.defer = Promise.pending = function() {
+              var promise = new Promise(INTERNAL);
+              return new PromiseResolver(promise);
+            };
+            Promise.cast = function(obj) {
+              var ret = tryConvertToPromise(obj);
+              if (!(ret instanceof Promise)) {
+                var val = ret;
+                ret = new Promise(INTERNAL);
+                ret._fulfillUnchecked(val);
+              }
+              return ret;
+            };
+            Promise.resolve = Promise.fulfilled = Promise.cast;
+            Promise.reject = Promise.rejected = function(reason) {
+              var ret = new Promise(INTERNAL);
+              ret._captureStackTrace();
+              ret._rejectCallback(reason, true);
+              return ret;
+            };
+            Promise.setScheduler = function(fn) {
+              if (typeof fn !== "function")
+                throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+              var prev = async._schedule;
+              async._schedule = fn;
+              return prev;
+            };
+            Promise.prototype._then = function(didFulfill, didReject, didProgress, receiver, internalData) {
+              var haveInternalData = internalData !== undefined;
+              var ret = haveInternalData ? internalData : new Promise(INTERNAL);
+              if (!haveInternalData) {
+                ret._propagateFrom(this, 4 | 1);
+                ret._captureStackTrace();
+              }
+              var target = this._target();
+              if (target !== this) {
+                if (receiver === undefined)
+                  receiver = this._boundTo;
+                if (!haveInternalData)
+                  ret._setIsMigrated();
+              }
+              var callbackIndex = target._addCallbacks(didFulfill, didReject, didProgress, ret, receiver);
+              if (target._isResolved() && !target._isSettlePromisesQueued()) {
+                async.invoke(target._settlePromiseAtPostResolution, target, callbackIndex);
+              }
+              return ret;
+            };
+            Promise.prototype._settlePromiseAtPostResolution = function(index) {
+              if (this._isRejectionUnhandled())
+                this._unsetRejectionIsUnhandled();
+              this._settlePromiseAt(index);
+            };
+            Promise.prototype._length = function() {
+              return this._bitField & 131071;
+            };
+            Promise.prototype._isFollowingOrFulfilledOrRejected = function() {
+              return (this._bitField & 939524096) > 0;
+            };
+            Promise.prototype._isFollowing = function() {
+              return (this._bitField & 536870912) === 536870912;
+            };
+            Promise.prototype._setLength = function(len) {
+              this._bitField = (this._bitField & -131072) | (len & 131071);
+            };
+            Promise.prototype._setFulfilled = function() {
+              this._bitField = this._bitField | 268435456;
+            };
+            Promise.prototype._setRejected = function() {
+              this._bitField = this._bitField | 134217728;
+            };
+            Promise.prototype._setFollowing = function() {
+              this._bitField = this._bitField | 536870912;
+            };
+            Promise.prototype._setIsFinal = function() {
+              this._bitField = this._bitField | 33554432;
+            };
+            Promise.prototype._isFinal = function() {
+              return (this._bitField & 33554432) > 0;
+            };
+            Promise.prototype._cancellable = function() {
+              return (this._bitField & 67108864) > 0;
+            };
+            Promise.prototype._setCancellable = function() {
+              this._bitField = this._bitField | 67108864;
+            };
+            Promise.prototype._unsetCancellable = function() {
+              this._bitField = this._bitField & (~67108864);
+            };
+            Promise.prototype._setIsMigrated = function() {
+              this._bitField = this._bitField | 4194304;
+            };
+            Promise.prototype._unsetIsMigrated = function() {
+              this._bitField = this._bitField & (~4194304);
+            };
+            Promise.prototype._isMigrated = function() {
+              return (this._bitField & 4194304) > 0;
+            };
+            Promise.prototype._receiverAt = function(index) {
+              var ret = index === 0 ? this._receiver0 : this[index * 5 - 5 + 4];
+              if (ret === undefined && this._isBound()) {
+                return this._boundTo;
+              }
+              return ret;
+            };
+            Promise.prototype._promiseAt = function(index) {
+              return index === 0 ? this._promise0 : this[index * 5 - 5 + 3];
+            };
+            Promise.prototype._fulfillmentHandlerAt = function(index) {
+              return index === 0 ? this._fulfillmentHandler0 : this[index * 5 - 5 + 0];
+            };
+            Promise.prototype._rejectionHandlerAt = function(index) {
+              return index === 0 ? this._rejectionHandler0 : this[index * 5 - 5 + 1];
+            };
+            Promise.prototype._migrateCallbacks = function(follower, index) {
+              var fulfill = follower._fulfillmentHandlerAt(index);
+              var reject = follower._rejectionHandlerAt(index);
+              var progress = follower._progressHandlerAt(index);
+              var promise = follower._promiseAt(index);
+              var receiver = follower._receiverAt(index);
+              if (promise instanceof Promise)
+                promise._setIsMigrated();
+              this._addCallbacks(fulfill, reject, progress, promise, receiver);
+            };
+            Promise.prototype._addCallbacks = function(fulfill, reject, progress, promise, receiver) {
+              var index = this._length();
+              if (index >= 131071 - 5) {
+                index = 0;
+                this._setLength(0);
+              }
+              if (index === 0) {
+                this._promise0 = promise;
+                if (receiver !== undefined)
+                  this._receiver0 = receiver;
+                if (typeof fulfill === "function" && !this._isCarryingStackTrace())
+                  this._fulfillmentHandler0 = fulfill;
+                if (typeof reject === "function")
+                  this._rejectionHandler0 = reject;
+                if (typeof progress === "function")
+                  this._progressHandler0 = progress;
+              } else {
+                var base = index * 5 - 5;
+                this[base + 3] = promise;
+                this[base + 4] = receiver;
+                if (typeof fulfill === "function")
+                  this[base + 0] = fulfill;
+                if (typeof reject === "function")
+                  this[base + 1] = reject;
+                if (typeof progress === "function")
+                  this[base + 2] = progress;
+              }
+              this._setLength(index + 1);
+              return index;
+            };
+            Promise.prototype._setProxyHandlers = function(receiver, promiseSlotValue) {
+              var index = this._length();
+              if (index >= 131071 - 5) {
+                index = 0;
+                this._setLength(0);
+              }
+              if (index === 0) {
+                this._promise0 = promiseSlotValue;
+                this._receiver0 = receiver;
+              } else {
+                var base = index * 5 - 5;
+                this[base + 3] = promiseSlotValue;
+                this[base + 4] = receiver;
+              }
+              this._setLength(index + 1);
+            };
+            Promise.prototype._proxyPromiseArray = function(promiseArray, index) {
+              this._setProxyHandlers(promiseArray, index);
+            };
+            Promise.prototype._resolveCallback = function(value, shouldBind) {
+              if (this._isFollowingOrFulfilledOrRejected())
+                return ;
+              if (value === this)
+                return this._rejectCallback(makeSelfResolutionError(), false, true);
+              var maybePromise = tryConvertToPromise(value, this);
+              if (!(maybePromise instanceof Promise))
+                return this._fulfill(value);
+              var propagationFlags = 1 | (shouldBind ? 4 : 0);
+              this._propagateFrom(maybePromise, propagationFlags);
+              var promise = maybePromise._target();
+              if (promise._isPending()) {
+                var len = this._length();
+                for (var i = 0; i < len; ++i) {
+                  promise._migrateCallbacks(this, i);
+                }
+                this._setFollowing();
+                this._setLength(0);
+                this._setFollowee(promise);
+              } else if (promise._isFulfilled()) {
+                this._fulfillUnchecked(promise._value());
+              } else {
+                this._rejectUnchecked(promise._reason(), promise._getCarriedStackTrace());
+              }
+            };
+            Promise.prototype._rejectCallback = function(reason, synchronous, shouldNotMarkOriginatingFromRejection) {
+              if (!shouldNotMarkOriginatingFromRejection) {
+                util.markAsOriginatingFromRejection(reason);
+              }
+              var trace = util.ensureErrorObject(reason);
+              var hasStack = trace === reason;
+              this._attachExtraTrace(trace, synchronous ? hasStack : false);
+              this._reject(reason, hasStack ? undefined : trace);
+            };
+            Promise.prototype._resolveFromResolver = function(resolver) {
+              var promise = this;
+              this._captureStackTrace();
+              this._pushContext();
+              var synchronous = true;
+              var r = tryCatch(resolver)(function(value) {
+                if (promise === null)
+                  return ;
+                promise._resolveCallback(value);
+                promise = null;
+              }, function(reason) {
+                if (promise === null)
+                  return ;
+                promise._rejectCallback(reason, synchronous);
+                promise = null;
+              });
+              synchronous = false;
+              this._popContext();
+              if (r !== undefined && r === errorObj && promise !== null) {
+                promise._rejectCallback(r.e, true, true);
+                promise = null;
+              }
+            };
+            Promise.prototype._settlePromiseFromHandler = function(handler, receiver, value, promise) {
+              if (promise._isRejected())
+                return ;
+              promise._pushContext();
+              var x;
+              if (receiver === APPLY && !this._isRejected()) {
+                x = tryCatch(handler).apply(this._boundTo, value);
+              } else {
+                x = tryCatch(handler).call(receiver, value);
+              }
+              promise._popContext();
+              if (x === errorObj || x === promise || x === NEXT_FILTER) {
+                var err = x === promise ? makeSelfResolutionError() : x.e;
+                promise._rejectCallback(err, false, true);
+              } else {
+                promise._resolveCallback(x);
+              }
+            };
+            Promise.prototype._target = function() {
+              var ret = this;
+              while (ret._isFollowing())
+                ret = ret._followee();
+              return ret;
+            };
+            Promise.prototype._followee = function() {
+              return this._rejectionHandler0;
+            };
+            Promise.prototype._setFollowee = function(promise) {
+              this._rejectionHandler0 = promise;
+            };
+            Promise.prototype._cleanValues = function() {
+              if (this._cancellable()) {
+                this._cancellationParent = undefined;
+              }
+            };
+            Promise.prototype._propagateFrom = function(parent, flags) {
+              if ((flags & 1) > 0 && parent._cancellable()) {
+                this._setCancellable();
+                this._cancellationParent = parent;
+              }
+              if ((flags & 4) > 0 && parent._isBound()) {
+                this._setBoundTo(parent._boundTo);
+              }
+            };
+            Promise.prototype._fulfill = function(value) {
+              if (this._isFollowingOrFulfilledOrRejected())
+                return ;
+              this._fulfillUnchecked(value);
+            };
+            Promise.prototype._reject = function(reason, carriedStackTrace) {
+              if (this._isFollowingOrFulfilledOrRejected())
+                return ;
+              this._rejectUnchecked(reason, carriedStackTrace);
+            };
+            Promise.prototype._settlePromiseAt = function(index) {
+              var promise = this._promiseAt(index);
+              var isPromise = promise instanceof Promise;
+              if (isPromise && promise._isMigrated()) {
+                promise._unsetIsMigrated();
+                return async.invoke(this._settlePromiseAt, this, index);
+              }
+              var handler = this._isFulfilled() ? this._fulfillmentHandlerAt(index) : this._rejectionHandlerAt(index);
+              var carriedStackTrace = this._isCarryingStackTrace() ? this._getCarriedStackTrace() : undefined;
+              var value = this._settledValue;
+              var receiver = this._receiverAt(index);
+              this._clearCallbackDataAtIndex(index);
+              if (typeof handler === "function") {
+                if (!isPromise) {
+                  handler.call(receiver, value, promise);
+                } else {
+                  this._settlePromiseFromHandler(handler, receiver, value, promise);
+                }
+              } else if (receiver instanceof PromiseArray) {
+                if (!receiver._isResolved()) {
+                  if (this._isFulfilled()) {
+                    receiver._promiseFulfilled(value, promise);
+                  } else {
+                    receiver._promiseRejected(value, promise);
+                  }
+                }
+              } else if (isPromise) {
+                if (this._isFulfilled()) {
+                  promise._fulfill(value);
+                } else {
+                  promise._reject(value, carriedStackTrace);
+                }
+              }
+              if (index >= 4 && (index & 31) === 4)
+                async.invokeLater(this._setLength, this, 0);
+            };
+            Promise.prototype._clearCallbackDataAtIndex = function(index) {
+              if (index === 0) {
+                if (!this._isCarryingStackTrace()) {
+                  this._fulfillmentHandler0 = undefined;
+                }
+                this._rejectionHandler0 = this._progressHandler0 = this._receiver0 = this._promise0 = undefined;
+              } else {
+                var base = index * 5 - 5;
+                this[base + 3] = this[base + 4] = this[base + 0] = this[base + 1] = this[base + 2] = undefined;
+              }
+            };
+            Promise.prototype._isSettlePromisesQueued = function() {
+              return (this._bitField & -1073741824) === -1073741824;
+            };
+            Promise.prototype._setSettlePromisesQueued = function() {
+              this._bitField = this._bitField | -1073741824;
+            };
+            Promise.prototype._unsetSettlePromisesQueued = function() {
+              this._bitField = this._bitField & (~-1073741824);
+            };
+            Promise.prototype._queueSettlePromises = function() {
+              async.settlePromises(this);
+              this._setSettlePromisesQueued();
+            };
+            Promise.prototype._fulfillUnchecked = function(value) {
+              if (value === this) {
+                var err = makeSelfResolutionError();
+                this._attachExtraTrace(err);
+                return this._rejectUnchecked(err, undefined);
+              }
+              this._setFulfilled();
+              this._settledValue = value;
+              this._cleanValues();
+              if (this._length() > 0) {
+                this._queueSettlePromises();
+              }
+            };
+            Promise.prototype._rejectUncheckedCheckError = function(reason) {
+              var trace = util.ensureErrorObject(reason);
+              this._rejectUnchecked(reason, trace === reason ? undefined : trace);
+            };
+            Promise.prototype._rejectUnchecked = function(reason, trace) {
+              if (reason === this) {
+                var err = makeSelfResolutionError();
+                this._attachExtraTrace(err);
+                return this._rejectUnchecked(err);
+              }
+              this._setRejected();
+              this._settledValue = reason;
+              this._cleanValues();
+              if (this._isFinal()) {
+                async.throwLater(function(e) {
+                  if ("stack" in e) {
+                    async.invokeFirst(CapturedTrace.unhandledRejection, undefined, e);
+                  }
+                  throw e;
+                }, trace === undefined ? reason : trace);
+                return ;
+              }
+              if (trace !== undefined && trace !== reason) {
+                this._setCarriedStackTrace(trace);
+              }
+              if (this._length() > 0) {
+                this._queueSettlePromises();
+              } else {
+                this._ensurePossibleRejectionHandled();
+              }
+            };
+            Promise.prototype._settlePromises = function() {
+              this._unsetSettlePromisesQueued();
+              var len = this._length();
+              for (var i = 0; i < len; i++) {
+                this._settlePromiseAt(i);
+              }
+            };
+            Promise._makeSelfResolutionError = makeSelfResolutionError;
+            _dereq_("./progress.js")(Promise, PromiseArray);
+            _dereq_("./method.js")(Promise, INTERNAL, tryConvertToPromise, apiRejection);
+            _dereq_("./bind.js")(Promise, INTERNAL, tryConvertToPromise);
+            _dereq_("./finally.js")(Promise, NEXT_FILTER, tryConvertToPromise);
+            _dereq_("./direct_resolve.js")(Promise);
+            _dereq_("./synchronous_inspection.js")(Promise);
+            _dereq_("./join.js")(Promise, PromiseArray, tryConvertToPromise, INTERNAL);
+            Promise.Promise = Promise;
+            _dereq_('./map.js')(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL);
+            _dereq_('./cancel.js')(Promise);
+            _dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext);
+            _dereq_('./generators.js')(Promise, apiRejection, INTERNAL, tryConvertToPromise);
+            _dereq_('./nodeify.js')(Promise);
+            _dereq_('./call_get.js')(Promise);
+            _dereq_('./props.js')(Promise, PromiseArray, tryConvertToPromise, apiRejection);
+            _dereq_('./race.js')(Promise, INTERNAL, tryConvertToPromise, apiRejection);
+            _dereq_('./reduce.js')(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL);
+            _dereq_('./settle.js')(Promise, PromiseArray);
+            _dereq_('./some.js')(Promise, PromiseArray, apiRejection);
+            _dereq_('./promisify.js')(Promise, INTERNAL);
+            _dereq_('./any.js')(Promise);
+            _dereq_('./each.js')(Promise, INTERNAL);
+            _dereq_('./timers.js')(Promise, INTERNAL);
+            _dereq_('./filter.js')(Promise, INTERNAL);
+            util.toFastProperties(Promise);
+            util.toFastProperties(Promise.prototype);
+            function fillTypes(value) {
+              var p = new Promise(INTERNAL);
+              p._fulfillmentHandler0 = value;
+              p._rejectionHandler0 = value;
+              p._progressHandler0 = value;
+              p._promise0 = value;
+              p._receiver0 = value;
+              p._settledValue = value;
+            }
+            fillTypes({a: 1});
+            fillTypes({b: 2});
+            fillTypes({c: 3});
+            fillTypes(1);
+            fillTypes(function() {});
+            fillTypes(undefined);
+            fillTypes(false);
+            fillTypes(new Promise(INTERNAL));
+            CapturedTrace.setBounds(async.firstLineError, util.lastLineError);
+            return Promise;
+          };
+        }, {
+          "./any.js": 1,
+          "./async.js": 2,
+          "./bind.js": 3,
+          "./call_get.js": 5,
+          "./cancel.js": 6,
+          "./captured_trace.js": 7,
+          "./catch_filter.js": 8,
+          "./context.js": 9,
+          "./debuggability.js": 10,
+          "./direct_resolve.js": 11,
+          "./each.js": 12,
+          "./errors.js": 13,
+          "./filter.js": 15,
+          "./finally.js": 16,
+          "./generators.js": 17,
+          "./join.js": 18,
+          "./map.js": 19,
+          "./method.js": 20,
+          "./nodeify.js": 21,
+          "./progress.js": 22,
+          "./promise_array.js": 24,
+          "./promise_resolver.js": 25,
+          "./promisify.js": 26,
+          "./props.js": 27,
+          "./race.js": 29,
+          "./reduce.js": 30,
+          "./settle.js": 32,
+          "./some.js": 33,
+          "./synchronous_inspection.js": 34,
+          "./thenables.js": 35,
+          "./timers.js": 36,
+          "./using.js": 37,
+          "./util.js": 38
+        }],
+        24: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, INTERNAL, tryConvertToPromise, apiRejection) {
+            var util = _dereq_("./util.js");
+            var isArray = util.isArray;
+            function toResolutionValue(val) {
+              switch (val) {
+                case -2:
+                  return [];
+                case -3:
+                  return {};
+              }
+            }
+            function PromiseArray(values) {
+              var promise = this._promise = new Promise(INTERNAL);
+              var parent;
+              if (values instanceof Promise) {
+                parent = values;
+                promise._propagateFrom(parent, 1 | 4);
+              }
+              this._values = values;
+              this._length = 0;
+              this._totalResolved = 0;
+              this._init(undefined, -2);
+            }
+            PromiseArray.prototype.length = function() {
+              return this._length;
+            };
+            PromiseArray.prototype.promise = function() {
+              return this._promise;
+            };
+            PromiseArray.prototype._init = function init(_, resolveValueIfEmpty) {
+              var values = tryConvertToPromise(this._values, this._promise);
+              if (values instanceof Promise) {
+                values = values._target();
+                this._values = values;
+                if (values._isFulfilled()) {
+                  values = values._value();
+                  if (!isArray(values)) {
+                    var err = new Promise.TypeError("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
+                    this.__hardReject__(err);
+                    return ;
+                  }
+                } else if (values._isPending()) {
+                  values._then(init, this._reject, undefined, this, resolveValueIfEmpty);
+                  return ;
+                } else {
+                  this._reject(values._reason());
+                  return ;
+                }
+              } else if (!isArray(values)) {
+                this._promise._reject(apiRejection("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a")._reason());
+                return ;
+              }
+              if (values.length === 0) {
+                if (resolveValueIfEmpty === -5) {
+                  this._resolveEmptyArray();
+                } else {
+                  this._resolve(toResolutionValue(resolveValueIfEmpty));
+                }
+                return ;
+              }
+              var len = this.getActualLength(values.length);
+              this._length = len;
+              this._values = this.shouldCopyValues() ? new Array(len) : this._values;
+              var promise = this._promise;
+              for (var i = 0; i < len; ++i) {
+                var isResolved = this._isResolved();
+                var maybePromise = tryConvertToPromise(values[i], promise);
+                if (maybePromise instanceof Promise) {
+                  maybePromise = maybePromise._target();
+                  if (isResolved) {
+                    maybePromise._unsetRejectionIsUnhandled();
+                  } else if (maybePromise._isPending()) {
+                    maybePromise._proxyPromiseArray(this, i);
+                  } else if (maybePromise._isFulfilled()) {
+                    this._promiseFulfilled(maybePromise._value(), i);
+                  } else {
+                    this._promiseRejected(maybePromise._reason(), i);
+                  }
+                } else if (!isResolved) {
+                  this._promiseFulfilled(maybePromise, i);
+                }
+              }
+            };
+            PromiseArray.prototype._isResolved = function() {
+              return this._values === null;
+            };
+            PromiseArray.prototype._resolve = function(value) {
+              this._values = null;
+              this._promise._fulfill(value);
+            };
+            PromiseArray.prototype.__hardReject__ = PromiseArray.prototype._reject = function(reason) {
+              this._values = null;
+              this._promise._rejectCallback(reason, false, true);
+            };
+            PromiseArray.prototype._promiseProgressed = function(progressValue, index) {
+              this._promise._progress({
+                index: index,
+                value: progressValue
+              });
+            };
+            PromiseArray.prototype._promiseFulfilled = function(value, index) {
+              this._values[index] = value;
+              var totalResolved = ++this._totalResolved;
+              if (totalResolved >= this._length) {
+                this._resolve(this._values);
+              }
+            };
+            PromiseArray.prototype._promiseRejected = function(reason, index) {
+              this._totalResolved++;
+              this._reject(reason);
+            };
+            PromiseArray.prototype.shouldCopyValues = function() {
+              return true;
+            };
+            PromiseArray.prototype.getActualLength = function(len) {
+              return len;
+            };
+            return PromiseArray;
+          };
+        }, {"./util.js": 38}],
+        25: [function(_dereq_, module, exports) {
+          "use strict";
+          var util = _dereq_("./util.js");
+          var maybeWrapAsError = util.maybeWrapAsError;
+          var errors = _dereq_("./errors.js");
+          var TimeoutError = errors.TimeoutError;
+          var OperationalError = errors.OperationalError;
+          var haveGetters = util.haveGetters;
+          var es5 = _dereq_("./es5.js");
+          function isUntypedError(obj) {
+            return obj instanceof Error && es5.getPrototypeOf(obj) === Error.prototype;
+          }
+          var rErrorKey = /^(?:name|message|stack|cause)$/;
+          function wrapAsOperationalError(obj) {
+            var ret;
+            if (isUntypedError(obj)) {
+              ret = new OperationalError(obj);
+              ret.name = obj.name;
+              ret.message = obj.message;
+              ret.stack = obj.stack;
+              var keys = es5.keys(obj);
+              for (var i = 0; i < keys.length; ++i) {
+                var key = keys[i];
+                if (!rErrorKey.test(key)) {
+                  ret[key] = obj[key];
+                }
+              }
+              return ret;
+            }
+            util.markAsOriginatingFromRejection(obj);
+            return obj;
+          }
+          function nodebackForPromise(promise) {
+            return function(err, value) {
+              if (promise === null)
+                return ;
+              if (err) {
+                var wrapped = wrapAsOperationalError(maybeWrapAsError(err));
+                promise._attachExtraTrace(wrapped);
+                promise._reject(wrapped);
+              } else if (arguments.length > 2) {
+                var $_len = arguments.length;
+                var args = new Array($_len - 1);
+                for (var $_i = 1; $_i < $_len; ++$_i) {
+                  args[$_i - 1] = arguments[$_i];
+                }
+                promise._fulfill(args);
+              } else {
+                promise._fulfill(value);
+              }
+              promise = null;
+            };
+          }
+          var PromiseResolver;
+          if (!haveGetters) {
+            PromiseResolver = function(promise) {
+              this.promise = promise;
+              this.asCallback = nodebackForPromise(promise);
+              this.callback = this.asCallback;
+            };
+          } else {
+            PromiseResolver = function(promise) {
+              this.promise = promise;
+            };
+          }
+          if (haveGetters) {
+            var prop = {get: function() {
+                return nodebackForPromise(this.promise);
+              }};
+            es5.defineProperty(PromiseResolver.prototype, "asCallback", prop);
+            es5.defineProperty(PromiseResolver.prototype, "callback", prop);
+          }
+          PromiseResolver._nodebackForPromise = nodebackForPromise;
+          PromiseResolver.prototype.toString = function() {
+            return "[object PromiseResolver]";
+          };
+          PromiseResolver.prototype.resolve = PromiseResolver.prototype.fulfill = function(value) {
+            if (!(this instanceof PromiseResolver)) {
+              throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
+            }
+            this.promise._resolveCallback(value);
+          };
+          PromiseResolver.prototype.reject = function(reason) {
+            if (!(this instanceof PromiseResolver)) {
+              throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
+            }
+            this.promise._rejectCallback(reason);
+          };
+          PromiseResolver.prototype.progress = function(value) {
+            if (!(this instanceof PromiseResolver)) {
+              throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
+            }
+            this.promise._progress(value);
+          };
+          PromiseResolver.prototype.cancel = function(err) {
+            this.promise.cancel(err);
+          };
+          PromiseResolver.prototype.timeout = function() {
+            this.reject(new TimeoutError("timeout"));
+          };
+          PromiseResolver.prototype.isResolved = function() {
+            return this.promise.isResolved();
+          };
+          PromiseResolver.prototype.toJSON = function() {
+            return this.promise.toJSON();
+          };
+          module.exports = PromiseResolver;
+        }, {
+          "./errors.js": 13,
+          "./es5.js": 14,
+          "./util.js": 38
+        }],
+        26: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, INTERNAL) {
+            var THIS = {};
+            var util = _dereq_("./util.js");
+            var nodebackForPromise = _dereq_("./promise_resolver.js")._nodebackForPromise;
+            var withAppended = util.withAppended;
+            var maybeWrapAsError = util.maybeWrapAsError;
+            var canEvaluate = util.canEvaluate;
+            var TypeError = _dereq_("./errors").TypeError;
+            var defaultSuffix = "Async";
+            var defaultPromisified = {__isPromisified__: true};
+            var noCopyPropsPattern = /^(?:length|name|arguments|caller|callee|prototype|__isPromisified__)$/;
+            var defaultFilter = function(name, func) {
+              return util.isIdentifier(name) && name.charAt(0) !== "_" && !util.isClass(func);
+            };
+            function propsFilter(key) {
+              return !noCopyPropsPattern.test(key);
+            }
+            function isPromisified(fn) {
+              try {
+                return fn.__isPromisified__ === true;
+              } catch (e) {
+                return false;
+              }
+            }
+            function hasPromisified(obj, key, suffix) {
+              var val = util.getDataPropertyOrDefault(obj, key + suffix, defaultPromisified);
+              return val ? isPromisified(val) : false;
+            }
+            function checkValid(ret, suffix, suffixRegexp) {
+              for (var i = 0; i < ret.length; i += 2) {
+                var key = ret[i];
+                if (suffixRegexp.test(key)) {
+                  var keyWithoutAsyncSuffix = key.replace(suffixRegexp, "");
+                  for (var j = 0; j < ret.length; j += 2) {
+                    if (ret[j] === keyWithoutAsyncSuffix) {
+                      throw new TypeError("Cannot promisify an API that has normal methods with '%s'-suffix\u000a\u000a    See http://goo.gl/iWrZbw\u000a".replace("%s", suffix));
+                    }
+                  }
+                }
+              }
+            }
+            function promisifiableMethods(obj, suffix, suffixRegexp, filter) {
+              var keys = util.inheritedDataKeys(obj);
+              var ret = [];
+              for (var i = 0; i < keys.length; ++i) {
+                var key = keys[i];
+                var value = obj[key];
+                var passesDefaultFilter = filter === defaultFilter ? true : defaultFilter(key, value, obj);
+                if (typeof value === "function" && !isPromisified(value) && !hasPromisified(obj, key, suffix) && filter(key, value, obj, passesDefaultFilter)) {
+                  ret.push(key, value);
+                }
+              }
+              checkValid(ret, suffix, suffixRegexp);
+              return ret;
+            }
+            var escapeIdentRegex = function(str) {
+              return str.replace(/([$])/, "\\$");
+            };
+            var makeNodePromisifiedEval;
+            if (!true) {
+              var switchCaseArgumentOrder = function(likelyArgumentCount) {
+                var ret = [likelyArgumentCount];
+                var min = Math.max(0, likelyArgumentCount - 1 - 3);
+                for (var i = likelyArgumentCount - 1; i >= min; --i) {
+                  ret.push(i);
+                }
+                for (var i = likelyArgumentCount + 1; i <= 3; ++i) {
+                  ret.push(i);
+                }
+                return ret;
+              };
+              var argumentSequence = function(argumentCount) {
+                return util.filledRange(argumentCount, "_arg", "");
+              };
+              var parameterDeclaration = function(parameterCount) {
+                return util.filledRange(Math.max(parameterCount, 3), "_arg", "");
+              };
+              var parameterCount = function(fn) {
+                if (typeof fn.length === "number") {
+                  return Math.max(Math.min(fn.length, 1023 + 1), 0);
+                }
+                return 0;
+              };
+              makeNodePromisifiedEval = function(callback, receiver, originalName, fn) {
+                var newParameterCount = Math.max(0, parameterCount(fn) - 1);
+                var argumentOrder = switchCaseArgumentOrder(newParameterCount);
+                var shouldProxyThis = typeof callback === "string" || receiver === THIS;
+                function generateCallForArgumentCount(count) {
+                  var args = argumentSequence(count).join(", ");
+                  var comma = count > 0 ? ", " : "";
+                  var ret;
+                  if (shouldProxyThis) {
+                    ret = "ret = callback.call(this, {{args}}, nodeback); break;\n";
+                  } else {
+                    ret = receiver === undefined ? "ret = callback({{args}}, nodeback); break;\n" : "ret = callback.call(receiver, {{args}}, nodeback); break;\n";
+                  }
+                  return ret.replace("{{args}}", args).replace(", ", comma);
+                }
+                function generateArgumentSwitchCase() {
+                  var ret = "";
+                  for (var i = 0; i < argumentOrder.length; ++i) {
+                    ret += "case " + argumentOrder[i] + ":" + generateCallForArgumentCount(argumentOrder[i]);
+                  }
+                  ret += "                                                             \n\
+        default:                                                             \n\
+            var args = new Array(len + 1);                                   \n\
+            var i = 0;                                                       \n\
+            for (var i = 0; i < len; ++i) {                                  \n\
+               args[i] = arguments[i];                                       \n\
+            }                                                                \n\
+            args[i] = nodeback;                                              \n\
+            [CodeForCall]                                                    \n\
+            break;                                                           \n\
+        ".replace("[CodeForCall]", (shouldProxyThis ? "ret = callback.apply(this, args);\n" : "ret = callback.apply(receiver, args);\n"));
+                  return ret;
+                }
+                var getFunctionCode = typeof callback === "string" ? ("this != null ? this['" + callback + "'] : fn") : "fn";
+                return new Function("Promise", "fn", "receiver", "withAppended", "maybeWrapAsError", "nodebackForPromise", "tryCatch", "errorObj", "INTERNAL", "'use strict';                            \n\
+        var ret = function (Parameters) {                                    \n\
+            'use strict';                                                    \n\
+            var len = arguments.length;                                      \n\
+            var promise = new Promise(INTERNAL);                             \n\
+            promise._captureStackTrace();                                    \n\
+            var nodeback = nodebackForPromise(promise);                      \n\
+            var ret;                                                         \n\
+            var callback = tryCatch([GetFunctionCode]);                      \n\
+            switch(len) {                                                    \n\
+                [CodeForSwitchCase]                                          \n\
+            }                                                                \n\
+            if (ret === errorObj) {                                          \n\
+                promise._rejectCallback(maybeWrapAsError(ret.e), true, true);\n\
+            }                                                                \n\
+            return promise;                                                  \n\
+        };                                                                   \n\
+        ret.__isPromisified__ = true;                                        \n\
+        return ret;                                                          \n\
+        ".replace("Parameters", parameterDeclaration(newParameterCount)).replace("[CodeForSwitchCase]", generateArgumentSwitchCase()).replace("[GetFunctionCode]", getFunctionCode))(Promise, fn, receiver, withAppended, maybeWrapAsError, nodebackForPromise, util.tryCatch, util.errorObj, INTERNAL);
+              };
+            }
+            function makeNodePromisifiedClosure(callback, receiver, _, fn) {
+              var defaultThis = (function() {
+                return this;
+              })();
+              var method = callback;
+              if (typeof method === "string") {
+                callback = fn;
+              }
+              function promisified() {
+                var _receiver = receiver;
+                if (receiver === THIS)
+                  _receiver = this;
+                var promise = new Promise(INTERNAL);
+                promise._captureStackTrace();
+                var cb = typeof method === "string" && this !== defaultThis ? this[method] : callback;
+                var fn = nodebackForPromise(promise);
+                try {
+                  cb.apply(_receiver, withAppended(arguments, fn));
+                } catch (e) {
+                  promise._rejectCallback(maybeWrapAsError(e), true, true);
+                }
+                return promise;
+              }
+              promisified.__isPromisified__ = true;
+              return promisified;
+            }
+            var makeNodePromisified = canEvaluate ? makeNodePromisifiedEval : makeNodePromisifiedClosure;
+            function promisifyAll(obj, suffix, filter, promisifier) {
+              var suffixRegexp = new RegExp(escapeIdentRegex(suffix) + "$");
+              var methods = promisifiableMethods(obj, suffix, suffixRegexp, filter);
+              for (var i = 0,
+                  len = methods.length; i < len; i += 2) {
+                var key = methods[i];
+                var fn = methods[i + 1];
+                var promisifiedKey = key + suffix;
+                obj[promisifiedKey] = promisifier === makeNodePromisified ? makeNodePromisified(key, THIS, key, fn, suffix) : promisifier(fn, function() {
+                  return makeNodePromisified(key, THIS, key, fn, suffix);
+                });
+              }
+              util.toFastProperties(obj);
+              return obj;
+            }
+            function promisify(callback, receiver) {
+              return makeNodePromisified(callback, receiver, undefined, callback);
+            }
+            Promise.promisify = function(fn, receiver) {
+              if (typeof fn !== "function") {
+                throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+              }
+              if (isPromisified(fn)) {
+                return fn;
+              }
+              var ret = promisify(fn, arguments.length < 2 ? THIS : receiver);
+              util.copyDescriptors(fn, ret, propsFilter);
+              return ret;
+            };
+            Promise.promisifyAll = function(target, options) {
+              if (typeof target !== "function" && typeof target !== "object") {
+                throw new TypeError("the target of promisifyAll must be an object or a function\u000a\u000a    See http://goo.gl/9ITlV0\u000a");
+              }
+              options = Object(options);
+              var suffix = options.suffix;
+              if (typeof suffix !== "string")
+                suffix = defaultSuffix;
+              var filter = options.filter;
+              if (typeof filter !== "function")
+                filter = defaultFilter;
+              var promisifier = options.promisifier;
+              if (typeof promisifier !== "function")
+                promisifier = makeNodePromisified;
+              if (!util.isIdentifier(suffix)) {
+                throw new RangeError("suffix must be a valid identifier\u000a\u000a    See http://goo.gl/8FZo5V\u000a");
+              }
+              var keys = util.inheritedDataKeys(target);
+              for (var i = 0; i < keys.length; ++i) {
+                var value = target[keys[i]];
+                if (keys[i] !== "constructor" && util.isClass(value)) {
+                  promisifyAll(value.prototype, suffix, filter, promisifier);
+                  promisifyAll(value, suffix, filter, promisifier);
+                }
+              }
+              return promisifyAll(target, suffix, filter, promisifier);
+            };
+          };
+        }, {
+          "./errors": 13,
+          "./promise_resolver.js": 25,
+          "./util.js": 38
+        }],
+        27: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, PromiseArray, tryConvertToPromise, apiRejection) {
+            var util = _dereq_("./util.js");
+            var isObject = util.isObject;
+            var es5 = _dereq_("./es5.js");
+            function PropertiesPromiseArray(obj) {
+              var keys = es5.keys(obj);
+              var len = keys.length;
+              var values = new Array(len * 2);
+              for (var i = 0; i < len; ++i) {
+                var key = keys[i];
+                values[i] = obj[key];
+                values[i + len] = key;
+              }
+              this.constructor$(values);
+            }
+            util.inherits(PropertiesPromiseArray, PromiseArray);
+            PropertiesPromiseArray.prototype._init = function() {
+              this._init$(undefined, -3);
+            };
+            PropertiesPromiseArray.prototype._promiseFulfilled = function(value, index) {
+              this._values[index] = value;
+              var totalResolved = ++this._totalResolved;
+              if (totalResolved >= this._length) {
+                var val = {};
+                var keyOffset = this.length();
+                for (var i = 0,
+                    len = this.length(); i < len; ++i) {
+                  val[this._values[i + keyOffset]] = this._values[i];
+                }
+                this._resolve(val);
+              }
+            };
+            PropertiesPromiseArray.prototype._promiseProgressed = function(value, index) {
+              this._promise._progress({
+                key: this._values[index + this.length()],
+                value: value
+              });
+            };
+            PropertiesPromiseArray.prototype.shouldCopyValues = function() {
+              return false;
+            };
+            PropertiesPromiseArray.prototype.getActualLength = function(len) {
+              return len >> 1;
+            };
+            function props(promises) {
+              var ret;
+              var castValue = tryConvertToPromise(promises);
+              if (!isObject(castValue)) {
+                return apiRejection("cannot await properties of a non-object\u000a\u000a    See http://goo.gl/OsFKC8\u000a");
+              } else if (castValue instanceof Promise) {
+                ret = castValue._then(Promise.props, undefined, undefined, undefined, undefined);
+              } else {
+                ret = new PropertiesPromiseArray(castValue).promise();
+              }
+              if (castValue instanceof Promise) {
+                ret._propagateFrom(castValue, 4);
+              }
+              return ret;
+            }
+            Promise.prototype.props = function() {
+              return props(this);
+            };
+            Promise.props = function(promises) {
+              return props(promises);
+            };
+          };
+        }, {
+          "./es5.js": 14,
+          "./util.js": 38
+        }],
+        28: [function(_dereq_, module, exports) {
+          "use strict";
+          function arrayMove(src, srcIndex, dst, dstIndex, len) {
+            for (var j = 0; j < len; ++j) {
+              dst[j + dstIndex] = src[j + srcIndex];
+              src[j + srcIndex] = void 0;
+            }
+          }
+          function Queue(capacity) {
+            this._capacity = capacity;
+            this._length = 0;
+            this._front = 0;
+          }
+          Queue.prototype._willBeOverCapacity = function(size) {
+            return this._capacity < size;
+          };
+          Queue.prototype._pushOne = function(arg) {
+            var length = this.length();
+            this._checkCapacity(length + 1);
+            var i = (this._front + length) & (this._capacity - 1);
+            this[i] = arg;
+            this._length = length + 1;
+          };
+          Queue.prototype._unshiftOne = function(value) {
+            var capacity = this._capacity;
+            this._checkCapacity(this.length() + 1);
+            var front = this._front;
+            var i = ((((front - 1) & (capacity - 1)) ^ capacity) - capacity);
+            this[i] = value;
+            this._front = i;
+            this._length = this.length() + 1;
+          };
+          Queue.prototype.unshift = function(fn, receiver, arg) {
+            this._unshiftOne(arg);
+            this._unshiftOne(receiver);
+            this._unshiftOne(fn);
+          };
+          Queue.prototype.push = function(fn, receiver, arg) {
+            var length = this.length() + 3;
+            if (this._willBeOverCapacity(length)) {
+              this._pushOne(fn);
+              this._pushOne(receiver);
+              this._pushOne(arg);
+              return ;
+            }
+            var j = this._front + length - 3;
+            this._checkCapacity(length);
+            var wrapMask = this._capacity - 1;
+            this[(j + 0) & wrapMask] = fn;
+            this[(j + 1) & wrapMask] = receiver;
+            this[(j + 2) & wrapMask] = arg;
+            this._length = length;
+          };
+          Queue.prototype.shift = function() {
+            var front = this._front,
+                ret = this[front];
+            this[front] = undefined;
+            this._front = (front + 1) & (this._capacity - 1);
+            this._length--;
+            return ret;
+          };
+          Queue.prototype.length = function() {
+            return this._length;
+          };
+          Queue.prototype._checkCapacity = function(size) {
+            if (this._capacity < size) {
+              this._resizeTo(this._capacity << 1);
+            }
+          };
+          Queue.prototype._resizeTo = function(capacity) {
+            var oldCapacity = this._capacity;
+            this._capacity = capacity;
+            var front = this._front;
+            var length = this._length;
+            var moveItemsCount = (front + length) & (oldCapacity - 1);
+            arrayMove(this, 0, this, oldCapacity, moveItemsCount);
+          };
+          module.exports = Queue;
+        }, {}],
+        29: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, INTERNAL, tryConvertToPromise, apiRejection) {
+            var isArray = _dereq_("./util.js").isArray;
+            var raceLater = function(promise) {
+              return promise.then(function(array) {
+                return race(array, promise);
+              });
+            };
+            function race(promises, parent) {
+              var maybePromise = tryConvertToPromise(promises);
+              if (maybePromise instanceof Promise) {
+                return raceLater(maybePromise);
+              } else if (!isArray(promises)) {
+                return apiRejection("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
+              }
+              var ret = new Promise(INTERNAL);
+              if (parent !== undefined) {
+                ret._propagateFrom(parent, 4 | 1);
+              }
+              var fulfill = ret._fulfill;
+              var reject = ret._reject;
+              for (var i = 0,
+                  len = promises.length; i < len; ++i) {
+                var val = promises[i];
+                if (val === undefined && !(i in promises)) {
+                  continue;
+                }
+                Promise.cast(val)._then(fulfill, reject, undefined, ret, null);
+              }
+              return ret;
+            }
+            Promise.race = function(promises) {
+              return race(promises, undefined);
+            };
+            Promise.prototype.race = function() {
+              return race(this, undefined);
+            };
+          };
+        }, {"./util.js": 38}],
+        30: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL) {
+            var async = _dereq_("./async.js");
+            var util = _dereq_("./util.js");
+            var tryCatch = util.tryCatch;
+            var errorObj = util.errorObj;
+            function ReductionPromiseArray(promises, fn, accum, _each) {
+              this.constructor$(promises);
+              this._promise._captureStackTrace();
+              this._preservedValues = _each === INTERNAL ? [] : null;
+              this._zerothIsAccum = (accum === undefined);
+              this._gotAccum = false;
+              this._reducingIndex = (this._zerothIsAccum ? 1 : 0);
+              this._valuesPhase = undefined;
+              var maybePromise = tryConvertToPromise(accum, this._promise);
+              var rejected = false;
+              var isPromise = maybePromise instanceof Promise;
+              if (isPromise) {
+                maybePromise = maybePromise._target();
+                if (maybePromise._isPending()) {
+                  maybePromise._proxyPromiseArray(this, -1);
+                } else if (maybePromise._isFulfilled()) {
+                  accum = maybePromise._value();
+                  this._gotAccum = true;
+                } else {
+                  this._reject(maybePromise._reason());
+                  rejected = true;
+                }
+              }
+              if (!(isPromise || this._zerothIsAccum))
+                this._gotAccum = true;
+              this._callback = fn;
+              this._accum = accum;
+              if (!rejected)
+                async.invoke(init, this, undefined);
+            }
+            function init() {
+              this._init$(undefined, -5);
+            }
+            util.inherits(ReductionPromiseArray, PromiseArray);
+            ReductionPromiseArray.prototype._init = function() {};
+            ReductionPromiseArray.prototype._resolveEmptyArray = function() {
+              if (this._gotAccum || this._zerothIsAccum) {
+                this._resolve(this._preservedValues !== null ? [] : this._accum);
+              }
+            };
+            ReductionPromiseArray.prototype._promiseFulfilled = function(value, index) {
+              var values = this._values;
+              values[index] = value;
+              var length = this.length();
+              var preservedValues = this._preservedValues;
+              var isEach = preservedValues !== null;
+              var gotAccum = this._gotAccum;
+              var valuesPhase = this._valuesPhase;
+              var valuesPhaseIndex;
+              if (!valuesPhase) {
+                valuesPhase = this._valuesPhase = new Array(length);
+                for (valuesPhaseIndex = 0; valuesPhaseIndex < length; ++valuesPhaseIndex) {
+                  valuesPhase[valuesPhaseIndex] = 0;
+                }
+              }
+              valuesPhaseIndex = valuesPhase[index];
+              if (index === 0 && this._zerothIsAccum) {
+                this._accum = value;
+                this._gotAccum = gotAccum = true;
+                valuesPhase[index] = ((valuesPhaseIndex === 0) ? 1 : 2);
+              } else if (index === -1) {
+                this._accum = value;
+                this._gotAccum = gotAccum = true;
+              } else {
+                if (valuesPhaseIndex === 0) {
+                  valuesPhase[index] = 1;
+                } else {
+                  valuesPhase[index] = 2;
+                  this._accum = value;
+                }
+              }
+              if (!gotAccum)
+                return ;
+              var callback = this._callback;
+              var receiver = this._promise._boundTo;
+              var ret;
+              for (var i = this._reducingIndex; i < length; ++i) {
+                valuesPhaseIndex = valuesPhase[i];
+                if (valuesPhaseIndex === 2) {
+                  this._reducingIndex = i + 1;
+                  continue;
+                }
+                if (valuesPhaseIndex !== 1)
+                  return ;
+                value = values[i];
+                this._promise._pushContext();
+                if (isEach) {
+                  preservedValues.push(value);
+                  ret = tryCatch(callback).call(receiver, value, i, length);
+                } else {
+                  ret = tryCatch(callback).call(receiver, this._accum, value, i, length);
+                }
+                this._promise._popContext();
+                if (ret === errorObj)
+                  return this._reject(ret.e);
+                var maybePromise = tryConvertToPromise(ret, this._promise);
+                if (maybePromise instanceof Promise) {
+                  maybePromise = maybePromise._target();
+                  if (maybePromise._isPending()) {
+                    valuesPhase[i] = 4;
+                    return maybePromise._proxyPromiseArray(this, i);
+                  } else if (maybePromise._isFulfilled()) {
+                    ret = maybePromise._value();
+                  } else {
+                    return this._reject(maybePromise._reason());
+                  }
+                }
+                this._reducingIndex = i + 1;
+                this._accum = ret;
+              }
+              this._resolve(isEach ? preservedValues : this._accum);
+            };
+            function reduce(promises, fn, initialValue, _each) {
+              if (typeof fn !== "function")
+                return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+              var array = new ReductionPromiseArray(promises, fn, initialValue, _each);
+              return array.promise();
+            }
+            Promise.prototype.reduce = function(fn, initialValue) {
+              return reduce(this, fn, initialValue, null);
+            };
+            Promise.reduce = function(promises, fn, initialValue, _each) {
+              return reduce(promises, fn, initialValue, _each);
+            };
+          };
+        }, {
+          "./async.js": 2,
+          "./util.js": 38
+        }],
+        31: [function(_dereq_, module, exports) {
+          "use strict";
+          var schedule;
+          var noAsyncScheduler = function() {
+            throw new Error("No async scheduler available\u000a\u000a    See http://goo.gl/m3OTXk\u000a");
+          };
+          if (_dereq_("./util.js").isNode) {
+            var version = process.versions.node.split(".").map(Number);
+            schedule = (version[0] === 0 && version[1] > 10) || (version[0] > 0) ? global.setImmediate : process.nextTick;
+            if (!schedule) {
+              if (typeof setImmediate !== "undefined") {
+                schedule = setImmediate;
+              } else if (typeof setTimeout !== "undefined") {
+                schedule = setTimeout;
+              } else {
+                schedule = noAsyncScheduler;
+              }
+            }
+          } else if (typeof MutationObserver !== "undefined") {
+            schedule = function(fn) {
+              var div = document.createElement("div");
+              var observer = new MutationObserver(fn);
+              observer.observe(div, {attributes: true});
+              return function() {
+                div.classList.toggle("foo");
+              };
+            };
+            schedule.isStatic = true;
+          } else if (typeof setImmediate !== "undefined") {
+            schedule = function(fn) {
+              setImmediate(fn);
+            };
+          } else if (typeof setTimeout !== "undefined") {
+            schedule = function(fn) {
+              setTimeout(fn, 0);
+            };
+          } else {
+            schedule = noAsyncScheduler;
+          }
+          module.exports = schedule;
+        }, {"./util.js": 38}],
+        32: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, PromiseArray) {
+            var PromiseInspection = Promise.PromiseInspection;
+            var util = _dereq_("./util.js");
+            function SettledPromiseArray(values) {
+              this.constructor$(values);
+            }
+            util.inherits(SettledPromiseArray, PromiseArray);
+            SettledPromiseArray.prototype._promiseResolved = function(index, inspection) {
+              this._values[index] = inspection;
+              var totalResolved = ++this._totalResolved;
+              if (totalResolved >= this._length) {
+                this._resolve(this._values);
+              }
+            };
+            SettledPromiseArray.prototype._promiseFulfilled = function(value, index) {
+              var ret = new PromiseInspection();
+              ret._bitField = 268435456;
+              ret._settledValue = value;
+              this._promiseResolved(index, ret);
+            };
+            SettledPromiseArray.prototype._promiseRejected = function(reason, index) {
+              var ret = new PromiseInspection();
+              ret._bitField = 134217728;
+              ret._settledValue = reason;
+              this._promiseResolved(index, ret);
+            };
+            Promise.settle = function(promises) {
+              return new SettledPromiseArray(promises).promise();
+            };
+            Promise.prototype.settle = function() {
+              return new SettledPromiseArray(this).promise();
+            };
+          };
+        }, {"./util.js": 38}],
+        33: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, PromiseArray, apiRejection) {
+            var util = _dereq_("./util.js");
+            var RangeError = _dereq_("./errors.js").RangeError;
+            var AggregateError = _dereq_("./errors.js").AggregateError;
+            var isArray = util.isArray;
+            function SomePromiseArray(values) {
+              this.constructor$(values);
+              this._howMany = 0;
+              this._unwrap = false;
+              this._initialized = false;
+            }
+            util.inherits(SomePromiseArray, PromiseArray);
+            SomePromiseArray.prototype._init = function() {
+              if (!this._initialized) {
+                return ;
+              }
+              if (this._howMany === 0) {
+                this._resolve([]);
+                return ;
+              }
+              this._init$(undefined, -5);
+              var isArrayResolved = isArray(this._values);
+              if (!this._isResolved() && isArrayResolved && this._howMany > this._canPossiblyFulfill()) {
+                this._reject(this._getRangeError(this.length()));
+              }
+            };
+            SomePromiseArray.prototype.init = function() {
+              this._initialized = true;
+              this._init();
+            };
+            SomePromiseArray.prototype.setUnwrap = function() {
+              this._unwrap = true;
+            };
+            SomePromiseArray.prototype.howMany = function() {
+              return this._howMany;
+            };
+            SomePromiseArray.prototype.setHowMany = function(count) {
+              this._howMany = count;
+            };
+            SomePromiseArray.prototype._promiseFulfilled = function(value) {
+              this._addFulfilled(value);
+              if (this._fulfilled() === this.howMany()) {
+                this._values.length = this.howMany();
+                if (this.howMany() === 1 && this._unwrap) {
+                  this._resolve(this._values[0]);
+                } else {
+                  this._resolve(this._values);
+                }
+              }
+            };
+            SomePromiseArray.prototype._promiseRejected = function(reason) {
+              this._addRejected(reason);
+              if (this.howMany() > this._canPossiblyFulfill()) {
+                var e = new AggregateError();
+                for (var i = this.length(); i < this._values.length; ++i) {
+                  e.push(this._values[i]);
+                }
+                this._reject(e);
+              }
+            };
+            SomePromiseArray.prototype._fulfilled = function() {
+              return this._totalResolved;
+            };
+            SomePromiseArray.prototype._rejected = function() {
+              return this._values.length - this.length();
+            };
+            SomePromiseArray.prototype._addRejected = function(reason) {
+              this._values.push(reason);
+            };
+            SomePromiseArray.prototype._addFulfilled = function(value) {
+              this._values[this._totalResolved++] = value;
+            };
+            SomePromiseArray.prototype._canPossiblyFulfill = function() {
+              return this.length() - this._rejected();
+            };
+            SomePromiseArray.prototype._getRangeError = function(count) {
+              var message = "Input array must contain at least " + this._howMany + " items but contains only " + count + " items";
+              return new RangeError(message);
+            };
+            SomePromiseArray.prototype._resolveEmptyArray = function() {
+              this._reject(this._getRangeError(0));
+            };
+            function some(promises, howMany) {
+              if ((howMany | 0) !== howMany || howMany < 0) {
+                return apiRejection("expecting a positive integer\u000a\u000a    See http://goo.gl/1wAmHx\u000a");
+              }
+              var ret = new SomePromiseArray(promises);
+              var promise = ret.promise();
+              ret.setHowMany(howMany);
+              ret.init();
+              return promise;
+            }
+            Promise.some = function(promises, howMany) {
+              return some(promises, howMany);
+            };
+            Promise.prototype.some = function(howMany) {
+              return some(this, howMany);
+            };
+            Promise._SomePromiseArray = SomePromiseArray;
+          };
+        }, {
+          "./errors.js": 13,
+          "./util.js": 38
+        }],
+        34: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise) {
+            function PromiseInspection(promise) {
+              if (promise !== undefined) {
+                promise = promise._target();
+                this._bitField = promise._bitField;
+                this._settledValue = promise._settledValue;
+              } else {
+                this._bitField = 0;
+                this._settledValue = undefined;
+              }
+            }
+            PromiseInspection.prototype.value = function() {
+              if (!this.isFulfilled()) {
+                throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\u000a\u000a    See http://goo.gl/hc1DLj\u000a");
+              }
+              return this._settledValue;
+            };
+            PromiseInspection.prototype.error = PromiseInspection.prototype.reason = function() {
+              if (!this.isRejected()) {
+                throw new TypeError("cannot get rejection reason of a non-rejected promise\u000a\u000a    See http://goo.gl/hPuiwB\u000a");
+              }
+              return this._settledValue;
+            };
+            PromiseInspection.prototype.isFulfilled = Promise.prototype._isFulfilled = function() {
+              return (this._bitField & 268435456) > 0;
+            };
+            PromiseInspection.prototype.isRejected = Promise.prototype._isRejected = function() {
+              return (this._bitField & 134217728) > 0;
+            };
+            PromiseInspection.prototype.isPending = Promise.prototype._isPending = function() {
+              return (this._bitField & 402653184) === 0;
+            };
+            PromiseInspection.prototype.isResolved = Promise.prototype._isResolved = function() {
+              return (this._bitField & 402653184) > 0;
+            };
+            Promise.prototype.isPending = function() {
+              return this._target()._isPending();
+            };
+            Promise.prototype.isRejected = function() {
+              return this._target()._isRejected();
+            };
+            Promise.prototype.isFulfilled = function() {
+              return this._target()._isFulfilled();
+            };
+            Promise.prototype.isResolved = function() {
+              return this._target()._isResolved();
+            };
+            Promise.prototype._value = function() {
+              return this._settledValue;
+            };
+            Promise.prototype._reason = function() {
+              this._unsetRejectionIsUnhandled();
+              return this._settledValue;
+            };
+            Promise.prototype.value = function() {
+              var target = this._target();
+              if (!target.isFulfilled()) {
+                throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\u000a\u000a    See http://goo.gl/hc1DLj\u000a");
+              }
+              return target._settledValue;
+            };
+            Promise.prototype.reason = function() {
+              var target = this._target();
+              if (!target.isRejected()) {
+                throw new TypeError("cannot get rejection reason of a non-rejected promise\u000a\u000a    See http://goo.gl/hPuiwB\u000a");
+              }
+              target._unsetRejectionIsUnhandled();
+              return target._settledValue;
+            };
+            Promise.PromiseInspection = PromiseInspection;
+          };
+        }, {}],
+        35: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, INTERNAL) {
+            var util = _dereq_("./util.js");
+            var errorObj = util.errorObj;
+            var isObject = util.isObject;
+            function tryConvertToPromise(obj, context) {
+              if (isObject(obj)) {
+                if (obj instanceof Promise) {
+                  return obj;
+                } else if (isAnyBluebirdPromise(obj)) {
+                  var ret = new Promise(INTERNAL);
+                  obj._then(ret._fulfillUnchecked, ret._rejectUncheckedCheckError, ret._progressUnchecked, ret, null);
+                  return ret;
+                }
+                var then = util.tryCatch(getThen)(obj);
+                if (then === errorObj) {
+                  if (context)
+                    context._pushContext();
+                  var ret = Promise.reject(then.e);
+                  if (context)
+                    context._popContext();
+                  return ret;
+                } else if (typeof then === "function") {
+                  return doThenable(obj, then, context);
+                }
+              }
+              return obj;
+            }
+            function getThen(obj) {
+              return obj.then;
+            }
+            var hasProp = {}.hasOwnProperty;
+            function isAnyBluebirdPromise(obj) {
+              return hasProp.call(obj, "_promise0");
+            }
+            function doThenable(x, then, context) {
+              var promise = new Promise(INTERNAL);
+              var ret = promise;
+              if (context)
+                context._pushContext();
+              promise._captureStackTrace();
+              if (context)
+                context._popContext();
+              var synchronous = true;
+              var result = util.tryCatch(then).call(x, resolveFromThenable, rejectFromThenable, progressFromThenable);
+              synchronous = false;
+              if (promise && result === errorObj) {
+                promise._rejectCallback(result.e, true, true);
+                promise = null;
+              }
+              function resolveFromThenable(value) {
+                if (!promise)
+                  return ;
+                if (x === value) {
+                  promise._rejectCallback(Promise._makeSelfResolutionError(), false, true);
+                } else {
+                  promise._resolveCallback(value);
+                }
+                promise = null;
+              }
+              function rejectFromThenable(reason) {
+                if (!promise)
+                  return ;
+                promise._rejectCallback(reason, synchronous, true);
+                promise = null;
+              }
+              function progressFromThenable(value) {
+                if (!promise)
+                  return ;
+                if (typeof promise._progress === "function") {
+                  promise._progress(value);
+                }
+              }
+              return ret;
+            }
+            return tryConvertToPromise;
+          };
+        }, {"./util.js": 38}],
+        36: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, INTERNAL) {
+            var util = _dereq_("./util.js");
+            var TimeoutError = Promise.TimeoutError;
+            var afterTimeout = function(promise, message) {
+              if (!promise.isPending())
+                return ;
+              if (typeof message !== "string") {
+                message = "operation timed out";
+              }
+              var err = new TimeoutError(message);
+              util.markAsOriginatingFromRejection(err);
+              promise._attachExtraTrace(err);
+              promise._cancel(err);
+            };
+            var afterValue = function(value) {
+              return delay(+this).thenReturn(value);
+            };
+            var delay = Promise.delay = function(value, ms) {
+              if (ms === undefined) {
+                ms = value;
+                value = undefined;
+                var ret = new Promise(INTERNAL);
+                setTimeout(function() {
+                  ret._fulfill();
+                }, ms);
+                return ret;
+              }
+              ms = +ms;
+              return Promise.resolve(value)._then(afterValue, null, null, ms, undefined);
+            };
+            Promise.prototype.delay = function(ms) {
+              return delay(this, ms);
+            };
+            function successClear(value) {
+              var handle = this;
+              if (handle instanceof Number)
+                handle = +handle;
+              clearTimeout(handle);
+              return value;
+            }
+            function failureClear(reason) {
+              var handle = this;
+              if (handle instanceof Number)
+                handle = +handle;
+              clearTimeout(handle);
+              throw reason;
+            }
+            Promise.prototype.timeout = function(ms, message) {
+              ms = +ms;
+              var ret = this.then().cancellable();
+              ret._cancellationParent = this;
+              var handle = setTimeout(function timeoutTimeout() {
+                afterTimeout(ret, message);
+              }, ms);
+              return ret._then(successClear, failureClear, undefined, handle, undefined);
+            };
+          };
+        }, {"./util.js": 38}],
+        37: [function(_dereq_, module, exports) {
+          "use strict";
+          module.exports = function(Promise, apiRejection, tryConvertToPromise, createContext) {
+            var TypeError = _dereq_("./errors.js").TypeError;
+            var inherits = _dereq_("./util.js").inherits;
+            var PromiseInspection = Promise.PromiseInspection;
+            function inspectionMapper(inspections) {
+              var len = inspections.length;
+              for (var i = 0; i < len; ++i) {
+                var inspection = inspections[i];
+                if (inspection.isRejected()) {
+                  return Promise.reject(inspection.error());
+                }
+                inspections[i] = inspection._settledValue;
+              }
+              return inspections;
+            }
+            function thrower(e) {
+              setTimeout(function() {
+                throw e;
+              }, 0);
+            }
+            function castPreservingDisposable(thenable) {
+              var maybePromise = tryConvertToPromise(thenable);
+              if (maybePromise !== thenable && typeof thenable._isDisposable === "function" && typeof thenable._getDisposer === "function" && thenable._isDisposable()) {
+                maybePromise._setDisposable(thenable._getDisposer());
+              }
+              return maybePromise;
+            }
+            function dispose(resources, inspection) {
+              var i = 0;
+              var len = resources.length;
+              var ret = Promise.defer();
+              function iterator() {
+                if (i >= len)
+                  return ret.resolve();
+                var maybePromise = castPreservingDisposable(resources[i++]);
+                if (maybePromise instanceof Promise && maybePromise._isDisposable()) {
+                  try {
+                    maybePromise = tryConvertToPromise(maybePromise._getDisposer().tryDispose(inspection), resources.promise);
+                  } catch (e) {
+                    return thrower(e);
+                  }
+                  if (maybePromise instanceof Promise) {
+                    return maybePromise._then(iterator, thrower, null, null, null);
+                  }
+                }
+                iterator();
+              }
+              iterator();
+              return ret.promise;
+            }
+            function disposerSuccess(value) {
+              var inspection = new PromiseInspection();
+              inspection._settledValue = value;
+              inspection._bitField = 268435456;
+              return dispose(this, inspection).thenReturn(value);
+            }
+            function disposerFail(reason) {
+              var inspection = new PromiseInspection();
+              inspection._settledValue = reason;
+              inspection._bitField = 134217728;
+              return dispose(this, inspection).thenThrow(reason);
+            }
+            function Disposer(data, promise, context) {
+              this._data = data;
+              this._promise = promise;
+              this._context = context;
+            }
+            Disposer.prototype.data = function() {
+              return this._data;
+            };
+            Disposer.prototype.promise = function() {
+              return this._promise;
+            };
+            Disposer.prototype.resource = function() {
+              if (this.promise().isFulfilled()) {
+                return this.promise().value();
+              }
+              return null;
+            };
+            Disposer.prototype.tryDispose = function(inspection) {
+              var resource = this.resource();
+              var context = this._context;
+              if (context !== undefined)
+                context._pushContext();
+              var ret = resource !== null ? this.doDispose(resource, inspection) : null;
+              if (context !== undefined)
+                context._popContext();
+              this._promise._unsetDisposable();
+              this._data = null;
+              return ret;
+            };
+            Disposer.isDisposer = function(d) {
+              return (d != null && typeof d.resource === "function" && typeof d.tryDispose === "function");
+            };
+            function FunctionDisposer(fn, promise, context) {
+              this.constructor$(fn, promise, context);
+            }
+            inherits(FunctionDisposer, Disposer);
+            FunctionDisposer.prototype.doDispose = function(resource, inspection) {
+              var fn = this.data();
+              return fn.call(resource, resource, inspection);
+            };
+            function maybeUnwrapDisposer(value) {
+              if (Disposer.isDisposer(value)) {
+                this.resources[this.index]._setDisposable(value);
+                return value.promise();
+              }
+              return value;
+            }
+            Promise.using = function() {
+              var len = arguments.length;
+              if (len < 2)
+                return apiRejection("you must pass at least 2 arguments to Promise.using");
+              var fn = arguments[len - 1];
+              if (typeof fn !== "function")
+                return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+              len--;
+              var resources = new Array(len);
+              for (var i = 0; i < len; ++i) {
+                var resource = arguments[i];
+                if (Disposer.isDisposer(resource)) {
+                  var disposer = resource;
+                  resource = resource.promise();
+                  resource._setDisposable(disposer);
+                } else {
+                  var maybePromise = tryConvertToPromise(resource);
+                  if (maybePromise instanceof Promise) {
+                    resource = maybePromise._then(maybeUnwrapDisposer, null, null, {
+                      resources: resources,
+                      index: i
+                    }, undefined);
+                  }
+                }
+                resources[i] = resource;
+              }
+              var promise = Promise.settle(resources).then(inspectionMapper).then(function(vals) {
+                promise._pushContext();
+                var ret;
+                try {
+                  ret = fn.apply(undefined, vals);
+                } finally {
+                  promise._popContext();
+                }
+                return ret;
+              })._then(disposerSuccess, disposerFail, undefined, resources, undefined);
+              resources.promise = promise;
+              return promise;
+            };
+            Promise.prototype._setDisposable = function(disposer) {
+              this._bitField = this._bitField | 262144;
+              this._disposer = disposer;
+            };
+            Promise.prototype._isDisposable = function() {
+              return (this._bitField & 262144) > 0;
+            };
+            Promise.prototype._getDisposer = function() {
+              return this._disposer;
+            };
+            Promise.prototype._unsetDisposable = function() {
+              this._bitField = this._bitField & (~262144);
+              this._disposer = undefined;
+            };
+            Promise.prototype.disposer = function(fn) {
+              if (typeof fn === "function") {
+                return new FunctionDisposer(fn, this, createContext());
+              }
+              throw new TypeError();
+            };
+          };
+        }, {
+          "./errors.js": 13,
+          "./util.js": 38
+        }],
+        38: [function(_dereq_, module, exports) {
+          "use strict";
+          var es5 = _dereq_("./es5.js");
+          var canEvaluate = typeof navigator == "undefined";
+          var haveGetters = (function() {
+            try {
+              var o = {};
+              es5.defineProperty(o, "f", {get: function() {
+                  return 3;
+                }});
+              return o.f === 3;
+            } catch (e) {
+              return false;
+            }
+          })();
+          var errorObj = {e: {}};
+          var tryCatchTarget;
+          function tryCatcher() {
+            try {
+              return tryCatchTarget.apply(this, arguments);
+            } catch (e) {
+              errorObj.e = e;
+              return errorObj;
+            }
+          }
+          function tryCatch(fn) {
+            tryCatchTarget = fn;
+            return tryCatcher;
+          }
+          var inherits = function(Child, Parent) {
+            var hasProp = {}.hasOwnProperty;
+            function T() {
+              this.constructor = Child;
+              this.constructor$ = Parent;
+              for (var propertyName in Parent.prototype) {
+                if (hasProp.call(Parent.prototype, propertyName) && propertyName.charAt(propertyName.length - 1) !== "$") {
+                  this[propertyName + "$"] = Parent.prototype[propertyName];
+                }
+              }
+            }
+            T.prototype = Parent.prototype;
+            Child.prototype = new T();
+            return Child.prototype;
+          };
+          function isPrimitive(val) {
+            return val == null || val === true || val === false || typeof val === "string" || typeof val === "number";
+          }
+          function isObject(value) {
+            return !isPrimitive(value);
+          }
+          function maybeWrapAsError(maybeError) {
+            if (!isPrimitive(maybeError))
+              return maybeError;
+            return new Error(safeToString(maybeError));
+          }
+          function withAppended(target, appendee) {
+            var len = target.length;
+            var ret = new Array(len + 1);
+            var i;
+            for (i = 0; i < len; ++i) {
+              ret[i] = target[i];
+            }
+            ret[i] = appendee;
+            return ret;
+          }
+          function getDataPropertyOrDefault(obj, key, defaultValue) {
+            if (es5.isES5) {
+              var desc = Object.getOwnPropertyDescriptor(obj, key);
+              if (desc != null) {
+                return desc.get == null && desc.set == null ? desc.value : defaultValue;
+              }
+            } else {
+              return {}.hasOwnProperty.call(obj, key) ? obj[key] : undefined;
+            }
+          }
+          function notEnumerableProp(obj, name, value) {
+            if (isPrimitive(obj))
+              return obj;
+            var descriptor = {
+              value: value,
+              configurable: true,
+              enumerable: false,
+              writable: true
+            };
+            es5.defineProperty(obj, name, descriptor);
+            return obj;
+          }
+          var wrapsPrimitiveReceiver = (function() {
+            return this !== "string";
+          }).call("string");
+          function thrower(r) {
+            throw r;
+          }
+          var inheritedDataKeys = (function() {
+            if (es5.isES5) {
+              var oProto = Object.prototype;
+              var getKeys = Object.getOwnPropertyNames;
+              return function(obj) {
+                var ret = [];
+                var visitedKeys = Object.create(null);
+                while (obj != null && obj !== oProto) {
+                  var keys;
+                  try {
+                    keys = getKeys(obj);
+                  } catch (e) {
+                    return ret;
+                  }
+                  for (var i = 0; i < keys.length; ++i) {
+                    var key = keys[i];
+                    if (visitedKeys[key])
+                      continue;
+                    visitedKeys[key] = true;
+                    var desc = Object.getOwnPropertyDescriptor(obj, key);
+                    if (desc != null && desc.get == null && desc.set == null) {
+                      ret.push(key);
+                    }
+                  }
+                  obj = es5.getPrototypeOf(obj);
+                }
+                return ret;
+              };
+            } else {
+              return function(obj) {
+                var ret = [];
+                for (var key in obj) {
+                  ret.push(key);
+                }
+                return ret;
+              };
+            }
+          })();
+          function isClass(fn) {
+            try {
+              if (typeof fn === "function") {
+                var keys = es5.names(fn.prototype);
+                if (es5.isES5)
+                  return keys.length > 1;
+                return keys.length > 0 && !(keys.length === 1 && keys[0] === "constructor");
+              }
+              return false;
+            } catch (e) {
+              return false;
+            }
+          }
+          function toFastProperties(obj) {
+            function f() {}
+            f.prototype = obj;
+            var l = 8;
+            while (l--)
+              new f();
+            return obj;
+            eval(obj);
+          }
+          var rident = /^[a-z$_][a-z$_0-9]*$/i;
+          function isIdentifier(str) {
+            return rident.test(str);
+          }
+          function filledRange(count, prefix, suffix) {
+            var ret = new Array(count);
+            for (var i = 0; i < count; ++i) {
+              ret[i] = prefix + i + suffix;
+            }
+            return ret;
+          }
+          function safeToString(obj) {
+            try {
+              return obj + "";
+            } catch (e) {
+              return "[no string representation]";
+            }
+          }
+          function markAsOriginatingFromRejection(e) {
+            try {
+              notEnumerableProp(e, "isOperational", true);
+            } catch (ignore) {}
+          }
+          function originatesFromRejection(e) {
+            if (e == null)
+              return false;
+            return ((e instanceof Error["__BluebirdErrorTypes__"].OperationalError) || e["isOperational"] === true);
+          }
+          function canAttachTrace(obj) {
+            return obj instanceof Error && es5.propertyIsWritable(obj, "stack");
+          }
+          var ensureErrorObject = (function() {
+            if (!("stack" in new Error())) {
+              return function(value) {
+                if (canAttachTrace(value))
+                  return value;
+                try {
+                  throw new Error(safeToString(value));
+                } catch (err) {
+                  return err;
+                }
+              };
+            } else {
+              return function(value) {
+                if (canAttachTrace(value))
+                  return value;
+                return new Error(safeToString(value));
+              };
+            }
+          })();
+          function classString(obj) {
+            return {}.toString.call(obj);
+          }
+          function copyDescriptors(from, to, filter) {
+            var keys = es5.names(from);
+            for (var i = 0; i < keys.length; ++i) {
+              var key = keys[i];
+              if (filter(key)) {
+                es5.defineProperty(to, key, es5.getDescriptor(from, key));
+              }
+            }
+          }
+          var ret = {
+            isClass: isClass,
+            isIdentifier: isIdentifier,
+            inheritedDataKeys: inheritedDataKeys,
+            getDataPropertyOrDefault: getDataPropertyOrDefault,
+            thrower: thrower,
+            isArray: es5.isArray,
+            haveGetters: haveGetters,
+            notEnumerableProp: notEnumerableProp,
+            isPrimitive: isPrimitive,
+            isObject: isObject,
+            canEvaluate: canEvaluate,
+            errorObj: errorObj,
+            tryCatch: tryCatch,
+            inherits: inherits,
+            withAppended: withAppended,
+            maybeWrapAsError: maybeWrapAsError,
+            wrapsPrimitiveReceiver: wrapsPrimitiveReceiver,
+            toFastProperties: toFastProperties,
+            filledRange: filledRange,
+            toString: safeToString,
+            canAttachTrace: canAttachTrace,
+            ensureErrorObject: ensureErrorObject,
+            originatesFromRejection: originatesFromRejection,
+            markAsOriginatingFromRejection: markAsOriginatingFromRejection,
+            classString: classString,
+            copyDescriptors: copyDescriptors,
+            hasDevTools: typeof chrome !== "undefined" && chrome && typeof chrome.loadTimes === "function",
+            isNode: typeof process !== "undefined" && classString(process).toLowerCase() === "[object process]"
+          };
+          try {
+            throw new Error();
+          } catch (e) {
+            ret.lastLineError = e;
+          }
+          module.exports = ret;
+        }, {"./es5.js": 14}],
+        39: [function(_dereq_, module, exports) {
+          function EventEmitter() {
+            this._events = this._events || {};
+            this._maxListeners = this._maxListeners || undefined;
+          }
+          module.exports = EventEmitter;
+          EventEmitter.EventEmitter = EventEmitter;
+          EventEmitter.prototype._events = undefined;
+          EventEmitter.prototype._maxListeners = undefined;
+          EventEmitter.defaultMaxListeners = 10;
+          EventEmitter.prototype.setMaxListeners = function(n) {
+            if (!isNumber(n) || n < 0 || isNaN(n))
+              throw TypeError('n must be a positive number');
+            this._maxListeners = n;
+            return this;
+          };
+          EventEmitter.prototype.emit = function(type) {
+            var er,
+                handler,
+                len,
+                args,
+                i,
+                listeners;
+            if (!this._events)
+              this._events = {};
+            if (type === 'error') {
+              if (!this._events.error || (isObject(this._events.error) && !this._events.error.length)) {
+                er = arguments[1];
+                if (er instanceof Error) {
+                  throw er;
+                }
+                throw TypeError('Uncaught, unspecified "error" event.');
+              }
+            }
+            handler = this._events[type];
+            if (isUndefined(handler))
+              return false;
+            if (isFunction(handler)) {
+              switch (arguments.length) {
+                case 1:
+                  handler.call(this);
+                  break;
+                case 2:
+                  handler.call(this, arguments[1]);
+                  break;
+                case 3:
+                  handler.call(this, arguments[1], arguments[2]);
+                  break;
+                default:
+                  len = arguments.length;
+                  args = new Array(len - 1);
+                  for (i = 1; i < len; i++)
+                    args[i - 1] = arguments[i];
+                  handler.apply(this, args);
+              }
+            } else if (isObject(handler)) {
+              len = arguments.length;
+              args = new Array(len - 1);
+              for (i = 1; i < len; i++)
+                args[i - 1] = arguments[i];
+              listeners = handler.slice();
+              len = listeners.length;
+              for (i = 0; i < len; i++)
+                listeners[i].apply(this, args);
+            }
+            return true;
+          };
+          EventEmitter.prototype.addListener = function(type, listener) {
+            var m;
+            if (!isFunction(listener))
+              throw TypeError('listener must be a function');
+            if (!this._events)
+              this._events = {};
+            if (this._events.newListener)
+              this.emit('newListener', type, isFunction(listener.listener) ? listener.listener : listener);
+            if (!this._events[type])
+              this._events[type] = listener;
+            else if (isObject(this._events[type]))
+              this._events[type].push(listener);
+            else
+              this._events[type] = [this._events[type], listener];
+            if (isObject(this._events[type]) && !this._events[type].warned) {
+              var m;
+              if (!isUndefined(this._maxListeners)) {
+                m = this._maxListeners;
+              } else {
+                m = EventEmitter.defaultMaxListeners;
+              }
+              if (m && m > 0 && this._events[type].length > m) {
+                this._events[type].warned = true;
+                console.error('(node) warning: possible EventEmitter memory ' + 'leak detected. %d listeners added. ' + 'Use emitter.setMaxListeners() to increase limit.', this._events[type].length);
+                if (typeof console.trace === 'function') {
+                  console.trace();
+                }
+              }
+            }
+            return this;
+          };
+          EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+          EventEmitter.prototype.once = function(type, listener) {
+            if (!isFunction(listener))
+              throw TypeError('listener must be a function');
+            var fired = false;
+            function g() {
+              this.removeListener(type, g);
+              if (!fired) {
+                fired = true;
+                listener.apply(this, arguments);
+              }
+            }
+            g.listener = listener;
+            this.on(type, g);
+            return this;
+          };
+          EventEmitter.prototype.removeListener = function(type, listener) {
+            var list,
+                position,
+                length,
+                i;
+            if (!isFunction(listener))
+              throw TypeError('listener must be a function');
+            if (!this._events || !this._events[type])
+              return this;
+            list = this._events[type];
+            length = list.length;
+            position = -1;
+            if (list === listener || (isFunction(list.listener) && list.listener === listener)) {
+              delete this._events[type];
+              if (this._events.removeListener)
+                this.emit('removeListener', type, listener);
+            } else if (isObject(list)) {
+              for (i = length; i-- > 0; ) {
+                if (list[i] === listener || (list[i].listener && list[i].listener === listener)) {
+                  position = i;
+                  break;
+                }
+              }
+              if (position < 0)
+                return this;
+              if (list.length === 1) {
+                list.length = 0;
+                delete this._events[type];
+              } else {
+                list.splice(position, 1);
+              }
+              if (this._events.removeListener)
+                this.emit('removeListener', type, listener);
+            }
+            return this;
+          };
+          EventEmitter.prototype.removeAllListeners = function(type) {
+            var key,
+                listeners;
+            if (!this._events)
+              return this;
+            if (!this._events.removeListener) {
+              if (arguments.length === 0)
+                this._events = {};
+              else if (this._events[type])
+                delete this._events[type];
+              return this;
+            }
+            if (arguments.length === 0) {
+              for (key in this._events) {
+                if (key === 'removeListener')
+                  continue;
+                this.removeAllListeners(key);
+              }
+              this.removeAllListeners('removeListener');
+              this._events = {};
+              return this;
+            }
+            listeners = this._events[type];
+            if (isFunction(listeners)) {
+              this.removeListener(type, listeners);
+            } else {
+              while (listeners.length)
+                this.removeListener(type, listeners[listeners.length - 1]);
+            }
+            delete this._events[type];
+            return this;
+          };
+          EventEmitter.prototype.listeners = function(type) {
+            var ret;
+            if (!this._events || !this._events[type])
+              ret = [];
+            else if (isFunction(this._events[type]))
+              ret = [this._events[type]];
+            else
+              ret = this._events[type].slice();
+            return ret;
+          };
+          EventEmitter.listenerCount = function(emitter, type) {
+            var ret;
+            if (!emitter._events || !emitter._events[type])
+              ret = 0;
+            else if (isFunction(emitter._events[type]))
+              ret = 1;
+            else
+              ret = emitter._events[type].length;
+            return ret;
+          };
+          function isFunction(arg) {
+            return typeof arg === 'function';
+          }
+          function isNumber(arg) {
+            return typeof arg === 'number';
+          }
+          function isObject(arg) {
+            return typeof arg === 'object' && arg !== null;
+          }
+          function isUndefined(arg) {
+            return arg === void 0;
+          }
+        }, {}]
+      }, {}, [4])(4);
+    });
+    ;
+    if (typeof window !== 'undefined' && window !== null) {
+      window.P = window.Promise;
+    } else if (typeof self !== 'undefined' && self !== null) {
+      self.P = self.Promise;
+    }
+  })(require("github:jspm/nodelibs-process@0.1.1"));
   global.define = __define;
   return module.exports;
 });
@@ -9162,11 +18343,267 @@ System.register("npm:keymirror@0.1.1", ["npm:keymirror@0.1.1/index"], true, func
   return module.exports;
 });
 
+System.register("npm:immutable@3.7.2", ["npm:immutable@3.7.2/dist/immutable"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:immutable@3.7.2/dist/immutable");
+  global.define = __define;
+  return module.exports;
+});
+
 System.register("npm:events@1.0.2", ["npm:events@1.0.2/events"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   module.exports = require("npm:events@1.0.2/events");
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:asap@1.0.0", ["npm:asap@1.0.0/asap"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:asap@1.0.0/asap");
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:localforage@1.2.2/src/drivers/localstorage", ["npm:promise@5.0.0", "npm:localforage@1.2.2/src/utils/serializer"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  "format cjs";
+  (function() {
+    'use strict';
+    var Promise = (typeof module !== 'undefined' && module.exports) ? require("npm:promise@5.0.0") : this.Promise;
+    var globalObject = this;
+    var serializer = null;
+    var localStorage = null;
+    try {
+      if (!this.localStorage || !('setItem' in this.localStorage)) {
+        return ;
+      }
+      localStorage = this.localStorage;
+    } catch (e) {
+      return ;
+    }
+    var ModuleType = {
+      DEFINE: 1,
+      EXPORT: 2,
+      WINDOW: 3
+    };
+    var moduleType = ModuleType.WINDOW;
+    if (typeof module !== 'undefined' && module.exports) {
+      moduleType = ModuleType.EXPORT;
+    } else if (typeof define === 'function' && define.amd) {
+      moduleType = ModuleType.DEFINE;
+    }
+    function _initStorage(options) {
+      var self = this;
+      var dbInfo = {};
+      if (options) {
+        for (var i in options) {
+          dbInfo[i] = options[i];
+        }
+      }
+      dbInfo.keyPrefix = dbInfo.name + '/';
+      self._dbInfo = dbInfo;
+      var serializerPromise = new Promise(function(resolve) {
+        if (moduleType === ModuleType.DEFINE) {
+          require(['localforageSerializer'], resolve);
+        } else if (moduleType === ModuleType.EXPORT) {
+          resolve(require("npm:localforage@1.2.2/src/utils/serializer"));
+        } else {
+          resolve(globalObject.localforageSerializer);
+        }
+      });
+      return serializerPromise.then(function(lib) {
+        serializer = lib;
+        return Promise.resolve();
+      });
+    }
+    function clear(callback) {
+      var self = this;
+      var promise = self.ready().then(function() {
+        var keyPrefix = self._dbInfo.keyPrefix;
+        for (var i = localStorage.length - 1; i >= 0; i--) {
+          var key = localStorage.key(i);
+          if (key.indexOf(keyPrefix) === 0) {
+            localStorage.removeItem(key);
+          }
+        }
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function getItem(key, callback) {
+      var self = this;
+      if (typeof key !== 'string') {
+        window.console.warn(key + ' used as a key, but it is not a string.');
+        key = String(key);
+      }
+      var promise = self.ready().then(function() {
+        var dbInfo = self._dbInfo;
+        var result = localStorage.getItem(dbInfo.keyPrefix + key);
+        if (result) {
+          result = serializer.deserialize(result);
+        }
+        return result;
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function iterate(iterator, callback) {
+      var self = this;
+      var promise = self.ready().then(function() {
+        var keyPrefix = self._dbInfo.keyPrefix;
+        var keyPrefixLength = keyPrefix.length;
+        var length = localStorage.length;
+        for (var i = 0; i < length; i++) {
+          var key = localStorage.key(i);
+          var value = localStorage.getItem(key);
+          if (value) {
+            value = serializer.deserialize(value);
+          }
+          value = iterator(value, key.substring(keyPrefixLength), i + 1);
+          if (value !== void(0)) {
+            return value;
+          }
+        }
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function key(n, callback) {
+      var self = this;
+      var promise = self.ready().then(function() {
+        var dbInfo = self._dbInfo;
+        var result;
+        try {
+          result = localStorage.key(n);
+        } catch (error) {
+          result = null;
+        }
+        if (result) {
+          result = result.substring(dbInfo.keyPrefix.length);
+        }
+        return result;
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function keys(callback) {
+      var self = this;
+      var promise = self.ready().then(function() {
+        var dbInfo = self._dbInfo;
+        var length = localStorage.length;
+        var keys = [];
+        for (var i = 0; i < length; i++) {
+          if (localStorage.key(i).indexOf(dbInfo.keyPrefix) === 0) {
+            keys.push(localStorage.key(i).substring(dbInfo.keyPrefix.length));
+          }
+        }
+        return keys;
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function length(callback) {
+      var self = this;
+      var promise = self.keys().then(function(keys) {
+        return keys.length;
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function removeItem(key, callback) {
+      var self = this;
+      if (typeof key !== 'string') {
+        window.console.warn(key + ' used as a key, but it is not a string.');
+        key = String(key);
+      }
+      var promise = self.ready().then(function() {
+        var dbInfo = self._dbInfo;
+        localStorage.removeItem(dbInfo.keyPrefix + key);
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function setItem(key, value, callback) {
+      var self = this;
+      if (typeof key !== 'string') {
+        window.console.warn(key + ' used as a key, but it is not a string.');
+        key = String(key);
+      }
+      var promise = self.ready().then(function() {
+        if (value === undefined) {
+          value = null;
+        }
+        var originalValue = value;
+        return new Promise(function(resolve, reject) {
+          serializer.serialize(value, function(value, error) {
+            if (error) {
+              reject(error);
+            } else {
+              try {
+                var dbInfo = self._dbInfo;
+                localStorage.setItem(dbInfo.keyPrefix + key, value);
+                resolve(originalValue);
+              } catch (e) {
+                if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                  reject(e);
+                }
+                reject(e);
+              }
+            }
+          });
+        });
+      });
+      executeCallback(promise, callback);
+      return promise;
+    }
+    function executeCallback(promise, callback) {
+      if (callback) {
+        promise.then(function(result) {
+          callback(null, result);
+        }, function(error) {
+          callback(error);
+        });
+      }
+    }
+    var localStorageWrapper = {
+      _driver: 'localStorageWrapper',
+      _initStorage: _initStorage,
+      iterate: iterate,
+      getItem: getItem,
+      setItem: setItem,
+      removeItem: removeItem,
+      clear: clear,
+      length: length,
+      key: key,
+      keys: keys
+    };
+    if (moduleType === ModuleType.EXPORT) {
+      module.exports = localStorageWrapper;
+    } else if (moduleType === ModuleType.DEFINE) {
+      define('localStorageWrapper', function() {
+        return localStorageWrapper;
+      });
+    } else {
+      this.localStorageWrapper = localStorageWrapper;
+    }
+  }).call(window);
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:bluebird@2.9.25", ["npm:bluebird@2.9.25/js/browser/bluebird"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:bluebird@2.9.25/js/browser/bluebird");
   global.define = __define;
   return module.exports;
 });
@@ -11808,6 +21245,110 @@ System.register("npm:flux@2.0.3/index", ["npm:flux@2.0.3/lib/Dispatcher"], true,
       __define = global.define;
   global.define = undefined;
   module.exports.Dispatcher = require("npm:flux@2.0.3/lib/Dispatcher");
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:promise@5.0.0/core", ["npm:asap@1.0.0"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var asap = require("npm:asap@1.0.0");
+  module.exports = Promise;
+  function Promise(fn) {
+    if (typeof this !== 'object')
+      throw new TypeError('Promises must be constructed via new');
+    if (typeof fn !== 'function')
+      throw new TypeError('not a function');
+    var state = null;
+    var value = null;
+    var deferreds = [];
+    var self = this;
+    this.then = function(onFulfilled, onRejected) {
+      return new Promise(function(resolve, reject) {
+        handle(new Handler(onFulfilled, onRejected, resolve, reject));
+      });
+    };
+    function handle(deferred) {
+      if (state === null) {
+        deferreds.push(deferred);
+        return ;
+      }
+      asap(function() {
+        var cb = state ? deferred.onFulfilled : deferred.onRejected;
+        if (cb === null) {
+          (state ? deferred.resolve : deferred.reject)(value);
+          return ;
+        }
+        var ret;
+        try {
+          ret = cb(value);
+        } catch (e) {
+          deferred.reject(e);
+          return ;
+        }
+        deferred.resolve(ret);
+      });
+    }
+    function resolve(newValue) {
+      try {
+        if (newValue === self)
+          throw new TypeError('A promise cannot be resolved with itself.');
+        if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+          var then = newValue.then;
+          if (typeof then === 'function') {
+            doResolve(then.bind(newValue), resolve, reject);
+            return ;
+          }
+        }
+        state = true;
+        value = newValue;
+        finale();
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function reject(newValue) {
+      state = false;
+      value = newValue;
+      finale();
+    }
+    function finale() {
+      for (var i = 0,
+          len = deferreds.length; i < len; i++)
+        handle(deferreds[i]);
+      deferreds = null;
+    }
+    doResolve(fn, resolve, reject);
+  }
+  function Handler(onFulfilled, onRejected, resolve, reject) {
+    this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
+    this.onRejected = typeof onRejected === 'function' ? onRejected : null;
+    this.resolve = resolve;
+    this.reject = reject;
+  }
+  function doResolve(fn, onFulfilled, onRejected) {
+    var done = false;
+    try {
+      fn(function(value) {
+        if (done)
+          return ;
+        done = true;
+        onFulfilled(value);
+      }, function(reason) {
+        if (done)
+          return ;
+        done = true;
+        onRejected(reason);
+      });
+    } catch (ex) {
+      if (done)
+        return ;
+      done = true;
+      onRejected(ex);
+    }
+  }
   global.define = __define;
   return module.exports;
 });
@@ -15563,6 +25104,185 @@ System.register("npm:flux@2.0.3", ["npm:flux@2.0.3/index"], true, function(requi
   return module.exports;
 });
 
+System.register("npm:promise@5.0.0/index", ["npm:promise@5.0.0/core", "npm:asap@1.0.0"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var Promise = require("npm:promise@5.0.0/core");
+  var asap = require("npm:asap@1.0.0");
+  module.exports = Promise;
+  function ValuePromise(value) {
+    this.then = function(onFulfilled) {
+      if (typeof onFulfilled !== 'function')
+        return this;
+      return new Promise(function(resolve, reject) {
+        asap(function() {
+          try {
+            resolve(onFulfilled(value));
+          } catch (ex) {
+            reject(ex);
+          }
+        });
+      });
+    };
+  }
+  ValuePromise.prototype = Object.create(Promise.prototype);
+  var TRUE = new ValuePromise(true);
+  var FALSE = new ValuePromise(false);
+  var NULL = new ValuePromise(null);
+  var UNDEFINED = new ValuePromise(undefined);
+  var ZERO = new ValuePromise(0);
+  var EMPTYSTRING = new ValuePromise('');
+  Promise.resolve = function(value) {
+    if (value instanceof Promise)
+      return value;
+    if (value === null)
+      return NULL;
+    if (value === undefined)
+      return UNDEFINED;
+    if (value === true)
+      return TRUE;
+    if (value === false)
+      return FALSE;
+    if (value === 0)
+      return ZERO;
+    if (value === '')
+      return EMPTYSTRING;
+    if (typeof value === 'object' || typeof value === 'function') {
+      try {
+        var then = value.then;
+        if (typeof then === 'function') {
+          return new Promise(then.bind(value));
+        }
+      } catch (ex) {
+        return new Promise(function(resolve, reject) {
+          reject(ex);
+        });
+      }
+    }
+    return new ValuePromise(value);
+  };
+  Promise.from = Promise.cast = function(value) {
+    var err = new Error('Promise.from and Promise.cast are deprecated, use Promise.resolve instead');
+    err.name = 'Warning';
+    console.warn(err.stack);
+    return Promise.resolve(value);
+  };
+  Promise.denodeify = function(fn, argumentCount) {
+    argumentCount = argumentCount || Infinity;
+    return function() {
+      var self = this;
+      var args = Array.prototype.slice.call(arguments);
+      return new Promise(function(resolve, reject) {
+        while (args.length && args.length > argumentCount) {
+          args.pop();
+        }
+        args.push(function(err, res) {
+          if (err)
+            reject(err);
+          else
+            resolve(res);
+        });
+        fn.apply(self, args);
+      });
+    };
+  };
+  Promise.nodeify = function(fn) {
+    return function() {
+      var args = Array.prototype.slice.call(arguments);
+      var callback = typeof args[args.length - 1] === 'function' ? args.pop() : null;
+      try {
+        return fn.apply(this, arguments).nodeify(callback);
+      } catch (ex) {
+        if (callback === null || typeof callback == 'undefined') {
+          return new Promise(function(resolve, reject) {
+            reject(ex);
+          });
+        } else {
+          asap(function() {
+            callback(ex);
+          });
+        }
+      }
+    };
+  };
+  Promise.all = function() {
+    var calledWithArray = arguments.length === 1 && Array.isArray(arguments[0]);
+    var args = Array.prototype.slice.call(calledWithArray ? arguments[0] : arguments);
+    if (!calledWithArray) {
+      var err = new Error('Promise.all should be called with a single array, calling it with multiple arguments is deprecated');
+      err.name = 'Warning';
+      console.warn(err.stack);
+    }
+    return new Promise(function(resolve, reject) {
+      if (args.length === 0)
+        return resolve([]);
+      var remaining = args.length;
+      function res(i, val) {
+        try {
+          if (val && (typeof val === 'object' || typeof val === 'function')) {
+            var then = val.then;
+            if (typeof then === 'function') {
+              then.call(val, function(val) {
+                res(i, val);
+              }, reject);
+              return ;
+            }
+          }
+          args[i] = val;
+          if (--remaining === 0) {
+            resolve(args);
+          }
+        } catch (ex) {
+          reject(ex);
+        }
+      }
+      for (var i = 0; i < args.length; i++) {
+        res(i, args[i]);
+      }
+    });
+  };
+  Promise.reject = function(value) {
+    return new Promise(function(resolve, reject) {
+      reject(value);
+    });
+  };
+  Promise.race = function(values) {
+    return new Promise(function(resolve, reject) {
+      values.forEach(function(value) {
+        Promise.resolve(value).then(resolve, reject);
+      });
+    });
+  };
+  Promise.prototype.done = function(onFulfilled, onRejected) {
+    var self = arguments.length ? this.then.apply(this, arguments) : this;
+    self.then(null, function(err) {
+      asap(function() {
+        throw err;
+      });
+    });
+  };
+  Promise.prototype.nodeify = function(callback) {
+    if (typeof callback != 'function')
+      return this;
+    this.then(function(value) {
+      asap(function() {
+        callback(null, value);
+      });
+    }, function(err) {
+      asap(function() {
+        callback(err);
+      });
+    });
+  };
+  Promise.prototype['catch'] = function(onRejected) {
+    return this.then(null, onRejected);
+  };
+  global.define = __define;
+  return module.exports;
+});
+
 System.register("npm:postcss@4.1.9/lib/declaration", ["npm:postcss@4.1.9/lib/node"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -16317,6 +26037,15 @@ System.register("npm:babel-runtime@5.2.6/helpers/get", ["npm:babel-runtime@5.2.6
     }
   };
   exports.__esModule = true;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:promise@5.0.0", ["npm:promise@5.0.0/index"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:promise@5.0.0/index");
   global.define = __define;
   return module.exports;
 });
@@ -17278,6 +27007,282 @@ System.register("npm:react@0.13.2/lib/ReactDOMIDOperations", ["npm:react@0.13.2/
   return module.exports;
 });
 
+System.register("npm:localforage@1.2.2/src/localforage", ["npm:promise@5.0.0", "npm:localforage@1.2.2/src/drivers/indexeddb", "npm:localforage@1.2.2/src/drivers/localstorage", "npm:localforage@1.2.2/src/drivers/websql"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  "format cjs";
+  (function() {
+    'use strict';
+    var Promise = (typeof module !== 'undefined' && module.exports) ? require("npm:promise@5.0.0") : this.Promise;
+    var CustomDrivers = {};
+    var DriverType = {
+      INDEXEDDB: 'asyncStorage',
+      LOCALSTORAGE: 'localStorageWrapper',
+      WEBSQL: 'webSQLStorage'
+    };
+    var DefaultDriverOrder = [DriverType.INDEXEDDB, DriverType.WEBSQL, DriverType.LOCALSTORAGE];
+    var LibraryMethods = ['clear', 'getItem', 'iterate', 'key', 'keys', 'length', 'removeItem', 'setItem'];
+    var ModuleType = {
+      DEFINE: 1,
+      EXPORT: 2,
+      WINDOW: 3
+    };
+    var DefaultConfig = {
+      description: '',
+      driver: DefaultDriverOrder.slice(),
+      name: 'localforage',
+      size: 4980736,
+      storeName: 'keyvaluepairs',
+      version: 1.0
+    };
+    var moduleType = ModuleType.WINDOW;
+    if (typeof module !== 'undefined' && module.exports) {
+      moduleType = ModuleType.EXPORT;
+    } else if (typeof define === 'function' && define.amd) {
+      moduleType = ModuleType.DEFINE;
+    }
+    var driverSupport = (function(self) {
+      var indexedDB = indexedDB || self.indexedDB || self.webkitIndexedDB || self.mozIndexedDB || self.OIndexedDB || self.msIndexedDB;
+      var result = {};
+      result[DriverType.WEBSQL] = !!self.openDatabase;
+      result[DriverType.INDEXEDDB] = !!(function() {
+        if (typeof self.openDatabase !== 'undefined' && self.navigator && self.navigator.userAgent && /Safari/.test(self.navigator.userAgent) && !/Chrome/.test(self.navigator.userAgent)) {
+          return false;
+        }
+        try {
+          return indexedDB && typeof indexedDB.open === 'function' && typeof self.IDBKeyRange !== 'undefined';
+        } catch (e) {
+          return false;
+        }
+      })();
+      result[DriverType.LOCALSTORAGE] = !!(function() {
+        try {
+          return (self.localStorage && ('setItem' in self.localStorage) && (self.localStorage.setItem));
+        } catch (e) {
+          return false;
+        }
+      })();
+      return result;
+    })(this);
+    var isArray = Array.isArray || function(arg) {
+      return Object.prototype.toString.call(arg) === '[object Array]';
+    };
+    function callWhenReady(localForageInstance, libraryMethod) {
+      localForageInstance[libraryMethod] = function() {
+        var _args = arguments;
+        return localForageInstance.ready().then(function() {
+          return localForageInstance[libraryMethod].apply(localForageInstance, _args);
+        });
+      };
+    }
+    function extend() {
+      for (var i = 1; i < arguments.length; i++) {
+        var arg = arguments[i];
+        if (arg) {
+          for (var key in arg) {
+            if (arg.hasOwnProperty(key)) {
+              if (isArray(arg[key])) {
+                arguments[0][key] = arg[key].slice();
+              } else {
+                arguments[0][key] = arg[key];
+              }
+            }
+          }
+        }
+      }
+      return arguments[0];
+    }
+    function isLibraryDriver(driverName) {
+      for (var driver in DriverType) {
+        if (DriverType.hasOwnProperty(driver) && DriverType[driver] === driverName) {
+          return true;
+        }
+      }
+      return false;
+    }
+    var globalObject = this;
+    function LocalForage(options) {
+      this._config = extend({}, DefaultConfig, options);
+      this._driverSet = null;
+      this._ready = false;
+      this._dbInfo = null;
+      for (var i = 0; i < LibraryMethods.length; i++) {
+        callWhenReady(this, LibraryMethods[i]);
+      }
+      this.setDriver(this._config.driver);
+    }
+    LocalForage.prototype.INDEXEDDB = DriverType.INDEXEDDB;
+    LocalForage.prototype.LOCALSTORAGE = DriverType.LOCALSTORAGE;
+    LocalForage.prototype.WEBSQL = DriverType.WEBSQL;
+    LocalForage.prototype.config = function(options) {
+      if (typeof(options) === 'object') {
+        if (this._ready) {
+          return new Error("Can't call config() after localforage " + 'has been used.');
+        }
+        for (var i in options) {
+          if (i === 'storeName') {
+            options[i] = options[i].replace(/\W/g, '_');
+          }
+          this._config[i] = options[i];
+        }
+        if ('driver' in options && options.driver) {
+          this.setDriver(this._config.driver);
+        }
+        return true;
+      } else if (typeof(options) === 'string') {
+        return this._config[options];
+      } else {
+        return this._config;
+      }
+    };
+    LocalForage.prototype.defineDriver = function(driverObject, callback, errorCallback) {
+      var defineDriver = new Promise(function(resolve, reject) {
+        try {
+          var driverName = driverObject._driver;
+          var complianceError = new Error('Custom driver not compliant; see ' + 'https://mozilla.github.io/localForage/#definedriver');
+          var namingError = new Error('Custom driver name already in use: ' + driverObject._driver);
+          if (!driverObject._driver) {
+            reject(complianceError);
+            return ;
+          }
+          if (isLibraryDriver(driverObject._driver)) {
+            reject(namingError);
+            return ;
+          }
+          var customDriverMethods = LibraryMethods.concat('_initStorage');
+          for (var i = 0; i < customDriverMethods.length; i++) {
+            var customDriverMethod = customDriverMethods[i];
+            if (!customDriverMethod || !driverObject[customDriverMethod] || typeof driverObject[customDriverMethod] !== 'function') {
+              reject(complianceError);
+              return ;
+            }
+          }
+          var supportPromise = Promise.resolve(true);
+          if ('_support' in driverObject) {
+            if (driverObject._support && typeof driverObject._support === 'function') {
+              supportPromise = driverObject._support();
+            } else {
+              supportPromise = Promise.resolve(!!driverObject._support);
+            }
+          }
+          supportPromise.then(function(supportResult) {
+            driverSupport[driverName] = supportResult;
+            CustomDrivers[driverName] = driverObject;
+            resolve();
+          }, reject);
+        } catch (e) {
+          reject(e);
+        }
+      });
+      defineDriver.then(callback, errorCallback);
+      return defineDriver;
+    };
+    LocalForage.prototype.driver = function() {
+      return this._driver || null;
+    };
+    LocalForage.prototype.ready = function(callback) {
+      var self = this;
+      var ready = new Promise(function(resolve, reject) {
+        self._driverSet.then(function() {
+          if (self._ready === null) {
+            self._ready = self._initStorage(self._config);
+          }
+          self._ready.then(resolve, reject);
+        }).catch(reject);
+      });
+      ready.then(callback, callback);
+      return ready;
+    };
+    LocalForage.prototype.setDriver = function(drivers, callback, errorCallback) {
+      var self = this;
+      if (typeof drivers === 'string') {
+        drivers = [drivers];
+      }
+      this._driverSet = new Promise(function(resolve, reject) {
+        var driverName = self._getFirstSupportedDriver(drivers);
+        var error = new Error('No available storage method found.');
+        if (!driverName) {
+          self._driverSet = Promise.reject(error);
+          reject(error);
+          return ;
+        }
+        self._dbInfo = null;
+        self._ready = null;
+        if (isLibraryDriver(driverName)) {
+          if (moduleType === ModuleType.DEFINE) {
+            require([driverName], function(lib) {
+              self._extend(lib);
+              resolve();
+            });
+            return ;
+          } else if (moduleType === ModuleType.EXPORT) {
+            var driver;
+            switch (driverName) {
+              case self.INDEXEDDB:
+                driver = require("npm:localforage@1.2.2/src/drivers/indexeddb");
+                break;
+              case self.LOCALSTORAGE:
+                driver = require("npm:localforage@1.2.2/src/drivers/localstorage");
+                break;
+              case self.WEBSQL:
+                driver = require("npm:localforage@1.2.2/src/drivers/websql");
+            }
+            self._extend(driver);
+          } else {
+            self._extend(globalObject[driverName]);
+          }
+        } else if (CustomDrivers[driverName]) {
+          self._extend(CustomDrivers[driverName]);
+        } else {
+          self._driverSet = Promise.reject(error);
+          reject(error);
+          return ;
+        }
+        resolve();
+      });
+      function setDriverToConfig() {
+        self._config.driver = self.driver();
+      }
+      this._driverSet.then(setDriverToConfig, setDriverToConfig);
+      this._driverSet.then(callback, errorCallback);
+      return this._driverSet;
+    };
+    LocalForage.prototype.supports = function(driverName) {
+      return !!driverSupport[driverName];
+    };
+    LocalForage.prototype._extend = function(libraryMethodsAndProperties) {
+      extend(this, libraryMethodsAndProperties);
+    };
+    LocalForage.prototype._getFirstSupportedDriver = function(drivers) {
+      if (drivers && isArray(drivers)) {
+        for (var i = 0; i < drivers.length; i++) {
+          var driver = drivers[i];
+          if (this.supports(driver)) {
+            return driver;
+          }
+        }
+      }
+      return null;
+    };
+    LocalForage.prototype.createInstance = function(options) {
+      return new LocalForage(options);
+    };
+    var localForage = new LocalForage();
+    if (moduleType === ModuleType.DEFINE) {
+      define('localforage', function() {
+        return localForage;
+      });
+    } else if (moduleType === ModuleType.EXPORT) {
+      module.exports = localForage;
+    } else {
+      this.localforage = localForage;
+    }
+  }).call(window);
+  global.define = __define;
+  return module.exports;
+});
+
 System.register("github:jspm/nodelibs-buffer@0.1.0", ["github:jspm/nodelibs-buffer@0.1.0/index"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -17401,6 +27406,15 @@ System.register("npm:react@0.13.2/lib/ReactComponentBrowserEnvironment", ["npm:r
     };
     module.exports = ReactComponentBrowserEnvironment;
   })(require("github:jspm/nodelibs-process@0.1.1"));
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:localforage@1.2.2", ["npm:localforage@1.2.2/src/localforage"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:localforage@1.2.2/src/localforage");
   global.define = __define;
   return module.exports;
 });
@@ -18783,15 +28797,256 @@ System.register('build/js/actions/PlaygroundActions', ['build/js/dispatcher/AppD
 			'use strict';
 
 			TodoActions = {
-				updateInput: function updateInput(input) {
+				init: function init() {
+					AppDispatcher.dispatch({
+						actionType: PlaygroundConstants.PLAYGROUND_INIT });
+				},
+
+				keyboardActionFired: function keyboardActionFired() {
+					AppDispatcher.dispatch({
+						actionType: PlaygroundConstants.PLAYGROUND_KEYBOARD_ACTION
+					});
+				},
+
+				updateInput: function updateInput(value) {
 					AppDispatcher.dispatch({
 						actionType: PlaygroundConstants.PLAYGROUND_INPUT_UPDATED,
-						input: input
+						value: value
+					});
+				},
+
+				processInput: function processInput() {
+					AppDispatcher.dispatch({
+						actionType: PlaygroundConstants.PLAYGROUND_START_PROCESS_INPUT
+					});
+				},
+
+				setPostcssCssVariablesPreserveOption: function setPostcssCssVariablesPreserveOption(value) {
+					AppDispatcher.dispatch({
+						actionType: PlaygroundConstants.PLAYGROUND_SET_POSTCSS_CSS_VARIABLES_PRESERVE,
+						value: value
+					});
+				},
+
+				setShouldLiveReloadOption: function setShouldLiveReloadOption(value) {
+					AppDispatcher.dispatch({
+						actionType: PlaygroundConstants.PLAYGROUND_SET_SHOULD_LIVE_RELOAD,
+						value: value
+					});
+				},
+
+				setTabWidthOption: function setTabWidthOption(value) {
+					AppDispatcher.dispatch({
+						actionType: PlaygroundConstants.PLAYGROUND_SET_TAB_WIDTH,
+						value: value
 					});
 				}
 			};
 
 			_export('default', TodoActions);
+		}
+	};
+});
+System.register('build/js/components/PlaygroundHeader', ['npm:babel-runtime@5.2.6/helpers/inherits', 'npm:babel-runtime@5.2.6/helpers/get', 'npm:babel-runtime@5.2.6/helpers/create-class', 'npm:babel-runtime@5.2.6/helpers/class-call-check', 'npm:react@0.13.2', 'build/js/stores/PlaygroundStore', 'build/js/actions/PlaygroundActions', 'npm:object-assign@2.0.0'], function (_export) {
+	var _inherits, _get, _createClass, _classCallCheck, React, PlaygroundStore, PlaygroundActions, assign, PlaygroundHeader;
+
+	return {
+		setters: [function (_npmBabelRuntime526HelpersInherits) {
+			_inherits = _npmBabelRuntime526HelpersInherits['default'];
+		}, function (_npmBabelRuntime526HelpersGet) {
+			_get = _npmBabelRuntime526HelpersGet['default'];
+		}, function (_npmBabelRuntime526HelpersCreateClass) {
+			_createClass = _npmBabelRuntime526HelpersCreateClass['default'];
+		}, function (_npmBabelRuntime526HelpersClassCallCheck) {
+			_classCallCheck = _npmBabelRuntime526HelpersClassCallCheck['default'];
+		}, function (_npmReact0132) {
+			React = _npmReact0132['default'];
+		}, function (_buildJsStoresPlaygroundStore) {
+			PlaygroundStore = _buildJsStoresPlaygroundStore['default'];
+		}, function (_buildJsActionsPlaygroundActions) {
+			PlaygroundActions = _buildJsActionsPlaygroundActions['default'];
+		}, function (_npmObjectAssign200) {
+			assign = _npmObjectAssign200['default'];
+		}],
+		execute: function () {
+			'use strict';
+
+			PlaygroundHeader = (function (_React$Component) {
+				function PlaygroundHeader(props) {
+					_classCallCheck(this, PlaygroundHeader);
+
+					_get(Object.getPrototypeOf(PlaygroundHeader.prototype), 'constructor', this).call(this, props);
+					this.state = assign({
+						optionsMenuDisplayToggle: false
+					});
+				}
+
+				_inherits(PlaygroundHeader, _React$Component);
+
+				_createClass(PlaygroundHeader, [{
+					key: 'componentDidMount',
+					value: function componentDidMount() {
+						PlaygroundStore.getKeyboardActionStream().on('KEYBOARD_ACTION', this._handleKeyboardAction.bind(this));
+
+						document.addEventListener('mousedown', this._handleMouseDown.bind(this));
+					}
+				}, {
+					key: 'componentWillUnmount',
+					value: function componentWillUnmount() {
+						PlaygroundStore.getKeyboardActionStream().removeEventListener('KEYBOARD_ACTION', this._handleKeyboardAction.bind(this));
+
+						document.removeEventListener('mousedown', this._handleMouseDown.bind(this));
+					}
+				}, {
+					key: 'render',
+					value: function render() {
+						//console.log('render', this.state);
+						return React.createElement('header', {
+							className: 'playground-header'
+						}, React.createElement('h1', {
+							className: 'playground-header-heading'
+						}, React.createElement('a', { className: 'playground-header-heading-primary-title', href: 'https://github.com/MadLittleMods/postcss-css-variables' }, 'postcss-css-variables'), ' Playground - ', React.createElement('a', { href: 'https://github.com/postcss/postcss' }, 'PostCSS')), React.createElement('div', {
+							className: 'playground-options-holder',
+							ref: 'playgroundOptionsHolder'
+						}, React.createElement('input', {
+							type: 'checkbox',
+							id: 'id-playground-options-menu-display-toggle-checkbox',
+							className: 'playground-options-menu-toggle-checkbox visually-hidden',
+							checked: this.state.optionsMenuDisplayToggle,
+							onChange: this._onOptionsMenuDisplayToggleCheckboxChanged.bind(this) }), React.createElement('label', {
+							className: 'playground-options-menu-toggle',
+							htmlFor: 'id-playground-options-menu-display-toggle-checkbox'
+						}, React.createElement('svg', {
+							className: 'playground-options-menu-toggle-icon icon',
+							viewBox: '0 0 1024 1024',
+							dangerouslySetInnerHTML: { __html: '<use xlink:href="#shape-gear"></use>' } })), React.createElement('div', {
+							className: 'playground-options-menu-wrapper'
+						}, React.createElement('div', {
+							className: 'playground-options-menu'
+						}, React.createElement('ul', {
+							className: 'playground-options-menu-options-group'
+						}, React.createElement('li', { className: 'playground-options-menu-item' }, React.createElement('label', {
+							className: 'playground-options-menu-item-label',
+							htmlFor: 'id-playground-postcss-css-variables-preserve-menu-option'
+						}, 'Preserve:'), React.createElement('input', {
+							type: 'checkbox',
+							id: 'id-playground-postcss-css-variables-preserve-menu-option',
+							checked: this.props.postcssCssVariablesPreserve,
+							onChange: this._onPostcssCssVariablesPreserveCheckboxChanged.bind(this) }))), React.createElement('hr', null), React.createElement('ul', {
+							className: 'playground-options-menu-options-group'
+						}, React.createElement('li', { className: 'playground-options-menu-item' }, React.createElement('label', {
+							className: 'playground-options-menu-item-label',
+							htmlFor: 'id-playground-tab-width-menu-option'
+						}, 'Tab Width:'), React.createElement('div', null, React.createElement('div', { className: 'playground-options-menu-item-secondary' }, React.createElement('label', {
+							className: 'playground-options-menu-item-label-secondary',
+							htmlFor: 'id-playground-tab-width-inherit-menu-option'
+						}, 'Auto:'), React.createElement('input', {
+							type: 'checkbox',
+							id: 'id-playground-tab-width-inherit-menu-option',
+							checked: this.props.tabWidth === 'inherit',
+							onChange: this._onTabWidthAutoCheckboxChanged.bind(this) })), React.createElement('input', {
+							type: 'range',
+							id: 'id-playground-tab-width-menu-option',
+							value: this.props.tabWidth === 'inherit' ? '4' : this.props.tabWidth,
+							onChange: this._onTabWidthChanged.bind(this),
+
+							min: '1',
+							max: '12',
+							step: '1',
+							disabled: this.props.tabWidth === 'inherit' }))), React.createElement('li', { className: 'playground-options-menu-item' }, React.createElement('label', {
+							className: 'playground-options-menu-item-label',
+							htmlFor: 'id-playground-should-live-reload-menu-option'
+						}, 'Live Reload:'), React.createElement('input', {
+							type: 'checkbox',
+							id: 'id-playground-should-live-reload-menu-option',
+							checked: this.props.shouldLiveReload,
+							onChange: this._onLiveReloadCheckboxChanged.bind(this) })))))), React.createElement('div', null, React.createElement('input', {
+							type: 'checkbox',
+							id: 'id-playground-live-reload-checkbox',
+							className: 'playground-live-reload-toggle-checkbox visually-hidden',
+							'aria-label': 'Live Reload',
+							checked: this.props.shouldLiveReload,
+							onChange: this._onLiveReloadCheckboxChanged.bind(this) }), React.createElement('label', {
+							className: 'playground-live-reload-toggle-togglebox',
+							htmlFor: 'id-playground-live-reload-checkbox'
+						}, React.createElement('label', {
+							className: 'switch',
+							htmlFor: 'id-playground-live-reload-checkbox'
+						}))), React.createElement('button', {
+							className: 'playground-header-save-button',
+							onClick: this._onProcessClick.bind(this)
+						}, 'Process'));
+					}
+				}, {
+					key: '_onProcessClick',
+					value: function _onProcessClick() {
+						PlaygroundActions.processInput();
+					}
+				}, {
+					key: '_onPostcssCssVariablesPreserveCheckboxChanged',
+					value: function _onPostcssCssVariablesPreserveCheckboxChanged(e) {
+						PlaygroundActions.setPostcssCssVariablesPreserveOption(e.target.checked);
+					}
+				}, {
+					key: '_onLiveReloadCheckboxChanged',
+					value: function _onLiveReloadCheckboxChanged(e) {
+						PlaygroundActions.setShouldLiveReloadOption(e.target.checked);
+					}
+				}, {
+					key: '_onTabWidthChanged',
+					value: function _onTabWidthChanged(e) {
+						//console.log(e.target.value);
+						PlaygroundActions.setTabWidthOption(e.target.value);
+					}
+				}, {
+					key: '_onTabWidthAutoCheckboxChanged',
+					value: function _onTabWidthAutoCheckboxChanged(e) {
+						if (e.target.checked) {
+							PlaygroundActions.setTabWidthOption('inherit');
+						} else {
+							PlaygroundActions.setTabWidthOption('4');
+						}
+					}
+				}, {
+					key: '_onOptionsMenuDisplayToggleCheckboxChanged',
+					value: function _onOptionsMenuDisplayToggleCheckboxChanged(e) {
+						this.setState({
+							optionsMenuDisplayToggle: e.target.checked
+						});
+					}
+				}, {
+					key: '_handleKeyboardAction',
+					value: function _handleKeyboardAction() {
+						//console.log('keyboard action');
+
+						// Also hide the options menu because we need it out of the way to start typing
+						this.setState({
+							optionsMenuDisplayToggle: false
+						});
+					}
+				}, {
+					key: '_handleMouseDown',
+					value: function _handleMouseDown(e) {
+						// If they clicked somewhere outside of the menu, then close it
+						if (!React.findDOMNode(this.refs.playgroundOptionsHolder).contains(e.target)) {
+							this.setState({
+								optionsMenuDisplayToggle: false
+							});
+						}
+					}
+				}]);
+
+				return PlaygroundHeader;
+			})(React.Component);
+
+			_export('default', PlaygroundHeader);
+
+			PlaygroundHeader.propTypes = {
+				tabWidth: React.PropTypes.string.isRequired,
+				shouldLiveReload: React.PropTypes.bool.isRequired,
+
+				postcssCssVariablesPreserve: React.PropTypes.bool.isRequired
+			};
 		}
 	};
 });
@@ -18805,7 +29060,18 @@ System.register('build/js/constants/PlaygroundConstants', ['npm:keymirror@0.1.1'
 			'use strict';
 
 			_export('default', keyMirror({
-				PLAYGROUND_INPUT_UPDATED: null }));
+				PLAYGROUND_INIT: null,
+
+				PLAYGROUND_INPUT_UPDATED: null,
+				PLAYGROUND_START_PROCESS_INPUT: null,
+
+				PLAYGROUND_KEYBOARD_ACTION: null,
+
+				PLAYGROUND_SET_POSTCSS_CSS_VARIABLES_PRESERVE: null,
+
+				PLAYGROUND_SET_SHOULD_LIVE_RELOAD: null,
+				PLAYGROUND_SET_TAB_WIDTH: null
+			}));
 		}
 	};
 });
@@ -18850,7 +29116,8 @@ System.register('build/js/components/EditorTextarea', ['npm:babel-runtime@5.2.6/
 						return React.createElement('textarea', {
 							className: this.props.className || '',
 							onChange: this._onChange.bind(this),
-							value: this.props.value
+							value: this.props.value,
+							style: this.props.style
 						});
 					}
 				}, {
@@ -18872,7 +29139,8 @@ System.register('build/js/components/EditorTextarea', ['npm:babel-runtime@5.2.6/
 			EditorTextarea.propTypes = {
 				onChange: React.PropTypes.func,
 				className: React.PropTypes.string,
-				value: React.PropTypes.string
+				value: React.PropTypes.string,
+				style: React.PropTypes.object
 			};
 		}
 	};
@@ -18893,26 +29161,27 @@ System.register('build/js/dispatcher/AppDispatcher', ['npm:flux@2.0.3'], functio
     }
   };
 });
-System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants', 'npm:events@1.0.2', 'npm:object-assign@2.0.0', 'npm:postcss@4.1.9', 'npm:postcss-css-variables@0.3.1'], function (_export) {
-	var AppDispatcher, PlaygroundConstants, events, assign, postcss, cssvariables, EventEmitter, CHANGE_EVENT, playgroundProcessor, postcssInputText, postcssOutputResult, postcssProcessingError, PlaygroundStore;
+System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:object-assign@2.0.0', 'npm:localforage@1.2.2', 'npm:bluebird@2.9.25'], function (_export) {
+	var AppDispatcher, PlaygroundConstants, Immutable, events, assign, localforage, Promise, EventEmitter, CHANGE_EVENT, playgroundSettings, pluginSettings, PlaygroundSettingsStore;
 
-	function updateInput(input) {
-		postcssInputText = input;
-
-		playgroundProcessor.process(input).then(function (result) {
-			updateOuput(result.css, null);
-			PlaygroundStore.emitChange();
-		})['catch'](function (error) {
-			// Because there was an error, reset the output text
-			updateOuput('', error);
-			console.warn(error);
-			PlaygroundStore.emitChange();
-		});
+	function retrieveSettingsFromPersistantStorage() {
+		console.log('Retrieving settings from persistent storage...');
+		return Promise.all([localforage.getItem('PlaygroundSettingsStore.PlaygroundSettings').then(function (value) {
+			playgroundSettings = playgroundSettings.mergeDeep(JSON.parse(value) || {});
+		}), localforage.getItem('PlaygroundSettingsStore.PluginSettings').then(function (value) {
+			pluginSettings = pluginSettings.mergeDeep(JSON.parse(value) || {});
+		})]);
 	}
 
-	function updateOuput(text, error) {
-		postcssOutputResult = text;
-		postcssProcessingError = error;
+	function savePersistently() {
+		console.log('Saving settings persistently...');
+		return Promise.all([localforage.setItem('PlaygroundSettingsStore.PlaygroundSettings', JSON.stringify(playgroundSettings.toObject())), localforage.setItem('PlaygroundSettingsStore.PluginSettings', JSON.stringify(pluginSettings.toObject()))]).then(function () {
+			console.log('Settings saved!');
+		})['catch'](function (e) {
+			console.log('Error saving:', e);
+
+			return e;
+		});
 	}
 
 	return {
@@ -18920,35 +29189,49 @@ System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDisp
 			AppDispatcher = _buildJsDispatcherAppDispatcher['default'];
 		}, function (_buildJsConstantsPlaygroundConstants) {
 			PlaygroundConstants = _buildJsConstantsPlaygroundConstants['default'];
+		}, function (_npmImmutable372) {
+			Immutable = _npmImmutable372['default'];
 		}, function (_npmEvents102) {
 			events = _npmEvents102['default'];
 		}, function (_npmObjectAssign200) {
 			assign = _npmObjectAssign200['default'];
-		}, function (_npmPostcss419) {
-			postcss = _npmPostcss419['default'];
-		}, function (_npmPostcssCssVariables031) {
-			cssvariables = _npmPostcssCssVariables031['default'];
+		}, function (_npmLocalforage122) {
+			localforage = _npmLocalforage122['default'];
+		}, function (_npmBluebird2925) {
+			Promise = _npmBluebird2925['default'];
 		}],
 		execute: function () {
 			'use strict';
 
 			EventEmitter = events.EventEmitter;
-			CHANGE_EVENT = 'CHANGE_EVENT';
-			playgroundProcessor = postcss().use(cssvariables());
-			postcssInputText = '';
-			postcssOutputResult = '';
-			postcssProcessingError = null;
-			PlaygroundStore = assign({}, EventEmitter.prototype, {
 
-				getInputText: function getInputText() {
-					return postcssInputText;
+			localforage.config({
+				name: 'postcss-css-variables-playground',
+				version: 1,
+				storeName: 'postcss-css-variables-playground-settings'
+			});
+
+			CHANGE_EVENT = 'CHANGE_EVENT';
+			playgroundSettings = Immutable.Map({
+				shouldLiveReload: true,
+				tabWidth: 'inherit'
+			});
+			pluginSettings = Immutable.Map({
+				'postcss-css-variables': Immutable.Map({
+					preserve: false
+				})
+			});
+			PlaygroundSettingsStore = assign({}, EventEmitter.prototype, {
+
+				getPluginSettings: function getPluginSettings() {
+					return pluginSettings;
 				},
 
-				getOutputResult: function getOutputResult() {
-					return {
-						result: postcssOutputResult,
-						error: postcssProcessingError
-					};
+				getShouldLiveReload: function getShouldLiveReload() {
+					return playgroundSettings.get('shouldLiveReload', true);
+				},
+				getTabWidth: function getTabWidth() {
+					return playgroundSettings.get('tabWidth', 'inherit');
 				},
 
 				emitChange: function emitChange() {
@@ -18963,13 +29246,159 @@ System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDisp
 					this.removeListener(CHANGE_EVENT, callback);
 				},
 
-				dispatcherIndex: AppDispatcher.register(function (action) {
+				dispatchToken: AppDispatcher.register(function (action) {
 					switch (action.actionType) {
-						case PlaygroundConstants.PLAYGROUND_INPUT_UPDATED:
-							var input = action.input;
-							updateInput(action.input);
-
+						case PlaygroundConstants.PLAYGROUND_INIT:
+							retrieveSettingsFromPersistantStorage().then(function () {
+								console.log('Settings Retrieved!');
+								PlaygroundSettingsStore.emitChange();
+							})['catch'](function (e) {
+								console.log('Error retrieving playground settings:', e);
+							});
 							break;
+
+						case PlaygroundConstants.PLAYGROUND_SET_POSTCSS_CSS_VARIABLES_PRESERVE:
+							pluginSettings = pluginSettings.setIn(['postcss-css-variables', 'preserve'], action.value);
+							savePersistently();
+							PlaygroundSettingsStore.emitChange();
+							break;
+
+						case PlaygroundConstants.PLAYGROUND_SET_SHOULD_LIVE_RELOAD:
+							playgroundSettings = playgroundSettings.set('shouldLiveReload', action.value);
+							savePersistently();
+							PlaygroundSettingsStore.emitChange();
+							break;
+
+						case PlaygroundConstants.PLAYGROUND_SET_TAB_WIDTH:
+							playgroundSettings = playgroundSettings.set('tabWidth', action.value);
+							savePersistently();
+							PlaygroundSettingsStore.emitChange();
+							break;
+
+						default:
+						// no op
+					}
+
+					// No errors. Needed by promise in Dispatcher.
+					return true;
+				})
+			});
+
+			_export('default', PlaygroundSettingsStore);
+		}
+	};
+});
+System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants', 'build/js/stores/PlaygroundSettingsStore', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:object-assign@2.0.0', 'npm:postcss@4.1.9', 'npm:postcss-css-variables@0.3.1'], function (_export) {
+	var AppDispatcher, PlaygroundConstants, PlaygroundSettingsStore, Immutable, events, assign, postcss, cssvariables, EventEmitter, CHANGE_EVENT, keyboardActionStream, playgroundProcessor, postcssUnprocessedInputText, processingResult, PlaygroundStore;
+
+	function updateProcessor(settings) {
+		settings = settings || {};
+
+		playgroundProcessor = postcss().use(cssvariables(settings.get('postcss-css-variables').toObject()));
+
+		// Whenever the plugin option updates,
+		// we need to update the output
+		updateOutput();
+	}
+
+	function updateOutput() {
+		processingResult = processingResult.set('input', postcssUnprocessedInputText);
+
+		playgroundProcessor.process(postcssUnprocessedInputText).then(function (result) {
+			_setOuput(result.css, null);
+		})['catch'](function (error) {
+			// Because there was an error, reset the output text
+			_setOuput('', error);
+			//console.warn(error);
+		});
+	}
+
+	function _setOuput(text, error) {
+		processingResult = processingResult.set('output', text);
+		processingResult = processingResult.set('error', error);
+		PlaygroundStore.emitChange();
+	}
+
+	return {
+		setters: [function (_buildJsDispatcherAppDispatcher) {
+			AppDispatcher = _buildJsDispatcherAppDispatcher['default'];
+		}, function (_buildJsConstantsPlaygroundConstants) {
+			PlaygroundConstants = _buildJsConstantsPlaygroundConstants['default'];
+		}, function (_buildJsStoresPlaygroundSettingsStore) {
+			PlaygroundSettingsStore = _buildJsStoresPlaygroundSettingsStore['default'];
+		}, function (_npmImmutable372) {
+			Immutable = _npmImmutable372['default'];
+		}, function (_npmEvents102) {
+			events = _npmEvents102['default'];
+		}, function (_npmObjectAssign200) {
+			assign = _npmObjectAssign200['default'];
+		}, function (_npmPostcss419) {
+			postcss = _npmPostcss419['default'];
+		}, function (_npmPostcssCssVariables031) {
+			cssvariables = _npmPostcssCssVariables031['default'];
+		}],
+		execute: function () {
+			'use strict';
+
+			EventEmitter = events.EventEmitter;
+			CHANGE_EVENT = 'CHANGE_EVENT';
+			keyboardActionStream = assign({}, EventEmitter.prototype);
+			playgroundProcessor = postcss().use(cssvariables());
+			postcssUnprocessedInputText = '';
+			processingResult = Immutable.Map({
+				input: '',
+				output: '',
+				error: null
+			});
+			PlaygroundStore = assign({}, EventEmitter.prototype, {
+
+				getKeyboardActionStream: function getKeyboardActionStream() {
+					return keyboardActionStream;
+				},
+
+				getInputText: function getInputText() {
+					return postcssUnprocessedInputText;
+				},
+
+				getOutputResult: function getOutputResult() {
+					return processingResult;
+				},
+
+				emitChange: function emitChange() {
+					this.emit(CHANGE_EVENT);
+				},
+
+				addChangeListener: function addChangeListener(callback) {
+					this.on(CHANGE_EVENT, callback);
+				},
+
+				removeChangeListener: function removeChangeListener(callback) {
+					this.removeListener(CHANGE_EVENT, callback);
+				},
+
+				dispatchToken: AppDispatcher.register(function (action) {
+
+					switch (action.actionType) {
+						case PlaygroundConstants.PLAYGROUND_KEYBOARD_ACTION:
+							keyboardActionStream.emit('KEYBOARD_ACTION');
+							break;
+
+						// Whenever the plugin option updates,
+						// we need to update the output
+						case PlaygroundConstants.PLAYGROUND_SET_POSTCSS_CSS_VARIABLES_PRESERVE:
+							AppDispatcher.waitFor([PlaygroundSettingsStore.dispatchToken]);
+							updateProcessor(PlaygroundSettingsStore.getPluginSettings());
+							break;
+
+						case PlaygroundConstants.PLAYGROUND_INPUT_UPDATED:
+							postcssUnprocessedInputText = action.value;
+							PlaygroundStore.emitChange();
+							break;
+
+						case PlaygroundConstants.PLAYGROUND_START_PROCESS_INPUT:
+							updateOutput();
+							break;
+
 						default:
 						// no op
 					}
@@ -18983,16 +29412,25 @@ System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDisp
 		}
 	};
 });
-System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/helpers/inherits', 'npm:babel-runtime@5.2.6/helpers/get', 'npm:babel-runtime@5.2.6/helpers/create-class', 'npm:babel-runtime@5.2.6/helpers/class-call-check', 'npm:react@0.13.2', 'npm:object-assign@2.0.0', 'npm:classnames@1.2.2', 'build/css/playground.css!github:systemjs/plugin-css@0.1.10', 'build/js/stores/PlaygroundStore', 'build/js/actions/PlaygroundActions', 'build/js/components/EditorTextarea'], function (_export) {
-	var _inherits, _get, _createClass, _classCallCheck, React, assign, classnames, PlaygroundStore, PlaygroundActions, EditorTextarea, PlaygroundApp;
+System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/helpers/inherits', 'npm:babel-runtime@5.2.6/helpers/get', 'npm:babel-runtime@5.2.6/helpers/create-class', 'npm:babel-runtime@5.2.6/helpers/class-call-check', 'npm:react@0.13.2', 'npm:object-assign@2.0.0', 'npm:classnames@1.2.2', 'build/css/playground.css!github:systemjs/plugin-css@0.1.10', 'build/js/stores/PlaygroundStore', 'build/js/stores/PlaygroundSettingsStore', 'build/js/actions/PlaygroundActions', 'build/js/components/PlaygroundHeader', 'build/js/components/EditorTextarea'], function (_export) {
+	var _inherits, _get, _createClass, _classCallCheck, React, assign, classnames, PlaygroundStore, PlaygroundSettingsStore, PlaygroundActions, PlaygroundHeader, EditorTextarea, PlaygroundApp;
 
-	function getPlaygroundState(props, state) {
+	function gatherPlaygroundStoreState(props, state) {
 		var newOutputResult = PlaygroundStore.getOutputResult();
 
 		return {
+			postcssInputText: PlaygroundStore.getInputText(),
 			postcssOutputResult: newOutputResult,
 			// If there was an error in parsing, then use the last known good one
-			prevSuccessfulPostcssOutputResult: newOutputResult.error ? state.postcssOutputResult : newOutputResult
+			prevSuccessfulPostcssOutputResult: newOutputResult.get('error') ? state.postcssOutputResult : newOutputResult
+		};
+	}
+
+	function gatherPlaygroundSettingsStoreState(props, state) {
+		return {
+			postcssCssVariablesPreserve: PlaygroundSettingsStore.getPluginSettings().getIn(['postcss-css-variables', 'preserve']),
+			shouldLiveReload: PlaygroundSettingsStore.getShouldLiveReload(),
+			tabWidth: PlaygroundSettingsStore.getTabWidth()
 		};
 	}
 
@@ -19013,8 +29451,12 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 			classnames = _npmClassnames122['default'];
 		}, function (_buildCssPlaygroundCssGithubSystemjsPluginCss0110) {}, function (_buildJsStoresPlaygroundStore) {
 			PlaygroundStore = _buildJsStoresPlaygroundStore['default'];
+		}, function (_buildJsStoresPlaygroundSettingsStore) {
+			PlaygroundSettingsStore = _buildJsStoresPlaygroundSettingsStore['default'];
 		}, function (_buildJsActionsPlaygroundActions) {
 			PlaygroundActions = _buildJsActionsPlaygroundActions['default'];
+		}, function (_buildJsComponentsPlaygroundHeader) {
+			PlaygroundHeader = _buildJsComponentsPlaygroundHeader['default'];
 		}, function (_buildJsComponentsEditorTextarea) {
 			EditorTextarea = _buildJsComponentsEditorTextarea['default'];
 		}],
@@ -19026,9 +29468,7 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 					_classCallCheck(this, PlaygroundApp);
 
 					_get(Object.getPrototypeOf(PlaygroundApp.prototype), 'constructor', this).call(this, props);
-					this.state = assign(getPlaygroundState(props, this.state || {}), {
-						shouldLiveReload: props.initialShouldLiveReload || true,
-						postcssInputText: props.initialPostcssInputText || '' });
+					this.state = assign(gatherPlaygroundStoreState(props, this.state || {}), gatherPlaygroundSettingsStoreState(props, this.state || {}));
 				}
 
 				_inherits(PlaygroundApp, _React$Component);
@@ -19036,14 +29476,19 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 				_createClass(PlaygroundApp, [{
 					key: 'componentDidMount',
 					value: function componentDidMount() {
-						PlaygroundStore.addChangeListener(this._onStoreChange.bind(this));
+						PlaygroundStore.addChangeListener(this._onPlaygroundStoreChange.bind(this));
+						PlaygroundSettingsStore.addChangeListener(this._onPlaygroundSettingsStoreChange.bind(this));
 
 						document.addEventListener('keyup', this._handleKeyUp.bind(this));
+
+						// Initialize the application
+						PlaygroundActions.init();
 					}
 				}, {
 					key: 'componentWillUnmount',
 					value: function componentWillUnmount() {
-						PlaygroundStore.removeChangeListener(this._onStoreChange);
+						PlaygroundStore.removeChangeListener(this._onPlaygroundStoreChange.bind(this));
+						PlaygroundSettingsStore.removeChangeListener(this._onPlaygroundSettingsStoreChange.bind(this));
 
 						document.removeEventListener('keyup', this._handleKeyUp.bind(this));
 					}
@@ -19052,11 +29497,11 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 					value: function render() {
 						//console.log('render', this.state);
 
-						var doesInputHaveError = !!this.state.postcssOutputResult.error;
-						var output = doesInputHaveError ? this.state.prevSuccessfulPostcssOutputResult.result : this.state.postcssOutputResult.result;
+						var doesInputHaveError = !!this.state.postcssOutputResult.get('error');
+						var output = doesInputHaveError ? this.state.prevSuccessfulPostcssOutputResult.get('output') : this.state.postcssOutputResult.get('output');
 
 						var parsingErrorMarkup;
-						if (this.state.postcssOutputResult.error) {
+						if (this.state.postcssOutputResult.get('error')) {
 							parsingErrorMarkup = React.createElement('div', {
 								className: 'postcss-editor-pane-error',
 								// Live region attributes: http://www.smashingmagazine.com/2015/04/27/its-alive-apps-that-feed-back-accessibly/
@@ -19064,62 +29509,46 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 								role: 'status'
 							}, React.createElement('div', {
 								className: 'postcss-editor-pane-error-message'
-							}, this.state.postcssOutputResult.error.toString()));
+							}, this.state.postcssOutputResult.get('error').toString()));
 						}
 
-						return React.createElement('div', { className: 'playground-app-wrapper' }, React.createElement('header', {
-							className: 'playground-header'
-						}, React.createElement('h1', {
-							className: 'playground-header-heading'
-						}, React.createElement('a', { className: 'playground-header-heading-primary-title', href: 'https://github.com/MadLittleMods/postcss-css-variables' }, 'postcss-css-variables'), ' Playground - ', React.createElement('a', { href: 'https://github.com/postcss/postcss' }, 'PostCSS')), React.createElement('label', {
-							className: 'live-reload-toggle-checkbox',
-							htmlFor: 'id-live-reload-checkbox',
-							onChange: this._onLiveReloadCheckboxChanged.bind(this)
-						}, React.createElement('input', {
-							type: 'checkbox',
-							id: 'id-live-reload-checkbox',
-							checked: this.state.shouldLiveReload,
-							onChange: this._onLiveReloadCheckboxChanged.bind(this) })), React.createElement('button', {
-							className: 'playground-header-save-button',
-							onClick: this._onSave.bind(this)
-						}, 'Save')), React.createElement('div', { className: 'postcss-editor-area' }, React.createElement('div', { className: 'postcss-editor-pane' }, React.createElement('div', {
+						var tabWidthStyleValue = this.state.tabWidth === 'inherit' ? this.state.tabWidth : this.state.tabWidth + 'ch';
+
+						return React.createElement('div', { className: 'playground-app-wrapper' }, React.createElement(PlaygroundHeader, {
+							tabWidth: this.state.tabWidth,
+							shouldLiveReload: this.state.shouldLiveReload,
+
+							postcssCssVariablesPreserve: this.state.postcssCssVariablesPreserve }), React.createElement('div', { className: 'postcss-editor-area' }, React.createElement('div', { className: 'postcss-editor-pane' }, React.createElement('div', {
 							className: 'postcss-editor-pane-label'
 						}, 'Input ', React.createElement('kbd', null, 'i')), React.createElement(EditorTextarea, {
 							ref: 'postcssInputTextarea',
 							className: 'postcss-textarea',
 							onChange: this._onInputChanged.bind(this),
-							value: this.state.postcssInputText })), React.createElement('div', { className: 'postcss-editor-pane' }, React.createElement('div', {
+							value: this.state.postcssInputText,
+
+							style: {
+								tabSize: tabWidthStyleValue
+							} })), React.createElement('div', { className: 'postcss-editor-pane' }, React.createElement('div', {
 							className: 'postcss-editor-pane-label'
 						}, 'Output ', React.createElement('kbd', null, 'o')), React.createElement(EditorTextarea, {
 							ref: 'postcssOutputTextarea',
 							className: classnames('postcss-textarea', { 'is-not-current': doesInputHaveError }),
-							value: output }), parsingErrorMarkup)));
-					}
-				}, {
-					key: '_onSave',
-					value: function _onSave() {
-						//console.log('saving');
-						PlaygroundActions.updateInput(this.state.postcssInputText);
+							value: output,
+
+							style: {
+								tabSize: tabWidthStyleValue
+							} }), parsingErrorMarkup)));
 					}
 				}, {
 					key: '_onInputChanged',
 					value: function _onInputChanged(text) {
 						//console.log('input changed');
-						this.setState({
-							postcssInputText: text
-						});
+						PlaygroundActions.updateInput(text);
 
 						// Defaults to true if undefined
 						if (this.state.shouldLiveReload) {
-							PlaygroundActions.updateInput(text);
+							PlaygroundActions.processInput();
 						}
-					}
-				}, {
-					key: '_onLiveReloadCheckboxChanged',
-					value: function _onLiveReloadCheckboxChanged() {
-						this.setState({
-							shouldLiveReload: event.target.checked
-						});
 					}
 				}, {
 					key: '_handleKeyUp',
@@ -19130,6 +29559,8 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 						if (e.keyCode === 27) {
 							// Unfocus/blur the currently focused elemnt
 							document.activeElement.blur();
+
+							PlaygroundActions.keyboardActionFired();
 						}
 
 						// If nothing is focused currently
@@ -19138,19 +29569,29 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 							if (e.keyCode === 73) {
 								//console.log('focus input');
 								React.findDOMNode(this.refs.postcssInputTextarea).focus();
+
+								PlaygroundActions.keyboardActionFired();
 							}
 							// o
 							else if (e.keyCode === 79) {
 								//console.log('focus output');
 								React.findDOMNode(this.refs.postcssOutputTextarea).focus();
+
+								PlaygroundActions.keyboardActionFired();
 							}
 						}
 					}
 				}, {
-					key: '_onStoreChange',
-					value: function _onStoreChange() {
+					key: '_onPlaygroundStoreChange',
+					value: function _onPlaygroundStoreChange() {
 						//console.log('change in PlaygroundStore');
-						this.setState(getPlaygroundState(this.props, this.state));
+						this.setState(gatherPlaygroundStoreState(this.props, this.state));
+					}
+				}, {
+					key: '_onPlaygroundSettingsStoreChange',
+					value: function _onPlaygroundSettingsStoreChange() {
+						//console.log('change in PlaygroundSettingsStore');
+						this.setState(gatherPlaygroundSettingsStoreState(this.props, this.state));
 					}
 				}]);
 
@@ -19159,14 +29600,12 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 
 			_export('default', PlaygroundApp);
 
-			PlaygroundApp.propTypes = {
-				// Defaults to true
-				initialShouldLiveReload: React.PropTypes.bool,
-				initialPostcssInputText: React.PropTypes.string
-			};
+			PlaygroundApp.propTypes = {};
 		}
 	};
 });
+
+// ...
 System.register('build/js/main', ['npm:react@0.13.2', 'build/js/components/PlaygroundApp'], function (_export) {
   var React, PlaygroundApp;
   return {
@@ -19184,5 +29623,5 @@ System.register('build/js/main', ['npm:react@0.13.2', 'build/js/components/Playg
 });
 System.register('build/css/playground.css!github:systemjs/plugin-css@0.1.10', [], false, function() {});
 (function(c){var d=document,a='appendChild',i='styleSheet',s=d.createElement('style');s.type='text/css';d.getElementsByTagName('head')[0][a](s);s[i]?s[i].cssText=c:s[a](d.createTextNode(c));})
-("body,html{height:100%}blockquote,body,button,code,figure,form,h1,h2,h3,h4,html,input,label,ol,p,pre,ul{margin:0;padding:0}a,a:active{text-decoration:none}img,li{display:block}body,html{width:100%}.playground-app-wrapper,.postcss-editor-pane-error{-webkit-box-orient:vertical;-webkit-box-direction:normal}.live-reload-toggle-checkbox:after,.live-reload-toggle-checkbox:before{position:absolute;top:50%;-webkit-transform:translate(0,-50%);-ms-transform:translate(0,-50%)}html{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}body{min-width:100%;min-height:100%;background-color:#ddd;font-family:Calibri,Candara,Segoe,'Segoe UI',Optima,Arial,sans-serif;font-size:16px;line-height:1.5;-moz-tab-size:4;tab-size:4}*,:after,:before{-webkit-box-sizing:inherit;-moz-box-sizing:inherit;box-sizing:inherit}button,input,kbd,textarea{font-family:inherit;font-size:inherit;line-height:inherit}ol,ul{list-style:none}h1,h2,h3,h4{font-size:inherit}a{margin:0;padding:0;background:0 0;color:inherit;-webkit-transition:all .3s ease;transition:all .3s ease;cursor:pointer;cusror:hand}a:focus,a:hover,a:visited{color:inherit;text-decoration:none}img{max-width:100%;height:auto;border:0}@media (max-width:760px){body{-moz-tab-size:2;tab-size:2}}kbd{display:inline-block;padding:.1em .5em;background-color:#f7f7f7;border:1px solid #ccc;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 2px #fff inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 2px #fff inset;white-space:nowrap;text-shadow:0 1px 0 #fff;-webkit-border-radius:3px;border-radius:3px}.playground-app-entry-point,.playground-app-wrapper{width:100%;height:100%}.playground-app-wrapper{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column}.postcss-editor-area{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex}@media (max-width:500px){.postcss-editor-area{-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column}}.postcss-editor-pane{position:relative;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;border:0;border-right:2px solid rgba(0,0,0,.4)}.postcss-editor-pane:last-child{border-right:0}@media (max-width:500px){.postcss-editor-pane{min-height:350px}}.postcss-editor-pane-label{position:absolute;top:0;right:0;padding:4px 8px;background:rgba(255,255,255,.75);border-left:1px solid rgba(0,0,0,.4);border-bottom:1px solid rgba(0,0,0,.4);line-height:1;pointer-events:none;-webkit-transition:opacity .2s ease;transition:opacity .2s ease}.postcss-editor-pane:focus>.postcss-editor-pane-label,.postcss-editor-pane:hover>.postcss-editor-pane-label{opacity:.5}.postcss-textarea{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;padding:8px;border:0;background:#fff;font-family:monospace;resize:none}.postcss-textarea.is-not-current{background:rgba(240,220,220,.8);color:rgba(0,0,0,.6)}.postcss-editor-pane-error{overflow:hidden;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;min-height:2em;padding:2px;background:-webkit-linear-gradient(45deg,#eee 25%,red 25%,red 50%,#eee 50%,#eee 75%,red 75%);background:linear-gradient(45deg,#eee 25%,red 25%,red 50%,#eee 50%,#eee 75%,red 75%);background-size:40px 40px;-webkit-animation:postcss-editor-pane-error-flex-grow .15s ease forwards,error-stripe-loading 12s infinite linear;animation:postcss-editor-pane-error-flex-grow .15s ease forwards,error-stripe-loading 12s infinite linear}.postcss-editor-pane-error .postcss-editor-pane-error-message{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;padding:8px;background:#eee;font-family:monospace;white-space:pre}@-webkit-keyframes postcss-editor-pane-error-flex-grow{from{-webkit-box-flex:.00001;-webkit-flex:.00001;flex:.00001;min-height:0}to{-webkit-box-flex:0;-webkit-flex:0 1 auto;flex:0 1 auto}}@keyframes postcss-editor-pane-error-flex-grow{from{-webkit-box-flex:.00001;-webkit-flex:.00001;-ms-flex:.00001;flex:.00001;min-height:0}to{-webkit-box-flex:0;-webkit-flex:0 1 auto;-ms-flex:0 1 auto;flex:0 1 auto}}@-webkit-keyframes error-stripe-loading{0%{background-position:0 0}100%{background-position:100% 0}}@keyframes error-stripe-loading{0%{background-position:0 0}100%{background-position:100% 0}}.playground-header{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;height:40px;background:#5f8da7;border-bottom:1px solid #555;color:#ddd}.playground-header-heading{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;margin-left:.5em;font-size:24px;font-weight:400}.playground-header-heading>a{color:#a3d6f4}.playground-header-heading>a:focus,.playground-header-heading>a:hover{outline:0;text-decoration:underline}.playground-header-heading-primary-title{font-weight:700}.live-reload-toggle-checkbox{margin-right:1em;position:relative;display:inline-block;vertical-align:middle;width:19ch;height:2rem;padding:.5ch .8ch;background:#666;-webkit-border-radius:4px;border-radius:4px;border:2px solid #444;color:rgba(255,255,255,.4);cursor:pointer;cursor:hand;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none}.live-reload-toggle-checkbox:focus{-webkit-box-shadow:inset 0 0 4px 0 rgba(255,255,255,.5);box-shadow:inset 0 0 4px 0 rgba(255,255,255,.5)}.live-reload-toggle-checkbox:before{content:'live reload';left:10px;transform:translate(0,-50%)}.live-reload-toggle-checkbox:after{content:'off';right:10px;transform:translate(0,-50%)}.live-reload-toggle-checkbox>input[type=checkbox]{z-index:2;position:relative;top:0;left:0;display:inline-block;width:13ch;height:100%;padding:0;margin:0;background:#c88;border:2px solid rgba(0,0,0,.2);-webkit-border-radius:6px;border-radius:6px;outline:0;cursor:pointer;cursor:hand;-webkit-appearance:none;-moz-appearance:none;appearance:none;-webkit-transition:all .1s linear;transition:all .1s linear}.live-reload-toggle-checkbox>input[type=checkbox]:focus:before{background:rgba(255,80,100,.9)}.live-reload-toggle-checkbox>input[type=checkbox]:checked:focus:before{background:rgba(100,255,100,1)}.live-reload-toggle-checkbox>input[type=checkbox]:checked{width:5ch;left:-webkit-calc(100% - 5ch);left:calc(100% - 5ch);background:#0e0}.live-reload-toggle-checkbox>input[type=checkbox]:before{content:'';position:absolute;top:50%;right:.8ch;width:1.5ch;height:.8ch;background:rgba(0,0,0,.25);border:1px solid rgba(0,0,0,.2);-webkit-border-radius:.3ch;border-radius:.3ch;-webkit-transform:translate(0,-50%);-ms-transform:translate(0,-50%);transform:translate(0,-50%);-webkit-transition:all .1s linear;transition:all .1s linear}.playground-header-save-button{height:100%;padding:0 2em;border:0;background:#a3d6f4;-webkit-box-shadow:0 0 8px 0 #9acae5;box-shadow:0 0 8px 0 #9acae5;-webkit-transition:all .2s ease;transition:all .2s ease;cursor:pointer;cusror:hand}.playground-header-save-button:focus,.playground-header-save-button:hover{outline:0;background:#abe0ff}.playground-header-save-button:active{background:#a3f4cd;-webkit-box-shadow:0 0 8px 0 #9acae5,inset 0 0 4px 0 rgba(0,0,0,.25);box-shadow:0 0 8px 0 #9acae5,inset 0 0 4px 0 rgba(0,0,0,.25)}");
+("body,html{height:100%;width:100%}blockquote,body,button,code,figure,form,h1,h2,h3,h4,html,input,label,ol,p,pre,ul{margin:0;padding:0}a,a:active{text-decoration:none}img,li{display:block}.postcss-editor-pane,.postcss-editor-pane-error{display:-webkit-box;-webkit-box-orient:vertical}a,input[type=checkbox]{cursor:pointer;cusror:hand}html{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}body{min-width:100%;min-height:100%;background-color:#ddd;font-family:Calibri,Candara,Segoe,'Segoe UI',Optima,Arial,sans-serif;font-size:16px;line-height:1.5;-moz-tab-size:4;tab-size:4}*,:after,:before{-webkit-box-sizing:inherit;-moz-box-sizing:inherit;box-sizing:inherit}button,input,kbd,textarea{font-family:inherit;font-size:inherit;line-height:inherit}ol,ul{list-style:none}h1,h2,h3,h4{font-size:inherit}a{margin:0;padding:0;background:0 0;color:inherit;-webkit-transition:all .3s ease;transition:all .3s ease}a:focus,a:hover,a:visited{color:inherit;text-decoration:none}img{max-width:100%;height:auto;border:0}@media (max-width:760px){body{-moz-tab-size:2;tab-size:2}}kbd{display:inline-block;padding:.1em .5em;background-color:#f7f7f7;border:1px solid #ccc;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 2px #fff inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 2px #fff inset;white-space:nowrap;text-shadow:0 1px 0 #fff;-webkit-border-radius:3px;border-radius:3px}input[type=range]{-webkit-appearance:none;width:140px;height:6px;background:0 0;-webkit-box-shadow:inset 0 0 8px rgba(0,0,0,.5);box-shadow:inset 0 0 8px rgba(0,0,0,.5);outline:0;-webkit-border-radius:3px;border-radius:3px;-webkit-transition:all .3s ease-out;transition:all .3s ease-out}input[type=range]:focus{-webkit-box-shadow:inset 0 0 8px rgba(0,0,0,.75);box-shadow:inset 0 0 8px rgba(0,0,0,.75)}input[type=range]:focus::-webkit-slider-thumb{background:#ddf;-webkit-box-shadow:0 0 4px rgba(0,0,0,.5);box-shadow:0 0 4px rgba(0,0,0,.5)}input[type=range]:disabled{-webkit-box-shadow:inset 0 0 8px rgba(100,0,0,.3);box-shadow:inset 0 0 8px rgba(100,0,0,.3)}input[type=range]:disabled::-webkit-slider-thumb{background:rgba(230,180,180,.9);border-color:rgba(110,110,110,.5)}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;background:#ddd;border:1px solid rgba(110,110,110,1);-webkit-box-shadow:0 0 4px rgba(0,0,0,.25);box-shadow:0 0 4px rgba(0,0,0,.25);-webkit-border-radius:50%;border-radius:50%;-webkit-transition:all .3s ease-out;transition:all .3s ease-out;cursor:pointer;cusror:hand}input[type=range]::-webkit-slider-thumb:focus::-webkit-slider-thumb{-webkit-box-shadow:0 0 10px rgba(150,150,150,.5);box-shadow:0 0 10px rgba(150,150,150,.5)}.hidden{display:none}.visually-hidden{position:absolute;overflow:hidden;clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;padding:0;border:0}.icon{width:24px;height:24px;fill:currentColor}.playground-app-entry-point,.playground-app-wrapper{width:100%;height:100%}.playground-app-wrapper{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column}.postcss-editor-area{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex}@media (max-width:500px){.postcss-editor-area{-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column}}.postcss-editor-pane{position:relative;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;border:0;border-right:2px solid rgba(0,0,0,.4)}.postcss-editor-pane:last-child{border-right:0}@media (max-width:500px){.postcss-editor-pane{min-height:350px}}.postcss-editor-pane-label{position:absolute;top:0;right:0;padding:4px 8px;background:rgba(255,255,255,.75);border-left:1px solid rgba(0,0,0,.4);border-bottom:1px solid rgba(0,0,0,.4);line-height:1;pointer-events:none;-webkit-transition:opacity .2s ease;transition:opacity .2s ease}.postcss-editor-pane:focus>.postcss-editor-pane-label,.postcss-editor-pane:hover>.postcss-editor-pane-label{opacity:.5}.postcss-textarea{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;padding:8px;border:0;background:#fff;font-family:monospace;resize:none;-webkit-transition:all .1s ease;transition:all .1s ease}.postcss-textarea:focus{outline:0;-webkit-box-shadow:inset 0 0 6px 0 rgba(0,0,50,.35);box-shadow:inset 0 0 6px 0 rgba(0,0,50,.35)}.postcss-textarea.is-not-current{background:rgba(240,220,220,.8);color:rgba(0,0,0,.6)}.postcss-editor-pane-error{overflow:hidden;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;min-height:2em;padding:2px;background:-webkit-linear-gradient(45deg,#eee 25%,red 25%,red 50%,#eee 50%,#eee 75%,red 75%);background:linear-gradient(45deg,#eee 25%,red 25%,red 50%,#eee 50%,#eee 75%,red 75%);background-size:40px 40px;-webkit-animation:postcss-editor-pane-error-flex-grow .15s ease forwards,error-stripe-loading 12s infinite linear;animation:postcss-editor-pane-error-flex-grow .15s ease forwards,error-stripe-loading 12s infinite linear}.postcss-editor-pane-error .postcss-editor-pane-error-message{padding:8px;background:#eee;font-family:monospace;white-space:pre}@-webkit-keyframes postcss-editor-pane-error-flex-grow{from{-webkit-box-flex:.00001;-webkit-flex:.00001;flex:.00001;min-height:0}to{-webkit-box-flex:0;-webkit-flex:0 1 auto;flex:0 1 auto}}@keyframes postcss-editor-pane-error-flex-grow{from{-webkit-box-flex:.00001;-webkit-flex:.00001;-ms-flex:.00001;flex:.00001;min-height:0}to{-webkit-box-flex:0;-webkit-flex:0 1 auto;-ms-flex:0 1 auto;flex:0 1 auto}}@-webkit-keyframes error-stripe-loading{0%{background-position:0 0}100%{background-position:100% 0}}@keyframes error-stripe-loading{0%{background-position:0 0}100%{background-position:100% 0}}.playground-header{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;height:40px;background:#5f8da7;border-bottom:1px solid #555;color:#ddd}.playground-header-heading{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;margin-left:.5em;font-size:24px;font-weight:400}.playground-header-heading>a{color:#a3d6f4}.playground-header-heading>a:focus,.playground-header-heading>a:hover{outline:0;text-decoration:underline}.playground-header-heading-primary-title{font-weight:700}.playground-options-holder{position:relative;height:100%}.playground-options-menu-toggle{position:relative;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;height:100%;margin-right:.5em;padding:0 2em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-transition:all .2s ease;transition:all .2s ease;cursor:pointer;cusror:hand}.playground-options-menu-toggle-checkbox:checked~* .playground-options-menu-toggle,.playground-options-menu-toggle-checkbox:checked~.playground-options-menu-toggle,.playground-options-menu-toggle-checkbox:focus~* .playground-options-menu-toggle,.playground-options-menu-toggle-checkbox:focus~.playground-options-menu-toggle,.playground-options-menu-toggle:focus,.playground-options-menu-toggle:hover{color:#ccc;background:rgba(0,0,0,.25)}.playground-options-menu-toggle:active{-webkit-box-shadow:inset 0 0 12px 0 rgba(0,0,0,.25);box-shadow:inset 0 0 12px 0 rgba(0,0,0,.25)}.playground-options-menu-toggle-checkbox:checked~* .playground-options-menu-toggle>.playground-options-menu-toggle-icon,.playground-options-menu-toggle-checkbox:checked~.playground-options-menu-toggle>.playground-options-menu-toggle-icon{-webkit-animation:spin 5s infinite linear;animation:spin 5s infinite linear}.playground-options-menu-wrapper{z-index:2;overflow:hidden;position:absolute;top:100%;top:-webkit-calc(100% + 1px);top:calc(100% + 1px);left:0;pointer-events:none;padding:8px;padding-top:0;-webkit-transform:translateX(-8px);-ms-transform:translateX(-8px);transform:translateX(-8px)}.playground-options-menu-toggle-checkbox:checked~* .playground-options-menu-wrapper,.playground-options-menu-toggle-checkbox:checked~.playground-options-menu-wrapper{pointer-events:auto}.playground-options-menu{visibility:hidden;display:inline-block;background:#eef;border-left:1px solid #555;border-bottom:1px solid #555;border-right:1px solid #555;:0 3px 8px 0 rgba(0,0,0,.2),;:inset 0 4px 4px -4px rgba(0,0,0,.25);:0 3px 8px 0 rgba(0,0,0,.2),;:inset 0 4px 4px -4px rgba(0,0,0,.25);-webkit-border-bottom-left-radius:2px;border-bottom-left-radius:2px;-webkit-border-bottom-right-radius:2px;border-bottom-right-radius:2px;color:#000;-webkit-transform:translateY(-110%);-ms-transform:translateY(-110%);transform:translateY(-110%);-webkit-transition:all .2s ease;transition:all .2s ease}.playground-options-menu-toggle-checkbox:checked~* .playground-options-menu,.playground-options-menu-toggle-checkbox:checked~.playground-options-menu{visibility:visible;-webkit-transform:translateY(0);-ms-transform:translateY(0);transform:translateY(0)}.playground-live-reload-toggle-togglebox:after,.playground-live-reload-toggle-togglebox:before,.playground-live-reload-toggle-togglebox>.switch:before{-webkit-transform:translate(0,-50%);transform:translate(0,-50%);-ms-transform:translate(0,-50%)}.playground-options-menu-options-group{display:inline-block;padding:10px}.playground-options-menu-item,.playground-options-menu-item-secondary{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;white-space:nowrap}.playground-options-menu-item-secondary>*+*,.playground-options-menu-item>*+*{margin-left:.5em}.playground-options-menu-item-label,.playground-options-menu-item-label-secondary{-webkit-align-self:flex-start;-ms-flex-item-align:start;align-self:flex-start}.playground-options-menu-item-label-secondary{font-size:80%;font-weight:700}.playground-live-reload-toggle-togglebox{margin-right:1em;position:relative;display:inline-block;vertical-align:middle;width:19ch;height:2rem;padding:.5ch .8ch;background:#666;-webkit-border-radius:4px;border-radius:4px;border:2px solid #444;color:rgba(255,255,255,.4);cursor:pointer;cursor:hand;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none}.playground-live-reload-toggle-checkbox:focus~* .playground-live-reload-toggle-togglebox,.playground-live-reload-toggle-checkbox:focus~.playground-live-reload-toggle-togglebox,.playground-live-reload-toggle-togglebox:focus{-webkit-box-shadow:inset 0 0 4px 0 rgba(255,255,255,.5);box-shadow:inset 0 0 4px 0 rgba(255,255,255,.5)}.playground-live-reload-toggle-togglebox:before{content:'live reload';position:absolute;top:50%;left:10px}.playground-live-reload-toggle-togglebox:after{content:'off';position:absolute;top:50%;right:10px}.playground-live-reload-toggle-togglebox>.switch{z-index:2;position:relative;top:0;left:0;display:inline-block;width:13ch;height:100%;padding:0;margin:0;background:#c88;border:2px solid rgba(0,0,0,.2);-webkit-border-radius:6px;border-radius:6px;outline:0;cursor:pointer;cursor:hand;-webkit-appearance:none;-moz-appearance:none;appearance:none;-webkit-transition:all .1s linear;transition:all .1s linear}.playground-live-reload-toggle-togglebox>.switch:focus:before{background:rgba(255,80,100,.9)}.playground-live-reload-toggle-checkbox:checked~*>.playground-live-reload-toggle-togglebox>.switch,.playground-live-reload-toggle-checkbox:checked~.playground-live-reload-toggle-togglebox>.switch{width:5ch;left:-webkit-calc(100% - 5ch);left:calc(100% - 5ch);background:#0e0}.playground-live-reload-toggle-checkbox:checked:focus~* .playground-live-reload-toggle-togglebox>.switch:before,.playground-live-reload-toggle-checkbox:checked:focus~.playground-live-reload-toggle-togglebox>.switch:before{background:rgba(100,255,100,1)}.playground-live-reload-toggle-togglebox>.switch:before{content:'';position:absolute;top:50%;right:.8ch;width:1.5ch;height:.8ch;background:rgba(0,0,0,.25);border:1px solid rgba(0,0,0,.2);-webkit-border-radius:.3ch;border-radius:.3ch;-webkit-transition:all .1s linear;transition:all .1s linear}.playground-header-save-button{height:100%;padding:0 2.5em;border:0;border-left:1px solid #555;background:#a3d6f4;-webkit-box-shadow:0 0 12px 0 rgba(0,0,0,.5);box-shadow:0 0 12px 0 rgba(0,0,0,.5);-webkit-transition:all .2s ease;transition:all .2s ease;cursor:pointer;cusror:hand}.playground-header-save-button:focus,.playground-header-save-button:hover{outline:0;background:#abe0ff}.playground-header-save-button:active{background:#a3f4cd;-webkit-box-shadow:0 0 8px 0 #9acae5,inset 0 0 4px 0 rgba(0,0,0,.25);box-shadow:0 0 8px 0 #9acae5,inset 0 0 4px 0 rgba(0,0,0,.25)}@-webkit-keyframes spin{from{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(359.9deg);transform:rotate(359.9deg)}}@keyframes spin{from{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(359.9deg);transform:rotate(359.9deg)}}");
 //# sourceMappingURL=build.js.map

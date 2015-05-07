@@ -18,7 +18,8 @@ export default class EditorTextarea extends React.Component {
 			React.createElement("textarea", {
 				className: this.props.className || '', 
 				onChange: this._onChange.bind(this), 
-				value: this.props.value
+				value: this.props.value, 
+				style: this.props.style
 			})
 		);
 	}
@@ -35,5 +36,6 @@ export default class EditorTextarea extends React.Component {
 EditorTextarea.propTypes = {
 	onChange: React.PropTypes.func,
 	className: React.PropTypes.string,
-	value: React.PropTypes.string
+	value: React.PropTypes.string,
+	style: React.PropTypes.object
 };

@@ -2,12 +2,14 @@
   "jspm": {
     "directories": {},
     "dependencies": {
+      "bluebird": "npm:bluebird@^2.9.25",
       "classnames": "npm:classnames@^1.2.2",
       "css": "github:systemjs/plugin-css@^0.1.10",
       "events": "npm:events@^1.0.2",
       "flux": "npm:flux@^2.0.3",
       "immutable": "npm:immutable@^3.7.2",
       "keymirror": "npm:keymirror@^0.1.1",
+      "localforage": "npm:localforage@^1.2.2",
       "object-assign": "npm:object-assign@^2.0.0",
       "postcss": "npm:postcss@^4.1.8",
       "postcss-css-variables": "npm:postcss-css-variables@^0.3.1",

@@ -109,7 +109,13 @@ System.config({
       "build/css/playground.css!github:systemjs/plugin-css@0.1.10",
       "npm:flux@2.0.3/lib/invariant",
       "npm:keymirror@0.1.1/index",
+      "npm:immutable@3.7.2/dist/immutable",
       "npm:events@1.0.2/events",
+      "npm:asap@1.0.0/asap",
+      "npm:localforage@1.2.2/src/drivers/indexeddb",
+      "npm:localforage@1.2.2/src/utils/serializer",
+      "npm:localforage@1.2.2/src/drivers/websql",
+      "npm:bluebird@2.9.25/js/browser/bluebird",
       "npm:postcss@4.1.9/lib/warn-once",
       "npm:base64-js@0.0.8/lib/b64",
       "npm:ieee754@1.1.5/index",
@@ -132,6 +138,7 @@ System.config({
       "npm:postcss@4.1.9/lib/vendor",
       "npm:extend@2.0.1/index",
       "build/js/actions/PlaygroundActions",
+      "build/js/components/PlaygroundHeader",
       "github:wjbryant/taboverride@4.0.2/build/output/taboverride.min",
       "npm:process@0.10.1",
       "npm:react@0.13.2/lib/warning",
@@ -171,7 +178,11 @@ System.config({
       "npm:classnames@1.2.2",
       "npm:flux@2.0.3/lib/Dispatcher",
       "npm:keymirror@0.1.1",
+      "npm:immutable@3.7.2",
       "npm:events@1.0.2",
+      "npm:asap@1.0.0",
+      "npm:localforage@1.2.2/src/drivers/localstorage",
+      "npm:bluebird@2.9.25",
       "npm:postcss@4.1.9/lib/css-syntax-error",
       "npm:base64-js@0.0.8",
       "npm:ieee754@1.1.5",
@@ -208,6 +219,7 @@ System.config({
       "npm:babel-runtime@5.2.6/helpers/create-class",
       "npm:flux@2.0.3/index",
       "build/js/constants/PlaygroundConstants",
+      "npm:promise@5.0.0/core",
       "npm:postcss@4.1.9/lib/node",
       "npm:buffer@3.2.2/index",
       "github:jspm/nodelibs-path@0.1.0/index",
@@ -226,6 +238,7 @@ System.config({
       "npm:babel-runtime@5.2.6/core-js/object/create",
       "npm:babel-runtime@5.2.6/core-js/object/get-own-property-descriptor",
       "npm:flux@2.0.3",
+      "npm:promise@5.0.0/index",
       "npm:postcss@4.1.9/lib/declaration",
       "npm:buffer@3.2.2",
       "github:jspm/nodelibs-path@0.1.0",
@@ -240,6 +253,7 @@ System.config({
       "npm:babel-runtime@5.2.6/helpers/inherits",
       "npm:babel-runtime@5.2.6/helpers/get",
       "build/js/dispatcher/AppDispatcher",
+      "npm:promise@5.0.0",
       "github:jspm/nodelibs-buffer@0.1.0/index",
       "npm:amdefine@0.1.0/amdefine",
       "npm:postcss@4.1.9/lib/parser",
@@ -247,15 +261,18 @@ System.config({
       "npm:react@0.13.2/lib/ReactChildren",
       "npm:react@0.13.2/lib/ReactComponent",
       "npm:react@0.13.2/lib/ReactDOMIDOperations",
+      "npm:localforage@1.2.2/src/localforage",
       "github:jspm/nodelibs-buffer@0.1.0",
       "npm:amdefine@0.1.0",
       "npm:postcss@4.1.9/lib/parse",
       "npm:react@0.13.2/lib/EventConstants",
       "npm:react@0.13.2/lib/ReactComponentBrowserEnvironment",
+      "npm:localforage@1.2.2",
       "npm:js-base64@2.1.8/base64",
       "npm:source-map@0.4.2/lib/source-map/source-map-generator",
       "npm:react@0.13.2/lib/EventPluginUtils",
       "npm:react@0.13.2/lib/ReactDOMTextComponent",
+      "build/js/stores/PlaygroundSettingsStore",
       "npm:js-base64@2.1.8",
       "npm:source-map@0.4.2/lib/source-map",
       "npm:react@0.13.2/lib/React",
@@ -278,6 +295,7 @@ System.config({
   "map": {
     "babel": "npm:babel-core@5.2.6",
     "babel-runtime": "npm:babel-runtime@5.2.6",
+    "bluebird": "npm:bluebird@2.9.25",
     "classnames": "npm:classnames@1.2.2",
     "core-js": "npm:core-js@0.9.6",
     "css": "github:systemjs/plugin-css@0.1.10",
@@ -285,6 +303,7 @@ System.config({
     "flux": "npm:flux@2.0.3",
     "immutable": "npm:immutable@3.7.2",
     "keymirror": "npm:keymirror@0.1.1",
+    "localforage": "npm:localforage@1.2.2",
     "object-assign": "npm:object-assign@2.0.0",
     "postcss": "npm:postcss@4.1.9",
     "postcss-css-variables": "npm:postcss-css-variables@0.3.1",
@@ -339,8 +358,15 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.1"
     },
+    "npm:asap@1.0.0": {
+      "process": "github:jspm/nodelibs-process@0.1.1"
+    },
     "npm:assert@1.3.0": {
       "util": "npm:util@0.10.3"
+    },
+    "npm:bluebird@2.9.25": {
+      "events": "github:jspm/nodelibs-events@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.1"
     },
     "npm:buffer@3.2.2": {
       "base64-js": "npm:base64-js@0.0.8",
@@ -409,6 +435,11 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.1",
       "source-map": "npm:source-map@0.1.31"
     },
+    "npm:localforage@1.2.2": {
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.1",
+      "promise": "npm:promise@5.0.0"
+    },
     "npm:os-browserify@0.1.2": {
       "os": "github:jspm/nodelibs-os@0.1.0"
     },
@@ -428,6 +459,9 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.1",
       "source-map": "npm:source-map@0.4.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.0"
+    },
+    "npm:promise@5.0.0": {
+      "asap": "npm:asap@1.0.0"
     },
     "npm:punycode@1.3.2": {
       "process": "github:jspm/nodelibs-process@0.1.1"

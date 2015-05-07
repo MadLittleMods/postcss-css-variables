@@ -4,39 +4,56 @@ import classnames from 'classnames';
 
 import '../../css/playground.css!';
 import PlaygroundStore from '../stores/PlaygroundStore';
+import PlaygroundSettingsStore from '../stores/PlaygroundSettingsStore';
 import PlaygroundActions from '../actions/PlaygroundActions';
 
 
+import PlaygroundHeader from './PlaygroundHeader';
 import EditorTextarea from './EditorTextarea';
 
 
-function getPlaygroundState(props, state) {
+
+function gatherPlaygroundStoreState(props, state) {
 	var newOutputResult = PlaygroundStore.getOutputResult();
 
 	return  {
+		postcssInputText: PlaygroundStore.getInputText(),
 		postcssOutputResult: newOutputResult,
 		// If there was an error in parsing, then use the last known good one
-		prevSuccessfulPostcssOutputResult: newOutputResult.error ? state.postcssOutputResult : newOutputResult
+		prevSuccessfulPostcssOutputResult: newOutputResult.get('error') ? state.postcssOutputResult : newOutputResult
+	};
+}
+
+function gatherPlaygroundSettingsStoreState(props, state) {
+	return  {
+		postcssCssVariablesPreserve: PlaygroundSettingsStore.getPluginSettings().getIn(['postcss-css-variables', 'preserve']),
+		shouldLiveReload: PlaygroundSettingsStore.getShouldLiveReload(),
+		tabWidth: PlaygroundSettingsStore.getTabWidth()
 	};
 }
 
 export default class PlaygroundApp extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = assign(getPlaygroundState(props, (this.state || {})), {
-			shouldLiveReload: props.initialShouldLiveReload || true,
-			postcssInputText: props.initialPostcssInputText || '',
-		});
+		this.state = assign(
+			gatherPlaygroundStoreState(props, (this.state || {})),
+			gatherPlaygroundSettingsStoreState(props, (this.state || {}))
+		);
 	}
 
 	componentDidMount() {
-		PlaygroundStore.addChangeListener(this._onStoreChange.bind(this));
+		PlaygroundStore.addChangeListener(this._onPlaygroundStoreChange.bind(this));
+		PlaygroundSettingsStore.addChangeListener(this._onPlaygroundSettingsStoreChange.bind(this));
 
 		document.addEventListener('keyup', this._handleKeyUp.bind(this));
+
+		// Initialize the application
+		PlaygroundActions.init();
 	}
 
 	componentWillUnmount() {
-		PlaygroundStore.removeChangeListener(this._onStoreChange);
+		PlaygroundStore.removeChangeListener(this._onPlaygroundStoreChange.bind(this));
+		PlaygroundSettingsStore.removeChangeListener(this._onPlaygroundSettingsStoreChange.bind(this));
 
 		document.removeEventListener('keyup', this._handleKeyUp.bind(this));
 	}
@@ -44,12 +61,11 @@ export default class PlaygroundApp extends React.Component {
 	render() {
 		//console.log('render', this.state);
 
-		var doesInputHaveError = !!this.state.postcssOutputResult.error;
-		var output = doesInputHaveError ? this.state.prevSuccessfulPostcssOutputResult.result : this.state.postcssOutputResult.result;
-
+		var doesInputHaveError = !!this.state.postcssOutputResult.get('error');
+		var output = doesInputHaveError ? this.state.prevSuccessfulPostcssOutputResult.get('output') : this.state.postcssOutputResult.get('output');
 
 		var parsingErrorMarkup;
-		if(this.state.postcssOutputResult.error) {
+		if(this.state.postcssOutputResult.get('error')) {
 			parsingErrorMarkup = (
 				React.createElement("div", {
 					className: "postcss-editor-pane-error", 
@@ -60,40 +76,23 @@ export default class PlaygroundApp extends React.Component {
 					React.createElement("div", {
 						className: "postcss-editor-pane-error-message"
 					}, 
-						this.state.postcssOutputResult.error.toString()
+						this.state.postcssOutputResult.get('error').toString()
 					)
 				)
 			);
 		}
 
+
+		var tabWidthStyleValue = this.state.tabWidth === 'inherit' ? this.state.tabWidth : this.state.tabWidth + 'ch';
+
 		return (
 			React.createElement("div", {className: "playground-app-wrapper"}, 
-				React.createElement("header", {
-					className: "playground-header"
-				}, 
-					React.createElement("h1", {
-						className: "playground-header-heading"
-					}, 
-						React.createElement("a", {className: "playground-header-heading-primary-title", href: "https://github.com/MadLittleMods/postcss-css-variables"}, "postcss-css-variables"), " Playground - ", React.createElement("a", {href: "https://github.com/postcss/postcss"}, "PostCSS")
-					), 
-					React.createElement("label", {
-						className: "live-reload-toggle-checkbox", 
-						htmlFor: "id-live-reload-checkbox", 
-						onChange: this._onLiveReloadCheckboxChanged.bind(this)
-					}, 
-						React.createElement("input", {
-							type: "checkbox", 
-							id: "id-live-reload-checkbox", 
-							checked: this.state.shouldLiveReload, 
-							onChange: this._onLiveReloadCheckboxChanged.bind(this)}
-						)
-					), 
-					React.createElement("button", {
-						className: "playground-header-save-button", 
-						onClick: this._onSave.bind(this)
-					}, 
-						"Save"
-					)
+
+				React.createElement(PlaygroundHeader, {
+					tabWidth: this.state.tabWidth, 
+					shouldLiveReload: this.state.shouldLiveReload, 
+
+					postcssCssVariablesPreserve: this.state.postcssCssVariablesPreserve}
 				), 
 
 				React.createElement("div", {className: "postcss-editor-area"}, 
@@ -107,7 +106,11 @@ export default class PlaygroundApp extends React.Component {
 							ref: "postcssInputTextarea", 
 							className: "postcss-textarea", 
 							onChange: this._onInputChanged.bind(this), 
-							value: this.state.postcssInputText}
+							value: this.state.postcssInputText, 
+
+							style: {
+								tabSize: tabWidthStyleValue
+							}}
 						)
 					), 
 					React.createElement("div", {className: "postcss-editor-pane"}, 
@@ -119,7 +122,11 @@ export default class PlaygroundApp extends React.Component {
 						React.createElement(EditorTextarea, {
 							ref: "postcssOutputTextarea", 
 							className: classnames('postcss-textarea', {'is-not-current': doesInputHaveError}), 
-							value: output}
+							value: output, 
+
+							style: {
+								tabSize: tabWidthStyleValue
+							}}
 						), 
 						parsingErrorMarkup
 					)
@@ -128,27 +135,14 @@ export default class PlaygroundApp extends React.Component {
 		);
 	}
 
-	_onSave() {
-		//console.log('saving');
-		PlaygroundActions.updateInput(this.state.postcssInputText);
-	}
-
 	_onInputChanged(text) {
 		//console.log('input changed');
-		this.setState({
-			postcssInputText: text
-		});
+		PlaygroundActions.updateInput(text);
 
 		// Defaults to true if undefined
 		if(this.state.shouldLiveReload) {
-			PlaygroundActions.updateInput(text);
+			PlaygroundActions.processInput();
 		}
-	}
-
-	_onLiveReloadCheckboxChanged() {
-		this.setState({
-			shouldLiveReload: event.target.checked
-		});
 	}
 
 	_handleKeyUp(e) {
@@ -158,6 +152,8 @@ export default class PlaygroundApp extends React.Component {
 		if(e.keyCode === 27) {
 			// Unfocus/blur the currently focused elemnt
 			document.activeElement.blur();
+
+			PlaygroundActions.keyboardActionFired();
 		}
 
 		// If nothing is focused currently
@@ -166,23 +162,31 @@ export default class PlaygroundApp extends React.Component {
 			if(e.keyCode === 73) {
 				//console.log('focus input');
 				React.findDOMNode(this.refs.postcssInputTextarea).focus();
+
+				PlaygroundActions.keyboardActionFired();
 			}
 			// o
 			else if(e.keyCode === 79) {
 				//console.log('focus output');
 				React.findDOMNode(this.refs.postcssOutputTextarea).focus();
+
+				PlaygroundActions.keyboardActionFired();
 			}
 		}
 	}
 
-	_onStoreChange() {
+
+	_onPlaygroundStoreChange() {
 		//console.log('change in PlaygroundStore');
-		this.setState(getPlaygroundState(this.props, this.state));
+		this.setState(gatherPlaygroundStoreState(this.props, this.state));
+	}
+
+	_onPlaygroundSettingsStoreChange() {
+		//console.log('change in PlaygroundSettingsStore');
+		this.setState(gatherPlaygroundSettingsStoreState(this.props, this.state));
 	}
 }
 
 PlaygroundApp.propTypes = {
-	// Defaults to true
-	initialShouldLiveReload: React.PropTypes.bool,
-	initialPostcssInputText: React.PropTypes.string
+	// ...
 };

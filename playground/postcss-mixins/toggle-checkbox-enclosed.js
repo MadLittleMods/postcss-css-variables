@@ -1,6 +1,6 @@
 var corepostcss = require('postcss');
 
-module.exports = function(mixins, labelOn, labelOff) {
+module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 	labelOn = labelOn || "'on'";
 	labelOff = labelOff || "'off'";
 
@@ -41,7 +41,9 @@ module.exports = function(mixins, labelOn, labelOff) {
 		-o-user-select: none;
 		user-select: none;
 
-		&:focus {
+		&:focus,
+		` + checkboxSelector + `:focus ~ &,
+		` + checkboxSelector + `:focus ~ * & {
 			box-shadow: inset 0 0 4px 0 rgba(255, 255, 255, 0.5);
 		}
 
@@ -67,7 +69,7 @@ module.exports = function(mixins, labelOn, labelOff) {
 		}
 
 
-		& > input[type="checkbox"] {
+		& > .switch {
 			z-index: 2;
 
 			position: relative;
@@ -107,15 +109,8 @@ module.exports = function(mixins, labelOn, labelOff) {
 
 			}
 
-			&:checked:focus {
-				&:before {
-					background: rgba(100, 255, 100, 1);
-				}
-
-			}
-
-
-			&:checked {
+			` + checkboxSelector + `:checked ~ &,
+			` + checkboxSelector + `:checked ~ * > & {
 				/* use the opposite width to cover up the other label */
 				width: ` + labelOffWidth + `ch;
 
@@ -123,6 +118,15 @@ module.exports = function(mixins, labelOn, labelOff) {
 
 				background: #00ee00;
 			}
+
+			` + checkboxSelector + `:checked:focus ~ &,
+			` + checkboxSelector + `:checked:focus ~ * & {
+				&:before {
+					background: rgba(100, 255, 100, 1);
+				}
+
+			}
+
 
 			&:before {
 				content: '';

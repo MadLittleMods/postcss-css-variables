@@ -1,6 +1,8 @@
 import AppDispatcher from '../dispatcher/AppDispatcher';
 import PlaygroundConstants from '../constants/PlaygroundConstants';
+import PlaygroundSettingsStore from '../stores/PlaygroundSettingsStore';
 
+import Immutable from 'immutable';
 import events from 'events';
 var EventEmitter = events.EventEmitter;
 import assign from 'object-assign';
@@ -13,25 +15,33 @@ import cssvariables from 'postcss-css-variables';
 var CHANGE_EVENT = 'CHANGE_EVENT';
 
 
+
+var keyboardActionStream = assign({}, EventEmitter.prototype);
+
 var playgroundProcessor = postcss()
 	.use(cssvariables());
 
-var postcssInputText = '';
-var postcssOutputResult = '';
-var postcssProcessingError = null;
+var postcssUnprocessedInputText = '';
+var processingResult = Immutable.Map({
+	input: '',
+	output: '',
+	error: null
+});
+
 
 var PlaygroundStore = assign({}, EventEmitter.prototype, {
 
+	getKeyboardActionStream: function() {
+		return keyboardActionStream;
+	},
+
 
 	getInputText: function() {
-		return postcssInputText;
+		return postcssUnprocessedInputText;
 	},
 
 	getOutputResult: function() {
-		return {
-			result: postcssOutputResult,
-			error: postcssProcessingError
-		};
+		return processingResult;
 	},
 
 
@@ -48,13 +58,31 @@ var PlaygroundStore = assign({}, EventEmitter.prototype, {
 		this.removeListener(CHANGE_EVENT, callback);
 	},
 
-	dispatcherIndex: AppDispatcher.register(function(action) {
-		switch(action.actionType) {
-			case PlaygroundConstants.PLAYGROUND_INPUT_UPDATED:
-				var input = action.input;
-				updateInput(action.input);
+	dispatchToken: AppDispatcher.register(function(action) {
 
+		switch(action.actionType) {
+			case PlaygroundConstants.PLAYGROUND_KEYBOARD_ACTION:
+				keyboardActionStream.emit('KEYBOARD_ACTION');
 				break;
+
+			// Whenever the plugin option updates,
+			// we need to update the output
+			case PlaygroundConstants.PLAYGROUND_SET_POSTCSS_CSS_VARIABLES_PRESERVE:
+				AppDispatcher.waitFor([
+					PlaygroundSettingsStore.dispatchToken
+				]);
+				updateProcessor(PlaygroundSettingsStore.getPluginSettings());
+				break;
+
+			case PlaygroundConstants.PLAYGROUND_INPUT_UPDATED:
+				postcssUnprocessedInputText = action.value;
+				PlaygroundStore.emitChange();
+				break;
+
+			case PlaygroundConstants.PLAYGROUND_START_PROCESS_INPUT:
+				updateOutput();
+				break;
+
 			default:
 				// no op
 		}
@@ -65,23 +93,34 @@ var PlaygroundStore = assign({}, EventEmitter.prototype, {
 });
 
 
-function updateInput(input) {
-	postcssInputText = input;
+function updateProcessor(settings) {
+	settings = settings || {};
 
-	playgroundProcessor.process(input).then(function(result) {
-		updateOuput(result.css, null);
-		PlaygroundStore.emitChange();
+	playgroundProcessor = postcss()
+		.use(cssvariables(settings.get('postcss-css-variables').toObject()));
+
+	// Whenever the plugin option updates,
+	// we need to update the output
+	updateOutput();
+}
+
+
+function updateOutput() {
+	processingResult = processingResult.set('input', postcssUnprocessedInputText);
+
+	playgroundProcessor.process(postcssUnprocessedInputText).then(function(result) {
+		_setOuput(result.css, null);
 	}).catch(function(error) {
 		// Because there was an error, reset the output text
-		updateOuput('', error);
-		console.warn(error);
-		PlaygroundStore.emitChange();
+		_setOuput('', error);
+		//console.warn(error);
 	});
 }
 
-function updateOuput(text, error) {
-	postcssOutputResult = text;
-	postcssProcessingError = error;
+function _setOuput(text, error) {
+	processingResult = processingResult.set('output', text);
+	processingResult = processingResult.set('error', error);
+	PlaygroundStore.emitChange();
 }
 
 
