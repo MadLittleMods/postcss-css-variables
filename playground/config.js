@@ -116,6 +116,7 @@ System.config({
       "npm:localforage@1.2.2/src/utils/serializer",
       "npm:localforage@1.2.2/src/drivers/websql",
       "npm:bluebird@2.9.25/js/browser/bluebird",
+      "build/js/lib/deferred-promise",
       "npm:postcss@4.1.9/lib/warn-once",
       "npm:base64-js@0.0.8/lib/b64",
       "npm:ieee754@1.1.5/index",

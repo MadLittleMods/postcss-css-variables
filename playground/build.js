@@ -28785,6 +28785,33 @@ System.register("npm:postcss@4.1.9", ["npm:postcss@4.1.9/lib/postcss"], true, fu
   return module.exports;
 });
 
+System.register('build/js/lib/deferred-promise', ['npm:bluebird@2.9.25'], function (_export) {
+	var Promise;
+
+	function deferredPromise() {
+		var resolve, reject;
+		var promise = new Promise(function () {
+			resolve = arguments[0];
+			reject = arguments[1];
+		});
+		return {
+			resolve: resolve,
+			reject: reject,
+			promise: promise
+		};
+	}
+
+	return {
+		setters: [function (_npmBluebird2925) {
+			Promise = _npmBluebird2925['default'];
+		}],
+		execute: function () {
+			'use strict';
+
+			_export('default', deferredPromise);
+		}
+	};
+});
 System.register('build/js/actions/PlaygroundActions', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants'], function (_export) {
 	var AppDispatcher, PlaygroundConstants, TodoActions;
 	return {
@@ -29161,8 +29188,8 @@ System.register('build/js/dispatcher/AppDispatcher', ['npm:flux@2.0.3'], functio
     }
   };
 });
-System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:object-assign@2.0.0', 'npm:localforage@1.2.2', 'npm:bluebird@2.9.25'], function (_export) {
-	var AppDispatcher, PlaygroundConstants, Immutable, events, assign, localforage, Promise, EventEmitter, CHANGE_EVENT, playgroundSettings, pluginSettings, PlaygroundSettingsStore;
+System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:object-assign@2.0.0', 'npm:localforage@1.2.2', 'npm:bluebird@2.9.25', 'build/js/lib/deferred-promise'], function (_export) {
+	var AppDispatcher, PlaygroundConstants, Immutable, events, assign, localforage, Promise, deferredPromise, EventEmitter, CHANGE_EVENT, isSettingsInitializedDeferredPromise, playgroundSettings, pluginSettings, PlaygroundSettingsStore;
 
 	function retrieveSettingsFromPersistantStorage() {
 		console.log('Retrieving settings from persistent storage...');
@@ -29199,6 +29226,8 @@ System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher
 			localforage = _npmLocalforage122['default'];
 		}, function (_npmBluebird2925) {
 			Promise = _npmBluebird2925['default'];
+		}, function (_buildJsLibDeferredPromise) {
+			deferredPromise = _buildJsLibDeferredPromise['default'];
 		}],
 		execute: function () {
 			'use strict';
@@ -29212,6 +29241,7 @@ System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher
 			});
 
 			CHANGE_EVENT = 'CHANGE_EVENT';
+			isSettingsInitializedDeferredPromise = deferredPromise();
 			playgroundSettings = Immutable.Map({
 				shouldLiveReload: true,
 				tabWidth: 'inherit'
@@ -29222,6 +29252,10 @@ System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher
 				})
 			});
 			PlaygroundSettingsStore = assign({}, EventEmitter.prototype, {
+
+				getIsSettingsInitializedPromise: function getIsSettingsInitializedPromise() {
+					return isSettingsInitializedDeferredPromise.promise;
+				},
 
 				getPluginSettings: function getPluginSettings() {
 					return pluginSettings;
@@ -29251,8 +29285,10 @@ System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher
 						case PlaygroundConstants.PLAYGROUND_INIT:
 							retrieveSettingsFromPersistantStorage().then(function () {
 								console.log('Settings Retrieved!');
+								isSettingsInitializedDeferredPromise.resolve();
 								PlaygroundSettingsStore.emitChange();
 							})['catch'](function (e) {
+								isSettingsInitializedDeferredPromise.reject(e);
 								console.log('Error retrieving playground settings:', e);
 							});
 							break;
@@ -29379,6 +29415,16 @@ System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDisp
 				dispatchToken: AppDispatcher.register(function (action) {
 
 					switch (action.actionType) {
+						case PlaygroundConstants.PLAYGROUND_INIT:
+							AppDispatcher.waitFor([PlaygroundSettingsStore.dispatchToken]);
+
+							// Once the PlaygroundSettingsStore has all of the data loaded
+							// from persistent storage, update the processor
+							PlaygroundSettingsStore.getIsSettingsInitializedPromise().then(function () {
+								updateProcessor(PlaygroundSettingsStore.getPluginSettings());
+							});
+							break;
+
 						case PlaygroundConstants.PLAYGROUND_KEYBOARD_ACTION:
 							keyboardActionStream.emit('KEYBOARD_ACTION');
 							break;

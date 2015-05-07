@@ -6,16 +6,21 @@ import events from 'events';
 var EventEmitter = events.EventEmitter;
 import assign from 'object-assign';
 import localforage from 'localforage';
+
 import Promise from 'bluebird';
+import deferredPromise from '../lib/deferred-promise';
 
 
 localforage.config({
-	name        : 'postcss-css-variables-playground',
-	version     : 1.0,
-	storeName   : 'postcss-css-variables-playground-settings'
+	name		: 'postcss-css-variables-playground',
+	version		: 1.0,
+	storeName	: 'postcss-css-variables-playground-settings'
 });
 
 var CHANGE_EVENT = 'CHANGE_EVENT';
+
+
+var isSettingsInitializedDeferredPromise = deferredPromise();
 
 
 var playgroundSettings = Immutable.Map({
@@ -33,6 +38,10 @@ var pluginSettings = Immutable.Map({
 
 var PlaygroundSettingsStore = assign({}, EventEmitter.prototype, {
 
+
+	getIsSettingsInitializedPromise: function() {
+		return isSettingsInitializedDeferredPromise.promise;
+	},
 
 
 	getPluginSettings: function() {
@@ -67,9 +76,11 @@ var PlaygroundSettingsStore = assign({}, EventEmitter.prototype, {
 				retrieveSettingsFromPersistantStorage()
 					.then(function() {
 						console.log('Settings Retrieved!');
+						isSettingsInitializedDeferredPromise.resolve();
 						PlaygroundSettingsStore.emitChange();
 					})
 					.catch(function(e) {
+						isSettingsInitializedDeferredPromise.reject(e);
 						console.log('Error retrieving playground settings:', e);
 					});
 				break;
