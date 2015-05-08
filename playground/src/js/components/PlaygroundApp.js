@@ -1,8 +1,9 @@
 import React from 'react';
 import assign from 'object-assign';
 import classnames from 'classnames';
+import throttle from 'throttle';
 
-import '../../css/playground.css!';
+import '../../postcss/playground.css!';
 import PlaygroundStore from '../stores/PlaygroundStore';
 import PlaygroundSettingsStore from '../stores/PlaygroundSettingsStore';
 import PlaygroundActions from '../actions/PlaygroundActions';
@@ -20,7 +21,7 @@ function gatherPlaygroundStoreState(props, state) {
 		postcssInputText: PlaygroundStore.getInputText(),
 		postcssOutputResult: newOutputResult,
 		// If there was an error in parsing, then use the last known good one
-		prevSuccessfulPostcssOutputResult: newOutputResult.get('error') ? state.postcssOutputResult : newOutputResult
+		prevSuccessfulPostcssOutputResult: newOutputResult.get('error') ? state.prevSuccessfulPostcssOutputResult : newOutputResult
 	};
 }
 
@@ -39,6 +40,8 @@ export default class PlaygroundApp extends React.Component {
 			gatherPlaygroundStoreState(props, (this.state || {})),
 			gatherPlaygroundSettingsStoreState(props, (this.state || {}))
 		);
+
+		this._throttledProcessInputAction = throttle(PlaygroundActions.processInput, 500);
 	}
 
 	componentDidMount() {
@@ -46,9 +49,6 @@ export default class PlaygroundApp extends React.Component {
 		PlaygroundSettingsStore.addChangeListener(this._onPlaygroundSettingsStoreChange.bind(this));
 
 		document.addEventListener('keyup', this._handleKeyUp.bind(this));
-
-		// Initialize the application
-		PlaygroundActions.init();
 	}
 
 	componentWillUnmount() {
@@ -136,12 +136,11 @@ export default class PlaygroundApp extends React.Component {
 	}
 
 	_onInputChanged(text) {
-		//console.log('input changed');
 		PlaygroundActions.updateInput(text);
 
 		// Defaults to true if undefined
 		if(this.state.shouldLiveReload) {
-			PlaygroundActions.processInput();
+			this._throttledProcessInputAction();
 		}
 	}
 

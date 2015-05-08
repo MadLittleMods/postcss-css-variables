@@ -2,13 +2,6 @@ import AppDispatcher from '../dispatcher/AppDispatcher';
 import PlaygroundConstants from '../constants/PlaygroundConstants';
 
 var TodoActions = {
-	init: function() {
-		AppDispatcher.dispatch({
-			actionType: PlaygroundConstants.PLAYGROUND_INIT,
-		});
-	},
-
-
 	keyboardActionFired: function() {
 		AppDispatcher.dispatch({
 			actionType: PlaygroundConstants.PLAYGROUND_KEYBOARD_ACTION

@@ -2,6 +2,7 @@ import React from 'react';
 
 import PlaygroundStore from '../stores/PlaygroundStore';
 import PlaygroundActions from '../actions/PlaygroundActions';
+import * as PlaygroundPersistentSettingsDAO from '../services/PlaygroundPersistentSettingsDAO';
 
 import assign from 'object-assign';
 
@@ -182,23 +183,23 @@ export default class PlaygroundHeader extends React.Component {
 	}
 
 	_onPostcssCssVariablesPreserveCheckboxChanged(e) {
-		PlaygroundActions.setPostcssCssVariablesPreserveOption(e.target.checked);
+		PlaygroundPersistentSettingsDAO.setPostCssCssVariablesPreserveOption(e.target.checked);
 	}
 
 	_onLiveReloadCheckboxChanged(e) {
-		PlaygroundActions.setShouldLiveReloadOption(e.target.checked);
+		PlaygroundPersistentSettingsDAO.setShouldLiveReload(e.target.checked);
 	}
 
 	_onTabWidthChanged(e) {
 		//console.log(e.target.value);
-		PlaygroundActions.setTabWidthOption(e.target.value);
+		PlaygroundPersistentSettingsDAO.setTabWidth(e.target.value);
 	}
 	_onTabWidthAutoCheckboxChanged(e) {
 		if(e.target.checked) {
-			PlaygroundActions.setTabWidthOption('inherit');
+			PlaygroundPersistentSettingsDAO.setTabWidth('inherit');
 		}
 		else {
-			PlaygroundActions.setTabWidthOption('4');
+			PlaygroundPersistentSettingsDAO.setTabWidth('4');
 		}
 	}
 

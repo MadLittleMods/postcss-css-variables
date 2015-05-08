@@ -21,7 +21,7 @@ module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 		display: inline-block;
 		vertical-align: middle;
 		
-		width: ` + totalCheckboxWidth + `ch;
+		width: ${totalCheckboxWidth}ch;
 		height: 2rem;
 		
 		padding: 0.5ch 0.8ch;
@@ -42,14 +42,14 @@ module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 		user-select: none;
 
 		&:focus,
-		` + checkboxSelector + `:focus ~ &,
-		` + checkboxSelector + `:focus ~ * & {
+		${checkboxSelector}:focus ~ &,
+		${checkboxSelector}:focus ~ * & {
 			box-shadow: inset 0 0 4px 0 rgba(255, 255, 255, 0.5);
 		}
 
 
 		&:before {
-			content: ` + labelOn + `;
+			content: ${labelOn};
 
 			position: absolute;
 			top: 50%;
@@ -59,7 +59,7 @@ module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 		}
 
 		&:after {
-			content: ` + labelOff + `;
+			content: ${labelOff};
 
 			position: absolute;
 			top: 50%;
@@ -78,7 +78,7 @@ module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 			
 			display: inline-block;
 			/* use the opposite width to cover up the other label */
-			width: ` + labelOnWidth + `ch;
+			width: ${labelOnWidth}ch;
 			height: 100%;
 			
 			padding: 0;
@@ -109,18 +109,18 @@ module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 
 			}
 
-			` + checkboxSelector + `:checked ~ &,
-			` + checkboxSelector + `:checked ~ * > & {
+			${checkboxSelector}:checked ~ &,
+			${checkboxSelector}:checked ~ * > & {
 				/* use the opposite width to cover up the other label */
-				width: ` + labelOffWidth + `ch;
+				width: ${labelOffWidth}ch;
 
-				left: calc(100% - ` + labelOffWidth + `ch);
+				left: calc(100% - ${labelOffWidth}ch);
 
 				background: #00ee00;
 			}
 
-			` + checkboxSelector + `:checked:focus ~ &,
-			` + checkboxSelector + `:checked:focus ~ * & {
+			${checkboxSelector}:checked:focus ~ &,
+			${checkboxSelector}:checked:focus ~ * & {
 				&:before {
 					background: rgba(100, 255, 100, 1);
 				}
@@ -135,7 +135,7 @@ module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 				top: 50%;
 				right: 0.8ch;
 
-				width: ` + ((Math.min(labelOnWidth, labelOffWidth)/2) - 1) + `ch;
+				width: ${(Math.min(labelOnWidth, labelOffWidth)/2) - 1}ch;
 				height: 0.8ch;
 	
 				background: rgba(0, 0, 0, 0.25);

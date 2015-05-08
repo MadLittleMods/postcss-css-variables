@@ -3631,6 +3631,47 @@ System.register("npm:classnames@1.2.2/index", [], true, function(require, export
   return module.exports;
 });
 
+System.register("npm:lodash.isnative@3.0.2/index", ["github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  (function(process) {
+    var funcTag = '[object Function]';
+    var reRegExpChars = /[.*+?^${}()|[\]\/\\]/g,
+        reHasRegExpChars = RegExp(reRegExpChars.source);
+    var reIsHostCtor = /^\[object .+?Constructor\]$/;
+    function baseToString(value) {
+      if (typeof value == 'string') {
+        return value;
+      }
+      return value == null ? '' : (value + '');
+    }
+    function isObjectLike(value) {
+      return !!value && typeof value == 'object';
+    }
+    var objectProto = Object.prototype;
+    var fnToString = Function.prototype.toString;
+    var objToString = objectProto.toString;
+    var reIsNative = RegExp('^' + escapeRegExp(objToString).replace(/toString|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
+    function isNative(value) {
+      if (value == null) {
+        return false;
+      }
+      if (objToString.call(value) == funcTag) {
+        return reIsNative.test(fnToString.call(value));
+      }
+      return isObjectLike(value) && reIsHostCtor.test(value);
+    }
+    function escapeRegExp(string) {
+      string = baseToString(string);
+      return (string && reHasRegExpChars.test(string)) ? string.replace(reRegExpChars, '\\$&') : string;
+    }
+    module.exports = isNative;
+  })(require("github:jspm/nodelibs-process@0.1.1"));
+  global.define = __define;
+  return module.exports;
+});
+
 System.register("npm:flux@2.0.3/lib/invariant", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -15300,6 +15341,16 @@ System.register("npm:extend@2.0.1/index", [], true, function(require, exports, m
   return module.exports;
 });
 
+System.register("npm:core-js@0.9.6/library/fn/object/keys", ["npm:core-js@0.9.6/library/modules/es6.object.statics-accept-primitives", "npm:core-js@0.9.6/library/modules/$"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@0.9.6/library/modules/es6.object.statics-accept-primitives");
+  module.exports = require("npm:core-js@0.9.6/library/modules/$").core.Object.keys;
+  global.define = __define;
+  return module.exports;
+});
+
 (function() {
 function define(){};  define.amd = {};
 !function(a) {
@@ -18259,6 +18310,15 @@ System.register("npm:classnames@1.2.2", ["npm:classnames@1.2.2/index"], true, fu
   return module.exports;
 });
 
+System.register("npm:lodash.isnative@3.0.2", ["npm:lodash.isnative@3.0.2/index"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:lodash.isnative@3.0.2/index");
+  global.define = __define;
+  return module.exports;
+});
+
 System.register("npm:flux@2.0.3/lib/Dispatcher", ["npm:flux@2.0.3/lib/invariant"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -19476,6 +19536,18 @@ System.register("npm:extend@2.0.1", ["npm:extend@2.0.1/index"], true, function(r
       __define = global.define;
   global.define = undefined;
   module.exports = require("npm:extend@2.0.1/index");
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:babel-runtime@5.2.6/core-js/object/keys", ["npm:core-js@0.9.6/library/fn/object/keys"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = {
+    "default": require("npm:core-js@0.9.6/library/fn/object/keys"),
+    __esModule: true
+  };
   global.define = __define;
   return module.exports;
 });
@@ -21236,6 +21308,130 @@ System.register("npm:babel-runtime@5.2.6/helpers/create-class", ["npm:babel-runt
     };
   })();
   exports.__esModule = true;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:lodash.debounce@3.0.3/index", ["npm:lodash.isnative@3.0.2"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var isNative = require("npm:lodash.isnative@3.0.2");
+  var FUNC_ERROR_TEXT = 'Expected a function';
+  var nativeMax = Math.max,
+      nativeNow = isNative(nativeNow = Date.now) && nativeNow;
+  var now = nativeNow || function() {
+    return new Date().getTime();
+  };
+  function debounce(func, wait, options) {
+    var args,
+        maxTimeoutId,
+        result,
+        stamp,
+        thisArg,
+        timeoutId,
+        trailingCall,
+        lastCalled = 0,
+        maxWait = false,
+        trailing = true;
+    if (typeof func != 'function') {
+      throw new TypeError(FUNC_ERROR_TEXT);
+    }
+    wait = wait < 0 ? 0 : (+wait || 0);
+    if (options === true) {
+      var leading = true;
+      trailing = false;
+    } else if (isObject(options)) {
+      leading = options.leading;
+      maxWait = 'maxWait' in options && nativeMax(+options.maxWait || 0, wait);
+      trailing = 'trailing' in options ? options.trailing : trailing;
+    }
+    function cancel() {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (maxTimeoutId) {
+        clearTimeout(maxTimeoutId);
+      }
+      maxTimeoutId = timeoutId = trailingCall = undefined;
+    }
+    function delayed() {
+      var remaining = wait - (now() - stamp);
+      if (remaining <= 0 || remaining > wait) {
+        if (maxTimeoutId) {
+          clearTimeout(maxTimeoutId);
+        }
+        var isCalled = trailingCall;
+        maxTimeoutId = timeoutId = trailingCall = undefined;
+        if (isCalled) {
+          lastCalled = now();
+          result = func.apply(thisArg, args);
+          if (!timeoutId && !maxTimeoutId) {
+            args = thisArg = null;
+          }
+        }
+      } else {
+        timeoutId = setTimeout(delayed, remaining);
+      }
+    }
+    function maxDelayed() {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      maxTimeoutId = timeoutId = trailingCall = undefined;
+      if (trailing || (maxWait !== wait)) {
+        lastCalled = now();
+        result = func.apply(thisArg, args);
+        if (!timeoutId && !maxTimeoutId) {
+          args = thisArg = null;
+        }
+      }
+    }
+    function debounced() {
+      args = arguments;
+      stamp = now();
+      thisArg = this;
+      trailingCall = trailing && (timeoutId || !leading);
+      if (maxWait === false) {
+        var leadingCall = leading && !timeoutId;
+      } else {
+        if (!maxTimeoutId && !leading) {
+          lastCalled = stamp;
+        }
+        var remaining = maxWait - (stamp - lastCalled),
+            isCalled = remaining <= 0 || remaining > maxWait;
+        if (isCalled) {
+          if (maxTimeoutId) {
+            maxTimeoutId = clearTimeout(maxTimeoutId);
+          }
+          lastCalled = stamp;
+          result = func.apply(thisArg, args);
+        } else if (!maxTimeoutId) {
+          maxTimeoutId = setTimeout(maxDelayed, remaining);
+        }
+      }
+      if (isCalled && timeoutId) {
+        timeoutId = clearTimeout(timeoutId);
+      } else if (!timeoutId && wait !== maxWait) {
+        timeoutId = setTimeout(delayed, wait);
+      }
+      if (leadingCall) {
+        isCalled = true;
+        result = func.apply(thisArg, args);
+      }
+      if (isCalled && !timeoutId && !maxTimeoutId) {
+        args = thisArg = null;
+      }
+      return result;
+    }
+    debounced.cancel = cancel;
+    return debounced;
+  }
+  function isObject(value) {
+    var type = typeof value;
+    return type == 'function' || (!!value && type == 'object');
+  }
+  module.exports = debounce;
   global.define = __define;
   return module.exports;
 });
@@ -25095,6 +25291,15 @@ System.register("npm:babel-runtime@5.2.6/core-js/object/get-own-property-descrip
   return module.exports;
 });
 
+System.register("npm:lodash.debounce@3.0.3", ["npm:lodash.debounce@3.0.3/index"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:lodash.debounce@3.0.3/index");
+  global.define = __define;
+  return module.exports;
+});
+
 System.register("npm:flux@2.0.3", ["npm:flux@2.0.3/index"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -26037,6 +26242,43 @@ System.register("npm:babel-runtime@5.2.6/helpers/get", ["npm:babel-runtime@5.2.6
     }
   };
   exports.__esModule = true;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:lodash.throttle@3.0.2/index", ["npm:lodash.debounce@3.0.3"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var debounce = require("npm:lodash.debounce@3.0.3");
+  var FUNC_ERROR_TEXT = 'Expected a function';
+  var debounceOptions = {
+    'leading': false,
+    'maxWait': 0,
+    'trailing': false
+  };
+  function throttle(func, wait, options) {
+    var leading = true,
+        trailing = true;
+    if (typeof func != 'function') {
+      throw new TypeError(FUNC_ERROR_TEXT);
+    }
+    if (options === false) {
+      leading = false;
+    } else if (isObject(options)) {
+      leading = 'leading' in options ? !!options.leading : leading;
+      trailing = 'trailing' in options ? !!options.trailing : trailing;
+    }
+    debounceOptions.leading = leading;
+    debounceOptions.maxWait = +wait;
+    debounceOptions.trailing = trailing;
+    return debounce(func, wait, debounceOptions);
+  }
+  function isObject(value) {
+    var type = typeof value;
+    return type == 'function' || (!!value && type == 'object');
+  }
+  module.exports = throttle;
   global.define = __define;
   return module.exports;
 });
@@ -27003,6 +27245,15 @@ System.register("npm:react@0.13.2/lib/ReactDOMIDOperations", ["npm:react@0.13.2/
     });
     module.exports = ReactDOMIDOperations;
   })(require("github:jspm/nodelibs-process@0.1.1"));
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:lodash.throttle@3.0.2", ["npm:lodash.throttle@3.0.2/index"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:lodash.throttle@3.0.2/index");
   global.define = __define;
   return module.exports;
 });
@@ -28785,7 +29036,7 @@ System.register("npm:postcss@4.1.9", ["npm:postcss@4.1.9/lib/postcss"], true, fu
   return module.exports;
 });
 
-System.register('build/js/lib/deferred-promise', ['npm:bluebird@2.9.25'], function (_export) {
+System.register('src/js/lib/deferred-promise', ['npm:bluebird@2.9.25'], function (_export) {
 	var Promise;
 
 	function deferredPromise() {
@@ -28812,23 +29063,18 @@ System.register('build/js/lib/deferred-promise', ['npm:bluebird@2.9.25'], functi
 		}
 	};
 });
-System.register('build/js/actions/PlaygroundActions', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants'], function (_export) {
+System.register('src/js/actions/PlaygroundActions', ['src/js/dispatcher/AppDispatcher', 'src/js/constants/PlaygroundConstants'], function (_export) {
 	var AppDispatcher, PlaygroundConstants, TodoActions;
 	return {
-		setters: [function (_buildJsDispatcherAppDispatcher) {
-			AppDispatcher = _buildJsDispatcherAppDispatcher['default'];
-		}, function (_buildJsConstantsPlaygroundConstants) {
-			PlaygroundConstants = _buildJsConstantsPlaygroundConstants['default'];
+		setters: [function (_srcJsDispatcherAppDispatcher) {
+			AppDispatcher = _srcJsDispatcherAppDispatcher['default'];
+		}, function (_srcJsConstantsPlaygroundConstants) {
+			PlaygroundConstants = _srcJsConstantsPlaygroundConstants['default'];
 		}],
 		execute: function () {
 			'use strict';
 
 			TodoActions = {
-				init: function init() {
-					AppDispatcher.dispatch({
-						actionType: PlaygroundConstants.PLAYGROUND_INIT });
-				},
-
 				keyboardActionFired: function keyboardActionFired() {
 					AppDispatcher.dispatch({
 						actionType: PlaygroundConstants.PLAYGROUND_KEYBOARD_ACTION
@@ -28874,210 +29120,7 @@ System.register('build/js/actions/PlaygroundActions', ['build/js/dispatcher/AppD
 		}
 	};
 });
-System.register('build/js/components/PlaygroundHeader', ['npm:babel-runtime@5.2.6/helpers/inherits', 'npm:babel-runtime@5.2.6/helpers/get', 'npm:babel-runtime@5.2.6/helpers/create-class', 'npm:babel-runtime@5.2.6/helpers/class-call-check', 'npm:react@0.13.2', 'build/js/stores/PlaygroundStore', 'build/js/actions/PlaygroundActions', 'npm:object-assign@2.0.0'], function (_export) {
-	var _inherits, _get, _createClass, _classCallCheck, React, PlaygroundStore, PlaygroundActions, assign, PlaygroundHeader;
-
-	return {
-		setters: [function (_npmBabelRuntime526HelpersInherits) {
-			_inherits = _npmBabelRuntime526HelpersInherits['default'];
-		}, function (_npmBabelRuntime526HelpersGet) {
-			_get = _npmBabelRuntime526HelpersGet['default'];
-		}, function (_npmBabelRuntime526HelpersCreateClass) {
-			_createClass = _npmBabelRuntime526HelpersCreateClass['default'];
-		}, function (_npmBabelRuntime526HelpersClassCallCheck) {
-			_classCallCheck = _npmBabelRuntime526HelpersClassCallCheck['default'];
-		}, function (_npmReact0132) {
-			React = _npmReact0132['default'];
-		}, function (_buildJsStoresPlaygroundStore) {
-			PlaygroundStore = _buildJsStoresPlaygroundStore['default'];
-		}, function (_buildJsActionsPlaygroundActions) {
-			PlaygroundActions = _buildJsActionsPlaygroundActions['default'];
-		}, function (_npmObjectAssign200) {
-			assign = _npmObjectAssign200['default'];
-		}],
-		execute: function () {
-			'use strict';
-
-			PlaygroundHeader = (function (_React$Component) {
-				function PlaygroundHeader(props) {
-					_classCallCheck(this, PlaygroundHeader);
-
-					_get(Object.getPrototypeOf(PlaygroundHeader.prototype), 'constructor', this).call(this, props);
-					this.state = assign({
-						optionsMenuDisplayToggle: false
-					});
-				}
-
-				_inherits(PlaygroundHeader, _React$Component);
-
-				_createClass(PlaygroundHeader, [{
-					key: 'componentDidMount',
-					value: function componentDidMount() {
-						PlaygroundStore.getKeyboardActionStream().on('KEYBOARD_ACTION', this._handleKeyboardAction.bind(this));
-
-						document.addEventListener('mousedown', this._handleMouseDown.bind(this));
-					}
-				}, {
-					key: 'componentWillUnmount',
-					value: function componentWillUnmount() {
-						PlaygroundStore.getKeyboardActionStream().removeEventListener('KEYBOARD_ACTION', this._handleKeyboardAction.bind(this));
-
-						document.removeEventListener('mousedown', this._handleMouseDown.bind(this));
-					}
-				}, {
-					key: 'render',
-					value: function render() {
-						//console.log('render', this.state);
-						return React.createElement('header', {
-							className: 'playground-header'
-						}, React.createElement('h1', {
-							className: 'playground-header-heading'
-						}, React.createElement('a', { className: 'playground-header-heading-primary-title', href: 'https://github.com/MadLittleMods/postcss-css-variables' }, 'postcss-css-variables'), ' Playground - ', React.createElement('a', { href: 'https://github.com/postcss/postcss' }, 'PostCSS')), React.createElement('div', {
-							className: 'playground-options-holder',
-							ref: 'playgroundOptionsHolder'
-						}, React.createElement('input', {
-							type: 'checkbox',
-							id: 'id-playground-options-menu-display-toggle-checkbox',
-							className: 'playground-options-menu-toggle-checkbox visually-hidden',
-							checked: this.state.optionsMenuDisplayToggle,
-							onChange: this._onOptionsMenuDisplayToggleCheckboxChanged.bind(this) }), React.createElement('label', {
-							className: 'playground-options-menu-toggle',
-							htmlFor: 'id-playground-options-menu-display-toggle-checkbox'
-						}, React.createElement('svg', {
-							className: 'playground-options-menu-toggle-icon icon',
-							viewBox: '0 0 1024 1024',
-							dangerouslySetInnerHTML: { __html: '<use xlink:href="#shape-gear"></use>' } })), React.createElement('div', {
-							className: 'playground-options-menu-wrapper'
-						}, React.createElement('div', {
-							className: 'playground-options-menu'
-						}, React.createElement('ul', {
-							className: 'playground-options-menu-options-group'
-						}, React.createElement('li', { className: 'playground-options-menu-item' }, React.createElement('label', {
-							className: 'playground-options-menu-item-label',
-							htmlFor: 'id-playground-postcss-css-variables-preserve-menu-option'
-						}, 'Preserve:'), React.createElement('input', {
-							type: 'checkbox',
-							id: 'id-playground-postcss-css-variables-preserve-menu-option',
-							checked: this.props.postcssCssVariablesPreserve,
-							onChange: this._onPostcssCssVariablesPreserveCheckboxChanged.bind(this) }))), React.createElement('hr', null), React.createElement('ul', {
-							className: 'playground-options-menu-options-group'
-						}, React.createElement('li', { className: 'playground-options-menu-item' }, React.createElement('label', {
-							className: 'playground-options-menu-item-label',
-							htmlFor: 'id-playground-tab-width-menu-option'
-						}, 'Tab Width:'), React.createElement('div', null, React.createElement('div', { className: 'playground-options-menu-item-secondary' }, React.createElement('label', {
-							className: 'playground-options-menu-item-label-secondary',
-							htmlFor: 'id-playground-tab-width-inherit-menu-option'
-						}, 'Auto:'), React.createElement('input', {
-							type: 'checkbox',
-							id: 'id-playground-tab-width-inherit-menu-option',
-							checked: this.props.tabWidth === 'inherit',
-							onChange: this._onTabWidthAutoCheckboxChanged.bind(this) })), React.createElement('input', {
-							type: 'range',
-							id: 'id-playground-tab-width-menu-option',
-							value: this.props.tabWidth === 'inherit' ? '4' : this.props.tabWidth,
-							onChange: this._onTabWidthChanged.bind(this),
-
-							min: '1',
-							max: '12',
-							step: '1',
-							disabled: this.props.tabWidth === 'inherit' }))), React.createElement('li', { className: 'playground-options-menu-item' }, React.createElement('label', {
-							className: 'playground-options-menu-item-label',
-							htmlFor: 'id-playground-should-live-reload-menu-option'
-						}, 'Live Reload:'), React.createElement('input', {
-							type: 'checkbox',
-							id: 'id-playground-should-live-reload-menu-option',
-							checked: this.props.shouldLiveReload,
-							onChange: this._onLiveReloadCheckboxChanged.bind(this) })))))), React.createElement('div', null, React.createElement('input', {
-							type: 'checkbox',
-							id: 'id-playground-live-reload-checkbox',
-							className: 'playground-live-reload-toggle-checkbox visually-hidden',
-							'aria-label': 'Live Reload',
-							checked: this.props.shouldLiveReload,
-							onChange: this._onLiveReloadCheckboxChanged.bind(this) }), React.createElement('label', {
-							className: 'playground-live-reload-toggle-togglebox',
-							htmlFor: 'id-playground-live-reload-checkbox'
-						}, React.createElement('label', {
-							className: 'switch',
-							htmlFor: 'id-playground-live-reload-checkbox'
-						}))), React.createElement('button', {
-							className: 'playground-header-save-button',
-							onClick: this._onProcessClick.bind(this)
-						}, 'Process'));
-					}
-				}, {
-					key: '_onProcessClick',
-					value: function _onProcessClick() {
-						PlaygroundActions.processInput();
-					}
-				}, {
-					key: '_onPostcssCssVariablesPreserveCheckboxChanged',
-					value: function _onPostcssCssVariablesPreserveCheckboxChanged(e) {
-						PlaygroundActions.setPostcssCssVariablesPreserveOption(e.target.checked);
-					}
-				}, {
-					key: '_onLiveReloadCheckboxChanged',
-					value: function _onLiveReloadCheckboxChanged(e) {
-						PlaygroundActions.setShouldLiveReloadOption(e.target.checked);
-					}
-				}, {
-					key: '_onTabWidthChanged',
-					value: function _onTabWidthChanged(e) {
-						//console.log(e.target.value);
-						PlaygroundActions.setTabWidthOption(e.target.value);
-					}
-				}, {
-					key: '_onTabWidthAutoCheckboxChanged',
-					value: function _onTabWidthAutoCheckboxChanged(e) {
-						if (e.target.checked) {
-							PlaygroundActions.setTabWidthOption('inherit');
-						} else {
-							PlaygroundActions.setTabWidthOption('4');
-						}
-					}
-				}, {
-					key: '_onOptionsMenuDisplayToggleCheckboxChanged',
-					value: function _onOptionsMenuDisplayToggleCheckboxChanged(e) {
-						this.setState({
-							optionsMenuDisplayToggle: e.target.checked
-						});
-					}
-				}, {
-					key: '_handleKeyboardAction',
-					value: function _handleKeyboardAction() {
-						//console.log('keyboard action');
-
-						// Also hide the options menu because we need it out of the way to start typing
-						this.setState({
-							optionsMenuDisplayToggle: false
-						});
-					}
-				}, {
-					key: '_handleMouseDown',
-					value: function _handleMouseDown(e) {
-						// If they clicked somewhere outside of the menu, then close it
-						if (!React.findDOMNode(this.refs.playgroundOptionsHolder).contains(e.target)) {
-							this.setState({
-								optionsMenuDisplayToggle: false
-							});
-						}
-					}
-				}]);
-
-				return PlaygroundHeader;
-			})(React.Component);
-
-			_export('default', PlaygroundHeader);
-
-			PlaygroundHeader.propTypes = {
-				tabWidth: React.PropTypes.string.isRequired,
-				shouldLiveReload: React.PropTypes.bool.isRequired,
-
-				postcssCssVariablesPreserve: React.PropTypes.bool.isRequired
-			};
-		}
-	};
-});
-System.register('build/js/constants/PlaygroundConstants', ['npm:keymirror@0.1.1'], function (_export) {
+System.register('src/js/constants/PlaygroundConstants', ['npm:keymirror@0.1.1'], function (_export) {
 	var keyMirror;
 	return {
 		setters: [function (_npmKeymirror011) {
@@ -29087,8 +29130,6 @@ System.register('build/js/constants/PlaygroundConstants', ['npm:keymirror@0.1.1'
 			'use strict';
 
 			_export('default', keyMirror({
-				PLAYGROUND_INIT: null,
-
 				PLAYGROUND_INPUT_UPDATED: null,
 				PLAYGROUND_START_PROCESS_INPUT: null,
 
@@ -29102,7 +29143,157 @@ System.register('build/js/constants/PlaygroundConstants', ['npm:keymirror@0.1.1'
 		}
 	};
 });
-System.register('build/js/components/EditorTextarea', ['npm:babel-runtime@5.2.6/helpers/inherits', 'npm:babel-runtime@5.2.6/helpers/get', 'npm:babel-runtime@5.2.6/helpers/create-class', 'npm:babel-runtime@5.2.6/helpers/class-call-check', 'npm:react@0.13.2', 'github:wjbryant/taboverride@4.0.2'], function (_export) {
+System.register('src/js/services/PlaygroundPersistentSettingsDAO', ['npm:babel-runtime@5.2.6/core-js/object/keys', 'src/js/actions/PlaygroundActions', 'npm:immutable@3.7.2', 'npm:localforage@1.2.2'], function (_export) {
+	var _Object$keys, PlaygroundActions, Immutable, localforage, playgroundSettingsStoreKey, playgroundSettingsStoreTypeKeys, actionMap, settings;
+
+	// Iterates over JS objects or Immutable.js Maps
+	function iterateOverObjectRecursively(obj, cb, _originalObj, _path) {
+		_originalObj = _originalObj || obj || {};
+		_path = _path || [];
+
+		// http://facebook.github.io/immutable-js/docs/#/Map/isMap
+		var isMap = Immutable.Map.isMap(obj);
+
+		var iteratingFunc = isMap ? Immutable.Map.prototype.mapKeys.bind(obj) : Array.prototype.forEach.bind(_Object$keys(obj));
+		iteratingFunc(function (key) {
+			var value = isMap ? obj.get(key) : obj[key];
+			var currentPath = _path.concat(key);
+
+			cb(currentPath, value);
+
+			if (typeof value === 'object' && value !== _originalObj) {
+				iterateOverObjectRecursively(value, cb, _originalObj, currentPath);
+			}
+		});
+	}
+
+	// Grab the settings from localforage and fire off the actions
+	function retrieveSettingsFromPersistantStorage() {
+		console.log('Retrieving settings from persistent storage...');
+
+		return localforage.getItem(playgroundSettingsStoreKey).then(function (value) {
+			var parsedObject = JSON.parse(value) || {};
+			settings = settings.mergeDeep(parsedObject);
+		}).then(function () {
+			// Look through the settings and fire off the actions since we just updated them from localforage
+			iterateOverObjectRecursively(settings, function (path, value) {
+				if (Immutable.Map.isMap(value)) {
+					var actionCallback = value.get('action');
+
+					if (actionCallback) {
+						actionCallback(value.get('value'));
+					}
+				}
+			});
+		})['catch'](function (e) {
+			console.log('Error retrieving', e);
+
+			throw e;
+		});
+	}
+
+	function savePersistently() {
+		console.log('Saving settings persistently...');
+		return localforage.setItem(playgroundSettingsStoreKey, JSON.stringify(settings.toJS())).then(function () {
+			console.log('Settings saved!', settings.toJS());
+		})['catch'](function (e) {
+			console.log('Error saving:', e);
+
+			throw e;
+		});
+	}
+
+	function init() {
+		retrieveSettingsFromPersistantStorage();
+	}
+
+	function setShouldLiveReload(value) {
+		settings = settings.setIn([playgroundSettingsStoreTypeKeys.playgroundSettings, 'shouldLiveReload', 'value'], value);
+		savePersistently();
+		PlaygroundActions.setShouldLiveReloadOption(value);
+	}
+
+	function setTabWidth(value) {
+		settings = settings.setIn([playgroundSettingsStoreTypeKeys.playgroundSettings, 'tabWidth', 'value'], value);
+		savePersistently();
+		PlaygroundActions.setTabWidthOption(value);
+	}
+
+	function setPostCssCssVariablesPreserveOption(value) {
+		settings = settings.setIn([playgroundSettingsStoreTypeKeys.pluginSettings, 'postcss-css-variables', 'preserve', 'value'], value);
+		savePersistently();
+		PlaygroundActions.setPostcssCssVariablesPreserveOption(value);
+	}
+
+	return {
+		setters: [function (_npmBabelRuntime526CoreJsObjectKeys) {
+			_Object$keys = _npmBabelRuntime526CoreJsObjectKeys['default'];
+		}, function (_srcJsActionsPlaygroundActions) {
+			PlaygroundActions = _srcJsActionsPlaygroundActions['default'];
+		}, function (_npmImmutable372) {
+			Immutable = _npmImmutable372['default'];
+		}, function (_npmLocalforage122) {
+			localforage = _npmLocalforage122['default'];
+		}],
+		execute: function () {
+			'use strict';
+
+			_export('init', init);
+
+			_export('setShouldLiveReload', setShouldLiveReload);
+
+			_export('setTabWidth', setTabWidth);
+
+			_export('setPostCssCssVariablesPreserveOption', setPostCssCssVariablesPreserveOption);
+
+			localforage.config({
+				name: 'postcss-css-variables-playground',
+				version: 1,
+				storeName: 'postcss-css-variables-playground-settings'
+			});
+
+			playgroundSettingsStoreKey = 'PlaygroundSettingsStore';
+			playgroundSettingsStoreTypeKeys = {
+				playgroundSettings: 'PlaygroundSettingsStore.PlaygroundSettings',
+				pluginSettings: 'PlaygroundSettingsStore.PluginSettings'
+			};
+			actionMap = {};
+
+			actionMap[playgroundSettingsStoreTypeKeys.playgroundSettings] = {
+				shouldLiveReload: PlaygroundActions.setShouldLiveReloadOption,
+				tabWidth: PlaygroundActions.setTabWidthOption
+			};
+			actionMap[playgroundSettingsStoreTypeKeys.pluginSettings] = {
+				'postcss-css-variables': {
+					preserve: PlaygroundActions.setPostcssCssVariablesPreserveOption
+				}
+			};settings = Immutable.fromJS((function () {
+				var _tempSettings = {};
+				_tempSettings[playgroundSettingsStoreTypeKeys.playgroundSettings] = {
+					shouldLiveReload: {
+						value: true,
+						action: PlaygroundActions.setShouldLiveReloadOption
+					},
+					tabWidth: {
+						value: 'inherit',
+						action: PlaygroundActions.setTabWidthOption
+					}
+				};
+				_tempSettings[playgroundSettingsStoreTypeKeys.pluginSettings] = {
+					'postcss-css-variables': {
+						preserve: {
+							value: false,
+							action: PlaygroundActions.setPostcssCssVariablesPreserveOption
+						}
+					}
+				};
+
+				return _tempSettings;
+			})());
+		}
+	};
+});
+System.register('src/js/components/EditorTextarea', ['npm:babel-runtime@5.2.6/helpers/inherits', 'npm:babel-runtime@5.2.6/helpers/get', 'npm:babel-runtime@5.2.6/helpers/create-class', 'npm:babel-runtime@5.2.6/helpers/class-call-check', 'npm:react@0.13.2', 'github:wjbryant/taboverride@4.0.2'], function (_export) {
 	var _inherits, _get, _createClass, _classCallCheck, React, tabOverride, EditorTextarea;
 
 	return {
@@ -29172,7 +29363,323 @@ System.register('build/js/components/EditorTextarea', ['npm:babel-runtime@5.2.6/
 		}
 	};
 });
-System.register('build/js/dispatcher/AppDispatcher', ['npm:flux@2.0.3'], function (_export) {
+System.register('src/js/components/PlaygroundHeader', ['npm:babel-runtime@5.2.6/helpers/inherits', 'npm:babel-runtime@5.2.6/helpers/get', 'npm:babel-runtime@5.2.6/helpers/create-class', 'npm:babel-runtime@5.2.6/helpers/class-call-check', 'npm:react@0.13.2', 'src/js/stores/PlaygroundStore', 'src/js/actions/PlaygroundActions', 'src/js/services/PlaygroundPersistentSettingsDAO', 'npm:object-assign@2.0.0'], function (_export) {
+	var _inherits, _get, _createClass, _classCallCheck, React, PlaygroundStore, PlaygroundActions, PlaygroundPersistentSettingsDAO, assign, PlaygroundHeader;
+
+	return {
+		setters: [function (_npmBabelRuntime526HelpersInherits) {
+			_inherits = _npmBabelRuntime526HelpersInherits['default'];
+		}, function (_npmBabelRuntime526HelpersGet) {
+			_get = _npmBabelRuntime526HelpersGet['default'];
+		}, function (_npmBabelRuntime526HelpersCreateClass) {
+			_createClass = _npmBabelRuntime526HelpersCreateClass['default'];
+		}, function (_npmBabelRuntime526HelpersClassCallCheck) {
+			_classCallCheck = _npmBabelRuntime526HelpersClassCallCheck['default'];
+		}, function (_npmReact0132) {
+			React = _npmReact0132['default'];
+		}, function (_srcJsStoresPlaygroundStore) {
+			PlaygroundStore = _srcJsStoresPlaygroundStore['default'];
+		}, function (_srcJsActionsPlaygroundActions) {
+			PlaygroundActions = _srcJsActionsPlaygroundActions['default'];
+		}, function (_srcJsServicesPlaygroundPersistentSettingsDAO) {
+			PlaygroundPersistentSettingsDAO = _srcJsServicesPlaygroundPersistentSettingsDAO;
+		}, function (_npmObjectAssign200) {
+			assign = _npmObjectAssign200['default'];
+		}],
+		execute: function () {
+			'use strict';
+
+			PlaygroundHeader = (function (_React$Component) {
+				function PlaygroundHeader(props) {
+					_classCallCheck(this, PlaygroundHeader);
+
+					_get(Object.getPrototypeOf(PlaygroundHeader.prototype), 'constructor', this).call(this, props);
+					this.state = assign({
+						optionsMenuDisplayToggle: false
+					});
+				}
+
+				_inherits(PlaygroundHeader, _React$Component);
+
+				_createClass(PlaygroundHeader, [{
+					key: 'componentDidMount',
+					value: function componentDidMount() {
+						PlaygroundStore.getKeyboardActionStream().on('KEYBOARD_ACTION', this._handleKeyboardAction.bind(this));
+
+						document.addEventListener('mousedown', this._handleMouseDown.bind(this));
+					}
+				}, {
+					key: 'componentWillUnmount',
+					value: function componentWillUnmount() {
+						PlaygroundStore.getKeyboardActionStream().removeEventListener('KEYBOARD_ACTION', this._handleKeyboardAction.bind(this));
+
+						document.removeEventListener('mousedown', this._handleMouseDown.bind(this));
+					}
+				}, {
+					key: 'render',
+					value: function render() {
+						//console.log('render', this.state);
+						return React.createElement(
+							'header',
+							{
+								className: 'playground-header'
+							},
+							React.createElement(
+								'h1',
+								{
+									className: 'playground-header-heading'
+								},
+								React.createElement(
+									'a',
+									{ className: 'playground-header-heading-primary-title', href: 'https://github.com/MadLittleMods/postcss-css-variables' },
+									'postcss-css-variables'
+								),
+								' Playground - ',
+								React.createElement(
+									'a',
+									{ href: 'https://github.com/postcss/postcss' },
+									'PostCSS'
+								)
+							),
+							React.createElement(
+								'div',
+								{
+									className: 'playground-options-holder',
+									ref: 'playgroundOptionsHolder'
+								},
+								React.createElement('input', {
+									type: 'checkbox',
+									id: 'id-playground-options-menu-display-toggle-checkbox',
+									className: 'playground-options-menu-toggle-checkbox visually-hidden',
+									checked: this.state.optionsMenuDisplayToggle,
+									onChange: this._onOptionsMenuDisplayToggleCheckboxChanged.bind(this)
+								}),
+								React.createElement(
+									'label',
+									{
+										className: 'playground-options-menu-toggle',
+										htmlFor: 'id-playground-options-menu-display-toggle-checkbox'
+									},
+									React.createElement('svg', {
+										className: 'playground-options-menu-toggle-icon icon',
+										viewBox: '0 0 1024 1024',
+										dangerouslySetInnerHTML: { __html: '<use xlink:href="#shape-gear"></use>' }
+									})
+								),
+								React.createElement(
+									'div',
+									{
+										className: 'playground-options-menu-wrapper'
+									},
+									React.createElement(
+										'div',
+										{
+											className: 'playground-options-menu'
+										},
+										React.createElement(
+											'ul',
+											{
+												className: 'playground-options-menu-options-group'
+											},
+											React.createElement(
+												'li',
+												{ className: 'playground-options-menu-item' },
+												React.createElement(
+													'label',
+													{
+														className: 'playground-options-menu-item-label',
+														htmlFor: 'id-playground-postcss-css-variables-preserve-menu-option'
+													},
+													'Preserve:'
+												),
+												React.createElement('input', {
+													type: 'checkbox',
+													id: 'id-playground-postcss-css-variables-preserve-menu-option',
+													checked: this.props.postcssCssVariablesPreserve,
+													onChange: this._onPostcssCssVariablesPreserveCheckboxChanged.bind(this)
+												})
+											)
+										),
+										React.createElement('hr', null),
+										React.createElement(
+											'ul',
+											{
+												className: 'playground-options-menu-options-group'
+											},
+											React.createElement(
+												'li',
+												{ className: 'playground-options-menu-item' },
+												React.createElement(
+													'label',
+													{
+														className: 'playground-options-menu-item-label',
+														htmlFor: 'id-playground-tab-width-menu-option'
+													},
+													'Tab Width:'
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'div',
+														{ className: 'playground-options-menu-item-secondary' },
+														React.createElement(
+															'label',
+															{
+																className: 'playground-options-menu-item-label-secondary',
+																htmlFor: 'id-playground-tab-width-inherit-menu-option'
+															},
+															'Auto:'
+														),
+														React.createElement('input', {
+															type: 'checkbox',
+															id: 'id-playground-tab-width-inherit-menu-option',
+															checked: this.props.tabWidth === 'inherit',
+															onChange: this._onTabWidthAutoCheckboxChanged.bind(this)
+														})
+													),
+													React.createElement('input', {
+														type: 'range',
+														id: 'id-playground-tab-width-menu-option',
+														value: this.props.tabWidth === 'inherit' ? '4' : this.props.tabWidth,
+														onChange: this._onTabWidthChanged.bind(this),
+
+														min: '1',
+														max: '12',
+														step: '1',
+														disabled: this.props.tabWidth === 'inherit'
+													})
+												)
+											),
+											React.createElement(
+												'li',
+												{ className: 'playground-options-menu-item' },
+												React.createElement(
+													'label',
+													{
+														className: 'playground-options-menu-item-label',
+														htmlFor: 'id-playground-should-live-reload-menu-option'
+													},
+													'Live Reload:'
+												),
+												React.createElement('input', {
+													type: 'checkbox',
+													id: 'id-playground-should-live-reload-menu-option',
+													checked: this.props.shouldLiveReload,
+													onChange: this._onLiveReloadCheckboxChanged.bind(this)
+												})
+											)
+										)
+									)
+								)
+							),
+							React.createElement(
+								'div',
+								null,
+								React.createElement('input', {
+									type: 'checkbox',
+									id: 'id-playground-live-reload-checkbox',
+									className: 'playground-live-reload-toggle-checkbox visually-hidden',
+									'aria-label': 'Live Reload',
+									checked: this.props.shouldLiveReload,
+									onChange: this._onLiveReloadCheckboxChanged.bind(this)
+								}),
+								React.createElement(
+									'label',
+									{
+										className: 'playground-live-reload-toggle-togglebox',
+										htmlFor: 'id-playground-live-reload-checkbox'
+									},
+									React.createElement('label', {
+										className: 'switch',
+										htmlFor: 'id-playground-live-reload-checkbox'
+									})
+								)
+							),
+							React.createElement(
+								'button',
+								{
+									className: 'playground-header-save-button',
+									onClick: this._onProcessClick.bind(this)
+								},
+								'Process'
+							)
+						);
+					}
+				}, {
+					key: '_onProcessClick',
+					value: function _onProcessClick() {
+						PlaygroundActions.processInput();
+					}
+				}, {
+					key: '_onPostcssCssVariablesPreserveCheckboxChanged',
+					value: function _onPostcssCssVariablesPreserveCheckboxChanged(e) {
+						PlaygroundPersistentSettingsDAO.setPostCssCssVariablesPreserveOption(e.target.checked);
+					}
+				}, {
+					key: '_onLiveReloadCheckboxChanged',
+					value: function _onLiveReloadCheckboxChanged(e) {
+						PlaygroundPersistentSettingsDAO.setShouldLiveReload(e.target.checked);
+					}
+				}, {
+					key: '_onTabWidthChanged',
+					value: function _onTabWidthChanged(e) {
+						//console.log(e.target.value);
+						PlaygroundPersistentSettingsDAO.setTabWidth(e.target.value);
+					}
+				}, {
+					key: '_onTabWidthAutoCheckboxChanged',
+					value: function _onTabWidthAutoCheckboxChanged(e) {
+						if (e.target.checked) {
+							PlaygroundPersistentSettingsDAO.setTabWidth('inherit');
+						} else {
+							PlaygroundPersistentSettingsDAO.setTabWidth('4');
+						}
+					}
+				}, {
+					key: '_onOptionsMenuDisplayToggleCheckboxChanged',
+					value: function _onOptionsMenuDisplayToggleCheckboxChanged(e) {
+						this.setState({
+							optionsMenuDisplayToggle: e.target.checked
+						});
+					}
+				}, {
+					key: '_handleKeyboardAction',
+					value: function _handleKeyboardAction() {
+						//console.log('keyboard action');
+
+						// Also hide the options menu because we need it out of the way to start typing
+						this.setState({
+							optionsMenuDisplayToggle: false
+						});
+					}
+				}, {
+					key: '_handleMouseDown',
+					value: function _handleMouseDown(e) {
+						// If they clicked somewhere outside of the menu, then close it
+						if (!React.findDOMNode(this.refs.playgroundOptionsHolder).contains(e.target)) {
+							this.setState({
+								optionsMenuDisplayToggle: false
+							});
+						}
+					}
+				}]);
+
+				return PlaygroundHeader;
+			})(React.Component);
+
+			_export('default', PlaygroundHeader);
+
+			PlaygroundHeader.propTypes = {
+				tabWidth: React.PropTypes.string.isRequired,
+				shouldLiveReload: React.PropTypes.bool.isRequired,
+
+				postcssCssVariablesPreserve: React.PropTypes.bool.isRequired
+			};
+		}
+	};
+});
+System.register('src/js/dispatcher/AppDispatcher', ['npm:flux@2.0.3'], function (_export) {
   var flux, Dispatcher, AppDispatcher;
   return {
     setters: [function (_npmFlux203) {
@@ -29188,8 +29695,8 @@ System.register('build/js/dispatcher/AppDispatcher', ['npm:flux@2.0.3'], functio
     }
   };
 });
-System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:object-assign@2.0.0', 'npm:localforage@1.2.2', 'npm:bluebird@2.9.25', 'build/js/lib/deferred-promise'], function (_export) {
-	var AppDispatcher, PlaygroundConstants, Immutable, events, assign, localforage, Promise, deferredPromise, EventEmitter, CHANGE_EVENT, isSettingsInitializedDeferredPromise, playgroundSettings, pluginSettings, PlaygroundSettingsStore;
+System.register('src/js/stores/PlaygroundSettingsStore', ['src/js/dispatcher/AppDispatcher', 'src/js/constants/PlaygroundConstants', 'npm:object-assign@2.0.0', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:localforage@1.2.2', 'npm:bluebird@2.9.25', 'src/js/lib/deferred-promise'], function (_export) {
+	var AppDispatcher, PlaygroundConstants, assign, Immutable, events, localforage, Promise, deferredPromise, EventEmitter, CHANGE_EVENT, isSettingsInitializedDeferredPromise, playgroundSettings, pluginSettings, PlaygroundSettingsStore;
 
 	function retrieveSettingsFromPersistantStorage() {
 		console.log('Retrieving settings from persistent storage...');
@@ -29212,22 +29719,22 @@ System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher
 	}
 
 	return {
-		setters: [function (_buildJsDispatcherAppDispatcher) {
-			AppDispatcher = _buildJsDispatcherAppDispatcher['default'];
-		}, function (_buildJsConstantsPlaygroundConstants) {
-			PlaygroundConstants = _buildJsConstantsPlaygroundConstants['default'];
+		setters: [function (_srcJsDispatcherAppDispatcher) {
+			AppDispatcher = _srcJsDispatcherAppDispatcher['default'];
+		}, function (_srcJsConstantsPlaygroundConstants) {
+			PlaygroundConstants = _srcJsConstantsPlaygroundConstants['default'];
+		}, function (_npmObjectAssign200) {
+			assign = _npmObjectAssign200['default'];
 		}, function (_npmImmutable372) {
 			Immutable = _npmImmutable372['default'];
 		}, function (_npmEvents102) {
 			events = _npmEvents102['default'];
-		}, function (_npmObjectAssign200) {
-			assign = _npmObjectAssign200['default'];
 		}, function (_npmLocalforage122) {
 			localforage = _npmLocalforage122['default'];
 		}, function (_npmBluebird2925) {
 			Promise = _npmBluebird2925['default'];
-		}, function (_buildJsLibDeferredPromise) {
-			deferredPromise = _buildJsLibDeferredPromise['default'];
+		}, function (_srcJsLibDeferredPromise) {
+			deferredPromise = _srcJsLibDeferredPromise['default'];
 		}],
 		execute: function () {
 			'use strict';
@@ -29282,32 +29789,18 @@ System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher
 
 				dispatchToken: AppDispatcher.register(function (action) {
 					switch (action.actionType) {
-						case PlaygroundConstants.PLAYGROUND_INIT:
-							retrieveSettingsFromPersistantStorage().then(function () {
-								console.log('Settings Retrieved!');
-								isSettingsInitializedDeferredPromise.resolve();
-								PlaygroundSettingsStore.emitChange();
-							})['catch'](function (e) {
-								isSettingsInitializedDeferredPromise.reject(e);
-								console.log('Error retrieving playground settings:', e);
-							});
-							break;
-
 						case PlaygroundConstants.PLAYGROUND_SET_POSTCSS_CSS_VARIABLES_PRESERVE:
 							pluginSettings = pluginSettings.setIn(['postcss-css-variables', 'preserve'], action.value);
-							savePersistently();
 							PlaygroundSettingsStore.emitChange();
 							break;
 
 						case PlaygroundConstants.PLAYGROUND_SET_SHOULD_LIVE_RELOAD:
 							playgroundSettings = playgroundSettings.set('shouldLiveReload', action.value);
-							savePersistently();
 							PlaygroundSettingsStore.emitChange();
 							break;
 
 						case PlaygroundConstants.PLAYGROUND_SET_TAB_WIDTH:
 							playgroundSettings = playgroundSettings.set('tabWidth', action.value);
-							savePersistently();
 							PlaygroundSettingsStore.emitChange();
 							break;
 
@@ -29324,8 +29817,8 @@ System.register('build/js/stores/PlaygroundSettingsStore', ['build/js/dispatcher
 		}
 	};
 });
-System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDispatcher', 'build/js/constants/PlaygroundConstants', 'build/js/stores/PlaygroundSettingsStore', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:object-assign@2.0.0', 'npm:postcss@4.1.9', 'npm:postcss-css-variables@0.3.1'], function (_export) {
-	var AppDispatcher, PlaygroundConstants, PlaygroundSettingsStore, Immutable, events, assign, postcss, cssvariables, EventEmitter, CHANGE_EVENT, keyboardActionStream, playgroundProcessor, postcssUnprocessedInputText, processingResult, PlaygroundStore;
+System.register('src/js/stores/PlaygroundStore', ['src/js/dispatcher/AppDispatcher', 'src/js/constants/PlaygroundConstants', 'src/js/stores/PlaygroundSettingsStore', 'npm:object-assign@2.0.0', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:postcss@4.1.9', 'npm:postcss-css-variables@0.3.1'], function (_export) {
+	var AppDispatcher, PlaygroundConstants, PlaygroundSettingsStore, assign, Immutable, events, postcss, cssvariables, EventEmitter, CHANGE_EVENT, keyboardActionStream, playgroundProcessor, postcssUnprocessedInputText, processingResult, PlaygroundStore;
 
 	function updateProcessor(settings) {
 		settings = settings || {};
@@ -29356,18 +29849,18 @@ System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDisp
 	}
 
 	return {
-		setters: [function (_buildJsDispatcherAppDispatcher) {
-			AppDispatcher = _buildJsDispatcherAppDispatcher['default'];
-		}, function (_buildJsConstantsPlaygroundConstants) {
-			PlaygroundConstants = _buildJsConstantsPlaygroundConstants['default'];
-		}, function (_buildJsStoresPlaygroundSettingsStore) {
-			PlaygroundSettingsStore = _buildJsStoresPlaygroundSettingsStore['default'];
+		setters: [function (_srcJsDispatcherAppDispatcher) {
+			AppDispatcher = _srcJsDispatcherAppDispatcher['default'];
+		}, function (_srcJsConstantsPlaygroundConstants) {
+			PlaygroundConstants = _srcJsConstantsPlaygroundConstants['default'];
+		}, function (_srcJsStoresPlaygroundSettingsStore) {
+			PlaygroundSettingsStore = _srcJsStoresPlaygroundSettingsStore['default'];
+		}, function (_npmObjectAssign200) {
+			assign = _npmObjectAssign200['default'];
 		}, function (_npmImmutable372) {
 			Immutable = _npmImmutable372['default'];
 		}, function (_npmEvents102) {
 			events = _npmEvents102['default'];
-		}, function (_npmObjectAssign200) {
-			assign = _npmObjectAssign200['default'];
 		}, function (_npmPostcss419) {
 			postcss = _npmPostcss419['default'];
 		}, function (_npmPostcssCssVariables031) {
@@ -29415,16 +29908,6 @@ System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDisp
 				dispatchToken: AppDispatcher.register(function (action) {
 
 					switch (action.actionType) {
-						case PlaygroundConstants.PLAYGROUND_INIT:
-							AppDispatcher.waitFor([PlaygroundSettingsStore.dispatchToken]);
-
-							// Once the PlaygroundSettingsStore has all of the data loaded
-							// from persistent storage, update the processor
-							PlaygroundSettingsStore.getIsSettingsInitializedPromise().then(function () {
-								updateProcessor(PlaygroundSettingsStore.getPluginSettings());
-							});
-							break;
-
 						case PlaygroundConstants.PLAYGROUND_KEYBOARD_ACTION:
 							keyboardActionStream.emit('KEYBOARD_ACTION');
 							break;
@@ -29458,8 +29941,8 @@ System.register('build/js/stores/PlaygroundStore', ['build/js/dispatcher/AppDisp
 		}
 	};
 });
-System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/helpers/inherits', 'npm:babel-runtime@5.2.6/helpers/get', 'npm:babel-runtime@5.2.6/helpers/create-class', 'npm:babel-runtime@5.2.6/helpers/class-call-check', 'npm:react@0.13.2', 'npm:object-assign@2.0.0', 'npm:classnames@1.2.2', 'build/css/playground.css!github:systemjs/plugin-css@0.1.10', 'build/js/stores/PlaygroundStore', 'build/js/stores/PlaygroundSettingsStore', 'build/js/actions/PlaygroundActions', 'build/js/components/PlaygroundHeader', 'build/js/components/EditorTextarea'], function (_export) {
-	var _inherits, _get, _createClass, _classCallCheck, React, assign, classnames, PlaygroundStore, PlaygroundSettingsStore, PlaygroundActions, PlaygroundHeader, EditorTextarea, PlaygroundApp;
+System.register('src/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/helpers/inherits', 'npm:babel-runtime@5.2.6/helpers/get', 'npm:babel-runtime@5.2.6/helpers/create-class', 'npm:babel-runtime@5.2.6/helpers/class-call-check', 'npm:react@0.13.2', 'npm:object-assign@2.0.0', 'npm:classnames@1.2.2', 'npm:lodash.throttle@3.0.2', 'src/postcss/playground.css!css', 'src/js/stores/PlaygroundStore', 'src/js/stores/PlaygroundSettingsStore', 'src/js/actions/PlaygroundActions', 'src/js/components/PlaygroundHeader', 'src/js/components/EditorTextarea'], function (_export) {
+	var _inherits, _get, _createClass, _classCallCheck, React, assign, classnames, throttle, PlaygroundStore, PlaygroundSettingsStore, PlaygroundActions, PlaygroundHeader, EditorTextarea, PlaygroundApp;
 
 	function gatherPlaygroundStoreState(props, state) {
 		var newOutputResult = PlaygroundStore.getOutputResult();
@@ -29468,7 +29951,7 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 			postcssInputText: PlaygroundStore.getInputText(),
 			postcssOutputResult: newOutputResult,
 			// If there was an error in parsing, then use the last known good one
-			prevSuccessfulPostcssOutputResult: newOutputResult.get('error') ? state.postcssOutputResult : newOutputResult
+			prevSuccessfulPostcssOutputResult: newOutputResult.get('error') ? state.prevSuccessfulPostcssOutputResult : newOutputResult
 		};
 	}
 
@@ -29495,16 +29978,18 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 			assign = _npmObjectAssign200['default'];
 		}, function (_npmClassnames122) {
 			classnames = _npmClassnames122['default'];
-		}, function (_buildCssPlaygroundCssGithubSystemjsPluginCss0110) {}, function (_buildJsStoresPlaygroundStore) {
-			PlaygroundStore = _buildJsStoresPlaygroundStore['default'];
-		}, function (_buildJsStoresPlaygroundSettingsStore) {
-			PlaygroundSettingsStore = _buildJsStoresPlaygroundSettingsStore['default'];
-		}, function (_buildJsActionsPlaygroundActions) {
-			PlaygroundActions = _buildJsActionsPlaygroundActions['default'];
-		}, function (_buildJsComponentsPlaygroundHeader) {
-			PlaygroundHeader = _buildJsComponentsPlaygroundHeader['default'];
-		}, function (_buildJsComponentsEditorTextarea) {
-			EditorTextarea = _buildJsComponentsEditorTextarea['default'];
+		}, function (_npmLodashThrottle302) {
+			throttle = _npmLodashThrottle302['default'];
+		}, function (_srcPostcssPlaygroundCssCss) {}, function (_srcJsStoresPlaygroundStore) {
+			PlaygroundStore = _srcJsStoresPlaygroundStore['default'];
+		}, function (_srcJsStoresPlaygroundSettingsStore) {
+			PlaygroundSettingsStore = _srcJsStoresPlaygroundSettingsStore['default'];
+		}, function (_srcJsActionsPlaygroundActions) {
+			PlaygroundActions = _srcJsActionsPlaygroundActions['default'];
+		}, function (_srcJsComponentsPlaygroundHeader) {
+			PlaygroundHeader = _srcJsComponentsPlaygroundHeader['default'];
+		}, function (_srcJsComponentsEditorTextarea) {
+			EditorTextarea = _srcJsComponentsEditorTextarea['default'];
 		}],
 		execute: function () {
 			'use strict';
@@ -29515,6 +30000,8 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 
 					_get(Object.getPrototypeOf(PlaygroundApp.prototype), 'constructor', this).call(this, props);
 					this.state = assign(gatherPlaygroundStoreState(props, this.state || {}), gatherPlaygroundSettingsStoreState(props, this.state || {}));
+
+					this._throttledProcessInputAction = throttle(PlaygroundActions.processInput, 500);
 				}
 
 				_inherits(PlaygroundApp, _React$Component);
@@ -29526,9 +30013,6 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 						PlaygroundSettingsStore.addChangeListener(this._onPlaygroundSettingsStoreChange.bind(this));
 
 						document.addEventListener('keyup', this._handleKeyUp.bind(this));
-
-						// Initialize the application
-						PlaygroundActions.init();
 					}
 				}, {
 					key: 'componentWillUnmount',
@@ -29548,52 +30032,101 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 
 						var parsingErrorMarkup;
 						if (this.state.postcssOutputResult.get('error')) {
-							parsingErrorMarkup = React.createElement('div', {
-								className: 'postcss-editor-pane-error',
-								// Live region attributes: http://www.smashingmagazine.com/2015/04/27/its-alive-apps-that-feed-back-accessibly/
-								'aria-live': 'polite',
-								role: 'status'
-							}, React.createElement('div', {
-								className: 'postcss-editor-pane-error-message'
-							}, this.state.postcssOutputResult.get('error').toString()));
+							parsingErrorMarkup = React.createElement(
+								'div',
+								{
+									className: 'postcss-editor-pane-error',
+									// Live region attributes: http://www.smashingmagazine.com/2015/04/27/its-alive-apps-that-feed-back-accessibly/
+									'aria-live': 'polite',
+									role: 'status'
+								},
+								React.createElement(
+									'div',
+									{
+										className: 'postcss-editor-pane-error-message'
+									},
+									this.state.postcssOutputResult.get('error').toString()
+								)
+							);
 						}
 
 						var tabWidthStyleValue = this.state.tabWidth === 'inherit' ? this.state.tabWidth : this.state.tabWidth + 'ch';
 
-						return React.createElement('div', { className: 'playground-app-wrapper' }, React.createElement(PlaygroundHeader, {
-							tabWidth: this.state.tabWidth,
-							shouldLiveReload: this.state.shouldLiveReload,
+						return React.createElement(
+							'div',
+							{ className: 'playground-app-wrapper' },
+							React.createElement(PlaygroundHeader, {
+								tabWidth: this.state.tabWidth,
+								shouldLiveReload: this.state.shouldLiveReload,
 
-							postcssCssVariablesPreserve: this.state.postcssCssVariablesPreserve }), React.createElement('div', { className: 'postcss-editor-area' }, React.createElement('div', { className: 'postcss-editor-pane' }, React.createElement('div', {
-							className: 'postcss-editor-pane-label'
-						}, 'Input ', React.createElement('kbd', null, 'i')), React.createElement(EditorTextarea, {
-							ref: 'postcssInputTextarea',
-							className: 'postcss-textarea',
-							onChange: this._onInputChanged.bind(this),
-							value: this.state.postcssInputText,
+								postcssCssVariablesPreserve: this.state.postcssCssVariablesPreserve
+							}),
+							React.createElement(
+								'div',
+								{ className: 'postcss-editor-area' },
+								React.createElement(
+									'div',
+									{ className: 'postcss-editor-pane' },
+									React.createElement(
+										'div',
+										{
+											className: 'postcss-editor-pane-label'
+										},
+										'Input ',
+										React.createElement(
+											'kbd',
+											null,
+											'i'
+										)
+									),
+									React.createElement(EditorTextarea, {
+										ref: 'postcssInputTextarea',
+										className: 'postcss-textarea',
+										onChange: this._onInputChanged.bind(this),
+										value: this.state.postcssInputText,
 
-							style: {
-								tabSize: tabWidthStyleValue
-							} })), React.createElement('div', { className: 'postcss-editor-pane' }, React.createElement('div', {
-							className: 'postcss-editor-pane-label'
-						}, 'Output ', React.createElement('kbd', null, 'o')), React.createElement(EditorTextarea, {
-							ref: 'postcssOutputTextarea',
-							className: classnames('postcss-textarea', { 'is-not-current': doesInputHaveError }),
-							value: output,
+										style: {
+											tabSize: tabWidthStyleValue
+										}
+									})
+								),
+								React.createElement(
+									'div',
+									{ className: 'postcss-editor-pane' },
+									React.createElement(
+										'div',
+										{
+											className: 'postcss-editor-pane-label'
+										},
+										'Output ',
+										React.createElement(
+											'kbd',
+											null,
+											'o'
+										)
+									),
+									React.createElement(EditorTextarea, {
+										ref: 'postcssOutputTextarea',
+										className: classnames('postcss-textarea', { 'is-not-current': doesInputHaveError }),
+										value: output,
 
-							style: {
-								tabSize: tabWidthStyleValue
-							} }), parsingErrorMarkup)));
+										style: {
+											tabSize: tabWidthStyleValue
+										}
+									}),
+									parsingErrorMarkup
+								)
+							)
+						);
 					}
 				}, {
 					key: '_onInputChanged',
 					value: function _onInputChanged(text) {
-						//console.log('input changed');
 						PlaygroundActions.updateInput(text);
 
 						// Defaults to true if undefined
 						if (this.state.shouldLiveReload) {
-							PlaygroundActions.processInput();
+							this._throttledProcessInputAction();
 						}
 					}
 				}, {
@@ -29652,22 +30185,25 @@ System.register('build/js/components/PlaygroundApp', ['npm:babel-runtime@5.2.6/h
 });
 
 // ...
-System.register('build/js/main', ['npm:react@0.13.2', 'build/js/components/PlaygroundApp'], function (_export) {
-  var React, PlaygroundApp;
+System.register('src/js/main', ['npm:react@0.13.2', 'src/js/components/PlaygroundApp', 'src/js/services/PlaygroundPersistentSettingsDAO'], function (_export) {
+  var React, PlaygroundApp, PlaygroundPersistentSettingsDAO;
   return {
     setters: [function (_npmReact0132) {
       React = _npmReact0132['default'];
-    }, function (_buildJsComponentsPlaygroundApp) {
-      PlaygroundApp = _buildJsComponentsPlaygroundApp['default'];
+    }, function (_srcJsComponentsPlaygroundApp) {
+      PlaygroundApp = _srcJsComponentsPlaygroundApp['default'];
+    }, function (_srcJsServicesPlaygroundPersistentSettingsDAO) {
+      PlaygroundPersistentSettingsDAO = _srcJsServicesPlaygroundPersistentSettingsDAO;
     }],
     execute: function () {
       'use strict';
+
+      PlaygroundPersistentSettingsDAO.init();
 
       React.render(React.createElement(PlaygroundApp, null), document.querySelector('.playground-app-entry-point'));
     }
   };
 });
-System.register('build/css/playground.css!github:systemjs/plugin-css@0.1.10', [], false, function() {});
+System.register('src/postcss/playground.css!css', [], false, function() {});
 (function(c){var d=document,a='appendChild',i='styleSheet',s=d.createElement('style');s.type='text/css';d.getElementsByTagName('head')[0][a](s);s[i]?s[i].cssText=c:s[a](d.createTextNode(c));})
-("body,html{height:100%;width:100%}blockquote,body,button,code,figure,form,h1,h2,h3,h4,html,input,label,ol,p,pre,ul{margin:0;padding:0}a,a:active{text-decoration:none}img,li{display:block}.postcss-editor-pane,.postcss-editor-pane-error{display:-webkit-box;-webkit-box-orient:vertical}a,input[type=checkbox]{cursor:pointer;cusror:hand}html{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}body{min-width:100%;min-height:100%;background-color:#ddd;font-family:Calibri,Candara,Segoe,'Segoe UI',Optima,Arial,sans-serif;font-size:16px;line-height:1.5;-moz-tab-size:4;tab-size:4}*,:after,:before{-webkit-box-sizing:inherit;-moz-box-sizing:inherit;box-sizing:inherit}button,input,kbd,textarea{font-family:inherit;font-size:inherit;line-height:inherit}ol,ul{list-style:none}h1,h2,h3,h4{font-size:inherit}a{margin:0;padding:0;background:0 0;color:inherit;-webkit-transition:all .3s ease;transition:all .3s ease}a:focus,a:hover,a:visited{color:inherit;text-decoration:none}img{max-width:100%;height:auto;border:0}@media (max-width:760px){body{-moz-tab-size:2;tab-size:2}}kbd{display:inline-block;padding:.1em .5em;background-color:#f7f7f7;border:1px solid #ccc;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 2px #fff inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 2px #fff inset;white-space:nowrap;text-shadow:0 1px 0 #fff;-webkit-border-radius:3px;border-radius:3px}input[type=range]{-webkit-appearance:none;width:140px;height:6px;background:0 0;-webkit-box-shadow:inset 0 0 8px rgba(0,0,0,.5);box-shadow:inset 0 0 8px rgba(0,0,0,.5);outline:0;-webkit-border-radius:3px;border-radius:3px;-webkit-transition:all .3s ease-out;transition:all .3s ease-out}input[type=range]:focus{-webkit-box-shadow:inset 0 0 8px rgba(0,0,0,.75);box-shadow:inset 0 0 8px rgba(0,0,0,.75)}input[type=range]:focus::-webkit-slider-thumb{background:#ddf;-webkit-box-shadow:0 0 4px rgba(0,0,0,.5);box-shadow:0 0 4px rgba(0,0,0,.5)}input[type=range]:disabled{-webkit-box-shadow:inset 0 0 8px rgba(100,0,0,.3);box-shadow:inset 0 0 8px rgba(100,0,0,.3)}input[type=range]:disabled::-webkit-slider-thumb{background:rgba(230,180,180,.9);border-color:rgba(110,110,110,.5)}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;background:#ddd;border:1px solid rgba(110,110,110,1);-webkit-box-shadow:0 0 4px rgba(0,0,0,.25);box-shadow:0 0 4px rgba(0,0,0,.25);-webkit-border-radius:50%;border-radius:50%;-webkit-transition:all .3s ease-out;transition:all .3s ease-out;cursor:pointer;cusror:hand}input[type=range]::-webkit-slider-thumb:focus::-webkit-slider-thumb{-webkit-box-shadow:0 0 10px rgba(150,150,150,.5);box-shadow:0 0 10px rgba(150,150,150,.5)}.hidden{display:none}.visually-hidden{position:absolute;overflow:hidden;clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;padding:0;border:0}.icon{width:24px;height:24px;fill:currentColor}.playground-app-entry-point,.playground-app-wrapper{width:100%;height:100%}.playground-app-wrapper{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column}.postcss-editor-area{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex}@media (max-width:500px){.postcss-editor-area{-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column}}.postcss-editor-pane{position:relative;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;border:0;border-right:2px solid rgba(0,0,0,.4)}.postcss-editor-pane:last-child{border-right:0}@media (max-width:500px){.postcss-editor-pane{min-height:350px}}.postcss-editor-pane-label{position:absolute;top:0;right:0;padding:4px 8px;background:rgba(255,255,255,.75);border-left:1px solid rgba(0,0,0,.4);border-bottom:1px solid rgba(0,0,0,.4);line-height:1;pointer-events:none;-webkit-transition:opacity .2s ease;transition:opacity .2s ease}.postcss-editor-pane:focus>.postcss-editor-pane-label,.postcss-editor-pane:hover>.postcss-editor-pane-label{opacity:.5}.postcss-textarea{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;padding:8px;border:0;background:#fff;font-family:monospace;resize:none;-webkit-transition:all .1s ease;transition:all .1s ease}.postcss-textarea:focus{outline:0;-webkit-box-shadow:inset 0 0 6px 0 rgba(0,0,50,.35);box-shadow:inset 0 0 6px 0 rgba(0,0,50,.35)}.postcss-textarea.is-not-current{background:rgba(240,220,220,.8);color:rgba(0,0,0,.6)}.postcss-editor-pane-error{overflow:hidden;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;min-height:2em;padding:2px;background:-webkit-linear-gradient(45deg,#eee 25%,red 25%,red 50%,#eee 50%,#eee 75%,red 75%);background:linear-gradient(45deg,#eee 25%,red 25%,red 50%,#eee 50%,#eee 75%,red 75%);background-size:40px 40px;-webkit-animation:postcss-editor-pane-error-flex-grow .15s ease forwards,error-stripe-loading 12s infinite linear;animation:postcss-editor-pane-error-flex-grow .15s ease forwards,error-stripe-loading 12s infinite linear}.postcss-editor-pane-error .postcss-editor-pane-error-message{padding:8px;background:#eee;font-family:monospace;white-space:pre}@-webkit-keyframes postcss-editor-pane-error-flex-grow{from{-webkit-box-flex:.00001;-webkit-flex:.00001;flex:.00001;min-height:0}to{-webkit-box-flex:0;-webkit-flex:0 1 auto;flex:0 1 auto}}@keyframes postcss-editor-pane-error-flex-grow{from{-webkit-box-flex:.00001;-webkit-flex:.00001;-ms-flex:.00001;flex:.00001;min-height:0}to{-webkit-box-flex:0;-webkit-flex:0 1 auto;-ms-flex:0 1 auto;flex:0 1 auto}}@-webkit-keyframes error-stripe-loading{0%{background-position:0 0}100%{background-position:100% 0}}@keyframes error-stripe-loading{0%{background-position:0 0}100%{background-position:100% 0}}.playground-header{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;height:40px;background:#5f8da7;border-bottom:1px solid #555;color:#ddd}.playground-header-heading{-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;margin-left:.5em;font-size:24px;font-weight:400}.playground-header-heading>a{color:#a3d6f4}.playground-header-heading>a:focus,.playground-header-heading>a:hover{outline:0;text-decoration:underline}.playground-header-heading-primary-title{font-weight:700}.playground-options-holder{position:relative;height:100%}.playground-options-menu-toggle{position:relative;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;height:100%;margin-right:.5em;padding:0 2em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-transition:all .2s ease;transition:all .2s ease;cursor:pointer;cusror:hand}.playground-options-menu-toggle-checkbox:checked~* .playground-options-menu-toggle,.playground-options-menu-toggle-checkbox:checked~.playground-options-menu-toggle,.playground-options-menu-toggle-checkbox:focus~* .playground-options-menu-toggle,.playground-options-menu-toggle-checkbox:focus~.playground-options-menu-toggle,.playground-options-menu-toggle:focus,.playground-options-menu-toggle:hover{color:#ccc;background:rgba(0,0,0,.25)}.playground-options-menu-toggle:active{-webkit-box-shadow:inset 0 0 12px 0 rgba(0,0,0,.25);box-shadow:inset 0 0 12px 0 rgba(0,0,0,.25)}.playground-options-menu-toggle-checkbox:checked~* .playground-options-menu-toggle>.playground-options-menu-toggle-icon,.playground-options-menu-toggle-checkbox:checked~.playground-options-menu-toggle>.playground-options-menu-toggle-icon{-webkit-animation:spin 5s infinite linear;animation:spin 5s infinite linear}.playground-options-menu-wrapper{z-index:2;overflow:hidden;position:absolute;top:100%;top:-webkit-calc(100% + 1px);top:calc(100% + 1px);left:0;pointer-events:none;padding:8px;padding-top:0;-webkit-transform:translateX(-8px);-ms-transform:translateX(-8px);transform:translateX(-8px)}.playground-options-menu-toggle-checkbox:checked~* .playground-options-menu-wrapper,.playground-options-menu-toggle-checkbox:checked~.playground-options-menu-wrapper{pointer-events:auto}.playground-options-menu{visibility:hidden;display:inline-block;background:#eef;border-left:1px solid #555;border-bottom:1px solid #555;border-right:1px solid #555;:0 3px 8px 0 rgba(0,0,0,.2),;:inset 0 4px 4px -4px rgba(0,0,0,.25);:0 3px 8px 0 rgba(0,0,0,.2),;:inset 0 4px 4px -4px rgba(0,0,0,.25);-webkit-border-bottom-left-radius:2px;border-bottom-left-radius:2px;-webkit-border-bottom-right-radius:2px;border-bottom-right-radius:2px;color:#000;-webkit-transform:translateY(-110%);-ms-transform:translateY(-110%);transform:translateY(-110%);-webkit-transition:all .2s ease;transition:all .2s ease}.playground-options-menu-toggle-checkbox:checked~* .playground-options-menu,.playground-options-menu-toggle-checkbox:checked~.playground-options-menu{visibility:visible;-webkit-transform:translateY(0);-ms-transform:translateY(0);transform:translateY(0)}.playground-live-reload-toggle-togglebox:after,.playground-live-reload-toggle-togglebox:before,.playground-live-reload-toggle-togglebox>.switch:before{-webkit-transform:translate(0,-50%);transform:translate(0,-50%);-ms-transform:translate(0,-50%)}.playground-options-menu-options-group{display:inline-block;padding:10px}.playground-options-menu-item,.playground-options-menu-item-secondary{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;white-space:nowrap}.playground-options-menu-item-secondary>*+*,.playground-options-menu-item>*+*{margin-left:.5em}.playground-options-menu-item-label,.playground-options-menu-item-label-secondary{-webkit-align-self:flex-start;-ms-flex-item-align:start;align-self:flex-start}.playground-options-menu-item-label-secondary{font-size:80%;font-weight:700}.playground-live-reload-toggle-togglebox{margin-right:1em;position:relative;display:inline-block;vertical-align:middle;width:19ch;height:2rem;padding:.5ch .8ch;background:#666;-webkit-border-radius:4px;border-radius:4px;border:2px solid #444;color:rgba(255,255,255,.4);cursor:pointer;cursor:hand;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none}.playground-live-reload-toggle-checkbox:focus~* .playground-live-reload-toggle-togglebox,.playground-live-reload-toggle-checkbox:focus~.playground-live-reload-toggle-togglebox,.playground-live-reload-toggle-togglebox:focus{-webkit-box-shadow:inset 0 0 4px 0 rgba(255,255,255,.5);box-shadow:inset 0 0 4px 0 rgba(255,255,255,.5)}.playground-live-reload-toggle-togglebox:before{content:'live reload';position:absolute;top:50%;left:10px}.playground-live-reload-toggle-togglebox:after{content:'off';position:absolute;top:50%;right:10px}.playground-live-reload-toggle-togglebox>.switch{z-index:2;position:relative;top:0;left:0;display:inline-block;width:13ch;height:100%;padding:0;margin:0;background:#c88;border:2px solid rgba(0,0,0,.2);-webkit-border-radius:6px;border-radius:6px;outline:0;cursor:pointer;cursor:hand;-webkit-appearance:none;-moz-appearance:none;appearance:none;-webkit-transition:all .1s linear;transition:all .1s linear}.playground-live-reload-toggle-togglebox>.switch:focus:before{background:rgba(255,80,100,.9)}.playground-live-reload-toggle-checkbox:checked~*>.playground-live-reload-toggle-togglebox>.switch,.playground-live-reload-toggle-checkbox:checked~.playground-live-reload-toggle-togglebox>.switch{width:5ch;left:-webkit-calc(100% - 5ch);left:calc(100% - 5ch);background:#0e0}.playground-live-reload-toggle-checkbox:checked:focus~* .playground-live-reload-toggle-togglebox>.switch:before,.playground-live-reload-toggle-checkbox:checked:focus~.playground-live-reload-toggle-togglebox>.switch:before{background:rgba(100,255,100,1)}.playground-live-reload-toggle-togglebox>.switch:before{content:'';position:absolute;top:50%;right:.8ch;width:1.5ch;height:.8ch;background:rgba(0,0,0,.25);border:1px solid rgba(0,0,0,.2);-webkit-border-radius:.3ch;border-radius:.3ch;-webkit-transition:all .1s linear;transition:all .1s linear}.playground-header-save-button{height:100%;padding:0 2.5em;border:0;border-left:1px solid #555;background:#a3d6f4;-webkit-box-shadow:0 0 12px 0 rgba(0,0,0,.5);box-shadow:0 0 12px 0 rgba(0,0,0,.5);-webkit-transition:all .2s ease;transition:all .2s ease;cursor:pointer;cusror:hand}.playground-header-save-button:focus,.playground-header-save-button:hover{outline:0;background:#abe0ff}.playground-header-save-button:active{background:#a3f4cd;-webkit-box-shadow:0 0 8px 0 #9acae5,inset 0 0 4px 0 rgba(0,0,0,.25);box-shadow:0 0 8px 0 #9acae5,inset 0 0 4px 0 rgba(0,0,0,.25)}@-webkit-keyframes spin{from{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(359.9deg);transform:rotate(359.9deg)}}@keyframes spin{from{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(359.9deg);transform:rotate(359.9deg)}}");
-//# sourceMappingURL=build.js.map
+("\r\n\r\nhtml,\r\nbody {\r\n\tpadding: 0;\r\n\tmargin: 0;\r\n}\r\nhtml {\r\n\twidth: 100%;\r\n\theight: 100%;\r\n\r\n\t-webkit-box-sizing: border-box;\r\n\r\n\t   -moz-box-sizing: border-box;\r\n\r\n\t        box-sizing: border-box;\r\n}\r\nbody {\r\n\twidth: 100%;\r\n\theight: 100%;\r\n\tmin-width: 100%;\r\n\tmin-height: 100%;\r\n}\r\n\r\n*,\r\n*:before,\r\n*:after {\r\n\t-webkit-box-sizing: inherit;\r\n\t   -moz-box-sizing: inherit;\r\n\t        box-sizing: inherit;\r\n}\r\n\r\nh1,\r\nh2,\r\nh3,\r\nh4,\r\np,\r\nblockquote,\r\nfigure,\r\nol,\r\nul,\r\npre,\r\ncode,\r\nform,\r\ninput,\r\nlabel,\r\nbutton {\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n}\r\n\r\ninput,\r\nbutton,\r\ntextarea,\r\nkbd {\r\n\tfont-family: inherit;\r\n\tfont-size: inherit;\r\n\tline-height: inherit;\r\n}\r\n\r\nul,\r\nol {\r\n\tlist-style: none;\r\n}\r\n\r\nli {\r\n\tdisplay: block;\r\n}\r\n\r\nh1,\r\nh2,\r\nh3,\r\nh4 {\r\n\tfont-size: inherit;\r\n}\r\n\r\na {\r\n\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tbackground: transparent;\r\n\t\r\n\tcolor: inherit;\r\n\ttext-decoration: none;\r\n\t\r\n\t-webkit-transition: all 0.3s ease;\r\n\t\r\n\t        transition: all 0.3s ease\r\n\r\n}\r\n\r\na {\r\n\tcursor: pointer;\r\n\tcusror: hand;\r\n}\r\n\r\na:visited {\r\n\tcolor: inherit;\r\n\ttext-decoration: none;\r\n}\r\n\r\na:hover, a:focus {\r\n\tcolor: inherit;\r\n\ttext-decoration: none;\r\n}\r\n\r\na:active {\r\n\ttext-decoration: none;\r\n}\r\n\r\nimg {\r\n\tdisplay: block;\r\n\tmax-width: 100%;\r\n\theight: auto;\r\n\r\n\tborder: 0;\r\n}\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nbody {\r\n\tbackground-color: #dddddd;\r\n\t\r\n\t/*font: 400 95%/1 \"Helvetica Neue\", Helvetica, Arial, sans-serif;*/\r\n\tfont-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;\r\n\tfont-size: 16px;\r\n\tline-height: 1.5;\r\n\r\n\t-moz-tab-size: 4;\r\n\r\n\t     tab-size: 4\r\n\r\n\r\n}\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n@media (max-width: 760px) {\r\n\tbody {\r\n\t\t-moz-tab-size: 2;\r\n\t\t     tab-size: 2;\r\n\t}\r\n}\r\n\r\n\r\n/* Based on the StackExchange kbd styles */\r\nkbd {\r\n\tdisplay: inline-block;\r\n\r\n\tpadding: 0.1em 0.5em;\r\n\r\n\tbackground-color: #f7f7f7;\r\n\tborder: 1px solid #cccccc;\r\n\r\n\t-webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #ffffff inset;\r\n\r\n\t        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #ffffff inset;\r\n\r\n\twhite-space: nowrap;\r\n\ttext-shadow: 0 1px 0 #ffffff;\r\n\r\n\t-webkit-border-radius: 3px;\r\n\r\n\t        border-radius: 3px;\r\n}\r\n\r\ninput[type='checkbox'] {\r\n\tcursor: pointer;\r\n\tcusror: hand;\r\n}\r\n\r\ninput[type='range'] {\r\n\t-webkit-appearance: none;\r\n\twidth: 140px;\r\n\theight: 6px;\r\n\t\r\n\tbackground: transparent;\r\n\t-webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.50);\r\n\t        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.50);\r\n\t\r\n\toutline: 0;\r\n\t\r\n\t-webkit-border-radius: 3px;\r\n\t\r\n\t        border-radius: 3px;\r\n\t\r\n\t-webkit-transition: all 0.3s ease-out;\r\n\t\r\n\t        transition: all 0.3s ease-out\r\n\r\n}\r\n\r\ninput[type='range']:focus {\r\n\t-webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.75);\r\n\t        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.75)\r\n}\r\n\r\ninput[type='range']:focus::-webkit-slider-thumb {\r\n\tbackground: #ddddff;\r\n\t-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.50);\r\n\t        box-shadow: 0 0 4px rgba(0, 0, 0, 0.50);\r\n}\r\n\r\ninput[type='range']:disabled {\r\n\t-webkit-box-shadow: inset 0 0 8px rgba(100, 0, 0, 0.30);\r\n\t        box-shadow: inset 0 0 8px rgba(100, 0, 0, 0.30)\r\n}\r\n\r\ninput[type='range']:disabled::-webkit-slider-thumb {\r\n\tbackground: rgba(230, 180, 180, 0.9);\r\n\tborder-color: rgba(110, 110, 110, 0.50);\r\n}\r\n\r\ninput[type='range']::-webkit-slider-thumb {\r\n\t-webkit-appearance: none;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tbackground: #dddddd;\r\n\tborder: 1px solid rgba(110, 110, 110, 1);\r\n\t-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);\r\n\t        box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);\r\n\t-webkit-border-radius: 50%;\r\n\t        border-radius: 50%;\r\n\t-webkit-transition: all 0.3s ease-out;\r\n\t        transition: all 0.3s ease-out\r\n}\r\n\r\ninput[type='range']::-webkit-slider-thumb {\r\n\tcursor: pointer;\r\n\tcusror: hand;\r\n}\r\n\r\ninput[type='range']::-webkit-slider-thumb:focus::-webkit-slider-thumb {\r\n\t-webkit-box-shadow: 0 0 10px rgba(150, 150, 150, 0.50);\r\n\t        box-shadow: 0 0 10px rgba(150, 150, 150, 0.50);\r\n}\r\n\r\n\r\n\r\n.hidden {\r\n\tdisplay: none;\r\n}\r\n\r\n.visually-hidden {\r\n\tposition: absolute;\r\n\r\n\toverflow: hidden;\r\n\tclip: rect(0 0 0 0);\r\n\twidth: 1px;\r\n\theight: 1px;\r\n\r\n\tmargin: -1px;\r\n\tpadding: 0;\r\n\r\n\tborder: 0;\r\n}\r\n\r\n\r\n.icon {\r\n\twidth: 24px;\r\n\theight: 24px;\r\n\r\n\tfill: currentColor;\r\n}\r\n\r\n\r\n\r\n.playground-app-entry-point, .playground-app-wrapper {\r\n\twidth: 100%;\r\n\theight: 100%;\r\n}\r\n\r\n.playground-app-wrapper {\r\n\tdisplay: -webkit-box;\r\n\tdisplay: -webkit-flex;\r\n\tdisplay: -ms-flexbox;\r\n\tdisplay: flex;\r\n\t-webkit-box-orient: vertical;\r\n\t-webkit-box-direction: normal;\r\n\t-webkit-flex-direction: column;\r\n\t    -ms-flex-direction: column;\r\n\t        flex-direction: column;\r\n}\r\n\r\n.postcss-editor-area {\r\n\t-webkit-box-flex: 1;\r\n\t-webkit-flex: 1;\r\n\t    -ms-flex: 1;\r\n\t        flex: 1;\r\n\r\n\tdisplay: -webkit-box;\r\n\r\n\tdisplay: -webkit-flex;\r\n\r\n\tdisplay: -ms-flexbox;\r\n\r\n\tdisplay: flex\r\n\r\n}\r\n\r\n@media (max-width: 500px) {\r\n\t.postcss-editor-area {\r\n\t\t-webkit-box-orient: vertical;\r\n\t\t-webkit-box-direction: normal;\r\n\t\t-webkit-flex-direction: column;\r\n\t\t    -ms-flex-direction: column;\r\n\t\t        flex-direction: column;\r\n\t}\r\n}\r\n\r\n.postcss-editor-pane {\r\n\tposition: relative;\r\n\r\n\t-webkit-box-flex: 1;\r\n\r\n\t-webkit-flex: 1;\r\n\r\n\t    -ms-flex: 1;\r\n\r\n\t        flex: 1;\r\n\r\n\tdisplay: -webkit-box;\r\n\r\n\tdisplay: -webkit-flex;\r\n\r\n\tdisplay: -ms-flexbox;\r\n\r\n\tdisplay: flex;\r\n\t-webkit-box-orient: vertical;\r\n\t-webkit-box-direction: normal;\r\n\t-webkit-flex-direction: column;\r\n\t    -ms-flex-direction: column;\r\n\t        flex-direction: column;\r\n\r\n\tborder: 0;\r\n\tborder-right: 2px solid rgba(0, 0, 0, 0.4)\r\n\r\n}\r\n\r\n.postcss-editor-pane:last-child {\r\n\tborder-right: 0;\r\n}\r\n\r\n@media (max-width: 500px) {\r\n\t.postcss-editor-pane {\r\n\t\tmin-height: 350px;\r\n\t}\r\n}\r\n\r\n.postcss-editor-pane-label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tright: 0;\r\n\r\n\tpadding: 4px 8px;\r\n\r\n\tbackground: rgba(255, 255, 255, 0.75);\r\n\tborder-left: 1px solid rgba(0, 0, 0, 0.4);\r\n\tborder-bottom: 1px solid rgba(0, 0, 0, 0.4);\r\n\r\n\tline-height: 1;\r\n\r\n\tpointer-events: none;\r\n\r\n\t-webkit-transition: opacity 0.2s ease;\r\n\r\n\t        transition: opacity 0.2s ease\r\n\r\n\t/* Also slightly dim it when you are in that panel */\r\n}\r\n\r\n.postcss-editor-pane:hover > .postcss-editor-pane-label, .postcss-editor-pane:focus > .postcss-editor-pane-label {\r\n\topacity: 0.5;\r\n}\r\n\r\n\r\n.postcss-textarea {\r\n\t-webkit-box-flex: 1;\r\n\t-webkit-flex: 1;\r\n\t    -ms-flex: 1;\r\n\t        flex: 1;\r\n\r\n\tpadding: 8px;\r\n\r\n\tborder: 0;\r\n\tbackground: #ffffff;\r\n\r\n\tfont-family: monospace;\r\n\r\n\tresize: none;\r\n\r\n\t-webkit-transition: all 0.1s ease;\r\n\r\n\t        transition: all 0.1s ease\r\n}\r\n\r\n\r\n.postcss-textarea:focus {\r\n\toutline: none;\r\n\t-webkit-box-shadow: inset 0 0 6px 0 rgba(0, 0, 50, 0.35);\r\n\t        box-shadow: inset 0 0 6px 0 rgba(0, 0, 50, 0.35);\r\n}\r\n\r\n\r\n.postcss-textarea.is-not-current {\r\n\tbackground: rgba(240, 220, 220, 0.8);\r\n\tcolor: rgba(0, 0, 0, 0.6);\r\n}\r\n\r\n.postcss-editor-pane-error {\r\n\r\n\toverflow: hidden;\r\n\r\n\tdisplay: -webkit-box;\r\n\r\n\tdisplay: -webkit-flex;\r\n\r\n\tdisplay: -ms-flexbox;\r\n\r\n\tdisplay: flex;\r\n\t-webkit-box-orient: vertical;\r\n\t-webkit-box-direction: normal;\r\n\t-webkit-flex-direction: column;\r\n\t    -ms-flex-direction: column;\r\n\t        flex-direction: column;\r\n\tmin-height: 2em;\r\n\r\n\tpadding: 2px;\r\n\r\n\t/* background-image: repeating-linear-gradient(45deg, var(--background-color), var(--background-color) 10px, var(--stripe-color) 10px, var(--stripe-color) 20px);\r\n\tbackground-size: 50%;*/\r\n\r\n\tbackground: -webkit-linear-gradient(45deg, #eeeeee 25%, #ff0000 25%, #ff0000 50%, #eeeeee 50%, #eeeeee 75%, #ff0000 75%);\r\n\r\n\tbackground: linear-gradient(45deg, #eeeeee 25%,\r\n\t\t#ff0000 25%, #ff0000 50%, \r\n\t\t#eeeeee 50%, #eeeeee 75%, \r\n\t\t#ff0000 75%);\r\n\tbackground-size: 40px 40px;\r\n\r\n\t-webkit-animation: postcss-editor-pane-error-flex-grow 0.15s ease forwards, error-stripe-loading 12s infinite linear;\r\n\r\n\t        animation: postcss-editor-pane-error-flex-grow 0.15s ease forwards, error-stripe-loading 12s infinite linear\r\n}\r\n\r\n.postcss-editor-pane-error .postcss-editor-pane-error-message {\r\n\tpadding: 8px;\r\n\tbackground: #eeeeee;\r\n\tfont-family: monospace;\r\n\twhite-space: pre;\r\n}\r\n\r\n@-webkit-keyframes postcss-editor-pane-error-flex-grow {\r\n\tfrom {\r\n\t\t-webkit-box-flex: 0.1;\r\n\t\t-webkit-flex: 0.1;\r\n\t\t        flex: 0.1;\r\n\t\t-webkit-box-flex: 0.00001;\r\n\t\t-webkit-flex: 0.00001;\r\n\t\t        flex: 0.00001;\r\n\t\tmin-height: 0;\r\n\t}\r\n\tto {\r\n\t\t/* flex: 0.25; */\r\n\t\t-webkit-box-flex: 0;\r\n\t\t-webkit-flex: 0 1 auto;\r\n\t\t        flex: 0 1 auto;\r\n\t}\r\n}\r\n\r\n@keyframes postcss-editor-pane-error-flex-grow {\r\n\tfrom {\r\n\t\t-webkit-box-flex: 0.1;\r\n\t\t-webkit-flex: 0.1;\r\n\t\t    -ms-flex: 0.1;\r\n\t\t        flex: 0.1;\r\n\t\t-webkit-box-flex: 0.00001;\r\n\t\t-webkit-flex: 0.00001;\r\n\t\t    -ms-flex: 0.00001;\r\n\t\t        flex: 0.00001;\r\n\t\tmin-height: 0;\r\n\t}\r\n\tto {\r\n\t\t/* flex: 0.25; */\r\n\t\t-webkit-box-flex: 0;\r\n\t\t-webkit-flex: 0 1 auto;\r\n\t\t    -ms-flex: 0 1 auto;\r\n\t\t        flex: 0 1 auto;\r\n\t}\r\n}\r\n\r\n@-webkit-keyframes error-stripe-loading {\r\n\t0% {\r\n\t\tbackground-position: 0 0;\r\n\t}\r\n\t100% {\r\n\t\tbackground-position: 100% 0;\r\n\t}\r\n}\r\n\r\n@keyframes error-stripe-loading {\r\n\t0% {\r\n\t\tbackground-position: 0 0;\r\n\t}\r\n\t100% {\r\n\t\tbackground-position: 100% 0;\r\n\t}\r\n}\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n.playground-header {\r\n\tdisplay: -webkit-box;\r\n\tdisplay: -webkit-flex;\r\n\tdisplay: -ms-flexbox;\r\n\tdisplay: flex;\r\n\t-webkit-box-align: center;\r\n\t-webkit-align-items: center;\r\n\t    -ms-flex-align: center;\r\n\t        align-items: center;\r\n\r\n\theight: 40px;\r\n\r\n\tbackground: #5f8da7;\r\n\tborder-bottom: 1px solid #555555;\r\n\r\n\tcolor: #dddddd;\r\n}\r\n\r\n.playground-header-heading {\r\n\t-webkit-box-flex: 1;\r\n\t-webkit-flex: 1;\r\n\t    -ms-flex: 1;\r\n\t        flex: 1;\r\n\r\n\tmargin-left: 0.5em;\r\n\r\n\tfont-size: 24px;\r\n\tfont-weight: normal\r\n\r\n}\r\n\r\n.playground-header-heading > a {\r\n\tcolor: #a3d6f4\r\n}\r\n\r\n.playground-header-heading > a:hover, .playground-header-heading > a:focus {\r\n\toutline: none;\r\n\ttext-decoration: underline;\r\n}\r\n\r\n.playground-header-heading-primary-title {\r\n\tfont-weight: bold;\r\n}\r\n\r\n\r\n.playground-options-holder {\r\n\tposition: relative;\r\n\r\n\theight: 100%;\r\n}\r\n\r\n.playground-options-menu-toggle {\r\n\r\n\tposition: relative;\r\n\r\n\tdisplay: -webkit-box;\r\n\r\n\tdisplay: -webkit-flex;\r\n\r\n\tdisplay: -ms-flexbox;\r\n\r\n\tdisplay: flex;\r\n\t-webkit-box-align: center;\r\n\t-webkit-align-items: center;\r\n\t    -ms-flex-align: center;\r\n\t        align-items: center;\r\n\r\n\theight: 100%;\r\n\r\n\tmargin-right: 0.5em;\r\n\tpadding: 0 2em;\r\n\r\n\t-webkit-user-select: none;\r\n\r\n\t   -moz-user-select: none;\r\n\r\n\t    -ms-user-select: none;\r\n\r\n\t        user-select: none;\r\n\r\n\t-webkit-transition: all 0.2s ease;\r\n\r\n\t        transition: all 0.2s ease\r\n}\r\n\r\n.playground-options-menu-toggle {\r\n\tcursor: pointer;\r\n\tcusror: hand;\r\n}\r\n\r\n.playground-options-menu-toggle:hover, .playground-options-menu-toggle:focus, .playground-options-menu-toggle-checkbox:focus ~ .playground-options-menu-toggle, .playground-options-menu-toggle-checkbox:focus ~ * .playground-options-menu-toggle, .playground-options-menu-toggle-checkbox:checked ~ .playground-options-menu-toggle, .playground-options-menu-toggle-checkbox:checked ~ * .playground-options-menu-toggle {\r\n\tcolor: #cccccc;\r\n\tbackground: rgba(0, 0, 0, 0.25);\r\n}\r\n\r\n.playground-options-menu-toggle:active {\r\n\t-webkit-box-shadow: inset 0 0 12px 0 rgba(0, 0, 0, 0.25);\r\n\t        box-shadow: inset 0 0 12px 0 rgba(0, 0, 0, 0.25);\r\n}\r\n\r\n.playground-options-menu-toggle-checkbox:checked ~ .playground-options-menu-toggle > .playground-options-menu-toggle-icon, .playground-options-menu-toggle-checkbox:checked ~ * .playground-options-menu-toggle > .playground-options-menu-toggle-icon {\r\n\t-webkit-animation: spin 5s infinite linear;\r\n\t        animation: spin 5s infinite linear;\r\n}\r\n\r\n\r\n.playground-options-menu-wrapper {\r\n\tz-index: 2;\r\n\toverflow: hidden;\r\n\r\n\tposition: absolute;\r\n\ttop: 100%;\r\n\ttop: -webkit-calc(100% + 1px);\r\n\ttop: calc(100% + 1px);\r\n\tleft: 0;\r\n\r\n\tpointer-events: none;\r\n\r\n\t/* so shadow can peak through */\r\n\tpadding: 8px;\r\n\tpadding-top: 0;\r\n\r\n\t/* Offset the padding on the left to make it still left align with the toggle button */\r\n\t-webkit-transform: translateX(-8px);\r\n\t    -ms-transform: translateX(-8px);\r\n\t        transform: translateX(-8px)\r\n\r\n}\r\n\r\n\r\n.playground-options-menu-toggle-checkbox:checked ~ .playground-options-menu-wrapper, .playground-options-menu-toggle-checkbox:checked ~ * .playground-options-menu-wrapper {\r\n\tpointer-events: auto;\r\n}\r\n\r\n.playground-options-menu {\r\n\tvisibility: hidden;\r\n\tdisplay: inline-block;\r\n\t\r\n\tbackground: #eeeeff;\r\n\tborder-left: 1px solid #555555;\r\n\tborder-bottom: 1px solid #555555;\r\n\tborder-right: 1px solid #555555;\r\n\t-webkit-box-shadow:\r\n\t\t/* outside shadow */\r\n\t\t0 3px 8px 0 rgba(0, 0, 0, 0.20), \r\n\t\t/* top inner shadow */\r\n\t\tinset 0 4px 4px -4px rgba(0, 0, 0, 0.25);\r\n\t        box-shadow:\r\n\t\t/* outside shadow */\r\n\t\t0 3px 8px 0 rgba(0, 0, 0, 0.20), \r\n\t\t/* top inner shadow */\r\n\t\tinset 0 4px 4px -4px rgba(0, 0, 0, 0.25);\r\n\r\n\t-webkit-border-bottom-left-radius: 2px;\r\n\r\n\t        border-bottom-left-radius: 2px;\r\n\t-webkit-border-bottom-right-radius: 2px;\r\n\t        border-bottom-right-radius: 2px;\r\n\r\n\tcolor: #000000;\r\n\r\n\t-webkit-transform: translateY(-110%);\r\n\r\n\t    -ms-transform: translateY(-110%);\r\n\r\n\t        transform: translateY(-110%);\r\n\r\n\t-webkit-transition: all 0.2s ease;\r\n\r\n\t        transition: all 0.2s ease\r\n}\r\n\r\n.playground-options-menu-toggle-checkbox:checked ~ .playground-options-menu, .playground-options-menu-toggle-checkbox:checked ~ * .playground-options-menu {\r\n\tvisibility: visible;\r\n\t-webkit-transform: translateY(0);\r\n\t    -ms-transform: translateY(0);\r\n\t        transform: translateY(0);\r\n}\r\n\r\n.playground-options-menu-options-group {\r\n\tdisplay: inline-block;\r\n\r\n\tpadding: 10px;\r\n\r\n}\r\n\r\n.playground-options-menu-item, .playground-options-menu-item-secondary {\r\n\tdisplay: -webkit-box;\r\n\tdisplay: -webkit-flex;\r\n\tdisplay: -ms-flexbox;\r\n\tdisplay: flex;\r\n\t-webkit-box-align: center;\r\n\t-webkit-align-items: center;\r\n\t    -ms-flex-align: center;\r\n\t        align-items: center;\r\n\r\n\twhite-space: nowrap\r\n}\r\n\r\n.playground-options-menu-item > * + *, .playground-options-menu-item-secondary > * + * {\r\n\tmargin-left: 0.5em;\r\n}\r\n\r\n.playground-options-menu-item-label, .playground-options-menu-item-label-secondary {\r\n\t-webkit-align-self: flex-start;\r\n\t    -ms-flex-item-align: start;\r\n\t        align-self: flex-start;\r\n}\r\n\r\n.playground-options-menu-item-label-secondary {\r\n\tfont-size: 80%;\r\n\tfont-weight: bold;\r\n}\r\n\r\n.playground-live-reload-toggle-togglebox {\r\n\r\n\tmargin-right: 1em;\r\n}\r\n\r\n.playground-live-reload-toggle-togglebox {\r\n\tposition: relative;\r\n\tdisplay: inline-block;\r\n\tvertical-align: middle;\r\n\twidth: 19ch;\r\n\theight: 2rem;\r\n\tpadding: 0.5ch 0.8ch;\r\n\tbackground: #666666;\r\n\t-webkit-border-radius: 4px;\r\n\t        border-radius: 4px;\r\n\tborder: 2px solid #444;\r\n\tcolor: rgba(255, 255, 255, 0.4);\r\n\tcursor: pointer;\r\n\tcursor: hand;\r\n\t-webkit-user-select: none;\r\n\t-moz-user-select: none;\r\n\t-ms-user-select: none;\r\n\t-o-user-select: none;\r\n\tuser-select: none;\r\n}\r\n\r\n.playground-live-reload-toggle-togglebox:focus, .playground-live-reload-toggle-checkbox:focus ~ .playground-live-reload-toggle-togglebox, .playground-live-reload-toggle-checkbox:focus ~ * .playground-live-reload-toggle-togglebox {\r\n\t-webkit-box-shadow: inset 0 0 4px 0 rgba(255, 255, 255, 0.5);\r\n\t        box-shadow: inset 0 0 4px 0 rgba(255, 255, 255, 0.5);\r\n}\r\n\r\n.playground-live-reload-toggle-togglebox:before {\r\n\tcontent: 'live reload';\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\tleft: 10px;\r\n\t-webkit-transform: translate(0, -50%);\r\n\t    -ms-transform: translate(0, -50%);\r\n\t        transform: translate(0, -50%);\r\n}\r\n\r\n.playground-live-reload-toggle-togglebox:after {\r\n\tcontent: 'off';\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\tright: 10px;\r\n\t-webkit-transform: translate(0, -50%);\r\n\t    -ms-transform: translate(0, -50%);\r\n\t        transform: translate(0, -50%);\r\n}\r\n\r\n.playground-live-reload-toggle-togglebox > .switch {\r\n\tz-index: 2;\r\n\tposition: relative;\r\n\ttop: 0;\r\n\tleft: 0;\r\n\tdisplay: inline-block;\r\n\t\r\n\t/* use the opposite width to cover up the other label */\r\n\twidth: 13ch;\r\n\theight: 100%;\r\n\tpadding: 0;\r\n\tmargin: 0;\r\n\tbackground: #cc8888;\r\n\tborder: 2px solid rgba(0, 0, 0, 0.2);\r\n\t-webkit-border-radius: 6px;\r\n\t        border-radius: 6px;\r\n\toutline: none;\r\n\tcursor: pointer;\r\n\tcursor: hand;\r\n\t\r\n\t/* Autoprexier doesn't have this yet :/ - https://github.com/postcss/autoprefixer/issues/43 */\r\n\t-webkit-appearance: none;\r\n\t-moz-appearance: none;\r\n\tappearance: none;\r\n\t-webkit-transition: all 0.1s linear;\r\n\t        transition: all 0.1s linear;\r\n}\r\n\r\n.playground-live-reload-toggle-togglebox > .switch:focus:before {\r\n\tbackground: rgba(255, 80, 100, 0.9);\r\n}\r\n\r\n.playground-live-reload-toggle-checkbox:checked ~ .playground-live-reload-toggle-togglebox > .switch, .playground-live-reload-toggle-checkbox:checked ~ * > .playground-live-reload-toggle-togglebox > .switch {\r\n\t\r\n\t/* use the opposite width to cover up the other label */\r\n\twidth: 5ch;\r\n\tleft: -webkit-calc(100% - 5ch);\r\n\tleft: calc(100% - 5ch);\r\n\tbackground: #00ee00;\r\n}\r\n\r\n.playground-live-reload-toggle-checkbox:checked:focus ~ .playground-live-reload-toggle-togglebox > .switch:before, .playground-live-reload-toggle-checkbox:checked:focus ~ * .playground-live-reload-toggle-togglebox > .switch:before {\r\n\tbackground: rgba(100, 255, 100, 1);\r\n}\r\n\r\n.playground-live-reload-toggle-togglebox > .switch:before {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\tright: 0.8ch;\r\n\twidth: 1.5ch;\r\n\theight: 0.8ch;\r\n\tbackground: rgba(0, 0, 0, 0.25);\r\n\tborder: 1px solid rgba(0, 0, 0, 0.2);\r\n\t-webkit-border-radius: 0.3ch;\r\n\t        border-radius: 0.3ch;\r\n\t-webkit-transform: translate(0, -50%);\r\n\t    -ms-transform: translate(0, -50%);\r\n\t        transform: translate(0, -50%);\r\n\t-webkit-transition: all 0.1s linear;\r\n\t        transition: all 0.1s linear;\r\n}\r\n\r\n\r\n.playground-header-save-button {\r\n\r\n\theight: 100%;\r\n\r\n\tpadding: 0 2.5em;\r\n\r\n\tborder: 0;\r\n\tborder-left: 1px solid #555;\r\n\tbackground: #a3d6f4;\r\n\t-webkit-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.5);\r\n\t        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.5);\r\n\r\n\t-webkit-transition: all 0.2s ease;\r\n\r\n\t        transition: all 0.2s ease\r\n\r\n}\r\n\r\n\r\n.playground-header-save-button {\r\n\tcursor: pointer;\r\n\tcusror: hand;\r\n}\r\n\r\n\r\n.playground-header-save-button:hover, .playground-header-save-button:focus {\r\n\toutline: none;\r\n\tbackground: #abe0ff;\r\n}\r\n\r\n\r\n.playground-header-save-button:active {\r\n\tbackground: #a3f4cd;\r\n\t-webkit-box-shadow: 0 0 8px 0 #9acae5, inset 0 0 4px 0 rgba(0, 0, 0, 0.25);\r\n\t        box-shadow: 0 0 8px 0 #9acae5, inset 0 0 4px 0 rgba(0, 0, 0, 0.25);\r\n}\r\n\r\n\r\n\r\n\r\n\r\n@-webkit-keyframes spin {\r\n\tfrom {\r\n\t\t-webkit-transform: rotate(0deg);\r\n\t\t        transform: rotate(0deg);\r\n\t}\r\n\tto {\r\n\t\t-webkit-transform: rotate(359.9deg);\r\n\t\t        transform: rotate(359.9deg);\r\n\t}\r\n}\r\n\r\n\r\n\r\n\r\n\r\n@keyframes spin {\r\n\tfrom {\r\n\t\t-webkit-transform: rotate(0deg);\r\n\t\t        transform: rotate(0deg);\r\n\t}\r\n\tto {\r\n\t\t-webkit-transform: rotate(359.9deg);\r\n\t\t        transform: rotate(359.9deg);\r\n\t}\r\n}");

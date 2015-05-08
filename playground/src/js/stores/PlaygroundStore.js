@@ -2,10 +2,10 @@ import AppDispatcher from '../dispatcher/AppDispatcher';
 import PlaygroundConstants from '../constants/PlaygroundConstants';
 import PlaygroundSettingsStore from '../stores/PlaygroundSettingsStore';
 
+import assign from 'object-assign';
 import Immutable from 'immutable';
 import events from 'events';
 var EventEmitter = events.EventEmitter;
-import assign from 'object-assign';
 
 
 import postcss from 'postcss';
@@ -61,19 +61,6 @@ var PlaygroundStore = assign({}, EventEmitter.prototype, {
 	dispatchToken: AppDispatcher.register(function(action) {
 
 		switch(action.actionType) {
-			case PlaygroundConstants.PLAYGROUND_INIT:
-				AppDispatcher.waitFor([
-					PlaygroundSettingsStore.dispatchToken
-				]);
-
-				// Once the PlaygroundSettingsStore has all of the data loaded
-				// from persistent storage, update the processor
-				PlaygroundSettingsStore.getIsSettingsInitializedPromise()
-					.then(function() {
-						updateProcessor(PlaygroundSettingsStore.getPluginSettings());
-					});
-				break;
-
 			case PlaygroundConstants.PLAYGROUND_KEYBOARD_ACTION:
 				keyboardActionStream.emit('KEYBOARD_ACTION');
 				break;

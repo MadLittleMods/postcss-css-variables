@@ -1,8 +1,6 @@
 import keyMirror from 'keymirror';
 
 export default keyMirror({
-	PLAYGROUND_INIT: null,
-
 	PLAYGROUND_INPUT_UPDATED: null,
 	PLAYGROUND_START_PROCESS_INPUT: null,
 
