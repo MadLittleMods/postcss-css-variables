@@ -1,6 +1,6 @@
 import flux from 'flux';
-var Dispatcher = flux.Dispatcher;
+let Dispatcher = flux.Dispatcher;
 
-var AppDispatcher = new Dispatcher();
+let AppDispatcher = new Dispatcher();
 
 export default AppDispatcher;

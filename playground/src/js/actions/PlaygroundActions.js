@@ -1,7 +1,7 @@
 import AppDispatcher from '../dispatcher/AppDispatcher';
 import PlaygroundConstants from '../constants/PlaygroundConstants';
 
-var TodoActions = {
+let TodoActions = {
 	keyboardActionFired: function() {
 		AppDispatcher.dispatch({
 			actionType: PlaygroundConstants.PLAYGROUND_KEYBOARD_ACTION

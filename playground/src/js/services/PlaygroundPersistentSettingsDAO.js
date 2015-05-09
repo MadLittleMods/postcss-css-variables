@@ -17,14 +17,15 @@ let playgroundSettingsStoreTypeKeys = {
 	pluginSettings: 'PlaygroundSettingsStore.PluginSettings'
 };
 
-let actionMap = {};
-actionMap[playgroundSettingsStoreTypeKeys.playgroundSettings] = {
-	shouldLiveReload: PlaygroundActions.setShouldLiveReloadOption,
-	tabWidth: PlaygroundActions.setTabWidthOption
-};
-actionMap[playgroundSettingsStoreTypeKeys.pluginSettings] = {
-	'postcss-css-variables': {
-		preserve: PlaygroundActions.setPostcssCssVariablesPreserveOption
+let actionMap = {
+	[playgroundSettingsStoreTypeKeys.playgroundSettings]: {
+		shouldLiveReload: PlaygroundActions.setShouldLiveReloadOption,
+		tabWidth: PlaygroundActions.setTabWidthOption
+	},
+	[playgroundSettingsStoreTypeKeys.pluginSettings]: {
+		'postcss-css-variables': {
+			preserve: PlaygroundActions.setPostcssCssVariablesPreserveOption
+		}
 	}
 };
 
@@ -37,7 +38,7 @@ function iterateOverObjectRecursively(obj, cb, _originalObj, _path) {
 	// http://facebook.github.io/immutable-js/docs/#/Map/isMap
 	let isMap = Immutable.Map.isMap(obj);
 
-	var iteratingFunc = isMap ? Immutable.Map.prototype.mapKeys.bind(obj) : Array.prototype.forEach.bind(Object.keys(obj));
+	let iteratingFunc = isMap ? Immutable.Map.prototype.mapKeys.bind(obj) : Array.prototype.forEach.bind(Object.keys(obj));
 	iteratingFunc((key) => {
 		let value = isMap ? obj.get(key) : obj[key];
 		let currentPath = _path.concat(key);

@@ -4,31 +4,19 @@ import PlaygroundConstants from '../constants/PlaygroundConstants';
 import assign from 'object-assign';
 import Immutable from 'immutable';
 import events from 'events';
-var EventEmitter = events.EventEmitter;
-import localforage from 'localforage';
-
-import Promise from 'bluebird';
-import deferredPromise from '../lib/deferred-promise';
+let EventEmitter = events.EventEmitter;
 
 
-localforage.config({
-	name		: 'postcss-css-variables-playground',
-	version		: 1.0,
-	storeName	: 'postcss-css-variables-playground-settings'
-});
-
-var CHANGE_EVENT = 'CHANGE_EVENT';
+let CHANGE_EVENT = 'CHANGE_EVENT';
 
 
-var isSettingsInitializedDeferredPromise = deferredPromise();
 
-
-var playgroundSettings = Immutable.Map({
+let playgroundSettings = Immutable.Map({
 	shouldLiveReload: true,
 	tabWidth: 'inherit'
 });
 
-var pluginSettings = Immutable.Map({
+let pluginSettings = Immutable.Map({
 	'postcss-css-variables': Immutable.Map({
 		preserve: false
 	})
@@ -36,12 +24,7 @@ var pluginSettings = Immutable.Map({
 
 
 
-var PlaygroundSettingsStore = assign({}, EventEmitter.prototype, {
-
-
-	getIsSettingsInitializedPromise: function() {
-		return isSettingsInitializedDeferredPromise.promise;
-	},
+let PlaygroundSettingsStore = assign({}, EventEmitter.prototype, {
 
 
 	getPluginSettings: function() {

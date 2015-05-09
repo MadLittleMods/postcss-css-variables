@@ -15,7 +15,7 @@ import EditorTextarea from './EditorTextarea';
 
 
 function gatherPlaygroundStoreState(props, state) {
-	var newOutputResult = PlaygroundStore.getOutputResult();
+	let newOutputResult = PlaygroundStore.getOutputResult();
 
 	return  {
 		postcssInputText: PlaygroundStore.getInputText(),
@@ -61,10 +61,10 @@ export default class PlaygroundApp extends React.Component {
 	render() {
 		//console.log('render', this.state);
 
-		var doesInputHaveError = !!this.state.postcssOutputResult.get('error');
-		var output = doesInputHaveError ? this.state.prevSuccessfulPostcssOutputResult.get('output') : this.state.postcssOutputResult.get('output');
+		let doesInputHaveError = !!this.state.postcssOutputResult.get('error');
+		let output = doesInputHaveError ? this.state.prevSuccessfulPostcssOutputResult.get('output') : this.state.postcssOutputResult.get('output');
 
-		var parsingErrorMarkup;
+		let parsingErrorMarkup;
 		if(this.state.postcssOutputResult.get('error')) {
 			parsingErrorMarkup = (
 				<div
@@ -83,7 +83,7 @@ export default class PlaygroundApp extends React.Component {
 		}
 
 
-		var tabWidthStyleValue = this.state.tabWidth === 'inherit' ? this.state.tabWidth : this.state.tabWidth + 'ch';
+		let tabWidthStyleValue = this.state.tabWidth === 'inherit' ? this.state.tabWidth : this.state.tabWidth + 'ch';
 
 		return (
 			<div className="playground-app-wrapper">

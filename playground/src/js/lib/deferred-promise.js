@@ -1,8 +1,8 @@
 import Promise from 'bluebird';
 
 function deferredPromise() {
-	var resolve, reject;
-	var promise = new Promise(function() {
+	let resolve, reject;
+	let promise = new Promise(function() {
 		resolve = arguments[0];
 		reject = arguments[1];
 	});

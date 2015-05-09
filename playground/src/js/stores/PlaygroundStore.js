@@ -5,31 +5,31 @@ import PlaygroundSettingsStore from '../stores/PlaygroundSettingsStore';
 import assign from 'object-assign';
 import Immutable from 'immutable';
 import events from 'events';
-var EventEmitter = events.EventEmitter;
+let EventEmitter = events.EventEmitter;
 
 
 import postcss from 'postcss';
 import cssvariables from 'postcss-css-variables';
 
 
-var CHANGE_EVENT = 'CHANGE_EVENT';
+let CHANGE_EVENT = 'CHANGE_EVENT';
 
 
 
-var keyboardActionStream = assign({}, EventEmitter.prototype);
+let keyboardActionStream = assign({}, EventEmitter.prototype);
 
-var playgroundProcessor = postcss()
+let playgroundProcessor = postcss()
 	.use(cssvariables());
 
-var postcssUnprocessedInputText = '';
-var processingResult = Immutable.Map({
+let postcssUnprocessedInputText = '';
+let processingResult = Immutable.Map({
 	input: '',
 	output: '',
 	error: null
 });
 
 
-var PlaygroundStore = assign({}, EventEmitter.prototype, {
+let PlaygroundStore = assign({}, EventEmitter.prototype, {
 
 	getKeyboardActionStream: function() {
 		return keyboardActionStream;

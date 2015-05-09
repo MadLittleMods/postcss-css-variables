@@ -36,23 +36,14 @@
     }
   },
   "devDependencies": {
-    "autoprefixer-core": "^5.1.11",
     "bluebird": "^2.9.25",
     "del": "^1.1.1",
     "fs-extra": "^0.18.3",
     "glob": "^5.0.5",
     "glob2base": "0.0.12",
     "gulp": "^3.8.11",
-    "gulp-cached": "^1.0.4",
-    "gulp-postcss": "^5.1.4",
-    "gulp-react": "^3.0.1",
     "gulp-util": "^3.0.4",
     "jspm": "^0.15.6",
-    "postcss": "^4.1.8",
-    "postcss-css-variables": "^0.2.2",
-    "postcss-inline-comment": "^1.0.3",
-    "postcss-mixins": "^0.1.1",
-    "postcss-nested": "^0.2.2",
     "run-sequence": "^1.1.0"
   },
   "scripts": {

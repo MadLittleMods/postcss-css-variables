@@ -15,17 +15,6 @@ var del = require('del');
 
 var jspm = require('jspm');
 
-var cache = require('gulp-cached');
-var react = require('gulp-react');
-
-var corepostcss = require('postcss');
-var postcss = require('gulp-postcss');
-var inlineComments = require('postcss-inline-comment');
-var mixins = require('postcss-mixins');
-var nestedcss = require('postcss-nested');
-var cssvariables = require('postcss-css-variables');
-var autoprefixer = require('autoprefixer-core');
-
 
 
 var config = {
@@ -50,42 +39,6 @@ gulp.task('build-clean', function(done) {
 });
 
 
-// JSX
-gulp.task('jsx', function() {
-	return gulp.src(config.paths.js)
-		// Process only changed files
-		.pipe(cache('jsx')) 
-		.pipe(react({
-			es6module: true
-		}))
-		.pipe(gulp.dest('build/js'));
-});
-
-
-
-// Compile our PostCSS
-gulp.task('postcss', function () {
-	var processors = [
-		inlineComments(),
-		mixins({
-			mixins: {
-				'cursor-hand': require('./custom-postcss-mixins/cursor-hand'),
-				'toggle-checkbox-enclosed': require('./custom-postcss-mixins/toggle-checkbox-enclosed')
-			}
-		}),
-		nestedcss,
-		cssvariables(),
-		autoprefixer({browsers: ['last 10 versions']})
-	];
-	return gulp.src(config.paths.postcss)
-		// Process only changed files
-		.pipe(cache('jsx')) 
-		.pipe(postcss(processors))
-		.on('error', function (e) {
-			console.log(e);
-		})
-		.pipe(gulp.dest('./build/css'));
-});
 
 
 // Read caniuse-db json and generate a map to paste into the System.js map config.js
@@ -177,16 +130,11 @@ gulp.task('build-finish', function(done) {
 });
 
 
-gulp.task('watch', function(){
-	//gulp.watch(config.paths.js, ['jsx']);
-	//gulp.watch(config.paths.postcss, ['postcss']);
-});
-
 // Default Task
 gulp.task('default', function(callback) {
 	runSequence(
 		['build-clean'],
-		['build-finish', 'watch'],
+		['build-finish'],
 		callback
 	);
 });
