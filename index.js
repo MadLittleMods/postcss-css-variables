@@ -1,5 +1,5 @@
 // PostCSS CSS Variables (postcss-css-variables)
-// v0.3.1
+// v0.3.3
 //
 // https://github.com/MadLittleMods/postcss-css-variables
 
@@ -8,6 +8,7 @@
 
 var postcss = require('postcss');
 var extend = require('extend');
+var escapeStringRegexp = require('escape-string-regexp');
 
 // A custom property is any property whose name starts with two dashes (U+002D HYPHEN-MINUS)
 // `--foo`
@@ -117,6 +118,23 @@ function findNodeAncestorWithSelector(selector, node) {
 }
 
 
+function generateDescendantPieces(selector) {
+	return selector.split(RE_SELECTOR_DESCENDANT_SPLIT)
+		.filter(function(piece) {
+			if(piece.length > 0) {
+				return true;
+			}
+			return false;
+		})
+		.map(function(piece) {
+			// Trim whitespace which would be a normal descendant selector
+			// and trim off the CSS4 descendant `>>` into a normal descendant selector
+			return piece.trim().replace(/\s*?>>\s*?/, function(match) {
+				return '';
+			});
+		});
+}
+
 function generateScopeList(node, /*optional*/includeSelf) {
 	includeSelf = includeSelf || false;
 
@@ -160,20 +178,7 @@ function generateScopeList(node, /*optional*/includeSelf) {
 				var descendantPieces = [scopeObject.value];
 				// Split at any descendant combinators to properly make the scope list
 				if(scopeObject.type === 'selector') {
-					descendantPieces = scopeObject.value.split(RE_SELECTOR_DESCENDANT_SPLIT)
-						.filter(function(piece) {
-							if(piece.length > 0) {
-								return true;
-							}
-							return false;
-						})
-						.map(function(piece) {
-							// Trim whitespace which would be a normal descendant selector
-							// and trim off the CSS4 descendant `>>` into a normal descendant selector
-							return piece.trim().replace(/\s*?>>\s*?/, function(match) {
-								return '';
-							});
-						});
+					descendantPieces = generateDescendantPieces(scopeObject.value);
 				}
 
 				// Add to the front of the array
@@ -183,6 +188,8 @@ function generateScopeList(node, /*optional*/includeSelf) {
 			});
 		});
 
+		// Start from a new list so we can
+		// Flatten out the branches a bit and and merge back into the list
 		selectorScopeList = [];
 		branches.forEach(function(branch) {
 			selectorScopeList = selectorScopeList.concat(branch);
@@ -194,18 +201,27 @@ function generateScopeList(node, /*optional*/includeSelf) {
 	return selectorScopeList;
 }
 
-function isUnderScope(node, scopeNode) {
-
-	var nodeScopeList = generateScopeList(node, true);
-	var scopeNodeList = generateScopeList(scopeNode, true);
-
-	var matchesScope = scopeNodeList.some(function(scopeNodeScopePieces) {
+function isUnderScope(nodeScopeList, scopeNodeScopeList) {
+	var matchesScope = scopeNodeScopeList.some(function(scopeNodeScopePieces) {
 		return nodeScopeList.some(function(nodeScopePieces) {
 			var currentPieceOffset;
 			var wasEveryPieceFound = scopeNodeScopePieces.every(function(scopePiece) {
 				var pieceOffset = currentPieceOffset || 0;
 				// Start from the previous index and make sure we can find it
-				var foundIndex = nodeScopePieces.indexOf(scopePiece, pieceOffset);
+				//var foundIndex = nodeScopePieces.indexOf(scopePiece, pieceOffset);
+
+				var foundIndex = -1;
+				var piecesWeCanMatch = nodeScopePieces.slice(pieceOffset);
+				piecesWeCanMatch.some(function(nodeScopePiece, index) {
+					// Find the scope piece at the end of the node selector
+					// Last-occurence
+					if(new RegExp(escapeStringRegexp(scopePiece) + '$').test(nodeScopePiece)) {
+						foundIndex = pieceOffset + index;
+						// Escape
+						return true;
+					}
+					return false;
+				});
 				// If it is a star or root, then it is valid no matter what
 				// We might consider adding `html` and `body` to this list as well
 				if(foundIndex < 0 && (scopePiece === '*' || scopePiece === ':root')) {
@@ -223,6 +239,14 @@ function isUnderScope(node, scopeNode) {
 	});
 
 	return matchesScope;
+}
+
+function isNodeUnderNode(node, scopeNode) {
+
+	var nodeScopeList = generateScopeList(node, true);
+	var scopeNodeScopeList = generateScopeList(scopeNode, true);
+
+	return isUnderScope(nodeScopeList, scopeNodeScopeList);
 }
 
 
@@ -254,13 +278,11 @@ var resolveValue = function(decl, map) {
 			// And if the current matching variable is already important, a new one to replace it has to be important
 			var isRoot = varDeclMapItem.parent.type === 'root' || varDeclMapItem.parent.selectors[0] === ':root';
 
-			var mimicDeclParent = decl.parent;
-
-			//console.log(generateScopeList(mimicDeclParent, true));
+			//console.log(generateScopeList(decl.parent, true));
 			//console.log(generateScopeList(varDeclMapItem.parent, true));
-			//console.log('isunderscope', isUnderScope(mimicDeclParent, varDeclMapItem.parent), varDeclMapItem.value);
+			//console.log('isNodeUnderNode', isNodeUnderNode(decl.parent, varDeclMapItem.parent), varDeclMapItem.value);
 			if(
-				isUnderScope(mimicDeclParent, varDeclMapItem.parent) &&
+				isNodeUnderNode(decl.parent, varDeclMapItem.parent) &&
 				// And if the currently matched declaration is `!important`, it will take another `!important` to override it
 				(!(matchingVarDeclMapItem || {}).isImportant || varDeclMapItem.isImportant)
 			) {
@@ -469,12 +491,12 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 							//console.log('amd og', generateScopeList(decl.parent, true));
 							//console.log('amd', generateScopeList(mimicDecl.parent, true));
 							//console.log(generateScopeList(varDeclMapItem.parent, true));
-							//console.log('amd isunderscope', isUnderScope(mimicDecl.parent, varDeclMapItem.parent), varDeclMapItem.value);
+							//console.log('amd isNodeUnderNode', isNodeUnderNode(mimicDecl.parent, varDeclMapItem.parent), varDeclMapItem.value);
 							
 
 							// If it is under the proper scope
 							// Then lets create the new rules
-							if(isUnderScope(mimicDecl.parent, varDeclMapItem.parent)) {
+							if(isNodeUnderNode(mimicDecl.parent, varDeclMapItem.parent)) {
 								// Create the clean atRule for which we place the declaration under
 								var atRuleNode = varDeclMapItem.parent.parent.clone().removeAll();
 
@@ -553,7 +575,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		});
 
 
-		//console.log(map);
+		//console.log('map', map);
 
 		/* * /
 		}

@@ -1,4 +1,10 @@
 
+# v0.3.3 - 2015-5-11
+
+ - Add support for last piece of combinator chain in selector resolution matching. 
+ 	 - `.foo + .bar` can match variables declared in `.bar`
+
+
 # v0.3.1 - 2015-5-5
 
  - Large overhaul of code to make it more robust on proper scope resolution.

@@ -134,6 +134,7 @@ System.config({
       "npm:postcss@4.1.9/package.json!github:systemjs/plugin-json@0.1.0",
       "npm:postcss@4.1.9/lib/vendor",
       "npm:extend@2.0.1/index",
+      "npm:escape-string-regexp@1.0.3/index",
       "src/js/actions/PlaygroundActions",
       "npm:babel-runtime@5.2.6/helpers/define-property",
       "npm:core-js@0.9.6/library/fn/object/keys",
@@ -195,6 +196,7 @@ System.config({
       "github:jspm/nodelibs-fs@0.1.2",
       "npm:es6-promise@2.1.1",
       "npm:extend@2.0.1",
+      "npm:escape-string-regexp@1.0.3",
       "npm:babel-runtime@5.2.6/core-js/object/keys",
       "npm:asap@1.0.0",
       "npm:localforage@1.2.2/src/drivers/localstorage",
@@ -229,7 +231,7 @@ System.config({
       "github:jspm/nodelibs-path@0.1.0/index",
       "npm:postcss@4.1.9/lib/container",
       "npm:postcss@4.1.9/lib/previous-map",
-      "npm:postcss-css-variables@0.3.1/index",
+      "npm:postcss-css-variables@0.3.3/index",
       "npm:promise@5.0.0/core",
       "src/js/components/EditorTextarea",
       "github:jspm/nodelibs-process@0.1.1",
@@ -249,7 +251,7 @@ System.config({
       "github:jspm/nodelibs-path@0.1.0",
       "npm:postcss@4.1.9/lib/at-rule",
       "npm:postcss@4.1.9/lib/input",
-      "npm:postcss-css-variables@0.3.1",
+      "npm:postcss-css-variables@0.3.3",
       "npm:promise@5.0.0/index",
       "npm:react@0.13.2/lib/invariant",
       "npm:react@0.13.2/lib/ReactFragment",
@@ -317,7 +319,7 @@ System.config({
     "object-assign": "npm:object-assign@2.0.0",
     "plugin-postcss": "github:geelen/plugin-postcss@0.1.0",
     "postcss": "npm:postcss@4.1.9",
-    "postcss-css-variables": "npm:postcss-css-variables@0.3.1",
+    "postcss-css-variables": "npm:postcss-css-variables@0.3.3",
     "postcss-inline-comment": "npm:postcss-inline-comment@1.0.3",
     "postcss-mixins": "npm:postcss-mixins@0.1.1",
     "postcss-nested": "npm:postcss-nested@0.2.2",
@@ -1456,6 +1458,17 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.1"
     },
     "npm:postcss-css-variables@0.3.1": {
+      "extend": "npm:extend@2.0.1",
+      "postcss": "npm:postcss@4.1.9",
+      "process": "github:jspm/nodelibs-process@0.1.1"
+    },
+    "npm:postcss-css-variables@0.3.2": {
+      "extend": "npm:extend@2.0.1",
+      "postcss": "npm:postcss@4.1.9",
+      "process": "github:jspm/nodelibs-process@0.1.1"
+    },
+    "npm:postcss-css-variables@0.3.3": {
+      "escape-string-regexp": "npm:escape-string-regexp@1.0.3",
       "extend": "npm:extend@2.0.1",
       "postcss": "npm:postcss@4.1.9",
       "process": "github:jspm/nodelibs-process@0.1.1"

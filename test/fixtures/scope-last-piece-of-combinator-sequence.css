@@ -1,0 +1,7 @@
+.bar {
+	--bar: 150px;
+}
+
+.foo + .bar {
+	width: var(--bar);
+}

@@ -49,6 +49,10 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/local-variable-non-root.css', './test/fixtures/local-variable-non-root.expected.css');
 	});
 
+	it('should work with any combinator selector if the last piece is the variable we have in the map', function() {
+		return testPlugin('./test/fixtures/scope-last-piece-of-combinator-sequence.css', './test/fixtures/scope-last-piece-of-combinator-sequence.expected.css');
+	});
+
 	it('should work with descendant selector type "nesting"', function() {
 		return testPlugin('./test/fixtures/descendant-selector.css', './test/fixtures/descendant-selector.expected.css');
 	});
