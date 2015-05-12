@@ -85,6 +85,10 @@ describe('postcss-css-variables', function() {
 			return testPlugin('./test/fixtures/cascade-on-nested-rules.css', './test/fixtures/cascade-on-nested-rules.expected.css');
 		});
 
+		it('should cascade with calc-expression to nested rules', function() {
+			return testPlugin('./test/fixtures/cascade-with-calc-expression-on-nested-rules.css', './test/fixtures/cascade-with-calc-expression-on-nested-rules.expected.css');
+		});
+
 		it('should cascade to nested rules in the proper scope. See issue #2', function() {
 			return testPlugin('./test/fixtures/cascade-on-nested-rules-in-proper-scope.css', './test/fixtures/cascade-on-nested-rules-in-proper-scope.expected.css');
 		});
@@ -95,19 +99,19 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/important-variable-declaration.css', './test/fixtures/important-variable-declaration.expected.css');
 	});
 
-	it('should work variables that reference other variables', function() {
+	it('should work with variables that reference other variables', function() {
 		return testPlugin('./test/fixtures/variable-reference-other-variable.css', './test/fixtures/variable-reference-other-variable.expected.css');
 	});
 
-	it('should work variable with calc-expression that reference other variables', function() {
+	it('should work with variable with calc-expression that reference other variables', function() {
 		return testPlugin('./test/fixtures/variable-with-calc-expression-reference-other-variable.css', './test/fixtures/variable-with-calc-expression-reference-other-variable.expected.css');
 	});
 
-	it('should work variables that reference other variables with at-rule changing the value', function() {
+	it('should work with variables that reference other variables with at-rule changing the value', function() {
 		return testPlugin('./test/fixtures/variable-reference-other-variable-media-query1.css', './test/fixtures/variable-reference-other-variable-media-query1.expected.css');
 	});
 
-	it('should work local variables that reference other variables with at-rule changing the value', function() {
+	it('should work with local variables that reference other variables with at-rule changing the value', function() {
 		return testPlugin('./test/fixtures/variable-reference-other-variable-media-query2.css', './test/fixtures/variable-reference-other-variable-media-query2.expected.css');
 	});
 

@@ -1,4 +1,9 @@
 
+# v0.3.5 - 2015-5-12
+
+ - Big refactor of code to reduce cyclomatic complexity. Still needs work though.
+ - Fix variable referencing another variable resolution when being changed by at-rule in non-root rule
+
 # v0.3.4 - 2015-5-12
 
  - Fix variable referencing another variable resolution when being changed by at-rule

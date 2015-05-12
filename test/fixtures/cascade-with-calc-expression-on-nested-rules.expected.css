@@ -1,0 +1,21 @@
+.box-foo {
+	width: calc(50px + 150px);
+
+	.box-bar {
+		width: calc(50px + 150px);
+	}
+
+	@media (max-width: 800px) {
+
+		.box-bar {
+			width: calc(50px + 300px);
+		}
+	}
+}
+
+@media (max-width: 800px) {
+
+	.box-foo {
+		width: calc(50px + 300px);
+	}
+}
