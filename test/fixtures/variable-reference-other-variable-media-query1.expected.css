@@ -1,0 +1,10 @@
+.foo {
+	width: 150px;
+}
+
+@media (max-width: 960px) {
+
+	.foo {
+		width: 300px;
+	}
+}

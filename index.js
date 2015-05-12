@@ -1,5 +1,5 @@
 // PostCSS CSS Variables (postcss-css-variables)
-// v0.3.3
+// v0.3.4
 //
 // https://github.com/MadLittleMods/postcss-css-variables
 
@@ -241,12 +241,56 @@ function isUnderScope(nodeScopeList, scopeNodeScopeList) {
 	return matchesScope;
 }
 
-function isNodeUnderNode(node, scopeNode) {
+function isNodeUnderNodeScope(node, scopeNode) {
 
 	var nodeScopeList = generateScopeList(node, true);
 	var scopeNodeScopeList = generateScopeList(scopeNode, true);
 
 	return isUnderScope(nodeScopeList, scopeNodeScopeList);
+}
+
+
+
+// Variables that referenced in some way by the target variable
+function gatherVariableDependencies(variablesUsed, map, _dependencyVariablesList) {
+	_dependencyVariablesList = _dependencyVariablesList || [];
+	var hasCircularOrSelfReference = false;
+
+	if(variablesUsed) {
+		_dependencyVariablesList = variablesUsed.reduce(function(dependencyVariablesList, variableUsedName) {
+			var isVariableInMap = !!map[variableUsedName];
+			var doesThisVarHaveCircularOrSelfReference = !isVariableInMap ? false : dependencyVariablesList.some(function(dep) {
+				return map[variableUsedName].some(function(mapItem) {
+					// If already in the list, we got a circular reference
+					if(dep === mapItem) {
+						return true;
+					}
+
+					return false;
+				});
+			});
+			// Update the overall state of dependency health
+			hasCircularOrSelfReference = hasCircularOrSelfReference || doesThisVarHaveCircularOrSelfReference;
+
+
+			if(isVariableInMap && !hasCircularOrSelfReference) {
+				dependencyVariablesList = dependencyVariablesList.concat(map[variableUsedName]);
+
+				(map[variableUsedName] || []).forEach(function(mapItem) {
+					var result = gatherVariableDependencies(mapItem.variablesUsed, map, dependencyVariablesList);
+					dependencyVariablesList = result.deps;
+					hasCircularOrSelfReference = hasCircularOrSelfReference || result.hasCircularOrSelfReference;
+				});
+			}
+
+			return dependencyVariablesList;
+		}, _dependencyVariablesList);
+	}
+
+	return {
+		deps: _dependencyVariablesList,
+		hasCircularOrSelfReference: hasCircularOrSelfReference
+	};
 }
 
 
@@ -256,33 +300,42 @@ function isNodeUnderNode(node, scopeNode) {
 // Note: We do not modify the declaration
 // Note: Resolving a declaration value without any `var(...)` does not harm the final value. 
 //		This means, feel free to run everything through this function
-var resolveValue = function(decl, map) {
+var resolveValue = function(decl, map, _debugIsInternal) {
 
 	var resultantValue = decl.value;
-	var variablesUsedInValue = [];
 	var warnings = [];
+
+	var variablesUsedInValueMap = {};
+	// Use `replace` as a loop to go over all occurrences with the `g` flag
+	resultantValue.replace(new RegExp(RE_VAR_FUNC.source, 'g'), function(match, variableName, fallback) {
+		variablesUsedInValueMap[variableName] = true;
+	});
+	var variablesUsedInValue = Object.keys(variablesUsedInValueMap);
+
+
 
 	// Resolve any var(...) substitutons
 	var isResultantValueUndefined = false;
 	resultantValue = resultantValue.replace(new RegExp(RE_VAR_FUNC.source, 'g'), function(match, variableName, fallback) {
-		variablesUsedInValue.push(variableName);
-
 		// Loop through the list of declarations for that value and find the one that best matches
 		// By best match, we mean, the variable actually applies. Criteria:
-		//		- At the root
-		//		- Defined in the same rule
+		//		- is under the same scope
 		//		- The latest defined `!important` if any
 		var matchingVarDeclMapItem;
+		//gatherVariableDependencies(variablesUsedInValue, map)
 		(map[variableName] || []).forEach(function(varDeclMapItem) {
 			// Make sure the variable declaration came from the right spot
 			// And if the current matching variable is already important, a new one to replace it has to be important
 			var isRoot = varDeclMapItem.parent.type === 'root' || varDeclMapItem.parent.selectors[0] === ':root';
 
-			//console.log(generateScopeList(decl.parent, true));
-			//console.log(generateScopeList(varDeclMapItem.parent, true));
-			//console.log('isNodeUnderNode', isNodeUnderNode(decl.parent, varDeclMapItem.parent), varDeclMapItem.value);
+
+			//var debugIndent = _debugIsInternal ? '\t' : '';
+			//console.log(debugIndent, generateScopeList(decl.parent, true));
+			//console.log(debugIndent, generateScopeList(varDeclMapItem.parent, true));
+			//console.log(debugIndent, 'isNodeUnderNodeScope', isNodeUnderNodeScope(decl.parent, varDeclMapItem.parent), varDeclMapItem.value);
+			
 			if(
-				isNodeUnderNode(decl.parent, varDeclMapItem.parent) &&
+				isNodeUnderNodeScope(decl.parent, varDeclMapItem.parent) &&
 				// And if the currently matched declaration is `!important`, it will take another `!important` to override it
 				(!(matchingVarDeclMapItem || {}).isImportant || varDeclMapItem.isImportant)
 			) {
@@ -290,8 +343,16 @@ var resolveValue = function(decl, map) {
 			}
 		});
 
-		
-		var replaceValue = (matchingVarDeclMapItem || {}).value || fallback;
+		// Default to the calculatedInPlaceValue which might be a previous fallback, then try this declarations fallback
+		var replaceValue = (matchingVarDeclMapItem || {}).calculatedInPlaceValue || fallback;
+		// Otherwise if the dependency health is good(no circular or self references), dive deeper and resolve
+		if(matchingVarDeclMapItem !== undefined && !gatherVariableDependencies(variablesUsedInValue, map).hasCircularOrSelfReference) {
+			var asdf = false;
+			var mimicDecl = cloneSpliceParentOntoNodeWhen(matchingVarDeclMapItem.decl, decl.parent.parent);
+
+			replaceValue = resolveValue(mimicDecl, map, true).value;
+		}
+
 		isResultantValueUndefined = replaceValue === undefined;
 		if(isResultantValueUndefined) {
 			warnings.push(["variable '" + variableName + "' is undefined and used without a fallback", { node: decl }]);
@@ -312,7 +373,6 @@ var resolveValue = function(decl, map) {
 
 
 
-
 module.exports = postcss.plugin('postcss-css-variables', function(options) {
 	var defaults = {
 		// Allows you to preserve custom properties & var() usage in output.
@@ -330,7 +390,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 	return function (css, result) {
 		// Transform CSS AST here
 
-		/* * /
+		/* */
 		try {
 		/* */
 
@@ -349,34 +409,36 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			map, 
 			Object.keys(opts.variables)
 				.reduce(function(prevVariableMap, variableName) {
-					var variableValue = opts.variables[variableName];
+					var variableEntry = opts.variables[variableName];
 					// Automatically prefix any variable with `--` (CSS custom property syntax) if it doesn't have it already
 					variableName = variableName.slice(0, 2) === '--' ? variableName : '--' + variableName;
+					var variableValue = typeof variableEntry=== 'object' ? variableEntry.value : variableEntry;
+					var isImportant = typeof variableEntry === 'object' ? variableEntry.isImportant : false;
 
+					// Add a node to the AST
+					var variableRootRule = postcss.rule({ selector: ':root' });
+					css.root().prepend(variableRootRule);
+					var varDecl = postcss.decl({ prop: variableName, value: variableValue });
+					varDecl.moveTo(variableRootRule);
 
-					// If they didn't pass a object, lets construct one
-					if(typeof variableValue !== 'object') {
-						variableValue = {
-							value: variableValue,
-							isImportant: false,
-							parent: css.root(),
-							isUnderAtRule: false
-						};
-					}
-
-					prevVariableMap[variableName] = (prevVariableMap[variableName] || []).concat(extend({
-						value: undefined,
-						isImportant: false,
-						parent: css.root(),
+					// Add the entry to the map
+					prevVariableMap[variableName] = (prevVariableMap[variableName] || []).concat({
+						decl: varDecl,
+						prop: variableName,
+						calculatedInPlaceValue: variableValue,
+						isImportant: isImportant,
+						variablesUsed: [],
+						parent: variableRootRule,
 						isUnderAtRule: false
-					}, variableValue));
+					});
 
 					return prevVariableMap;
 				}, {})
 		);
 
+
 		// Chainable helper function to log any messages (warnings)
-		function logResolveValueResult(valueResult) {
+		var logResolveValueResult = function(valueResult) {
 			// Log any warnings that might of popped up
 			var warningList = [].concat(valueResult.warnings);
 			warningList.forEach(function(warningArgs) {
@@ -386,7 +448,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 			// Keep the chain going
 			return valueResult;
-		}
+		};
 
 
 		// Collect all of the variables defined
@@ -410,25 +472,28 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				var prop = decl.prop;
 				// If declaration is a variable
 				if(RE_VAR_PROP.test(prop)) {
-					var resolvedValue = logResolveValueResult(resolveValue(decl, map)).value;
-					if(resolvedValue !== undefined) {
-						// Split out each selector piece into its own declaration for easier logic down the road
-						decl.parent.selectors.forEach(function(selector, index) {
-							// Create a detached clone
-							var splitOutRule = rule.clone();
-							rule.selector = selector;
-							splitOutRule.parent = rule.parent;
+					var valueResults = logResolveValueResult(resolveValue(decl, map));
+					// Split out each selector piece into its own declaration for easier logic down the road
+					decl.parent.selectors.forEach(function(selector, index) {
+						// Create a detached clone
+						var splitOutRule = rule.clone().removeAll();
+						rule.selector = selector;
+						splitOutRule.parent = rule.parent;
 
-							map[prop] = (map[prop] || []).concat({
-								prop: prop,
-								value: resolvedValue,
-								isImportant: decl.important || false,
-								// variables inside root or at-rules (eg. @media, @support)
-								parent: splitOutRule,
-								isUnderAtRule: splitOutRule.parent.type === 'atrule'
-							});
+						var declClone = decl.clone();
+						declClone.moveTo(splitOutRule);
+
+						map[prop] = (map[prop] || []).concat({
+							decl: declClone,
+							prop: prop,
+							calculatedInPlaceValue: valueResults.value,
+							isImportant: decl.important || false,
+							variablesUsed: valueResults.variablesUsed,
+							// variables inside root or at-rules (eg. @media, @support)
+							parent: splitOutRule,
+							isUnderAtRule: splitOutRule.parent.type === 'atrule'
 						});
-					}
+					});
 
 					// Remove the variable declaration because they are pretty much useless after we resolve them
 					if(!opts.preserve) {
@@ -436,7 +501,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 					}
 					// Or we can also just show the computed value used for that variable
 					else if(opts.preserve === 'computed') {
-						decl.value = resolvedValue;
+						decl.value = valueResults.value;
 					}
 					// Otherwise just keep them as var declarations
 				}
@@ -464,26 +529,36 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 				// Grab the balue for this declarations
 				var valueResults = logResolveValueResult(resolveValue(decl, map));
+				//console.log('decl v', decl.value);
+
+
+				
+
+				//console.log('deps', gatherVariableDependencies(valueResults.variablesUsed, map));
+
 
 				// Resolve the cascade
 				// Now find any at-rule declarations that need to be added below each rule
 				// Loop through the variables used
 				valueResults.variablesUsed.forEach(function(variableUsedName) {
+
+
 					// Find anything in the map that corresponds to that variable
-					(map[variableUsedName] || []).forEach(function(varDeclMapItem) {
+					gatherVariableDependencies(valueResults.variablesUsed, map).deps.forEach(function(varDeclMapItem) {
 						if(varDeclMapItem.isUnderAtRule) {
 							
 
 							// Get the inner-most selector of the at-rule scope variable declaration we are matching
-							// Because the inner-most selector will be the same for each branch, we can look in any of them
+							//		Because the inner-most selector will be the same for each branch, we can look at the first one [0] or any of the others
 							var varDeclScopeList = generateScopeList(varDeclMapItem.parent, true);
-							var selector = varDeclScopeList[0].slice(-1)[0];
+							var innerMostAtRuleSelector = varDeclScopeList[0].slice(-1)[0];
 
-							var currentNodeToSpliceParentOnto = findNodeAncestorWithSelector(selector, decl.parent);
+							var nodeToSpliceParentOnto = findNodeAncestorWithSelector(innerMostAtRuleSelector, decl.parent);
 
+							// Splice on where the selector starts matching the selector inside at-rule 
 							var varDeclAtRule = varDeclMapItem.parent.parent;
 							var mimicDecl = cloneSpliceParentOntoNodeWhen(decl, varDeclAtRule, function(ancestor) {
-								return ancestor === currentNodeToSpliceParentOnto;
+								return ancestor === nodeToSpliceParentOnto;
 							});
 
 
@@ -491,12 +566,12 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 							//console.log('amd og', generateScopeList(decl.parent, true));
 							//console.log('amd', generateScopeList(mimicDecl.parent, true));
 							//console.log(generateScopeList(varDeclMapItem.parent, true));
-							//console.log('amd isNodeUnderNode', isNodeUnderNode(mimicDecl.parent, varDeclMapItem.parent), varDeclMapItem.value);
+							//console.log('amd isNodeUnderNodeScope', isNodeUnderNodeScope(mimicDecl.parent, varDeclMapItem.parent), varDeclMapItem.value);
 							
 
 							// If it is under the proper scope
 							// Then lets create the new rules
-							if(isNodeUnderNode(mimicDecl.parent, varDeclMapItem.parent)) {
+							if(isNodeUnderNodeScope(mimicDecl.parent, varDeclMapItem.parent)) {
 								// Create the clean atRule for which we place the declaration under
 								var atRuleNode = varDeclMapItem.parent.parent.clone().removeAll();
 
@@ -577,9 +652,10 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 		//console.log('map', map);
 
-		/* * /
+		/* */
 		}
 		catch(e) {
+			//console.log('e', e.message);
 			console.log('e', e.message, e.stack);
 		}
 		/* */

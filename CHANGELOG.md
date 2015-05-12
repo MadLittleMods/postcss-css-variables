@@ -1,9 +1,12 @@
 
+# v0.3.4 - 2015-5-12
+
+ - Fix variable referencing another variable resolution when being changed by at-rule
+
 # v0.3.3 - 2015-5-11
 
  - Add support for last piece of combinator chain in selector resolution matching. 
  	 - `.foo + .bar` can match variables declared in `.bar`
-
 
 # v0.3.1 - 2015-5-5
 
@@ -13,7 +16,6 @@
 # v0.2.3 - 2015-5-4
 
  - Add support for CSS4 descendant selector `>>` syntax
-
 
 # v0.2.2 - 2015-5-1
 

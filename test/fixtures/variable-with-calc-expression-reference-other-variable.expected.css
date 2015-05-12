@@ -1,0 +1,10 @@
+.foo {
+	width: calc(50px + 150px);
+}
+
+@media (max-width: 960px) {
+
+	.foo {
+		width: calc(50px + 300px);
+	}
+}

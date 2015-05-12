@@ -1,0 +1,14 @@
+:root {
+	--foo-width: 150px;
+	--bar-width: calc(50px + var(--foo-width));
+}
+
+@media (max-width: 960px) {
+	:root {
+		--foo-width: 300px;
+	}
+}
+
+.foo {
+	width: var(--bar-width);
+}

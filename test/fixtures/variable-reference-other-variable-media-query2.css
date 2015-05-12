@@ -1,0 +1,14 @@
+:root {
+	--foo-width: 150px;
+}
+
+@media (max-width: 960px) {
+	:root {
+		--foo-width: 300px;
+	}
+}
+
+.foo {
+	--_self-width: var(--foo-width);
+	width: var(--_self-width);
+}
