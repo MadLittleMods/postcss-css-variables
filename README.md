@@ -2,11 +2,11 @@
 
 # PostCSS CSS Variables
 
-[PostCSS](https://github.com/postcss/postcss) plugin to transform [`CSS Custom Properties(CSS variables)`](http://dev.w3.org/csswg/css-variables/) syntax into a static representation. This plugin provides a future-proof way of using **most** of CSS variables featuers.
+[PostCSS](https://github.com/postcss/postcss) plugin to transform [`CSS Custom Properties(CSS variables)`](http://dev.w3.org/csswg/css-variables/) syntax into a static representation. This plugin provides a future-proof way of using **most** of CSS variables features.
 
 CSS variables or CSS Custom Properties limited subset polyfill/shim.
 
-We strive for the most complete transformation but we/no plugin can achieve true complete parity according to the [speficification](http://dev.w3.org/csswg/css-variables/) because of the DOM cascade unknowns.
+We strive for the most complete transformation but we/no plugin can achieve true complete parity according to the [specification](http://dev.w3.org/csswg/css-variables/) because of the DOM cascade unknowns.
 
 ## Latest Version: v0.3.5
 ### [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
@@ -193,7 +193,7 @@ will be processed to:
 
 `post-css-variables` plays really nice with [`postcss-nested`](https://github.com/postcss/postcss-nested) in order to get a larger subset of CSS variables features. *See [Nested rules, Usage section](#nested-rules)*
 
-If you are using [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties) previosly, we have a compatible feature set and more so you can switch over without having to refactor any of your code. You can just start writing the new awesome stuff.
+If you are using [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties) previously, we have a compatible feature set and more so you can switch over without having to refactor any of your code. You can just start writing the new awesome stuff.
 
 
 # Why?
@@ -207,7 +207,7 @@ There is another similar plugin available, [`postcss-custom-properties`](https:/
 The main features that we`post-css-variables` add/provide are:
 
  - No limitation on what scope CSS variables can be declared or used (`:root` or wherever)
- 	 - Proper value substition based on explicit DOM/structure traversal
+ 	 - Proper value substitution based on explicit DOM/structure traversal
  - At-rule support `@media`, `@support`, etc
  - Nested rules which can be fully deduced with [`postcss-nested`](https://github.com/postcss/postcss-nested).
 
