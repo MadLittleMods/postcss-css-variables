@@ -4,17 +4,17 @@
 	--color-three: var(--color-two);
 }
 
-.before {
+.foo {
 	prop: before;
 	color: var(--color-one);
 }
 
-.after {
+.bar {
 	color: var(--color-two);
 	prop: after;
 }
 
-.before-and-after {
+.foo-and-bar {
 	prop: before;
 	color: var(--missing, #ff0000);
 	otherprop: after;

@@ -1,6 +1,6 @@
 {
   "name": "postcss-css-variables",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "PostCSS plugin to transform CSS Custom Properties(CSS variables) syntax into a static representation",
   "keywords": [
     "postcss",
@@ -22,6 +22,7 @@
     "bluebird": "^2.9.25",
     "chai": "^2.3.0",
     "chai-as-promised": "^5.0.0",
+    "clean-css": "^3.2.10",
     "gulp": "^3.8.11",
     "gulp-eslint": "^0.11.1",
     "gulp-mocha": "^2.0.1",

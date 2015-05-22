@@ -4,17 +4,17 @@
 	--color-three: #00ff00;
 }
 
-.before {
+.foo {
 	prop: before;
 	color: #0000ff;
 }
 
-.after {
+.bar {
 	color: #00ff00;
 	prop: after;
 }
 
-.before-and-after {
+.foo-and-bar {
 	prop: before;
 	color: #ff0000;
 	otherprop: after;

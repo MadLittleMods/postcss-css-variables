@@ -1,0 +1,10 @@
+.some-foo-namespace {
+	--color: red;
+}
+.some-bar-namespace {
+	--color: blue;
+}
+
+.some-foo-namespace .foo, .some-bar-namespace .bar {
+	color: var(--color);
+}

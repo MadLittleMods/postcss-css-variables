@@ -7,6 +7,7 @@ var postcss = require('postcss');
 
 var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require("fs"));
+var CleanCSS = require('clean-css');
 
 var cssvariables = require('../');
 
@@ -24,7 +25,16 @@ function testPlugin(filePath, expectedFilePath, options) {
 				.then(function(buffer) {
 					var contents = String(buffer);
 
-					expect(actual.trim()).to.equal(contents.trim());
+					var cleanCss = new CleanCSS({
+						advanced: false,
+						aggressiveMerging: false,
+						mediaMerging: false,
+						restructuring: false,
+						shorthandCompacting: false,
+						keepBreaks: true
+					});
+
+					expect(cleanCss.minify(actual).styles).to.equal(cleanCss.minify(contents).styles);
 				});
 		});
 }
@@ -61,8 +71,12 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/css4-descendant-selector.css', './test/fixtures/css4-descendant-selector.expected.css');
 	});
 
-	it('should work with comma separated selector', function() {
-		return testPlugin('./test/fixtures/comma-separated-selector-use-proper-scope.css', './test/fixtures/comma-separated-selector-use-proper-scope.expected.css');
+	it('should work with variables defined in comma separated selector', function() {
+		return testPlugin('./test/fixtures/comma-separated-variable-declaration.css', './test/fixtures/comma-separated-variable-declaration.expected.css');
+	});
+
+	it('should work use the correct variable in comma separated selector', function() {
+		return testPlugin('./test/fixtures/comma-separated-variable-usage.css', './test/fixtures/comma-separated-variable-usage.expected.css');
 	});
 
 	it('should work with star selector', function() {

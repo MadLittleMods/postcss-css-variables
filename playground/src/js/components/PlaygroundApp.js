@@ -88,6 +88,7 @@ export default class PlaygroundApp extends React.Component {
 		return (
 			<div className="playground-app-wrapper">
 
+
 				<PlaygroundHeader
 					tabWidth={this.state.tabWidth}
 					shouldLiveReload={this.state.shouldLiveReload}

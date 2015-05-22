@@ -82,15 +82,24 @@ gulp.task('generate-caniuse-db-json-systemjs-paths', function(done) {
 
 
 
-
 // Clears the distribution folder before running the other tasks
-gulp.task('build-finish', function(done) {
+gulp.task('build-setup', function(done) {
 
 	if(config.isDev) {
-		jspm.unbundle()
-			.then(function() {
-				done();
-			});
+		var pkg = require('./package.json');
+		var deps = pkg.jspm.dependencies;
+		var modules = Object.keys(deps);
+		var moduleList = modules.join(' + ');
+		console.log('\n' + moduleList + '\n');
+
+		Promise.join(
+			jspm.unbundle(),
+			// Thanks to @OrKoN for this incremental jspm bundle
+			jspm.bundle(moduleList, 'jspm-bundle.js', { mangle: false, sourceMaps: true, inject: true })
+		)
+		.then(function() {
+			done();
+		});
 
 	}
 	else {
@@ -100,6 +109,7 @@ gulp.task('build-finish', function(done) {
 			'build.js',
 			{
 				mangle: false,
+				sourceMaps: true,
 				inject: true
 			}
 		)
@@ -134,7 +144,7 @@ gulp.task('build-finish', function(done) {
 gulp.task('default', function(callback) {
 	runSequence(
 		['build-clean'],
-		['build-finish'],
+		['build-setup'],
 		callback
 	);
 });

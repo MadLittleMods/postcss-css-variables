@@ -1,0 +1,18 @@
+:root {
+	--fizz: 10px;
+}
+
+.some-foo-namespace, .some-bar-namespace {
+	--fizz: 13px;
+	--buzz: 23px;
+}
+
+.some-bar-namespace * ~ * {
+	margin-top: var(--fizz);
+}
+
+@media (max-width: 640px) {
+	.some-foo-namespace {
+		--fizz: 17px;
+	}
+}

@@ -1,4 +1,8 @@
 
+# v0.3.6 - 2015-5-21
+
+ - Fix #6. Variable usage in comma separated selector to use proper scope
+
 # v0.3.5 - 2015-5-12
 
  - Big refactor of code to reduce cyclomatic complexity. Still needs work though.
