@@ -7826,7 +7826,7 @@ System.register("npm:events@1.0.2/events", [], true, function(require, exports, 
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/warn-once", [], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/warn-once", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -8880,7 +8880,7 @@ System.register("npm:source-map@0.4.2/lib/source-map/source-node", ["npm:amdefin
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/warning", [], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/warning", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -8918,7 +8918,7 @@ System.register("npm:postcss@4.1.10/lib/warning", [], true, function(require, ex
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/tokenize", [], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/tokenize", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -9104,7 +9104,7 @@ System.register("npm:postcss@4.1.10/lib/tokenize", [], true, function(require, e
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/comment", ["npm:postcss@4.1.10/lib/node"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/comment", ["npm:postcss@4.1.11/lib/node"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -9131,7 +9131,7 @@ System.register("npm:postcss@4.1.10/lib/comment", ["npm:postcss@4.1.10/lib/node"
     if (superClass)
       subClass.__proto__ = superClass;
   }
-  var _node = require("npm:postcss@4.1.10/lib/node");
+  var _node = require("npm:postcss@4.1.11/lib/node");
   var _node2 = _interopRequireDefault(_node);
   var Comment = (function(_Node) {
     function Comment(defaults) {
@@ -9156,7 +9156,7 @@ System.register("npm:postcss@4.1.10/lib/comment", ["npm:postcss@4.1.10/lib/node"
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/list", [], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/list", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -9219,7 +9219,7 @@ System.register("npm:postcss@4.1.10/lib/list", [], true, function(require, expor
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/root", ["npm:postcss@4.1.10/lib/container", "npm:postcss@4.1.10/lib/lazy-result", "npm:postcss@4.1.10/lib/processor", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/root", ["npm:postcss@4.1.11/lib/container", "npm:postcss@4.1.11/lib/lazy-result", "npm:postcss@4.1.11/lib/processor", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -9247,7 +9247,7 @@ System.register("npm:postcss@4.1.10/lib/root", ["npm:postcss@4.1.10/lib/containe
       if (superClass)
         subClass.__proto__ = superClass;
     }
-    var _container = require("npm:postcss@4.1.10/lib/container");
+    var _container = require("npm:postcss@4.1.11/lib/container");
     var _container2 = _interopRequireDefault(_container);
     var Root = (function(_Container) {
       function Root(defaults) {
@@ -9305,8 +9305,8 @@ System.register("npm:postcss@4.1.10/lib/root", ["npm:postcss@4.1.10/lib/containe
       };
       Root.prototype.toResult = function toResult() {
         var opts = arguments[0] === undefined ? {} : arguments[0];
-        var LazyResult = require("npm:postcss@4.1.10/lib/lazy-result");
-        var Processor = require("npm:postcss@4.1.10/lib/processor");
+        var LazyResult = require("npm:postcss@4.1.11/lib/lazy-result");
+        var Processor = require("npm:postcss@4.1.11/lib/processor");
         var lazy = new LazyResult(new Processor(), this, opts);
         return lazy.stringify();
       };
@@ -9871,13 +9871,13 @@ System.register("npm:es6-promise@2.1.1/dist/es6-promise", ["github:jspm/nodelibs
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/package.json!github:systemjs/plugin-json@0.1.0", [], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/package.json!github:systemjs/plugin-json@0.1.0", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   module.exports = {
     "name": "postcss",
-    "version": "4.1.10",
+    "version": "4.1.11",
     "description": "Tool for transforming CSS with JS plugins",
     "keywords": ["css", "postproccessor", "parser", "source map", "transform", "manipulation", "preprocess", "transpiler"],
     "author": "Andrey Sitnik <andrey@sitnik.ru>",
@@ -9894,6 +9894,7 @@ System.register("npm:postcss@4.1.10/package.json!github:systemjs/plugin-json@0.1
     "devDependencies": {
       "concat-with-sourcemaps": "1.0.2",
       "gulp-json-editor": "2.2.1",
+      "load-resources": "0.1.0",
       "gulp-eslint": "0.12.0",
       "gulp-babel": "5.1.0",
       "gulp-mocha": "2.0.1",
@@ -9901,31 +9902,12 @@ System.register("npm:postcss@4.1.10/package.json!github:systemjs/plugin-json@0.1
       "gulp-util": "3.0.4",
       "gulp-run": "1.6.8",
       "fs-extra": "0.18.3",
-      "through2": "0.6.5",
-      "request": "2.55.0",
+      "eslint": "0.21.0",
       "sinon": "1.14.1",
-      "mocha": "2.2.4",
+      "mocha": "2.2.5",
       "gulp": "3.8.11",
       "chai": "2.3.0",
-      "babel-core": "5.2.17"
-    },
-    "benchmarkDependencies": {
-      "postcss-simple-vars": "0.3.0",
-      "gulp-bench-summary": "0.1.0",
-      "stylecow-parser": "2.2.2",
-      "postcss-nested": "0.3.1",
-      "postcss-mixins": "0.2.0",
-      "postcss-calc": "4.0.1",
-      "gonzales-pe": "3.0.0-26",
-      "gulp-bench": "1.1.0",
-      "node-sass": "3.0.0",
-      "gonzales": "1.0.7",
-      "mensch": "0.3.1",
-      "stylus": "0.51.1",
-      "rework": "1.0.1",
-      "cssom": "0.3.0",
-      "less": "2.5.0",
-      "myth": "1.4.0"
+      "babel-core": "5.4.3"
     },
     "scripts": {"test": "gulp"},
     "main": "lib/postcss"
@@ -9934,7 +9916,7 @@ System.register("npm:postcss@4.1.10/package.json!github:systemjs/plugin-json@0.1
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/vendor", [], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/vendor", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -10038,7 +10020,131 @@ System.register("npm:extend@2.0.1/index", [], true, function(require, exports, m
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.5/lib/clone-splice-parent-onto-node-when", [], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.3.6/lib/generate-descendant-pieces-from-selector", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var RE_SELECTOR_DESCENDANT_SPLIT = (/(.*?(?:(?:\[[^\]]+\]|(?![><+~\s]).)+)(?:(?:(?:\s(?!>>))|(?:\t(?!>>))|(?:\s?>>\s?))(?!\s+))(?![><+~][\s]+?))/);
+  var generateDescendantPiecesFromSelector = function(selector) {
+    return selector.split(RE_SELECTOR_DESCENDANT_SPLIT).filter(function(piece) {
+      if (piece.length > 0) {
+        return true;
+      }
+      return false;
+    }).map(function(piece) {
+      return piece.trim().replace(/\s*?>>\s*?/, function(match) {
+        return '';
+      });
+    });
+  };
+  module.exports = generateDescendantPiecesFromSelector;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:escape-string-regexp@1.0.3/index", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
+  module.exports = function(str) {
+    if (typeof str !== 'string') {
+      throw new TypeError('Expected a string');
+    }
+    return str.replace(matchOperatorsRe, '\\$&');
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:postcss-css-variables@0.3.6/lib/is-piece-always-ancestor-selector", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var alwaysAncestorSelector = {
+    '*': true,
+    ':root': true,
+    'html': true
+  };
+  var isPieceIsAlwaysAncestorSelector = function(piece) {
+    return !!alwaysAncestorSelector[piece];
+  };
+  module.exports = isPieceIsAlwaysAncestorSelector;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:postcss-css-variables@0.3.6/lib/gather-variable-dependencies", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var gatherVariableDependencies = function(variablesUsed, map, _dependencyVariablesList) {
+    _dependencyVariablesList = _dependencyVariablesList || [];
+    var hasCircularOrSelfReference = false;
+    if (variablesUsed) {
+      _dependencyVariablesList = variablesUsed.reduce(function(dependencyVariablesList, variableUsedName) {
+        var isVariableInMap = !!map[variableUsedName];
+        var doesThisVarHaveCircularOrSelfReference = !isVariableInMap ? false : dependencyVariablesList.some(function(dep) {
+          return map[variableUsedName].some(function(mapItem) {
+            if (dep === mapItem) {
+              return true;
+            }
+            return false;
+          });
+        });
+        hasCircularOrSelfReference = hasCircularOrSelfReference || doesThisVarHaveCircularOrSelfReference;
+        if (isVariableInMap && !hasCircularOrSelfReference) {
+          dependencyVariablesList = dependencyVariablesList.concat(map[variableUsedName]);
+          (map[variableUsedName] || []).forEach(function(mapItem) {
+            var result = gatherVariableDependencies(mapItem.variablesUsed, map, dependencyVariablesList);
+            dependencyVariablesList = result.deps;
+            hasCircularOrSelfReference = hasCircularOrSelfReference || result.hasCircularOrSelfReference;
+          });
+        }
+        return dependencyVariablesList;
+      }, _dependencyVariablesList);
+    }
+    return {
+      deps: _dependencyVariablesList,
+      hasCircularOrSelfReference: hasCircularOrSelfReference
+    };
+  };
+  module.exports = gatherVariableDependencies;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:postcss-css-variables@0.3.6/lib/find-node-ancestor-with-selector", ["npm:postcss-css-variables@0.3.6/lib/generate-scope-list"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var generateScopeList = require("npm:postcss-css-variables@0.3.6/lib/generate-scope-list");
+  var findNodeAncestorWithSelector = function(selector, node) {
+    var matchingNode;
+    var currentNode = node;
+    var stillFindingNode = true;
+    while (currentNode.parent && !matchingNode) {
+      var currentNodeScopeList = generateScopeList(currentNode.clone(), true);
+      currentNodeScopeList.some(function(scopePieces) {
+        return scopePieces.some(function(scopePiece) {
+          if (scopePiece === selector) {
+            matchingNode = currentNode;
+            return true;
+          }
+          return false;
+        });
+      });
+      currentNode = currentNode.parent;
+    }
+    return matchingNode;
+  };
+  module.exports = findNodeAncestorWithSelector;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:postcss-css-variables@0.3.6/lib/clone-splice-parent-onto-node-when", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -10084,97 +10190,65 @@ System.register("npm:postcss-css-variables@0.3.5/lib/clone-splice-parent-onto-no
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.5/lib/generate-descendant-pieces-from-selector", [], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.3.6/lib/resolve-decl", ["npm:postcss-css-variables@0.3.6/lib/resolve-value", "npm:postcss-css-variables@0.3.6/lib/generate-scope-list", "npm:postcss-css-variables@0.3.6/lib/gather-variable-dependencies", "npm:postcss-css-variables@0.3.6/lib/is-node-under-scope", "npm:postcss-css-variables@0.3.6/lib/find-node-ancestor-with-selector", "npm:postcss-css-variables@0.3.6/lib/clone-splice-parent-onto-node-when"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var RE_SELECTOR_DESCENDANT_SPLIT = (/(.*?(?:(?:\[[^\]]+\]|(?![><+~\s]).)+)(?:(?:(?:\s(?!>>))|(?:\t(?!>>))|(?:\s?>>\s?))(?!\s+))(?![><+~][\s]+?))/);
-  var generateDescendantPiecesFromSelector = function(selector) {
-    return selector.split(RE_SELECTOR_DESCENDANT_SPLIT).filter(function(piece) {
-      if (piece.length > 0) {
-        return true;
+  var resolveValue = require("npm:postcss-css-variables@0.3.6/lib/resolve-value");
+  var generateScopeList = require("npm:postcss-css-variables@0.3.6/lib/generate-scope-list");
+  var gatherVariableDependencies = require("npm:postcss-css-variables@0.3.6/lib/gather-variable-dependencies");
+  var isNodeUnderScope = require("npm:postcss-css-variables@0.3.6/lib/is-node-under-scope");
+  var findNodeAncestorWithSelector = require("npm:postcss-css-variables@0.3.6/lib/find-node-ancestor-with-selector");
+  var cloneSpliceParentOntoNodeWhen = require("npm:postcss-css-variables@0.3.6/lib/clone-splice-parent-onto-node-when");
+  function resolveDecl(decl, map, logResolveValueResult) {
+    var _logResolveValueResult = function(valueResults) {
+      if (logResolveValueResult) {
+        logResolveValueResult(valueResults);
       }
-      return false;
-    }).map(function(piece) {
-      return piece.trim().replace(/\s*?>>\s*?/, function(match) {
-        return '';
+      return valueResults;
+    };
+    var valueResults = _logResolveValueResult(resolveValue(decl, map));
+    eachMapItemUnderAtRuleUsedByVariable(valueResults.variablesUsed, map, decl, function(mimicDecl, mapItem) {
+      var atRuleNode = mapItem.parent.parent.clone().removeAll();
+      var ruleClone = decl.parent.clone().removeAll();
+      var declClone = decl.clone();
+      declClone.value = _logResolveValueResult(resolveValue(mimicDecl, map)).value;
+      ruleClone.append(declClone);
+      atRuleNode.append(ruleClone);
+      var parentAtRuleNode = atRuleNode;
+      var currentAtRuleNode = mapItem.parent.parent;
+      while (currentAtRuleNode.parent.type === 'atrule') {
+        var newParentAtRuleNode = currentAtRuleNode.parent.clone().removeAll();
+        newParentAtRuleNode.append(parentAtRuleNode);
+        parentAtRuleNode = newParentAtRuleNode;
+        currentAtRuleNode = currentAtRuleNode.parent;
+      }
+      decl.parent.parent.insertAfter(decl.parent, parentAtRuleNode);
+    });
+    if (opts.preserve === true && decl.value !== valueResults.value) {
+      decl.cloneAfter();
+    }
+    decl.value = valueResults.value;
+  }
+  function eachMapItemUnderAtRuleUsedByVariable(variablesUsedList, map, decl, cb) {
+    variablesUsedList.forEach(function(variableUsedName) {
+      gatherVariableDependencies(variablesUsedList, map).deps.forEach(function(mapItem) {
+        if (mapItem.isUnderAtRule) {
+          var varDeclScopeList = generateScopeList(mapItem.parent, true);
+          var innerMostAtRuleSelector = varDeclScopeList[0].slice(-1)[0];
+          var nodeToSpliceParentOnto = findNodeAncestorWithSelector(innerMostAtRuleSelector, decl.parent);
+          var varDeclAtRule = mapItem.parent.parent;
+          var mimicDecl = cloneSpliceParentOntoNodeWhen(decl, varDeclAtRule, function(ancestor) {
+            return ancestor === nodeToSpliceParentOnto;
+          });
+          if (isNodeUnderScope(mimicDecl.parent, mapItem.parent)) {
+            cb(mimicDecl, mapItem);
+          }
+        }
       });
     });
-  };
-  module.exports = generateDescendantPiecesFromSelector;
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("npm:escape-string-regexp@1.0.3/index", [], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
-  module.exports = function(str) {
-    if (typeof str !== 'string') {
-      throw new TypeError('Expected a string');
-    }
-    return str.replace(matchOperatorsRe, '\\$&');
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("npm:postcss-css-variables@0.3.5/lib/is-piece-always-ancestor-selector", [], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  var alwaysAncestorSelector = {
-    '*': true,
-    ':root': true,
-    'html': true
-  };
-  var isPieceIsAlwaysAncestorSelector = function(piece) {
-    return !!alwaysAncestorSelector[piece];
-  };
-  module.exports = isPieceIsAlwaysAncestorSelector;
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("npm:postcss-css-variables@0.3.5/lib/gather-variable-dependencies", [], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  var gatherVariableDependencies = function(variablesUsed, map, _dependencyVariablesList) {
-    _dependencyVariablesList = _dependencyVariablesList || [];
-    var hasCircularOrSelfReference = false;
-    if (variablesUsed) {
-      _dependencyVariablesList = variablesUsed.reduce(function(dependencyVariablesList, variableUsedName) {
-        var isVariableInMap = !!map[variableUsedName];
-        var doesThisVarHaveCircularOrSelfReference = !isVariableInMap ? false : dependencyVariablesList.some(function(dep) {
-          return map[variableUsedName].some(function(mapItem) {
-            if (dep === mapItem) {
-              return true;
-            }
-            return false;
-          });
-        });
-        hasCircularOrSelfReference = hasCircularOrSelfReference || doesThisVarHaveCircularOrSelfReference;
-        if (isVariableInMap && !hasCircularOrSelfReference) {
-          dependencyVariablesList = dependencyVariablesList.concat(map[variableUsedName]);
-          (map[variableUsedName] || []).forEach(function(mapItem) {
-            var result = gatherVariableDependencies(mapItem.variablesUsed, map, dependencyVariablesList);
-            dependencyVariablesList = result.deps;
-            hasCircularOrSelfReference = hasCircularOrSelfReference || result.hasCircularOrSelfReference;
-          });
-        }
-        return dependencyVariablesList;
-      }, _dependencyVariablesList);
-    }
-    return {
-      deps: _dependencyVariablesList,
-      hasCircularOrSelfReference: hasCircularOrSelfReference
-    };
-  };
-  module.exports = gatherVariableDependencies;
+  }
+  module.exports = resolveDecl;
   global.define = __define;
   return module.exports;
 });
@@ -14123,7 +14197,7 @@ System.register("npm:events@1.0.2", ["npm:events@1.0.2/events"], true, function(
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/css-syntax-error", ["npm:postcss@4.1.10/lib/warn-once", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/css-syntax-error", ["npm:postcss@4.1.11/lib/warn-once", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -14151,7 +14225,7 @@ System.register("npm:postcss@4.1.10/lib/css-syntax-error", ["npm:postcss@4.1.10/
       if (superClass)
         subClass.__proto__ = superClass;
     }
-    var _warnOnce = require("npm:postcss@4.1.10/lib/warn-once");
+    var _warnOnce = require("npm:postcss@4.1.11/lib/warn-once");
     var _warnOnce2 = _interopRequireDefault(_warnOnce);
     var CssSyntaxError = (function(_SyntaxError) {
       function CssSyntaxError(message, line, column, source, file, plugin) {
@@ -14207,7 +14281,7 @@ System.register("npm:postcss@4.1.10/lib/css-syntax-error", ["npm:postcss@4.1.10/
         return '\n' + prev + broken + mark + next;
       };
       CssSyntaxError.prototype.highlight = function highlight(color) {
-        _warnOnce2['default']('CssSyntaxError#highlight is deprecated and will be ' + 'removed in 5.0. Use error.showSourceCode instead.');
+        (0, _warnOnce2['default'])('CssSyntaxError#highlight is deprecated and will be ' + 'removed in 5.0. Use error.showSourceCode instead.');
         return this.showSourceCode(color).replace(/^\n/, '');
       };
       CssSyntaxError.prototype.setMozillaProps = function setMozillaProps() {
@@ -14806,7 +14880,7 @@ System.register("npm:source-map@0.4.2/lib/source-map/source-map-consumer", ["npm
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/result", ["npm:postcss@4.1.10/lib/warn-once", "npm:postcss@4.1.10/lib/warning", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/result", ["npm:postcss@4.1.11/lib/warn-once", "npm:postcss@4.1.11/lib/warning", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -14840,9 +14914,9 @@ System.register("npm:postcss@4.1.10/lib/result", ["npm:postcss@4.1.10/lib/warn-o
         throw new TypeError('Cannot call a class as a function');
       }
     }
-    var _warnOnce = require("npm:postcss@4.1.10/lib/warn-once");
+    var _warnOnce = require("npm:postcss@4.1.11/lib/warn-once");
     var _warnOnce2 = _interopRequireDefault(_warnOnce);
-    var _warning = require("npm:postcss@4.1.10/lib/warning");
+    var _warning = require("npm:postcss@4.1.11/lib/warning");
     var _warning2 = _interopRequireDefault(_warning);
     var Result = (function() {
       function Result(processor, root, opts) {
@@ -14874,13 +14948,13 @@ System.register("npm:postcss@4.1.10/lib/result", ["npm:postcss@4.1.10/lib/warn-o
       _createClass(Result, [{
         key: 'from',
         get: function() {
-          _warnOnce2['default']('result.from is deprecated and will be removed in 5.0. ' + 'Use result.opts.from instead.');
+          (0, _warnOnce2['default'])('result.from is deprecated and will be removed in 5.0. ' + 'Use result.opts.from instead.');
           return this.opts.from;
         }
       }, {
         key: 'to',
         get: function() {
-          _warnOnce2['default']('result.to is deprecated and will be removed in 5.0. ' + 'Use result.opts.to instead.');
+          (0, _warnOnce2['default'])('result.to is deprecated and will be removed in 5.0. ' + 'Use result.opts.to instead.');
           return this.opts.to;
         }
       }]);
@@ -14893,7 +14967,7 @@ System.register("npm:postcss@4.1.10/lib/result", ["npm:postcss@4.1.10/lib/warn-o
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/rule", ["npm:postcss@4.1.10/lib/container", "npm:postcss@4.1.10/lib/list"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/rule", ["npm:postcss@4.1.11/lib/container", "npm:postcss@4.1.11/lib/list"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -14939,9 +15013,9 @@ System.register("npm:postcss@4.1.10/lib/rule", ["npm:postcss@4.1.10/lib/containe
     if (superClass)
       subClass.__proto__ = superClass;
   }
-  var _container = require("npm:postcss@4.1.10/lib/container");
+  var _container = require("npm:postcss@4.1.11/lib/container");
   var _container2 = _interopRequireDefault(_container);
-  var _list = require("npm:postcss@4.1.10/lib/list");
+  var _list = require("npm:postcss@4.1.11/lib/list");
   var _list2 = _interopRequireDefault(_list);
   var Rule = (function(_Container) {
     function Rule(defaults) {
@@ -14999,11 +15073,11 @@ System.register("npm:extend@2.0.1", ["npm:extend@2.0.1/index"], true, function(r
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.5/lib/generate-scope-list", ["npm:postcss-css-variables@0.3.5/lib/generate-descendant-pieces-from-selector"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.3.6/lib/generate-scope-list", ["npm:postcss-css-variables@0.3.6/lib/generate-descendant-pieces-from-selector"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var generateDescendantPiecesFromSelector = require("npm:postcss-css-variables@0.3.5/lib/generate-descendant-pieces-from-selector");
+  var generateDescendantPiecesFromSelector = require("npm:postcss-css-variables@0.3.6/lib/generate-descendant-pieces-from-selector");
   var generateScopeList = function(node, includeSelf) {
     includeSelf = includeSelf || false;
     var selectorScopeList = [[]];
@@ -17203,7 +17277,7 @@ System.register("npm:flux@2.0.3/index", ["npm:flux@2.0.3/lib/Dispatcher"], true,
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/node", ["npm:postcss@4.1.10/lib/css-syntax-error"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/node", ["npm:postcss@4.1.11/lib/css-syntax-error"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -17217,7 +17291,7 @@ System.register("npm:postcss@4.1.10/lib/node", ["npm:postcss@4.1.10/lib/css-synt
       throw new TypeError('Cannot call a class as a function');
     }
   }
-  var _cssSyntaxError = require("npm:postcss@4.1.10/lib/css-syntax-error");
+  var _cssSyntaxError = require("npm:postcss@4.1.11/lib/css-syntax-error");
   var _cssSyntaxError2 = _interopRequireDefault(_cssSyntaxError);
   var defaultStyle = {
     colon: ': ',
@@ -18787,7 +18861,7 @@ System.register("github:jspm/nodelibs-path@0.1.0/index", ["npm:path-browserify@0
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/container", ["npm:postcss@4.1.10/lib/declaration", "npm:postcss@4.1.10/lib/comment", "npm:postcss@4.1.10/lib/node", "npm:postcss@4.1.10/lib/parse", "npm:postcss@4.1.10/lib/rule", "npm:postcss@4.1.10/lib/at-rule", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/container", ["npm:postcss@4.1.11/lib/declaration", "npm:postcss@4.1.11/lib/comment", "npm:postcss@4.1.11/lib/node", "npm:postcss@4.1.11/lib/parse", "npm:postcss@4.1.11/lib/rule", "npm:postcss@4.1.11/lib/at-rule", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -18834,11 +18908,11 @@ System.register("npm:postcss@4.1.10/lib/container", ["npm:postcss@4.1.10/lib/dec
       if (superClass)
         subClass.__proto__ = superClass;
     }
-    var _declaration = require("npm:postcss@4.1.10/lib/declaration");
+    var _declaration = require("npm:postcss@4.1.11/lib/declaration");
     var _declaration2 = _interopRequireDefault(_declaration);
-    var _comment = require("npm:postcss@4.1.10/lib/comment");
+    var _comment = require("npm:postcss@4.1.11/lib/comment");
     var _comment2 = _interopRequireDefault(_comment);
-    var _node = require("npm:postcss@4.1.10/lib/node");
+    var _node = require("npm:postcss@4.1.11/lib/node");
     var _node2 = _interopRequireDefault(_node);
     var Container = (function(_Node) {
       function Container() {
@@ -19165,7 +19239,7 @@ System.register("npm:postcss@4.1.10/lib/container", ["npm:postcss@4.1.10/lib/dec
       Container.prototype.normalize = function normalize(nodes, sample) {
         var _this = this;
         if (typeof nodes === 'string') {
-          var parse = require("npm:postcss@4.1.10/lib/parse");
+          var parse = require("npm:postcss@4.1.11/lib/parse");
           nodes = parse(nodes).nodes;
         } else if (!Array.isArray(nodes)) {
           if (nodes.type === 'root') {
@@ -19178,10 +19252,10 @@ System.register("npm:postcss@4.1.10/lib/container", ["npm:postcss@4.1.10/lib/dec
             }
             nodes = [new _declaration2['default'](nodes)];
           } else if (nodes.selector) {
-            var Rule = require("npm:postcss@4.1.10/lib/rule");
+            var Rule = require("npm:postcss@4.1.11/lib/rule");
             nodes = [new Rule(nodes)];
           } else if (nodes.name) {
-            var AtRule = require("npm:postcss@4.1.10/lib/at-rule");
+            var AtRule = require("npm:postcss@4.1.11/lib/at-rule");
             nodes = [new AtRule(nodes)];
           } else if (nodes.text) {
             nodes = [new _comment2['default'](nodes)];
@@ -19226,7 +19300,7 @@ System.register("npm:postcss@4.1.10/lib/container", ["npm:postcss@4.1.10/lib/dec
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/previous-map", ["npm:js-base64@2.1.8", "npm:source-map@0.4.2", "github:jspm/nodelibs-path@0.1.0", "github:jspm/nodelibs-fs@0.1.2"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/previous-map", ["npm:js-base64@2.1.8", "npm:source-map@0.4.2", "github:jspm/nodelibs-path@0.1.0", "github:jspm/nodelibs-fs@0.1.2"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -19325,41 +19399,12 @@ System.register("npm:postcss@4.1.10/lib/previous-map", ["npm:js-base64@2.1.8", "
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.5/lib/find-node-ancestor-with-selector", ["npm:postcss-css-variables@0.3.5/lib/generate-scope-list"], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  var generateScopeList = require("npm:postcss-css-variables@0.3.5/lib/generate-scope-list");
-  var findNodeAncestorWithSelector = function(selector, node) {
-    var matchingNode;
-    var currentNode = node;
-    var stillFindingNode = true;
-    while (currentNode.parent && !matchingNode) {
-      var currentNodeScopeList = generateScopeList(currentNode.clone(), true);
-      currentNodeScopeList.some(function(scopePieces) {
-        return scopePieces.some(function(scopePiece) {
-          if (scopePiece === selector) {
-            matchingNode = currentNode;
-            return true;
-          }
-          return false;
-        });
-      });
-      currentNode = currentNode.parent;
-    }
-    return matchingNode;
-  };
-  module.exports = findNodeAncestorWithSelector;
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("npm:postcss-css-variables@0.3.5/lib/is-under-scope", ["npm:escape-string-regexp@1.0.3", "npm:postcss-css-variables@0.3.5/lib/is-piece-always-ancestor-selector"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.3.6/lib/is-under-scope", ["npm:escape-string-regexp@1.0.3", "npm:postcss-css-variables@0.3.6/lib/is-piece-always-ancestor-selector"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   var escapeStringRegexp = require("npm:escape-string-regexp@1.0.3");
-  var isPieceIsAlwaysAncestorSelector = require("npm:postcss-css-variables@0.3.5/lib/is-piece-always-ancestor-selector");
+  var isPieceIsAlwaysAncestorSelector = require("npm:postcss-css-variables@0.3.6/lib/is-piece-always-ancestor-selector");
   var isUnderScope = function(nodeScopeList, scopeNodeScopeList) {
     var matchesScope = scopeNodeScopeList.some(function(scopeNodeScopePieces) {
       return nodeScopeList.some(function(nodeScopePieces) {
@@ -20837,7 +20882,7 @@ System.register("npm:flux@2.0.3", ["npm:flux@2.0.3/index"], true, function(requi
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/declaration", ["npm:postcss@4.1.10/lib/node"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/declaration", ["npm:postcss@4.1.11/lib/node"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -20864,7 +20909,7 @@ System.register("npm:postcss@4.1.10/lib/declaration", ["npm:postcss@4.1.10/lib/n
     if (superClass)
       subClass.__proto__ = superClass;
   }
-  var _node = require("npm:postcss@4.1.10/lib/node");
+  var _node = require("npm:postcss@4.1.11/lib/node");
   var _node2 = _interopRequireDefault(_node);
   var Declaration = (function(_Node) {
     function Declaration(defaults) {
@@ -20912,7 +20957,7 @@ System.register("github:jspm/nodelibs-path@0.1.0", ["github:jspm/nodelibs-path@0
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/at-rule", ["npm:postcss@4.1.10/lib/container"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/at-rule", ["npm:postcss@4.1.11/lib/container"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -20939,7 +20984,7 @@ System.register("npm:postcss@4.1.10/lib/at-rule", ["npm:postcss@4.1.10/lib/conta
     if (superClass)
       subClass.__proto__ = superClass;
   }
-  var _container = require("npm:postcss@4.1.10/lib/container");
+  var _container = require("npm:postcss@4.1.11/lib/container");
   var _container2 = _interopRequireDefault(_container);
   var AtRule = (function(_Container) {
     function AtRule(defaults) {
@@ -20994,7 +21039,7 @@ System.register("npm:postcss@4.1.10/lib/at-rule", ["npm:postcss@4.1.10/lib/conta
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/input", ["npm:postcss@4.1.10/lib/css-syntax-error", "npm:postcss@4.1.10/lib/previous-map", "github:jspm/nodelibs-path@0.1.0"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/input", ["npm:postcss@4.1.11/lib/css-syntax-error", "npm:postcss@4.1.11/lib/previous-map", "github:jspm/nodelibs-path@0.1.0"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -21008,9 +21053,9 @@ System.register("npm:postcss@4.1.10/lib/input", ["npm:postcss@4.1.10/lib/css-syn
       throw new TypeError('Cannot call a class as a function');
     }
   }
-  var _cssSyntaxError = require("npm:postcss@4.1.10/lib/css-syntax-error");
+  var _cssSyntaxError = require("npm:postcss@4.1.11/lib/css-syntax-error");
   var _cssSyntaxError2 = _interopRequireDefault(_cssSyntaxError);
-  var _previousMap = require("npm:postcss@4.1.10/lib/previous-map");
+  var _previousMap = require("npm:postcss@4.1.11/lib/previous-map");
   var _previousMap2 = _interopRequireDefault(_previousMap);
   var _path = require("github:jspm/nodelibs-path@0.1.0");
   var _path2 = _interopRequireDefault(_path);
@@ -21092,12 +21137,12 @@ System.register("npm:postcss@4.1.10/lib/input", ["npm:postcss@4.1.10/lib/css-syn
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.5/lib/is-node-under-scope", ["npm:postcss-css-variables@0.3.5/lib/is-under-scope", "npm:postcss-css-variables@0.3.5/lib/generate-scope-list"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.3.6/lib/is-node-under-scope", ["npm:postcss-css-variables@0.3.6/lib/is-under-scope", "npm:postcss-css-variables@0.3.6/lib/generate-scope-list"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var isUnderScope = require("npm:postcss-css-variables@0.3.5/lib/is-under-scope");
-  var generateScopeList = require("npm:postcss-css-variables@0.3.5/lib/generate-scope-list");
+  var isUnderScope = require("npm:postcss-css-variables@0.3.6/lib/is-under-scope");
+  var generateScopeList = require("npm:postcss-css-variables@0.3.6/lib/generate-scope-list");
   var isNodeUnderScope = function(node, scopeNode) {
     var nodeScopeList = generateScopeList(node, true);
     var scopeNodeScopeList = generateScopeList(scopeNode, true);
@@ -22034,7 +22079,7 @@ System.register("npm:amdefine@0.1.0/amdefine", ["github:jspm/nodelibs-path@0.1.0
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/parser", ["npm:postcss@4.1.10/lib/declaration", "npm:postcss@4.1.10/lib/tokenize", "npm:postcss@4.1.10/lib/comment", "npm:postcss@4.1.10/lib/at-rule", "npm:postcss@4.1.10/lib/root", "npm:postcss@4.1.10/lib/rule"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/parser", ["npm:postcss@4.1.11/lib/declaration", "npm:postcss@4.1.11/lib/tokenize", "npm:postcss@4.1.11/lib/comment", "npm:postcss@4.1.11/lib/at-rule", "npm:postcss@4.1.11/lib/root", "npm:postcss@4.1.11/lib/rule"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -22048,17 +22093,17 @@ System.register("npm:postcss@4.1.10/lib/parser", ["npm:postcss@4.1.10/lib/declar
       throw new TypeError('Cannot call a class as a function');
     }
   }
-  var _declaration = require("npm:postcss@4.1.10/lib/declaration");
+  var _declaration = require("npm:postcss@4.1.11/lib/declaration");
   var _declaration2 = _interopRequireDefault(_declaration);
-  var _tokenize = require("npm:postcss@4.1.10/lib/tokenize");
+  var _tokenize = require("npm:postcss@4.1.11/lib/tokenize");
   var _tokenize2 = _interopRequireDefault(_tokenize);
-  var _comment = require("npm:postcss@4.1.10/lib/comment");
+  var _comment = require("npm:postcss@4.1.11/lib/comment");
   var _comment2 = _interopRequireDefault(_comment);
-  var _atRule = require("npm:postcss@4.1.10/lib/at-rule");
+  var _atRule = require("npm:postcss@4.1.11/lib/at-rule");
   var _atRule2 = _interopRequireDefault(_atRule);
-  var _root = require("npm:postcss@4.1.10/lib/root");
+  var _root = require("npm:postcss@4.1.11/lib/root");
   var _root2 = _interopRequireDefault(_root);
-  var _rule = require("npm:postcss@4.1.10/lib/rule");
+  var _rule = require("npm:postcss@4.1.11/lib/rule");
   var _rule2 = _interopRequireDefault(_rule);
   var Parser = (function() {
     function Parser(input) {
@@ -22074,7 +22119,7 @@ System.register("npm:postcss@4.1.10/lib/parser", ["npm:postcss@4.1.10/lib/declar
         this.root.prevMap = input.map;
     }
     Parser.prototype.tokenize = function tokenize() {
-      this.tokens = _tokenize2['default'](this.input);
+      this.tokens = (0, _tokenize2['default'])(this.input);
     };
     Parser.prototype.loop = function loop() {
       var token = undefined;
@@ -22549,15 +22594,15 @@ System.register("npm:postcss@4.1.10/lib/parser", ["npm:postcss@4.1.10/lib/declar
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.5/lib/resolve-value", ["npm:postcss-css-variables@0.3.5/lib/generate-scope-list", "npm:postcss-css-variables@0.3.5/lib/is-node-under-scope", "npm:postcss-css-variables@0.3.5/lib/gather-variable-dependencies", "npm:postcss-css-variables@0.3.5/lib/find-node-ancestor-with-selector", "npm:postcss-css-variables@0.3.5/lib/clone-splice-parent-onto-node-when"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.3.6/lib/resolve-value", ["npm:postcss-css-variables@0.3.6/lib/generate-scope-list", "npm:postcss-css-variables@0.3.6/lib/is-node-under-scope", "npm:postcss-css-variables@0.3.6/lib/gather-variable-dependencies", "npm:postcss-css-variables@0.3.6/lib/find-node-ancestor-with-selector", "npm:postcss-css-variables@0.3.6/lib/clone-splice-parent-onto-node-when"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var generateScopeList = require("npm:postcss-css-variables@0.3.5/lib/generate-scope-list");
-  var isNodeUnderScope = require("npm:postcss-css-variables@0.3.5/lib/is-node-under-scope");
-  var gatherVariableDependencies = require("npm:postcss-css-variables@0.3.5/lib/gather-variable-dependencies");
-  var findNodeAncestorWithSelector = require("npm:postcss-css-variables@0.3.5/lib/find-node-ancestor-with-selector");
-  var cloneSpliceParentOntoNodeWhen = require("npm:postcss-css-variables@0.3.5/lib/clone-splice-parent-onto-node-when");
+  var generateScopeList = require("npm:postcss-css-variables@0.3.6/lib/generate-scope-list");
+  var isNodeUnderScope = require("npm:postcss-css-variables@0.3.6/lib/is-node-under-scope");
+  var gatherVariableDependencies = require("npm:postcss-css-variables@0.3.6/lib/gather-variable-dependencies");
+  var findNodeAncestorWithSelector = require("npm:postcss-css-variables@0.3.6/lib/find-node-ancestor-with-selector");
+  var cloneSpliceParentOntoNodeWhen = require("npm:postcss-css-variables@0.3.6/lib/clone-splice-parent-onto-node-when");
   var RE_VAR_FUNC = (/var\((--[^,\s]+?)(?:\s*,\s*(.+))?\)/);
   var resolveValue = function(decl, map, _debugIsInternal) {
     var resultantValue = decl.value;
@@ -22598,6 +22643,7 @@ System.register("npm:postcss-css-variables@0.3.5/lib/resolve-value", ["npm:postc
       warnings: warnings
     };
   };
+  resolveValue.RE_VAR_FUNC = RE_VAR_FUNC;
   module.exports = resolveValue;
   global.define = __define;
   return module.exports;
@@ -22865,7 +22911,7 @@ System.register("npm:amdefine@0.1.0", ["npm:amdefine@0.1.0/amdefine"], true, fun
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/parse", ["npm:postcss@4.1.10/lib/parser", "npm:postcss@4.1.10/lib/input"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/parse", ["npm:postcss@4.1.11/lib/parser", "npm:postcss@4.1.11/lib/input"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -22875,9 +22921,9 @@ System.register("npm:postcss@4.1.10/lib/parse", ["npm:postcss@4.1.10/lib/parser"
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {'default': obj};
   }
-  var _parser = require("npm:postcss@4.1.10/lib/parser");
+  var _parser = require("npm:postcss@4.1.11/lib/parser");
   var _parser2 = _interopRequireDefault(_parser);
-  var _input = require("npm:postcss@4.1.10/lib/input");
+  var _input = require("npm:postcss@4.1.11/lib/input");
   var _input2 = _interopRequireDefault(_input);
   function parse(css, opts) {
     var input = new _input2['default'](css, opts);
@@ -22891,161 +22937,136 @@ System.register("npm:postcss@4.1.10/lib/parse", ["npm:postcss@4.1.10/lib/parser"
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.5/index", ["npm:postcss@4.1.10", "npm:extend@2.0.1", "npm:postcss-css-variables@0.3.5/lib/clone-splice-parent-onto-node-when", "npm:postcss-css-variables@0.3.5/lib/find-node-ancestor-with-selector", "npm:postcss-css-variables@0.3.5/lib/resolve-value", "npm:postcss-css-variables@0.3.5/lib/is-node-under-scope", "npm:postcss-css-variables@0.3.5/lib/generate-scope-list", "npm:postcss-css-variables@0.3.5/lib/gather-variable-dependencies", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.3.6/index", ["npm:postcss@4.1.11", "npm:extend@2.0.1", "npm:postcss-css-variables@0.3.6/lib/resolve-value", "npm:postcss-css-variables@0.3.6/lib/resolve-decl"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  (function(process) {
-    var postcss = require("npm:postcss@4.1.10");
-    var extend = require("npm:extend@2.0.1");
-    var cloneSpliceParentOntoNodeWhen = require("npm:postcss-css-variables@0.3.5/lib/clone-splice-parent-onto-node-when");
-    var findNodeAncestorWithSelector = require("npm:postcss-css-variables@0.3.5/lib/find-node-ancestor-with-selector");
-    var resolveValue = require("npm:postcss-css-variables@0.3.5/lib/resolve-value");
-    var isNodeUnderScope = require("npm:postcss-css-variables@0.3.5/lib/is-node-under-scope");
-    var generateScopeList = require("npm:postcss-css-variables@0.3.5/lib/generate-scope-list");
-    var gatherVariableDependencies = require("npm:postcss-css-variables@0.3.5/lib/gather-variable-dependencies");
-    var RE_VAR_PROP = (/(--(.+))/);
-    function eachCssVariableDeclaration(css, cb) {
-      css.eachDecl(function(decl, index) {
-        if (RE_VAR_PROP.test(decl.prop)) {
-          cb(decl);
+  var postcss = require("npm:postcss@4.1.11");
+  var extend = require("npm:extend@2.0.1");
+  var resolveValue = require("npm:postcss-css-variables@0.3.6/lib/resolve-value");
+  var resolveDecl = require("npm:postcss-css-variables@0.3.6/lib/resolve-decl");
+  var RE_VAR_PROP = (/(--(.+))/);
+  function eachCssVariableDeclaration(css, cb) {
+    css.eachDecl(function(decl, index) {
+      if (RE_VAR_PROP.test(decl.prop)) {
+        cb(decl);
+      }
+    });
+  }
+  function cleanUpNode(currentNodeToRemove) {
+    var currentNodeToPossiblyCleanUp = currentNodeToRemove;
+    while (currentNodeToPossiblyCleanUp && currentNodeToPossiblyCleanUp.nodes.length <= 0) {
+      var nodeToRemove = currentNodeToPossiblyCleanUp;
+      currentNodeToPossiblyCleanUp = currentNodeToPossiblyCleanUp.parent;
+      nodeToRemove.removeSelf();
+    }
+  }
+  module.exports = postcss.plugin('postcss-css-variables', function(options) {
+    var defaults = {
+      preserve: false,
+      variables: {}
+    };
+    opts = extend({}, defaults, options);
+    return function(css, result) {
+      var nodesToRemoveAtEnd = [];
+      var map = {};
+      map = extend(map, Object.keys(opts.variables).reduce(function(prevVariableMap, variableName) {
+        var variableEntry = opts.variables[variableName];
+        variableName = variableName.slice(0, 2) === '--' ? variableName : '--' + variableName;
+        var variableValue = (variableEntry || {}).value || variableEntry;
+        var isImportant = (variableEntry || {}).isImportant || false;
+        var variableRootRule = postcss.rule({selector: ':root'});
+        css.root().prepend(variableRootRule);
+        var varDecl = postcss.decl({
+          prop: variableName,
+          value: variableValue
+        });
+        varDecl.moveTo(variableRootRule);
+        prevVariableMap[variableName] = (prevVariableMap[variableName] || []).concat({
+          decl: varDecl,
+          prop: variableName,
+          calculatedInPlaceValue: variableValue,
+          isImportant: isImportant,
+          variablesUsed: [],
+          parent: variableRootRule,
+          isUnderAtRule: false
+        });
+        return prevVariableMap;
+      }, {}));
+      var logResolveValueResult = function(valueResult) {
+        var warningList = [].concat(valueResult.warnings);
+        warningList.forEach(function(warningArgs) {
+          warningArgs = [].concat(warningArgs);
+          result.warn.apply(result, warningArgs);
+        });
+        return valueResult;
+      };
+      eachCssVariableDeclaration(css, function(decl) {
+        var declParentRule = decl.parent;
+        var valueResults = logResolveValueResult(resolveValue(decl, map));
+        decl.parent.selectors.forEach(function(selector) {
+          var splitOutRule = decl.parent.clone().removeAll();
+          splitOutRule.selector = selector;
+          splitOutRule.parent = decl.parent.parent;
+          var declClone = decl.clone();
+          declClone.moveTo(splitOutRule);
+          var prop = decl.prop;
+          map[prop] = (map[prop] || []).concat({
+            decl: declClone,
+            prop: prop,
+            calculatedInPlaceValue: valueResults.value,
+            isImportant: decl.important || false,
+            variablesUsed: valueResults.variablesUsed,
+            parent: splitOutRule,
+            isUnderAtRule: splitOutRule.parent.type === 'atrule'
+          });
+        });
+        if (!opts.preserve) {
+          decl.removeSelf();
+        } else if (opts.preserve === 'computed') {
+          decl.value = valueResults.value;
+        }
+        if (declParentRule.nodes.length <= 0) {
+          nodesToRemoveAtEnd.push(declParentRule);
         }
       });
-    }
-    function eachMapItemUnderAtRuleUsedByVariable(variablesUsedList, map, decl, cb) {
-      variablesUsedList.forEach(function(variableUsedName) {
-        gatherVariableDependencies(variablesUsedList, map).deps.forEach(function(mapItem) {
-          if (mapItem.isUnderAtRule) {
-            var varDeclScopeList = generateScopeList(mapItem.parent, true);
-            var innerMostAtRuleSelector = varDeclScopeList[0].slice(-1)[0];
-            var nodeToSpliceParentOnto = findNodeAncestorWithSelector(innerMostAtRuleSelector, decl.parent);
-            var varDeclAtRule = mapItem.parent.parent;
-            var mimicDecl = cloneSpliceParentOntoNodeWhen(decl, varDeclAtRule, function(ancestor) {
-              return ancestor === nodeToSpliceParentOnto;
-            });
-            if (isNodeUnderScope(mimicDecl.parent, mapItem.parent)) {
-              cb(mimicDecl, mapItem);
+      var rulesThatHaveDeclarationsWithVariablesList = [];
+      css.eachRule(function(rule) {
+        var doesRuleUseVariables = rule.nodes.some(function(node) {
+          if (node.type == 'decl') {
+            var decl = node;
+            if (resolveValue.RE_VAR_FUNC.test(decl.value) && !RE_VAR_PROP.test(decl.prop)) {
+              return true;
             }
           }
+          return false;
+        });
+        if (doesRuleUseVariables) {
+          rulesThatHaveDeclarationsWithVariablesList.push(rule);
+        }
+      });
+      rulesThatHaveDeclarationsWithVariablesList.forEach(function(rule) {
+        var rulesToWorkOn = [].concat(rule);
+        if (rule.selectors.length > 1) {
+          rulesToWorkOn = rule.selectors.reverse().map(function(selector) {
+            var ruleClone = rule.cloneAfter();
+            ruleClone.selector = selector;
+            return ruleClone;
+          });
+          rule.removeSelf();
+        }
+        rulesToWorkOn.forEach(function(ruleToWorkOn) {
+          ruleToWorkOn.nodes.slice(0).forEach(function(node) {
+            if (node.type == 'decl') {
+              var decl = node;
+              resolveDecl(decl, map);
+            }
+          });
         });
       });
-    }
-    module.exports = postcss.plugin('postcss-css-variables', function(options) {
-      var defaults = {
-        preserve: false,
-        variables: {}
-      };
-      opts = extend({}, defaults, options);
-      return function(css, result) {
-        var createNodeCallbackList = [];
-        var nodesToRemoveAtEnd = [];
-        var map = {};
-        map = extend(map, Object.keys(opts.variables).reduce(function(prevVariableMap, variableName) {
-          var variableEntry = opts.variables[variableName];
-          variableName = variableName.slice(0, 2) === '--' ? variableName : '--' + variableName;
-          var variableValue = (variableEntry || {}).value || variableEntry;
-          var isImportant = (variableEntry || {}).isImportant || false;
-          var variableRootRule = postcss.rule({selector: ':root'});
-          css.root().prepend(variableRootRule);
-          var varDecl = postcss.decl({
-            prop: variableName,
-            value: variableValue
-          });
-          varDecl.moveTo(variableRootRule);
-          prevVariableMap[variableName] = (prevVariableMap[variableName] || []).concat({
-            decl: varDecl,
-            prop: variableName,
-            calculatedInPlaceValue: variableValue,
-            isImportant: isImportant,
-            variablesUsed: [],
-            parent: variableRootRule,
-            isUnderAtRule: false
-          });
-          return prevVariableMap;
-        }, {}));
-        var logResolveValueResult = function(valueResult) {
-          var warningList = [].concat(valueResult.warnings);
-          warningList.forEach(function(warningArgs) {
-            warningArgs = [].concat(warningArgs);
-            result.warn.apply(result, warningArgs);
-          });
-          return valueResult;
-        };
-        eachCssVariableDeclaration(css, function(decl) {
-          var declParentRule = decl.parent;
-          var valueResults = logResolveValueResult(resolveValue(decl, map));
-          decl.parent.selectors.forEach(function(selector) {
-            var splitOutRule = decl.parent.clone().removeAll();
-            splitOutRule.selector = selector;
-            splitOutRule.parent = decl.parent.parent;
-            var declClone = decl.clone();
-            declClone.moveTo(splitOutRule);
-            var prop = decl.prop;
-            map[prop] = (map[prop] || []).concat({
-              decl: declClone,
-              prop: prop,
-              calculatedInPlaceValue: valueResults.value,
-              isImportant: decl.important || false,
-              variablesUsed: valueResults.variablesUsed,
-              parent: splitOutRule,
-              isUnderAtRule: splitOutRule.parent.type === 'atrule'
-            });
-          });
-          if (!opts.preserve) {
-            decl.removeSelf();
-          } else if (opts.preserve === 'computed') {
-            decl.value = valueResults.value;
-          }
-          if (declParentRule.nodes.length <= 0) {
-            nodesToRemoveAtEnd.push(declParentRule);
-          }
-        });
-        css.eachDecl(function(decl) {
-          if (!RE_VAR_PROP.test(decl.prop)) {
-            var valueResults = logResolveValueResult(resolveValue(decl, map));
-            eachMapItemUnderAtRuleUsedByVariable(valueResults.variablesUsed, map, decl, function(mimicDecl, mapItem) {
-              var atRuleNode = mapItem.parent.parent.clone().removeAll();
-              var ruleClone = decl.parent.clone().removeAll();
-              var declClone = decl.clone();
-              declClone.value = logResolveValueResult(resolveValue(mimicDecl, map)).value;
-              ruleClone.append(declClone);
-              atRuleNode.append(ruleClone);
-              var parentAtRuleNode = atRuleNode;
-              var currentAtRuleNode = mapItem.parent.parent;
-              while (currentAtRuleNode.parent.type === 'atrule') {
-                var newParentAtRuleNode = currentAtRuleNode.parent.clone().removeAll();
-                newParentAtRuleNode.append(parentAtRuleNode);
-                parentAtRuleNode = newParentAtRuleNode;
-                currentAtRuleNode = currentAtRuleNode.parent;
-              }
-              createNodeCallbackList.push(function() {
-                decl.parent.parent.insertAfter(decl.parent, parentAtRuleNode);
-              });
-            });
-            if (opts.preserve === true && decl.value !== valueResults.value) {
-              createNodeCallbackList.push(function() {
-                decl.cloneAfter();
-                decl.value = valueResults.value;
-              });
-            } else {
-              decl.value = valueResults.value;
-            }
-          }
-        });
-        createNodeCallbackList.forEach(function(cb) {
-          cb();
-        });
-        nodesToRemoveAtEnd.forEach(function(currentChildToRemove) {
-          var currentNodeToPossiblyCleanUp = currentChildToRemove;
-          while (currentNodeToPossiblyCleanUp && currentNodeToPossiblyCleanUp.nodes.length <= 0) {
-            var nodeToRemove = currentNodeToPossiblyCleanUp;
-            currentNodeToPossiblyCleanUp = currentNodeToPossiblyCleanUp.parent;
-            nodeToRemove.removeSelf();
-          }
-        });
-      };
-    });
-  })(require("github:jspm/nodelibs-process@0.1.1"));
+      nodesToRemoveAtEnd.forEach(cleanUpNode);
+    };
+  });
   global.define = __define;
   return module.exports;
 });
@@ -23812,11 +23833,11 @@ System.register("npm:source-map@0.4.2/lib/source-map/source-map-generator", ["np
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.5", ["npm:postcss-css-variables@0.3.5/index"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.3.6", ["npm:postcss-css-variables@0.3.6/index"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  module.exports = require("npm:postcss-css-variables@0.3.5/index");
+  module.exports = require("npm:postcss-css-variables@0.3.6/index");
   global.define = __define;
   return module.exports;
 });
@@ -24141,7 +24162,7 @@ System.register("npm:react@0.13.2/react", ["npm:react@0.13.2/lib/React"], true, 
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/map-generator", ["npm:js-base64@2.1.8", "npm:source-map@0.4.2", "github:jspm/nodelibs-path@0.1.0"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/map-generator", ["npm:js-base64@2.1.8", "npm:source-map@0.4.2", "github:jspm/nodelibs-path@0.1.0"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -24411,7 +24432,7 @@ System.register("npm:react@0.13.2", ["npm:react@0.13.2/react"], true, function(r
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/lazy-result", ["npm:postcss@4.1.10/lib/map-generator", "npm:postcss@4.1.10/lib/warn-once", "npm:postcss@4.1.10/lib/result", "npm:postcss@4.1.10/lib/parse", "npm:postcss@4.1.10/lib/root", "npm:es6-promise@2.1.1", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/lazy-result", ["npm:postcss@4.1.11/lib/map-generator", "npm:postcss@4.1.11/lib/warn-once", "npm:postcss@4.1.11/lib/result", "npm:postcss@4.1.11/lib/parse", "npm:postcss@4.1.11/lib/root", "npm:es6-promise@2.1.1", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -24445,15 +24466,15 @@ System.register("npm:postcss@4.1.10/lib/lazy-result", ["npm:postcss@4.1.10/lib/m
         throw new TypeError('Cannot call a class as a function');
       }
     }
-    var _mapGenerator = require("npm:postcss@4.1.10/lib/map-generator");
+    var _mapGenerator = require("npm:postcss@4.1.11/lib/map-generator");
     var _mapGenerator2 = _interopRequireDefault(_mapGenerator);
-    var _warnOnce = require("npm:postcss@4.1.10/lib/warn-once");
+    var _warnOnce = require("npm:postcss@4.1.11/lib/warn-once");
     var _warnOnce2 = _interopRequireDefault(_warnOnce);
-    var _result = require("npm:postcss@4.1.10/lib/result");
+    var _result = require("npm:postcss@4.1.11/lib/result");
     var _result2 = _interopRequireDefault(_result);
-    var _parse = require("npm:postcss@4.1.10/lib/parse");
+    var _parse = require("npm:postcss@4.1.11/lib/parse");
     var _parse2 = _interopRequireDefault(_parse);
-    var _root = require("npm:postcss@4.1.10/lib/root");
+    var _root = require("npm:postcss@4.1.11/lib/root");
     var _root2 = _interopRequireDefault(_root);
     var Promise = global.Promise || require("npm:es6-promise@2.1.1").Promise;
     function isPromise(obj) {
@@ -24474,7 +24495,7 @@ System.register("npm:postcss@4.1.10/lib/lazy-result", ["npm:postcss@4.1.10/lib/m
           }
         } else {
           try {
-            root = _parse2['default'](css, opts);
+            root = (0, _parse2['default'])(css, opts);
           } catch (error) {
             this.error = error;
           }
@@ -24494,20 +24515,22 @@ System.register("npm:postcss@4.1.10/lib/lazy-result", ["npm:postcss@4.1.10/lib/m
         return this.async()['catch'](onRejected);
       };
       LazyResult.prototype.handleError = function handleError(error, plugin) {
-        this.error = error;
-        if (error.name === 'CssSyntaxError' && !error.plugin) {
-          error.plugin = plugin.postcssPlugin;
-          error.setMessage();
-        } else if (plugin.postcssVersion) {
-          var pluginName = plugin.postcssPlugin;
-          var pluginVersion = plugin.postcssVersion;
-          var runtimeVersion = this.result.processor.version;
-          var a = pluginVersion.split('.');
-          var b = runtimeVersion.split('.');
-          if (a[0] !== b[0] || parseInt(a[1]) > parseInt(b[1])) {
-            _warnOnce2['default']('Your current PostCSS version is ' + runtimeVersion + ', ' + ('but ' + pluginName + ' uses ' + pluginVersion + '. Perhaps ') + 'this is the source of the error below.');
+        try {
+          this.error = error;
+          if (error.name === 'CssSyntaxError' && !error.plugin) {
+            error.plugin = plugin.postcssPlugin;
+            error.setMessage();
+          } else if (plugin.postcssVersion) {
+            var pluginName = plugin.postcssPlugin;
+            var pluginVer = plugin.postcssVersion;
+            var runtimeVer = this.result.processor.version;
+            var a = pluginVer.split('.');
+            var b = runtimeVer.split('.');
+            if (a[0] !== b[0] || parseInt(a[1]) > parseInt(b[1])) {
+              (0, _warnOnce2['default'])('Your current PostCSS version is ' + runtimeVer + ', ' + ('but ' + pluginName + ' uses ' + pluginVer + '. Perhaps ') + 'this is the source of the error below.');
+            }
           }
-        }
+        } catch (err) {}
       };
       LazyResult.prototype.asyncTick = function asyncTick(plugins, resolve, reject) {
         var _this = this;
@@ -24657,7 +24680,7 @@ System.register("npm:postcss@4.1.10/lib/lazy-result", ["npm:postcss@4.1.10/lib/m
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/processor", ["npm:postcss@4.1.10/lib/lazy-result", "npm:postcss@4.1.10/package.json!github:systemjs/plugin-json@0.1.0", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/processor", ["npm:postcss@4.1.11/lib/lazy-result", "npm:postcss@4.1.11/package.json!github:systemjs/plugin-json@0.1.0", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -24672,7 +24695,7 @@ System.register("npm:postcss@4.1.10/lib/processor", ["npm:postcss@4.1.10/lib/laz
         throw new TypeError('Cannot call a class as a function');
       }
     }
-    var _lazyResult = require("npm:postcss@4.1.10/lib/lazy-result");
+    var _lazyResult = require("npm:postcss@4.1.11/lib/lazy-result");
     var _lazyResult2 = _interopRequireDefault(_lazyResult);
     var Processor = (function() {
       function Processor() {
@@ -24720,14 +24743,14 @@ System.register("npm:postcss@4.1.10/lib/processor", ["npm:postcss@4.1.10/lib/laz
       return Processor;
     })();
     exports['default'] = Processor;
-    Processor.prototype.version = require("npm:postcss@4.1.10/package.json!github:systemjs/plugin-json@0.1.0").version;
+    Processor.prototype.version = require("npm:postcss@4.1.11/package.json!github:systemjs/plugin-json@0.1.0").version;
     module.exports = exports['default'];
   })(require("github:jspm/nodelibs-process@0.1.1"));
   global.define = __define;
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10/lib/postcss", ["npm:postcss@4.1.10/lib/declaration", "npm:postcss@4.1.10/lib/processor", "npm:postcss@4.1.10/lib/comment", "npm:postcss@4.1.10/lib/at-rule", "npm:postcss@4.1.10/lib/vendor", "npm:postcss@4.1.10/lib/parse", "npm:postcss@4.1.10/lib/list", "npm:postcss@4.1.10/lib/rule", "npm:postcss@4.1.10/lib/root", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11/lib/postcss", ["npm:postcss@4.1.11/lib/declaration", "npm:postcss@4.1.11/lib/processor", "npm:postcss@4.1.11/lib/comment", "npm:postcss@4.1.11/lib/at-rule", "npm:postcss@4.1.11/lib/vendor", "npm:postcss@4.1.11/lib/parse", "npm:postcss@4.1.11/lib/list", "npm:postcss@4.1.11/lib/rule", "npm:postcss@4.1.11/lib/root", "github:jspm/nodelibs-process@0.1.1"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -24737,23 +24760,23 @@ System.register("npm:postcss@4.1.10/lib/postcss", ["npm:postcss@4.1.10/lib/decla
     function _interopRequireDefault(obj) {
       return obj && obj.__esModule ? obj : {'default': obj};
     }
-    var _declaration = require("npm:postcss@4.1.10/lib/declaration");
+    var _declaration = require("npm:postcss@4.1.11/lib/declaration");
     var _declaration2 = _interopRequireDefault(_declaration);
-    var _processor = require("npm:postcss@4.1.10/lib/processor");
+    var _processor = require("npm:postcss@4.1.11/lib/processor");
     var _processor2 = _interopRequireDefault(_processor);
-    var _comment = require("npm:postcss@4.1.10/lib/comment");
+    var _comment = require("npm:postcss@4.1.11/lib/comment");
     var _comment2 = _interopRequireDefault(_comment);
-    var _atRule = require("npm:postcss@4.1.10/lib/at-rule");
+    var _atRule = require("npm:postcss@4.1.11/lib/at-rule");
     var _atRule2 = _interopRequireDefault(_atRule);
-    var _vendor = require("npm:postcss@4.1.10/lib/vendor");
+    var _vendor = require("npm:postcss@4.1.11/lib/vendor");
     var _vendor2 = _interopRequireDefault(_vendor);
-    var _parse = require("npm:postcss@4.1.10/lib/parse");
+    var _parse = require("npm:postcss@4.1.11/lib/parse");
     var _parse2 = _interopRequireDefault(_parse);
-    var _list = require("npm:postcss@4.1.10/lib/list");
+    var _list = require("npm:postcss@4.1.11/lib/list");
     var _list2 = _interopRequireDefault(_list);
-    var _rule = require("npm:postcss@4.1.10/lib/rule");
+    var _rule = require("npm:postcss@4.1.11/lib/rule");
     var _rule2 = _interopRequireDefault(_rule);
-    var _root = require("npm:postcss@4.1.10/lib/root");
+    var _root = require("npm:postcss@4.1.11/lib/root");
     var _root2 = _interopRequireDefault(_root);
     var postcss = function postcss() {
       for (var _len = arguments.length,
@@ -24801,11 +24824,11 @@ System.register("npm:postcss@4.1.10/lib/postcss", ["npm:postcss@4.1.10/lib/decla
   return module.exports;
 });
 
-System.register("npm:postcss@4.1.10", ["npm:postcss@4.1.10/lib/postcss"], true, function(require, exports, module) {
+System.register("npm:postcss@4.1.11", ["npm:postcss@4.1.11/lib/postcss"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  module.exports = require("npm:postcss@4.1.10/lib/postcss");
+  module.exports = require("npm:postcss@4.1.11/lib/postcss");
   global.define = __define;
   return module.exports;
 });
@@ -25525,7 +25548,7 @@ System.register('src/js/components/PlaygroundHeader', ['npm:babel-runtime@5.2.6/
 		}
 	};
 });
-System.register('src/js/stores/PlaygroundStore', ['src/js/dispatcher/AppDispatcher', 'src/js/constants/PlaygroundConstants', 'src/js/stores/PlaygroundSettingsStore', 'npm:object-assign@2.0.0', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:postcss@4.1.10', 'npm:postcss-css-variables@0.3.5'], function (_export) {
+System.register('src/js/stores/PlaygroundStore', ['src/js/dispatcher/AppDispatcher', 'src/js/constants/PlaygroundConstants', 'src/js/stores/PlaygroundSettingsStore', 'npm:object-assign@2.0.0', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:postcss@4.1.11', 'npm:postcss-css-variables@0.3.6'], function (_export) {
 	var AppDispatcher, PlaygroundConstants, PlaygroundSettingsStore, assign, Immutable, events, postcss, cssvariables, EventEmitter, CHANGE_EVENT, keyboardActionStream, playgroundProcessor, postcssUnprocessedInputText, processingResult, PlaygroundStore;
 
 	function updateProcessor(settings) {
@@ -25569,10 +25592,10 @@ System.register('src/js/stores/PlaygroundStore', ['src/js/dispatcher/AppDispatch
 			Immutable = _npmImmutable372['default'];
 		}, function (_npmEvents102) {
 			events = _npmEvents102['default'];
-		}, function (_npmPostcss4110) {
-			postcss = _npmPostcss4110['default'];
-		}, function (_npmPostcssCssVariables035) {
-			cssvariables = _npmPostcssCssVariables035['default'];
+		}, function (_npmPostcss4111) {
+			postcss = _npmPostcss4111['default'];
+		}, function (_npmPostcssCssVariables036) {
+			cssvariables = _npmPostcssCssVariables036['default'];
 		}],
 		execute: function () {
 			'use strict';

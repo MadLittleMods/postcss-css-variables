@@ -14,7 +14,7 @@
       "object-assign": "npm:object-assign@^2.0.0",
       "plugin-postcss": "github:geelen/plugin-postcss@^0.1.0",
       "postcss": "npm:postcss@^4.1.8",
-      "postcss-css-variables": "npm:postcss-css-variables@^0.3.5",
+      "postcss-css-variables": "npm:postcss-css-variables@^0.3.6",
       "postcss-inline-comment": "npm:postcss-inline-comment@^1.0.3",
       "postcss-mixins": "npm:postcss-mixins@^0.1.1",
       "postcss-nested": "npm:postcss-nested@^0.2.2",
