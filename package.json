@@ -16,17 +16,17 @@
   "dependencies": {
     "escape-string-regexp": "^1.0.3",
     "extend": "^2.0.1",
-    "postcss": "^4.1.5"
+    "postcss": "^4.1.11"
   },
   "devDependencies": {
-    "bluebird": "^2.9.25",
+    "bluebird": "^2.9.26",
     "chai": "^2.3.0",
     "chai-as-promised": "^5.0.0",
     "clean-css": "^3.2.10",
     "gulp": "^3.8.11",
-    "gulp-eslint": "^0.11.1",
-    "gulp-mocha": "^2.0.1",
-    "mocha": "^2.2.4"
+    "gulp-eslint": "^0.12.0",
+    "gulp-mocha": "^2.1.0",
+    "mocha": "^2.2.5"
   },
   "scripts": {
     "test": "gulp"
