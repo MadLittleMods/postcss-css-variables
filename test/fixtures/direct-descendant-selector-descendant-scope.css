@@ -1,0 +1,31 @@
+
+.baz {
+	--baz-width: 180px;
+}
+
+.baz .qux {
+	--baz-width: 300px;
+}
+
+.baz > .qux > .wan {
+	width: var(--baz-width);
+}
+
+.some-parent > .baz > .qux > .wan {
+	width: var(--baz-width);
+}
+
+.some-parent > .baz > .wan > .qux {
+	width: var(--baz-width);
+}
+
+
+
+
+.baz .qux .further-child {
+	--baz-width: 320px;
+}
+
+.some-parent > .baz > .qux > .wan .further-child .ger {
+	width: var(--baz-width);
+}

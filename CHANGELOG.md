@@ -1,4 +1,9 @@
 
+# v0.3.7 - 2015-5-27
+
+ - Fix #7: Support for child combinator
+ - Added tests for child combinator coverage
+
 # v0.3.6 - 2015-5-21
 
  - Fix #6. Variable usage in comma separated selector to use proper scope

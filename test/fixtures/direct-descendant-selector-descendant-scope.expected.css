@@ -1,0 +1,17 @@
+.baz > .qux > .wan {
+	width: 300px;
+}
+
+.some-parent > .baz > .qux > .wan {
+	width: 300px;
+}
+
+.some-parent > .baz > .wan > .qux {
+	width: 300px;
+}
+
+
+
+.some-parent > .baz > .qux > .wan .further-child .ger {
+	width: 320px;
+}

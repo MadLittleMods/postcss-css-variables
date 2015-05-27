@@ -1,5 +1,5 @@
 // PostCSS CSS Variables (postcss-css-variables)
-// v0.3.6
+// v0.3.7
 //
 // https://github.com/MadLittleMods/postcss-css-variables
 
@@ -65,7 +65,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 	return function (css, result) {
 		// Transform CSS AST here
 
-		/* * /
+		/* */
 		try {
 		/* */
 
@@ -243,7 +243,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 		//console.log('map', map);
 
-		/* * /
+		/* */
 		}
 		catch(e) {
 			//console.log('e', e.message);

@@ -31,10 +31,12 @@ function testPlugin(filePath, expectedFilePath, options) {
 						mediaMerging: false,
 						restructuring: false,
 						shorthandCompacting: false,
-						keepBreaks: true
+						//keepBreaks: true,
+						compatibility: '-properties.merging'
 					});
 
 					expect(cleanCss.minify(actual).styles).to.equal(cleanCss.minify(contents).styles);
+					//expect(actual).to.equal(contents);
 				});
 		});
 }
@@ -51,6 +53,8 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/empty-var-func.css', './test/fixtures/empty-var-func.expected.css');
 	});
 
+
+
 	it('should work with variables declared in root', function() {
 		return testPlugin('./test/fixtures/root-variable.css', './test/fixtures/root-variable.expected.css');
 	});
@@ -63,6 +67,8 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/scope-last-piece-of-combinator-sequence.css', './test/fixtures/scope-last-piece-of-combinator-sequence.expected.css');
 	});
 
+
+
 	it('should work with descendant selector type "nesting"', function() {
 		return testPlugin('./test/fixtures/descendant-selector.css', './test/fixtures/descendant-selector.expected.css');
 	});
@@ -70,6 +76,24 @@ describe('postcss-css-variables', function() {
 	it('should work with css4 descendant selector type "nesting"', function() {
 		return testPlugin('./test/fixtures/css4-descendant-selector.css', './test/fixtures/css4-descendant-selector.expected.css');
 	});
+
+
+
+	it('should work with direct descendant selector', function() {
+		return testPlugin('./test/fixtures/direct-descendant-selector.css', './test/fixtures/direct-descendant-selector.expected.css');
+	});
+
+	it('should work with direct descendant selector where variables are scoped in a descendant selector', function() {
+		return testPlugin('./test/fixtures/direct-descendant-selector-descendant-scope.css', './test/fixtures/direct-descendant-selector-descendant-scope.expected.css');
+	});
+
+	it('should work with direct descendant selector where variables are scoped in a direct descendant selector', function() {
+		return testPlugin('./test/fixtures/direct-descendant-selector-direct-descendant-scope.css', './test/fixtures/direct-descendant-selector-direct-descendant-scope.expected.css');
+	});
+
+
+
+
 
 	it('should work with variables defined in comma separated selector', function() {
 		return testPlugin('./test/fixtures/comma-separated-variable-declaration.css', './test/fixtures/comma-separated-variable-declaration.expected.css');
@@ -79,9 +103,17 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/comma-separated-variable-usage.css', './test/fixtures/comma-separated-variable-usage.expected.css');
 	});
 
+
+
 	it('should work with star selector', function() {
 		return testPlugin('./test/fixtures/star-selector-scope.css', './test/fixtures/star-selector-scope.expected.css');
 	});
+
+	it('should work with `!important` variable declarations', function() {
+		return testPlugin('./test/fixtures/important-variable-declaration.css', './test/fixtures/important-variable-declaration.expected.css');
+	});
+
+
 
 	describe('with at-rules', function() {
 		it('should add rule declaration of property in @media', function() {
@@ -109,9 +141,6 @@ describe('postcss-css-variables', function() {
 		
 	});
 
-	it('should work with `!important` variable declarations', function() {
-		return testPlugin('./test/fixtures/important-variable-declaration.css', './test/fixtures/important-variable-declaration.expected.css');
-	});
 
 	it('should work with variables that reference other variables', function() {
 		return testPlugin('./test/fixtures/variable-reference-other-variable.css', './test/fixtures/variable-reference-other-variable.expected.css');
@@ -130,6 +159,7 @@ describe('postcss-css-variables', function() {
 	});
 
 
+
 	it('should work with variables that try to self reference', function() {
 		return testPlugin('./test/fixtures/self-reference.css', './test/fixtures/self-reference.expected.css');
 	});
@@ -140,6 +170,8 @@ describe('postcss-css-variables', function() {
 	it('should work with circular reference', function() {
 		return testPlugin('./test/fixtures/circular-reference.css', './test/fixtures/circular-reference.expected.css');
 	});
+
+
 
 	describe('with `options.variables`', function() {
 		it('should work with JS defined variables', function() {

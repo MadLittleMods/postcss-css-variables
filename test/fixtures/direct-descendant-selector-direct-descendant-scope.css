@@ -1,0 +1,16 @@
+.foo > .bar {
+	--foo-bar-width: 400px;
+}
+
+.foo > .bar > .baz {
+	width: var(--foo-bar-width);
+}
+
+.qux + .foo > .bar > .baz {
+	width: var(--foo-bar-width);
+}
+
+.foo > .bar + .baz {
+	/* undefined */
+	width: var(--foo-bar-width);
+}

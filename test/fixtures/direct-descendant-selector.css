@@ -1,0 +1,7 @@
+.foo {
+	--foo-width: 150px;
+}
+
+.foo > .bar {
+	width: var(--foo-width);
+}

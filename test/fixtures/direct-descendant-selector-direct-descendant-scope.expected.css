@@ -1,0 +1,12 @@
+.foo > .bar > .baz {
+	width: 400px;
+}
+
+.qux + .foo > .bar > .baz {
+	width: 400px;
+}
+
+.foo > .bar + .baz {
+	/* undefined */
+	width: undefined;
+}
