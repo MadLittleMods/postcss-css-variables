@@ -1,3 +1,6 @@
+# v0.3.8 - 2015-5-28
+
+ - Add support for pseudo selectors `:hover` `:before`
 
 # v0.3.7 - 2015-5-27
 

@@ -1,0 +1,22 @@
+.foo {
+	--foo-color: #ff0000;
+	color: var(--foo-color);
+}
+
+.foo:hover {
+	--foo-color: #00ff00;
+}
+
+
+/* This should add nothing to `.foo`, wrong scope */
+.bar:hover + .foo {
+	--foo-color: #f0f000;
+}
+/* This should add nothing to `.foo`, wrong scope */
+.foo:hover + .bar {
+	--foo-color: #0000ff;
+}
+/* This should add nothing to `.foo`, wrong scope */
+.foo:hover + .bar:focus {
+	--foo-color: #000f0f;
+}

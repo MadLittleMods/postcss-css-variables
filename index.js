@@ -1,5 +1,5 @@
 // PostCSS CSS Variables (postcss-css-variables)
-// v0.3.7
+// v0.3.8
 //
 // https://github.com/MadLittleMods/postcss-css-variables
 
@@ -46,18 +46,18 @@ function cleanUpNode(currentNodeToRemove) {
 }
 
 
-
+var defaults = {
+	// Allows you to preserve custom properties & var() usage in output.
+	// `true`, `false`, or `'computed'`
+	preserve: false,
+	// Define variables via JS
+	// Simple key-value pair
+	// or an object with a `value` property and an optional `isImportant` bool property
+	variables: {}
+};
 
 module.exports = postcss.plugin('postcss-css-variables', function(options) {
-	var defaults = {
-		// Allows you to preserve custom properties & var() usage in output.
-		// `true`, `false`, or `'computed'`
-		preserve: false,
-		// Define variables via JS
-		// Simple key-value pair
-		// or an object with a `value` property and an optional `isImportant` bool property
-		variables: {}
-	};
+	
 	opts = extend({}, defaults, options);
 
 	// Work with opts here
@@ -65,7 +65,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 	return function (css, result) {
 		// Transform CSS AST here
 
-		/* */
+		/* * /
 		try {
 		/* */
 
@@ -243,7 +243,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 		//console.log('map', map);
 
-		/* */
+		/* * /
 		}
 		catch(e) {
 			//console.log('e', e.message);

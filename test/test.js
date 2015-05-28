@@ -96,6 +96,11 @@ describe('postcss-css-variables', function() {
 		return testPlugin('./test/fixtures/pseudo-selector.css', './test/fixtures/pseudo-selector.expected.css');
 	});
 
+	it('should work with variables declared in pseudo selectors', function() {
+		return testPlugin('./test/fixtures/pseudo-selector-declare-variable.css', './test/fixtures/pseudo-selector-declare-variable.expected.css');
+	});
+
+
 
 	it('should work with variables defined in comma separated selector', function() {
 		return testPlugin('./test/fixtures/comma-separated-variable-declaration.css', './test/fixtures/comma-separated-variable-declaration.expected.css');
