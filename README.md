@@ -82,6 +82,32 @@ will be processed to:
 }
 ```
 
+## Pseudo class and elements
+
+```css
+.foo {
+	--foo-color: #ff0000;
+	color: var(--foo-color);
+}
+
+.foo:hover {
+	--foo-color: #00ff00;
+}
+```
+
+will be processed to:
+
+```css
+.foo {
+	color: #ff0000;
+}
+
+.foo:hover {
+	color: #00ff00;
+}
+```
+
+
 
 ## Nested rules
 
