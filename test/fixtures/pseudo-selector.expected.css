@@ -1,0 +1,7 @@
+.foo {
+	color: #ff0000;
+}
+
+.foo:before {
+	color: #ff0000;
+}

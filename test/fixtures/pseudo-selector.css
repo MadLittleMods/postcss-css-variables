@@ -1,0 +1,8 @@
+.foo {
+	--foo-color: #ff0000;
+	color: var(--foo-color);
+}
+
+.foo:before {
+	color: var(--foo-color);
+}
