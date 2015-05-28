@@ -14,7 +14,7 @@ The code playground for `postcss-css-variables` is [available live here](https:/
 
 Run once to set everything up:
 
-`npm run setup`
+`npm install`
 
 When developing run the following to build:
 
