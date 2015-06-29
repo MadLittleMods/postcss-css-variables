@@ -10219,7 +10219,7 @@ System.register("npm:postcss-css-variables@0.3.8/lib/resolve-decl", ["npm:postcs
   var isNodeUnderScope = require("npm:postcss-css-variables@0.3.8/lib/is-node-under-scope");
   var findNodeAncestorWithSelector = require("npm:postcss-css-variables@0.3.8/lib/find-node-ancestor-with-selector");
   var cloneSpliceParentOntoNodeWhen = require("npm:postcss-css-variables@0.3.8/lib/clone-splice-parent-onto-node-when");
-  function resolveDecl(decl, map, logResolveValueResult) {
+  function resolveDecl(decl, map, opts, logResolveValueResult) {
     var _logResolveValueResult = function(valueResults) {
       if (logResolveValueResult) {
         logResolveValueResult(valueResults);
