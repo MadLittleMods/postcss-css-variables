@@ -8,7 +8,7 @@ CSS variables or CSS Custom Properties limited subset polyfill/shim.
 
 We strive for the most complete transformation but we/no plugin can achieve true complete parity according to the [specification](http://dev.w3.org/csswg/css-variables/) because of the DOM cascade unknowns.
 
-## Latest Version: v0.3.8
+## Latest Version: v0.3.9
 ### [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
 
 ### Install
@@ -217,7 +217,7 @@ will be processed to:
 
 ## Interoperability
 
-`post-css-variables` plays really nice with [`postcss-nested`](https://github.com/postcss/postcss-nested) in order to get a larger subset of CSS variables features. *See [Nested rules, Usage section](#nested-rules)*
+`postcss-css-variables` plays really nice with [`postcss-nested`](https://github.com/postcss/postcss-nested) in order to get a larger subset of CSS variables features. *See [Nested rules, Usage section](#nested-rules)*
 
 If you are using [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties) previously, we have a compatible feature set and more so you can switch over without having to refactor any of your code. You can just start writing the new awesome stuff.
 
@@ -230,7 +230,7 @@ There is another similar plugin available, [`postcss-custom-properties`](https:/
 
 ### Differences from `postcss-custom-properties`
 
-The main features that we`post-css-variables` add/provide are:
+The main features that we`postcss-css-variables` add/provide are:
 
  - No limitation on what scope CSS variables can be declared or used (`:root` or wherever)
  	 - Proper value substitution based on explicit DOM/structure traversal

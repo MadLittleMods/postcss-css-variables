@@ -1,3 +1,9 @@
+
+# v0.3.9 - 2015-6-29
+
+ - Remove `opts` global leak. Fix #13
+
+
 # v0.3.8 - 2015-5-28
 
  - Add support for pseudo selectors `:hover` `:before`

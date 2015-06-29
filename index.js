@@ -57,8 +57,8 @@ var defaults = {
 };
 
 module.exports = postcss.plugin('postcss-css-variables', function(options) {
-	
-	opts = extend({}, defaults, options);
+
+	var opts = extend({}, defaults, options);
 
 	// Work with opts here
 
@@ -78,7 +78,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 		// Add the js defined variables `opts.variables` to the map
 		map = extend(
-			map, 
+			map,
 			Object.keys(opts.variables).reduce(function(prevVariableMap, variableName) {
 				var variableEntry = opts.variables[variableName];
 				// Automatically prefix any variable with `--` (CSS custom property syntax) if it doesn't have it already
@@ -187,7 +187,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		var rulesThatHaveDeclarationsWithVariablesList = [];
 		css.eachRule(function(rule) {
 			var doesRuleUseVariables = rule.nodes.some(function(node) {
-				if(node.type == 'decl') {
+				if(node.type === 'decl') {
 					var decl = node;
 					// If it uses variables
 					// and is not a variable declarations that we may be preserving from earlier
@@ -223,16 +223,16 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			// Resolve the declarations
 			rulesToWorkOn.forEach(function(ruleToWorkOn) {
 				ruleToWorkOn.nodes.slice(0).forEach(function(node) {
-					if(node.type == 'decl') {
+					if(node.type === 'decl') {
 						var decl = node;
-						resolveDecl(decl, map);
+						resolveDecl(decl, map, opts.preserve);
 					}
 				});
 			});
 
 		});
 
-		
+
 
 
 
