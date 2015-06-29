@@ -105,7 +105,7 @@ gulp.task('build-setup', function(done) {
 	else {
 		jspm.setPackagePath('.');
 		jspm.bundle(
-			'src/js/main', 
+			'src/js/main',
 			'build.js',
 			{
 				mangle: false,
