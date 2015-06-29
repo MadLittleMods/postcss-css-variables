@@ -58,7 +58,7 @@ var defaults = {
 
 module.exports = postcss.plugin('postcss-css-variables', function(options) {
 	
-	opts = extend({}, defaults, options);
+	var opts = extend({}, defaults, options);
 
 	// Work with opts here
 
@@ -225,7 +225,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				ruleToWorkOn.nodes.slice(0).forEach(function(node) {
 					if(node.type == 'decl') {
 						var decl = node;
-						resolveDecl(decl, map);
+						resolveDecl(decl, map, opts);
 					}
 				});
 			});
