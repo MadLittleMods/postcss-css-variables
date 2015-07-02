@@ -6,7 +6,7 @@ chai.use(chaiAsPromised);
 var postcss = require('postcss');
 
 var Promise = require('bluebird');
-var fs = Promise.promisifyAll(require("fs"));
+var fs = Promise.promisifyAll(require('fs'));
 var CleanCSS = require('clean-css');
 
 var cssvariables = require('../');

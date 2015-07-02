@@ -1,5 +1,5 @@
 // PostCSS CSS Variables (postcss-css-variables)
-// v0.3.8
+// v0.4.0
 //
 // https://github.com/MadLittleMods/postcss-css-variables
 
@@ -9,6 +9,7 @@
 var postcss = require('postcss');
 var extend = require('extend');
 
+var shallowCloneNode = require('./lib/shallow-clone-node');
 var resolveValue = require('./lib/resolve-value');
 var resolveDecl = require('./lib/resolve-decl');
 
@@ -23,7 +24,7 @@ var RE_VAR_PROP = (/(--(.+))/);
 
 function eachCssVariableDeclaration(css, cb) {
 	// Loop through all of the declarations and grab the variables and put them in the map
-	css.eachDecl(function(decl, index) {
+	css.eachDecl(function(decl) {
 		// If declaration is a variable
 		if(RE_VAR_PROP.test(decl.prop)) {
 			cb(decl);
@@ -137,7 +138,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			// Split out each selector piece into its own declaration for easier logic down the road
 			decl.parent.selectors.forEach(function(selector) {
 				// Create a detached clone
-				var splitOutRule = decl.parent.clone().removeAll();
+				var splitOutRule = shallowCloneNode(decl.parent);
 				splitOutRule.selector = selector;
 				splitOutRule.parent = decl.parent.parent;
 

@@ -1,4 +1,12 @@
 
+# v0.4.0 - 2015-7-2
+
+ - Fix #15
+ 	 - Remove slowness from cloning the `root` with `node.clone().removeAll()`. Now using `./lib/shallow-clone-node.js` to avoid cloning children which will get removed right after.
+ 	 - Thank you to @ddprrt for bringing up the slowness issue in this article, [PostCSS misconceptions](https://medium.com/@ddprrt/postcss-misconceptions-faf5dc5038df).
+
+
+
 # v0.3.9 - 2015-6-29
 
  - Remove `opts` global leak. Fix #13

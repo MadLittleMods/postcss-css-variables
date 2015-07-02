@@ -8,7 +8,7 @@ CSS variables or CSS Custom Properties limited subset polyfill/shim.
 
 We strive for the most complete transformation but we/no plugin can achieve true complete parity according to the [specification](http://dev.w3.org/csswg/css-variables/) because of the DOM cascade unknowns.
 
-## Latest Version: v0.3.9
+## Latest Version: v0.4.0
 ### [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
 
 ### Install
@@ -236,6 +236,7 @@ The main features that we`postcss-css-variables` add/provide are:
  	 - Proper value substitution based on explicit DOM/structure traversal
  - At-rule support `@media`, `@support`, etc
  - Nested rules which can be fully deduced with [`postcss-nested`](https://github.com/postcss/postcss-nested).
+ - Pseudo class/element support `:hover`, etc
 
 
 
