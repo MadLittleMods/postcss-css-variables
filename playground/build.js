@@ -10032,7 +10032,47 @@ System.register("npm:extend@2.0.1/index", [], true, function(require, exports, m
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/generate-descendant-pieces-from-selector", [], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/shallow-clone-node", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var shallowCloneNode = function(obj, parent) {
+    var cloned = new obj.constructor();
+    Object.keys(obj).forEach(function(i) {
+      if (!obj.hasOwnProperty(i)) {
+        return ;
+      }
+      var value = obj[i];
+      var type = typeof value;
+      if (i === 'parent' && type === 'object') {
+        if (parent) {
+          cloned[i] = parent;
+        }
+      } else if (i === 'source') {
+        cloned[i] = value;
+      } else if (value instanceof Array) {
+        if (i === 'nodes') {
+          cloned[i] = [];
+        } else {
+          cloned[i] = value.map(function(j) {
+            shallowCloneNode(j, cloned);
+          });
+        }
+      } else if (i !== 'before' && i !== 'after' && i !== 'between' && i !== 'semicolon') {
+        if (type === 'object') {
+          value = shallowCloneNode(value);
+        }
+        cloned[i] = value;
+      }
+    });
+    return cloned;
+  };
+  module.exports = shallowCloneNode;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("npm:postcss-css-variables@0.4.0/lib/generate-descendant-pieces-from-selector", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -10068,7 +10108,7 @@ System.register("npm:escape-string-regexp@1.0.3/index", [], true, function(requi
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/is-piece-always-ancestor-selector", [], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/is-piece-always-ancestor-selector", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -10085,7 +10125,7 @@ System.register("npm:postcss-css-variables@0.3.9/lib/is-piece-always-ancestor-se
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/generate-direct-descendant-pieces-from-selector", [], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/generate-direct-descendant-pieces-from-selector", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -10105,7 +10145,7 @@ System.register("npm:postcss-css-variables@0.3.9/lib/generate-direct-descendant-
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/gather-variable-dependencies", [], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/gather-variable-dependencies", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -10145,11 +10185,11 @@ System.register("npm:postcss-css-variables@0.3.9/lib/gather-variable-dependencie
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/find-node-ancestor-with-selector", ["npm:postcss-css-variables@0.3.9/lib/generate-scope-list"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/find-node-ancestor-with-selector", ["npm:postcss-css-variables@0.4.0/lib/generate-scope-list"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var generateScopeList = require("npm:postcss-css-variables@0.3.9/lib/generate-scope-list");
+  var generateScopeList = require("npm:postcss-css-variables@0.4.0/lib/generate-scope-list");
   var findNodeAncestorWithSelector = function(selector, node) {
     var matchingNode;
     var currentNode = node;
@@ -10173,10 +10213,11 @@ System.register("npm:postcss-css-variables@0.3.9/lib/find-node-ancestor-with-sel
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/clone-splice-parent-onto-node-when", [], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/clone-splice-parent-onto-node-when", ["npm:postcss-css-variables@0.4.0/lib/shallow-clone-node"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
+  var shallowCloneNode = require("npm:postcss-css-variables@0.4.0/lib/shallow-clone-node");
   var cloneSpliceParentOntoNodeWhen = function(node, parent, whenCb) {
     whenCb = whenCb || function() {
       return true;
@@ -10188,7 +10229,7 @@ System.register("npm:postcss-css-variables@0.3.9/lib/clone-splice-parent-onto-no
       if (current.type === 'decl') {
         cloneList.push(current.clone());
       } else {
-        cloneList.push(current.clone().removeAll());
+        cloneList.push(shallowCloneNode(current));
       }
       isWhenNow = whenCb(current);
       current = current.parent;
@@ -10196,7 +10237,7 @@ System.register("npm:postcss-css-variables@0.3.9/lib/clone-splice-parent-onto-no
     var cloneParentList = [];
     var currentParent = parent;
     while (currentParent) {
-      cloneParentList.push(currentParent.clone().removeAll());
+      cloneParentList.push(shallowCloneNode(currentParent));
       currentParent = currentParent.parent;
     }
     cloneParentList.forEach(function(parentClone, index, cloneParentList) {
@@ -10219,17 +10260,18 @@ System.register("npm:postcss-css-variables@0.3.9/lib/clone-splice-parent-onto-no
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/resolve-decl", ["npm:postcss-css-variables@0.3.9/lib/resolve-value", "npm:postcss-css-variables@0.3.9/lib/generate-scope-list", "npm:postcss-css-variables@0.3.9/lib/gather-variable-dependencies", "npm:postcss-css-variables@0.3.9/lib/is-under-scope", "npm:postcss-css-variables@0.3.9/lib/is-node-under-scope", "npm:postcss-css-variables@0.3.9/lib/find-node-ancestor-with-selector", "npm:postcss-css-variables@0.3.9/lib/clone-splice-parent-onto-node-when"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/resolve-decl", ["npm:postcss-css-variables@0.4.0/lib/resolve-value", "npm:postcss-css-variables@0.4.0/lib/generate-scope-list", "npm:postcss-css-variables@0.4.0/lib/gather-variable-dependencies", "npm:postcss-css-variables@0.4.0/lib/is-under-scope", "npm:postcss-css-variables@0.4.0/lib/is-node-under-scope", "npm:postcss-css-variables@0.4.0/lib/shallow-clone-node", "npm:postcss-css-variables@0.4.0/lib/find-node-ancestor-with-selector", "npm:postcss-css-variables@0.4.0/lib/clone-splice-parent-onto-node-when"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var resolveValue = require("npm:postcss-css-variables@0.3.9/lib/resolve-value");
-  var generateScopeList = require("npm:postcss-css-variables@0.3.9/lib/generate-scope-list");
-  var gatherVariableDependencies = require("npm:postcss-css-variables@0.3.9/lib/gather-variable-dependencies");
-  var isUnderScope = require("npm:postcss-css-variables@0.3.9/lib/is-under-scope");
-  var isNodeUnderScope = require("npm:postcss-css-variables@0.3.9/lib/is-node-under-scope");
-  var findNodeAncestorWithSelector = require("npm:postcss-css-variables@0.3.9/lib/find-node-ancestor-with-selector");
-  var cloneSpliceParentOntoNodeWhen = require("npm:postcss-css-variables@0.3.9/lib/clone-splice-parent-onto-node-when");
+  var resolveValue = require("npm:postcss-css-variables@0.4.0/lib/resolve-value");
+  var generateScopeList = require("npm:postcss-css-variables@0.4.0/lib/generate-scope-list");
+  var gatherVariableDependencies = require("npm:postcss-css-variables@0.4.0/lib/gather-variable-dependencies");
+  var isUnderScope = require("npm:postcss-css-variables@0.4.0/lib/is-under-scope");
+  var isNodeUnderScope = require("npm:postcss-css-variables@0.4.0/lib/is-node-under-scope");
+  var shallowCloneNode = require("npm:postcss-css-variables@0.4.0/lib/shallow-clone-node");
+  var findNodeAncestorWithSelector = require("npm:postcss-css-variables@0.4.0/lib/find-node-ancestor-with-selector");
+  var cloneSpliceParentOntoNodeWhen = require("npm:postcss-css-variables@0.4.0/lib/clone-splice-parent-onto-node-when");
   function eachMapItemDependencyOfDecl(variablesUsedList, map, decl, cb) {
     variablesUsedList.forEach(function(variableUsedName) {
       gatherVariableDependencies(variablesUsedList, map).deps.forEach(function(mapItem) {
@@ -10243,7 +10285,7 @@ System.register("npm:postcss-css-variables@0.3.9/lib/resolve-decl", ["npm:postcs
             return ancestor === nodeToSpliceParentOnto;
           });
         } else if (isUnderScope.RE_PSEUDO_SELECTOR.test(mapItem.parent.selector)) {
-          var ruleClone = decl.parent.clone().removeAll();
+          var ruleClone = shallowCloneNode(decl.parent);
           ruleClone.parent = decl.parent.parent;
           mimicDecl = decl.clone();
           ruleClone.append(mimicDecl);
@@ -10267,17 +10309,17 @@ System.register("npm:postcss-css-variables@0.3.9/lib/resolve-decl", ["npm:postcs
     };
     var valueResults = _logResolveValueResult(resolveValue(decl, map));
     eachMapItemDependencyOfDecl(valueResults.variablesUsed, map, decl, function(mimicDecl, mapItem) {
-      var ruleClone = decl.parent.clone().removeAll();
+      var ruleClone = shallowCloneNode(decl.parent);
       var declClone = decl.clone();
       declClone.value = _logResolveValueResult(resolveValue(mimicDecl, map, true)).value;
       ruleClone.append(declClone);
       if (mapItem.isUnderAtRule) {
-        var atRuleNode = mapItem.parent.parent.clone().removeAll();
+        var atRuleNode = shallowCloneNode(mapItem.parent.parent);
         atRuleNode.append(ruleClone);
         var parentAtRuleNode = atRuleNode;
         var currentAtRuleNode = mapItem.parent.parent;
         while (currentAtRuleNode.parent.type === 'atrule') {
-          var newParentAtRuleNode = currentAtRuleNode.parent.clone().removeAll();
+          var newParentAtRuleNode = shallowCloneNode(currentAtRuleNode.parent);
           newParentAtRuleNode.append(parentAtRuleNode);
           parentAtRuleNode = newParentAtRuleNode;
           currentAtRuleNode = currentAtRuleNode.parent;
@@ -15118,11 +15160,11 @@ System.register("npm:extend@2.0.1", ["npm:extend@2.0.1/index"], true, function(r
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/generate-scope-list", ["npm:postcss-css-variables@0.3.9/lib/generate-descendant-pieces-from-selector"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/generate-scope-list", ["npm:postcss-css-variables@0.4.0/lib/generate-descendant-pieces-from-selector"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var generateDescendantPiecesFromSelector = require("npm:postcss-css-variables@0.3.9/lib/generate-descendant-pieces-from-selector");
+  var generateDescendantPiecesFromSelector = require("npm:postcss-css-variables@0.4.0/lib/generate-descendant-pieces-from-selector");
   var generateScopeList = function(node, includeSelf) {
     includeSelf = includeSelf || false;
     var selectorScopeList = [[]];
@@ -17689,7 +17731,7 @@ System.register("npm:postcss@4.1.13/lib/node", ["npm:postcss@4.1.13/lib/css-synt
   return module.exports;
 });
 
-System.register("npm:buffer@3.2.2/index", ["npm:base64-js@0.0.8", "npm:ieee754@1.1.6", "npm:is-array@1.0.1"], true, function(require, exports, module) {
+System.register("npm:buffer@3.3.0/index", ["npm:base64-js@0.0.8", "npm:ieee754@1.1.6", "npm:is-array@1.0.1"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -17700,7 +17742,6 @@ System.register("npm:buffer@3.2.2/index", ["npm:base64-js@0.0.8", "npm:ieee754@1
   exports.SlowBuffer = SlowBuffer;
   exports.INSPECT_MAX_BYTES = 50;
   Buffer.poolSize = 8192;
-  var kMaxLength = 0x3fffffff;
   var rootParent = {};
   Buffer.TYPED_ARRAY_SUPPORT = (function() {
     try {
@@ -17714,6 +17755,9 @@ System.register("npm:buffer@3.2.2/index", ["npm:base64-js@0.0.8", "npm:ieee754@1
       return false;
     }
   })();
+  function kMaxLength() {
+    return Buffer.TYPED_ARRAY_SUPPORT ? 0x7fffffff : 0x3fffffff;
+  }
   function Buffer(arg) {
     if (!(this instanceof Buffer)) {
       if (arguments.length > 1)
@@ -17818,8 +17862,8 @@ System.register("npm:buffer@3.2.2/index", ["npm:base64-js@0.0.8", "npm:ieee754@1
     return that;
   }
   function checked(length) {
-    if (length >= kMaxLength) {
-      throw new RangeError('Attempt to allocate Buffer larger than maximum ' + 'size: 0x' + kMaxLength.toString(16) + ' bytes');
+    if (length >= kMaxLength()) {
+      throw new RangeError('Attempt to allocate Buffer larger than maximum ' + 'size: 0x' + kMaxLength().toString(16) + ' bytes');
     }
     return length | 0;
   }
@@ -17902,34 +17946,42 @@ System.register("npm:buffer@3.2.2/index", ["npm:base64-js@0.0.8", "npm:ieee754@1
   };
   function byteLength(string, encoding) {
     if (typeof string !== 'string')
-      string = String(string);
-    if (string.length === 0)
+      string = '' + string;
+    var len = string.length;
+    if (len === 0)
       return 0;
-    switch (encoding || 'utf8') {
-      case 'ascii':
-      case 'binary':
-      case 'raw':
-        return string.length;
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return string.length * 2;
-      case 'hex':
-        return string.length >>> 1;
-      case 'utf8':
-      case 'utf-8':
-        return utf8ToBytes(string).length;
-      case 'base64':
-        return base64ToBytes(string).length;
-      default:
-        return string.length;
+    var loweredCase = false;
+    for (; ; ) {
+      switch (encoding) {
+        case 'ascii':
+        case 'binary':
+        case 'raw':
+        case 'raws':
+          return len;
+        case 'utf8':
+        case 'utf-8':
+          return utf8ToBytes(string).length;
+        case 'ucs2':
+        case 'ucs-2':
+        case 'utf16le':
+        case 'utf-16le':
+          return len * 2;
+        case 'hex':
+          return len >>> 1;
+        case 'base64':
+          return base64ToBytes(string).length;
+        default:
+          if (loweredCase)
+            return utf8ToBytes(string).length;
+          encoding = ('' + encoding).toLowerCase();
+          loweredCase = true;
+      }
     }
   }
   Buffer.byteLength = byteLength;
   Buffer.prototype.length = undefined;
   Buffer.prototype.parent = undefined;
-  Buffer.prototype.toString = function toString(encoding, start, end) {
+  function slowToString(encoding, start, end) {
     var loweredCase = false;
     start = start | 0;
     end = end === undefined || end === Infinity ? this.length : end | 0;
@@ -17966,6 +18018,14 @@ System.register("npm:buffer@3.2.2/index", ["npm:base64-js@0.0.8", "npm:ieee754@1
           loweredCase = true;
       }
     }
+  }
+  Buffer.prototype.toString = function toString() {
+    var length = this.length | 0;
+    if (length === 0)
+      return '';
+    if (arguments.length === 0)
+      return utf8Slice(this, 0, length);
+    return slowToString.apply(this, arguments);
   };
   Buffer.prototype.equals = function equals(b) {
     if (!Buffer.isBuffer(b))
@@ -19445,13 +19505,13 @@ System.register("npm:postcss@4.1.13/lib/previous-map", ["npm:js-base64@2.1.8", "
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/is-under-scope", ["npm:escape-string-regexp@1.0.3", "npm:postcss-css-variables@0.3.9/lib/is-piece-always-ancestor-selector", "npm:postcss-css-variables@0.3.9/lib/generate-direct-descendant-pieces-from-selector"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/is-under-scope", ["npm:escape-string-regexp@1.0.3", "npm:postcss-css-variables@0.4.0/lib/is-piece-always-ancestor-selector", "npm:postcss-css-variables@0.4.0/lib/generate-direct-descendant-pieces-from-selector"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   var escapeStringRegexp = require("npm:escape-string-regexp@1.0.3");
-  var isPieceAlwaysAncestorSelector = require("npm:postcss-css-variables@0.3.9/lib/is-piece-always-ancestor-selector");
-  var generateDirectDescendantPiecesFromSelector = require("npm:postcss-css-variables@0.3.9/lib/generate-direct-descendant-pieces-from-selector");
+  var isPieceAlwaysAncestorSelector = require("npm:postcss-css-variables@0.4.0/lib/is-piece-always-ancestor-selector");
+  var generateDirectDescendantPiecesFromSelector = require("npm:postcss-css-variables@0.4.0/lib/generate-direct-descendant-pieces-from-selector");
   var RE_AT_RULE_SCOPE_PIECE = (/^@.*/);
   var RE_PSEUDO_SELECTOR = (/([^\s:]+)((?::|::)[^\s]*?)(\s+|$)/);
   function getScopeMatchResults(nodeScopeList, scopeNodeScopeList) {
@@ -21027,11 +21087,11 @@ System.register("npm:postcss@4.1.13/lib/declaration", ["npm:postcss@4.1.13/lib/n
   return module.exports;
 });
 
-System.register("npm:buffer@3.2.2", ["npm:buffer@3.2.2/index"], true, function(require, exports, module) {
+System.register("npm:buffer@3.3.0", ["npm:buffer@3.3.0/index"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  module.exports = require("npm:buffer@3.2.2/index");
+  module.exports = require("npm:buffer@3.3.0/index");
   global.define = __define;
   return module.exports;
 });
@@ -21225,12 +21285,12 @@ System.register("npm:postcss@4.1.13/lib/input", ["npm:postcss@4.1.13/lib/css-syn
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/is-node-under-scope", ["npm:postcss-css-variables@0.3.9/lib/is-under-scope", "npm:postcss-css-variables@0.3.9/lib/generate-scope-list"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/is-node-under-scope", ["npm:postcss-css-variables@0.4.0/lib/is-under-scope", "npm:postcss-css-variables@0.4.0/lib/generate-scope-list"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var isUnderScope = require("npm:postcss-css-variables@0.3.9/lib/is-under-scope");
-  var generateScopeList = require("npm:postcss-css-variables@0.3.9/lib/generate-scope-list");
+  var isUnderScope = require("npm:postcss-css-variables@0.4.0/lib/is-under-scope");
+  var generateScopeList = require("npm:postcss-css-variables@0.4.0/lib/generate-scope-list");
   var isNodeUnderScope = function(node, scopeNode, ignorePseudo) {
     var nodeScopeList = generateScopeList(node, true);
     var scopeNodeScopeList = generateScopeList(scopeNode, true);
@@ -21951,11 +22011,11 @@ System.register("npm:lodash.throttle@3.0.2/index", ["npm:lodash.debounce@3.0.3"]
   return module.exports;
 });
 
-System.register("github:jspm/nodelibs-buffer@0.1.0/index", ["npm:buffer@3.2.2"], true, function(require, exports, module) {
+System.register("github:jspm/nodelibs-buffer@0.1.0/index", ["npm:buffer@3.3.0"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  module.exports = System._nodeRequire ? System._nodeRequire('buffer') : require("npm:buffer@3.2.2");
+  module.exports = System._nodeRequire ? System._nodeRequire('buffer') : require("npm:buffer@3.3.0");
   global.define = __define;
   return module.exports;
 });
@@ -22684,15 +22744,15 @@ System.register("npm:postcss@4.1.13/lib/parser", ["npm:postcss@4.1.13/lib/declar
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/lib/resolve-value", ["npm:postcss-css-variables@0.3.9/lib/generate-scope-list", "npm:postcss-css-variables@0.3.9/lib/is-node-under-scope", "npm:postcss-css-variables@0.3.9/lib/gather-variable-dependencies", "npm:postcss-css-variables@0.3.9/lib/find-node-ancestor-with-selector", "npm:postcss-css-variables@0.3.9/lib/clone-splice-parent-onto-node-when"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/lib/resolve-value", ["npm:postcss-css-variables@0.4.0/lib/generate-scope-list", "npm:postcss-css-variables@0.4.0/lib/is-node-under-scope", "npm:postcss-css-variables@0.4.0/lib/gather-variable-dependencies", "npm:postcss-css-variables@0.4.0/lib/find-node-ancestor-with-selector", "npm:postcss-css-variables@0.4.0/lib/clone-splice-parent-onto-node-when"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var generateScopeList = require("npm:postcss-css-variables@0.3.9/lib/generate-scope-list");
-  var isNodeUnderScope = require("npm:postcss-css-variables@0.3.9/lib/is-node-under-scope");
-  var gatherVariableDependencies = require("npm:postcss-css-variables@0.3.9/lib/gather-variable-dependencies");
-  var findNodeAncestorWithSelector = require("npm:postcss-css-variables@0.3.9/lib/find-node-ancestor-with-selector");
-  var cloneSpliceParentOntoNodeWhen = require("npm:postcss-css-variables@0.3.9/lib/clone-splice-parent-onto-node-when");
+  var generateScopeList = require("npm:postcss-css-variables@0.4.0/lib/generate-scope-list");
+  var isNodeUnderScope = require("npm:postcss-css-variables@0.4.0/lib/is-node-under-scope");
+  var gatherVariableDependencies = require("npm:postcss-css-variables@0.4.0/lib/gather-variable-dependencies");
+  var findNodeAncestorWithSelector = require("npm:postcss-css-variables@0.4.0/lib/find-node-ancestor-with-selector");
+  var cloneSpliceParentOntoNodeWhen = require("npm:postcss-css-variables@0.4.0/lib/clone-splice-parent-onto-node-when");
   var RE_VAR_FUNC = (/var\((--[^,\s]+?)(?:\s*,\s*(.+))?\)/);
   var resolveValue = function(decl, map, ignorePseudoScope, _debugIsInternal) {
     var resultantValue = decl.value;
@@ -23027,17 +23087,18 @@ System.register("npm:postcss@4.1.13/lib/parse", ["npm:postcss@4.1.13/lib/parser"
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9/index", ["npm:postcss@4.1.13", "npm:extend@2.0.1", "npm:postcss-css-variables@0.3.9/lib/resolve-value", "npm:postcss-css-variables@0.3.9/lib/resolve-decl"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0/index", ["npm:postcss@4.1.13", "npm:extend@2.0.1", "npm:postcss-css-variables@0.4.0/lib/shallow-clone-node", "npm:postcss-css-variables@0.4.0/lib/resolve-value", "npm:postcss-css-variables@0.4.0/lib/resolve-decl"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   var postcss = require("npm:postcss@4.1.13");
   var extend = require("npm:extend@2.0.1");
-  var resolveValue = require("npm:postcss-css-variables@0.3.9/lib/resolve-value");
-  var resolveDecl = require("npm:postcss-css-variables@0.3.9/lib/resolve-decl");
+  var shallowCloneNode = require("npm:postcss-css-variables@0.4.0/lib/shallow-clone-node");
+  var resolveValue = require("npm:postcss-css-variables@0.4.0/lib/resolve-value");
+  var resolveDecl = require("npm:postcss-css-variables@0.4.0/lib/resolve-decl");
   var RE_VAR_PROP = (/(--(.+))/);
   function eachCssVariableDeclaration(css, cb) {
-    css.eachDecl(function(decl, index) {
+    css.eachDecl(function(decl) {
       if (RE_VAR_PROP.test(decl.prop)) {
         cb(decl);
       }
@@ -23095,7 +23156,7 @@ System.register("npm:postcss-css-variables@0.3.9/index", ["npm:postcss@4.1.13", 
         var declParentRule = decl.parent;
         var valueResults = logResolveValueResult(resolveValue(decl, map));
         decl.parent.selectors.forEach(function(selector) {
-          var splitOutRule = decl.parent.clone().removeAll();
+          var splitOutRule = shallowCloneNode(decl.parent);
           splitOutRule.selector = selector;
           splitOutRule.parent = decl.parent.parent;
           var declClone = decl.clone();
@@ -23923,11 +23984,11 @@ System.register("npm:source-map@0.4.2/lib/source-map/source-map-generator", ["np
   return module.exports;
 });
 
-System.register("npm:postcss-css-variables@0.3.9", ["npm:postcss-css-variables@0.3.9/index"], true, function(require, exports, module) {
+System.register("npm:postcss-css-variables@0.4.0", ["npm:postcss-css-variables@0.4.0/index"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  module.exports = require("npm:postcss-css-variables@0.3.9/index");
+  module.exports = require("npm:postcss-css-variables@0.4.0/index");
   global.define = __define;
   return module.exports;
 });
@@ -25638,7 +25699,7 @@ System.register('src/js/components/PlaygroundHeader', ['npm:babel-runtime@5.2.6/
 		}
 	};
 });
-System.register('src/js/stores/PlaygroundStore', ['src/js/dispatcher/AppDispatcher', 'src/js/constants/PlaygroundConstants', 'src/js/stores/PlaygroundSettingsStore', 'npm:object-assign@2.0.0', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:postcss@4.1.13', 'npm:postcss-css-variables@0.3.9'], function (_export) {
+System.register('src/js/stores/PlaygroundStore', ['src/js/dispatcher/AppDispatcher', 'src/js/constants/PlaygroundConstants', 'src/js/stores/PlaygroundSettingsStore', 'npm:object-assign@2.0.0', 'npm:immutable@3.7.2', 'npm:events@1.0.2', 'npm:postcss@4.1.13', 'npm:postcss-css-variables@0.4.0'], function (_export) {
 	var AppDispatcher, PlaygroundConstants, PlaygroundSettingsStore, assign, Immutable, events, postcss, cssvariables, EventEmitter, CHANGE_EVENT, keyboardActionStream, playgroundProcessor, postcssUnprocessedInputText, processingResult, PlaygroundStore;
 
 	function updateProcessor(settings) {
@@ -25684,8 +25745,8 @@ System.register('src/js/stores/PlaygroundStore', ['src/js/dispatcher/AppDispatch
 			events = _npmEvents102['default'];
 		}, function (_npmPostcss4113) {
 			postcss = _npmPostcss4113['default'];
-		}, function (_npmPostcssCssVariables039) {
-			cssvariables = _npmPostcssCssVariables039['default'];
+		}, function (_npmPostcssCssVariables040) {
+			cssvariables = _npmPostcssCssVariables040['default'];
 		}],
 		execute: function () {
 			'use strict';

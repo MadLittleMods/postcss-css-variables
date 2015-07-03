@@ -578,14 +578,15 @@ System.config({
       "npm:postcss@4.1.13/package.json!github:systemjs/plugin-json@0.1.0",
       "npm:postcss@4.1.13/lib/vendor",
       "npm:extend@2.0.1/index",
-      "npm:postcss-css-variables@0.3.9/lib/generate-descendant-pieces-from-selector",
+      "npm:postcss-css-variables@0.4.0/lib/shallow-clone-node",
+      "npm:postcss-css-variables@0.4.0/lib/generate-descendant-pieces-from-selector",
       "npm:escape-string-regexp@1.0.3/index",
-      "npm:postcss-css-variables@0.3.9/lib/is-piece-always-ancestor-selector",
-      "npm:postcss-css-variables@0.3.9/lib/generate-direct-descendant-pieces-from-selector",
-      "npm:postcss-css-variables@0.3.9/lib/gather-variable-dependencies",
-      "npm:postcss-css-variables@0.3.9/lib/find-node-ancestor-with-selector",
-      "npm:postcss-css-variables@0.3.9/lib/clone-splice-parent-onto-node-when",
-      "npm:postcss-css-variables@0.3.9/lib/resolve-decl",
+      "npm:postcss-css-variables@0.4.0/lib/is-piece-always-ancestor-selector",
+      "npm:postcss-css-variables@0.4.0/lib/generate-direct-descendant-pieces-from-selector",
+      "npm:postcss-css-variables@0.4.0/lib/gather-variable-dependencies",
+      "npm:postcss-css-variables@0.4.0/lib/find-node-ancestor-with-selector",
+      "npm:postcss-css-variables@0.4.0/lib/clone-splice-parent-onto-node-when",
+      "npm:postcss-css-variables@0.4.0/lib/resolve-decl",
       "src/js/actions/PlaygroundActions",
       "npm:babel-runtime@5.2.6/helpers/define-property",
       "npm:core-js@0.9.6/library/fn/object/keys",
@@ -647,7 +648,7 @@ System.config({
       "github:jspm/nodelibs-fs@0.1.2",
       "npm:es6-promise@2.3.0",
       "npm:extend@2.0.1",
-      "npm:postcss-css-variables@0.3.9/lib/generate-scope-list",
+      "npm:postcss-css-variables@0.4.0/lib/generate-scope-list",
       "npm:escape-string-regexp@1.0.3",
       "npm:babel-runtime@5.2.6/core-js/object/keys",
       "npm:asap@1.0.0",
@@ -679,11 +680,11 @@ System.config({
       "src/js/constants/PlaygroundConstants",
       "src/js/stores/PlaygroundSettingsStore",
       "npm:postcss@4.1.13/lib/node",
-      "npm:buffer@3.2.2/index",
+      "npm:buffer@3.3.0/index",
       "github:jspm/nodelibs-path@0.1.0/index",
       "npm:postcss@4.1.13/lib/container",
       "npm:postcss@4.1.13/lib/previous-map",
-      "npm:postcss-css-variables@0.3.9/lib/is-under-scope",
+      "npm:postcss-css-variables@0.4.0/lib/is-under-scope",
       "npm:promise@5.0.0/core",
       "src/js/components/EditorTextarea",
       "github:jspm/nodelibs-process@0.1.1",
@@ -699,11 +700,11 @@ System.config({
       "npm:lodash.debounce@3.0.3",
       "npm:flux@2.0.3",
       "npm:postcss@4.1.13/lib/declaration",
-      "npm:buffer@3.2.2",
+      "npm:buffer@3.3.0",
       "github:jspm/nodelibs-path@0.1.0",
       "npm:postcss@4.1.13/lib/at-rule",
       "npm:postcss@4.1.13/lib/input",
-      "npm:postcss-css-variables@0.3.9/lib/is-node-under-scope",
+      "npm:postcss-css-variables@0.4.0/lib/is-node-under-scope",
       "npm:promise@5.0.0/index",
       "npm:react@0.13.2/lib/invariant",
       "npm:react@0.13.2/lib/ReactFragment",
@@ -717,7 +718,7 @@ System.config({
       "github:jspm/nodelibs-buffer@0.1.0/index",
       "npm:amdefine@0.1.1/amdefine",
       "npm:postcss@4.1.13/lib/parser",
-      "npm:postcss-css-variables@0.3.9/lib/resolve-value",
+      "npm:postcss-css-variables@0.4.0/lib/resolve-value",
       "npm:promise@5.0.0",
       "npm:react@0.13.2/lib/keyMirror",
       "npm:react@0.13.2/lib/ReactChildren",
@@ -727,13 +728,13 @@ System.config({
       "github:jspm/nodelibs-buffer@0.1.0",
       "npm:amdefine@0.1.1",
       "npm:postcss@4.1.13/lib/parse",
-      "npm:postcss-css-variables@0.3.9/index",
+      "npm:postcss-css-variables@0.4.0/index",
       "npm:localforage@1.2.2/src/localforage",
       "npm:react@0.13.2/lib/EventConstants",
       "npm:react@0.13.2/lib/ReactComponentBrowserEnvironment",
       "npm:js-base64@2.1.8/base64",
       "npm:source-map@0.4.2/lib/source-map/source-map-generator",
-      "npm:postcss-css-variables@0.3.9",
+      "npm:postcss-css-variables@0.4.0",
       "npm:localforage@1.2.2",
       "npm:react@0.13.2/lib/EventPluginUtils",
       "npm:react@0.13.2/lib/ReactDOMTextComponent",
@@ -774,7 +775,7 @@ System.config({
     "object-assign": "npm:object-assign@2.0.0",
     "plugin-postcss": "github:geelen/plugin-postcss@0.1.0",
     "postcss": "npm:postcss@4.1.13",
-    "postcss-css-variables": "npm:postcss-css-variables@0.3.9",
+    "postcss-css-variables": "npm:postcss-css-variables@0.4.0",
     "postcss-inline-comment": "npm:postcss-inline-comment@1.0.3",
     "postcss-mixins": "npm:postcss-mixins@0.1.1",
     "postcss-nested": "npm:postcss-nested@0.2.2",
@@ -790,7 +791,7 @@ System.config({
       "assert": "npm:assert@1.3.0"
     },
     "github:jspm/nodelibs-buffer@0.1.0": {
-      "buffer": "npm:buffer@3.2.2"
+      "buffer": "npm:buffer@3.3.0"
     },
     "github:jspm/nodelibs-events@0.1.0": {
       "events-browserify": "npm:events-browserify@0.0.1"
@@ -1832,6 +1833,11 @@ System.config({
       "ieee754": "npm:ieee754@1.1.6",
       "is-array": "npm:is-array@1.0.1"
     },
+    "npm:buffer@3.3.0": {
+      "base64-js": "npm:base64-js@0.0.8",
+      "ieee754": "npm:ieee754@1.1.6",
+      "is-array": "npm:is-array@1.0.1"
+    },
     "npm:classnames@1.2.2": {
       "assert": "github:jspm/nodelibs-assert@0.1.0"
     },
@@ -1915,6 +1921,11 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.1"
     },
     "npm:postcss-css-variables@0.3.9": {
+      "escape-string-regexp": "npm:escape-string-regexp@1.0.3",
+      "extend": "npm:extend@2.0.1",
+      "postcss": "npm:postcss@4.1.13"
+    },
+    "npm:postcss-css-variables@0.4.0": {
       "escape-string-regexp": "npm:escape-string-regexp@1.0.3",
       "extend": "npm:extend@2.0.1",
       "postcss": "npm:postcss@4.1.13"
