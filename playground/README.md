@@ -8,7 +8,7 @@ The code playground for `postcss-css-variables` is [available live here](https:/
 
 ## Prerequisites
 
- - [io.js](https://iojs.org/en/index.html) *or Node.js with support for template strings (not currently avaialable)*
+ - [io.js](https://iojs.org/en/index.html) *or Node.js with support for template strings (not currently available)*
 
  ## Instructions:
 
