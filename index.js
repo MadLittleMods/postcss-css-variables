@@ -1,5 +1,5 @@
 // PostCSS CSS Variables (postcss-css-variables)
-// v0.4.0
+// v0.5.0
 //
 // https://github.com/MadLittleMods/postcss-css-variables
 
@@ -24,7 +24,7 @@ var RE_VAR_PROP = (/(--(.+))/);
 
 function eachCssVariableDeclaration(css, cb) {
 	// Loop through all of the declarations and grab the variables and put them in the map
-	css.eachDecl(function(decl) {
+	css.walkDecls(function(decl) {
 		// If declaration is a variable
 		if(RE_VAR_PROP.test(decl.prop)) {
 			cb(decl);
@@ -42,7 +42,7 @@ function cleanUpNode(currentNodeToRemove) {
 		// Get a reference to it before we remove and lose reference to the child after removing it
 		currentNodeToPossiblyCleanUp = currentNodeToPossiblyCleanUp.parent;
 
-		nodeToRemove.removeSelf();
+		nodeToRemove.remove();
 	}
 }
 
@@ -160,7 +160,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 			// Remove the variable declaration because they are pretty much useless after we resolve them
 			if(!opts.preserve) {
-				decl.removeSelf();
+				decl.remove();
 			}
 			// Or we can also just show the computed value used for that variable
 			else if(opts.preserve === 'computed') {
@@ -186,7 +186,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 		// Collect all the rules that have declarations that use variables
 		var rulesThatHaveDeclarationsWithVariablesList = [];
-		css.eachRule(function(rule) {
+		css.walkRules(function(rule) {
 			var doesRuleUseVariables = rule.nodes.some(function(node) {
 				if(node.type === 'decl') {
 					var decl = node;
@@ -218,7 +218,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 					return ruleClone;
 				});
 
-				rule.removeSelf();
+				rule.remove();
 			}
 
 			// Resolve the declarations

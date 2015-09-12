@@ -1,4 +1,8 @@
 
+# v0.5.0 - 2015-9-12
+
+ - Upgrade to PostCSS v5. Fix #20
+
 # v0.4.0 - 2015-7-2
 
  - Fix #15
