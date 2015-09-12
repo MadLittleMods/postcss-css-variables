@@ -46,14 +46,14 @@ gulp.task('generate-caniuse-db-json-systemjs-paths', function(done) {
 
 	var jsonFileMap = {};
 
-	var jsonGlobPatternString = 'jspm_packages/npm/caniuse-db@1.0.30000161/**/*.json';
+	var jsonGlobPatternString = 'jspm_packages/npm/caniuse-db@1.0.30000304/**/*.json';
 	var jsonBaseGlobPath = glob2base(new glob.Glob(jsonGlobPatternString));
 
 	glob(jsonGlobPatternString, {})
 		.then(function(completeFilePaths) {
 			completeFilePaths.forEach(function(completeFilePath) {
 				var filePath = path.join(
-						'caniuse-db@1.0.30000161/',
+						'caniuse-db@1.0.30000304/',
 						path.relative(jsonBaseGlobPath, completeFilePath)
 					)
 					.replace(/\\/g, '/');

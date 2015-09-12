@@ -2,7 +2,7 @@
   "jspm": {
     "directories": {},
     "dependencies": {
-      "autoprefixer-core": "npm:autoprefixer-core@^5.1.11",
+      "autoprefixer": "npm:autoprefixer@^6.0.2",
       "bluebird": "npm:bluebird@^2.9.25",
       "classnames": "npm:classnames@^1.2.2",
       "events": "npm:events@^1.0.2",
@@ -13,11 +13,12 @@
       "localforage": "npm:localforage@^1.2.2",
       "object-assign": "npm:object-assign@^2.0.0",
       "plugin-postcss": "github:geelen/plugin-postcss@^0.1.0",
-      "postcss": "npm:postcss@^4.1.8",
-      "postcss-css-variables": "npm:postcss-css-variables@^0.4.0",
-      "postcss-inline-comment": "npm:postcss-inline-comment@^1.0.3",
-      "postcss-mixins": "npm:postcss-mixins@^0.1.1",
-      "postcss-nested": "npm:postcss-nested@^0.2.2",
+      "postcss": "npm:postcss@^5.0.5",
+      "postcss-css-variables": "npm:postcss-css-variables@^0.5.0",
+      "postcss-inline-comment": "npm:postcss-inline-comment@^2.0.0",
+      "postcss-mixins": "npm:postcss-mixins@^1.0.0",
+      "postcss-nested": "npm:postcss-nested@^1.0.0",
+      "postcss-safe-parser": "npm:postcss-safe-parser@^1.0.1",
       "react": "npm:react@^0.13.2",
       "systemjs/plugin-css": "github:systemjs/plugin-css@^0.1.10",
       "throttle": "npm:lodash.throttle@^3.0.2",
@@ -48,7 +49,7 @@
   },
   "scripts": {
     "prepublish": "jspm install -y",
-    "build": "iojs ./node_modules/gulp/bin/gulp.js",
-    "build-dev": "iojs ./node_modules/gulp/bin/gulp.js --dev"
+    "build": "gulp",
+    "build-dev": "gulp --dev"
   }
 }
