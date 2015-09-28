@@ -5,7 +5,7 @@
   "keywords": [
     "postcss",
     "css",
-    "postcssplugin"
+    "postcss-plugin"
   ],
   "author": "Eric Eastwood <contact@ericeastwood.com> (http://ericeastwood.com/)",
   "license": "MIT",
