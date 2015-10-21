@@ -1,17 +1,19 @@
+var Promise = require('bluebird');
+var fs = Promise.promisifyAll(require('fs'));
+var path = require('path');
+
 var chai = require('chai');
 var expect = chai.expect;
 var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 
 var postcss = require('postcss');
-
-var Promise = require('bluebird');
-var fs = Promise.promisifyAll(require('fs'));
-var CleanCSS = require('clean-css');
-
 var cssvariables = require('../');
 
-function testPlugin(filePath, expectedFilePath, options) {
+var CleanCSS = require('clean-css');
+
+
+var testPlugin = function(filePath, expectedFilePath, options) {
 	options = options || {};
 	return fs.readFileAsync(filePath)
 		.then(function(buffer) {
@@ -39,204 +41,163 @@ function testPlugin(filePath, expectedFilePath, options) {
 					//expect(actual).to.equal(contents);
 				});
 		});
-}
+};
+
+var fixtureBasePath = './test/fixtures/';
+var test = function(message, fixtureName, options) {
+	it(message, function() {
+		return testPlugin(
+			path.join(fixtureBasePath, fixtureName + '.css'),
+			path.join(fixtureBasePath, fixtureName + '.expected.css'),
+			options
+		);
+	});
+};
+
+
 
 describe('postcss-css-variables', function() {
 
-	
+
 	// Just make sure it doesn't mangle anything
-	it('should work when there are no var() functions to consume declarations', function() {
-		return testPlugin('./test/fixtures/no-var-func.css', './test/fixtures/no-var-func.expected.css');
-	});
-
-	it('should work when no variable name passed to `var()`', function() {
-		return testPlugin('./test/fixtures/empty-var-func.css', './test/fixtures/empty-var-func.expected.css');
-	});
+	test('should work when there are no var() functions to consume declarations', 'no-var-func');
+	test('should work when no variable name passed to `var()`', 'empty-var-func');
 
 
+	test('should work with variables declared in root', 'root-variable');
 
-	it('should work with variables declared in root', function() {
-		return testPlugin('./test/fixtures/root-variable.css', './test/fixtures/root-variable.expected.css');
-	});
-
-	it('should work with locally scoped variable in a non-root rule', function() {
-		return testPlugin('./test/fixtures/local-variable-non-root.css', './test/fixtures/local-variable-non-root.expected.css');
-	});
-
-	it('should work with any combinator selector if the last piece is the variable we have in the map', function() {
-		return testPlugin('./test/fixtures/scope-last-piece-of-combinator-sequence.css', './test/fixtures/scope-last-piece-of-combinator-sequence.expected.css');
-	});
+	test('should work with locally scoped variable in a non-root rule', 'local-variable-non-root');
 
 
-
-	it('should work with descendant selector type "nesting"', function() {
-		return testPlugin('./test/fixtures/descendant-selector.css', './test/fixtures/descendant-selector.expected.css');
-	});
-
-	it('should work with css4 descendant selector type "nesting"', function() {
-		return testPlugin('./test/fixtures/css4-descendant-selector.css', './test/fixtures/css4-descendant-selector.expected.css');
-	});
+	test(
+		'should work with any combinator selector if the last piece is the variable we have in the map',
+		'scope-last-piece-of-combinator-sequence'
+	);
 
 
+	test('should work with descendant selector type "nesting"', 'descendant-selector');
+	test('should work with css4 descendant selector type "nesting"', 'css4-descendant-selector');
+	test('should work with direct descendant selector', 'direct-descendant-selector');
 
-	it('should work with direct descendant selector', function() {
-		return testPlugin('./test/fixtures/direct-descendant-selector.css', './test/fixtures/direct-descendant-selector.expected.css');
-	});
-
-	it('should work with direct descendant selector where variables are scoped in a descendant selector', function() {
-		return testPlugin('./test/fixtures/direct-descendant-selector-descendant-scope.css', './test/fixtures/direct-descendant-selector-descendant-scope.expected.css');
-	});
-
-	it('should work with direct descendant selector where variables are scoped in a direct descendant selector', function() {
-		return testPlugin('./test/fixtures/direct-descendant-selector-direct-descendant-scope.css', './test/fixtures/direct-descendant-selector-direct-descendant-scope.expected.css');
-	});
+	test(
+		'should work with direct descendant selector where variables are scoped in a descendant selector',
+		'direct-descendant-selector-descendant-scope'
+	);
+	test(
+		'should work with direct descendant selector where variables are scoped in a direct descendant selector',
+		'direct-descendant-selector-direct-descendant-scope'
+	);
 
 
-	it('should work with pseudo selectors', function() {
-		return testPlugin('./test/fixtures/pseudo-selector.css', './test/fixtures/pseudo-selector.expected.css');
-	});
-
-	it('should work with variables declared in pseudo selectors', function() {
-		return testPlugin('./test/fixtures/pseudo-selector-declare-variable.css', './test/fixtures/pseudo-selector-declare-variable.expected.css');
-	});
+	test('should work with pseudo selectors', 'pseudo-selector');
+	test('should work with variables declared in pseudo selectors', 'pseudo-selector-declare-variable');
 
 
 
-	it('should work with variables defined in comma separated selector', function() {
-		return testPlugin('./test/fixtures/comma-separated-variable-declaration.css', './test/fixtures/comma-separated-variable-declaration.expected.css');
-	});
-
-	it('should work use the correct variable in comma separated selector', function() {
-		return testPlugin('./test/fixtures/comma-separated-variable-usage.css', './test/fixtures/comma-separated-variable-usage.expected.css');
-	});
+	test('should work with variables defined in comma separated selector', 'comma-separated-variable-declaration');
 
 
+	test('should work use the correct variable in comma separated selector', 'comma-separated-variable-usage');
 
-	it('should work with star selector', function() {
-		return testPlugin('./test/fixtures/star-selector-scope.css', './test/fixtures/star-selector-scope.expected.css');
-	});
 
-	it('should work with `!important` variable declarations', function() {
-		return testPlugin('./test/fixtures/important-variable-declaration.css', './test/fixtures/important-variable-declaration.expected.css');
-	});
+	test('should work with star selector', 'star-selector-scope');
+
+	test('should work with `!important` variable declarations', 'important-variable-declaration');
 
 
 
 	describe('with at-rules', function() {
-		it('should add rule declaration of property in @media', function() {
-			return testPlugin('./test/fixtures/media-query.css', './test/fixtures/media-query.expected.css');
-		});
-		it('should add rule declaration of property in @support', function() {
-			return testPlugin('./test/fixtures/support-directive.css', './test/fixtures/support-directive.expected.css');
-		});
+		test('should add rule declaration of property in @media', 'media-query');
+		test('should add rule declaration of property in @support', 'support-directive');
 
-		it('should work with nested @media', function() {
-			return testPlugin('./test/fixtures/media-query-nested.css', './test/fixtures/media-query-nested.expected.css');
-		});
+		test('should work with nested @media', 'media-query-nested');
 
-		it('should cascade to nested rules', function() {
-			return testPlugin('./test/fixtures/cascade-on-nested-rules.css', './test/fixtures/cascade-on-nested-rules.expected.css');
-		});
+		test('should cascade to nested rules', 'cascade-on-nested-rules');
 
-		it('should cascade with calc-expression to nested rules', function() {
-			return testPlugin('./test/fixtures/cascade-with-calc-expression-on-nested-rules.css', './test/fixtures/cascade-with-calc-expression-on-nested-rules.expected.css');
-		});
+		test('should cascade with calc-expression to nested rules', 'cascade-with-calc-expression-on-nested-rules');
 
-		it('should cascade to nested rules in the proper scope. See issue #2', function() {
-			return testPlugin('./test/fixtures/cascade-on-nested-rules-in-proper-scope.css', './test/fixtures/cascade-on-nested-rules-in-proper-scope.expected.css');
-		});
-		
+		test('should cascade to nested rules in the proper scope. See issue #2', 'cascade-on-nested-rules-in-proper-scope');
 	});
 
 
-	it('should work with variables that reference other variables', function() {
-		return testPlugin('./test/fixtures/variable-reference-other-variable.css', './test/fixtures/variable-reference-other-variable.expected.css');
-	});
+	test('should work with variables that reference other variables', 'variable-reference-other-variable');
 
-	it('should work with variable with calc-expression that reference other variables', function() {
-		return testPlugin('./test/fixtures/variable-with-calc-expression-reference-other-variable.css', './test/fixtures/variable-with-calc-expression-reference-other-variable.expected.css');
-	});
+	test(
+		'should work with variable with calc-expression that reference other variables',
+		'variable-with-calc-expression-reference-other-variable'
+	);
 
-	it('should work with variables that reference other variables with at-rule changing the value', function() {
-		return testPlugin('./test/fixtures/variable-reference-other-variable-media-query1.css', './test/fixtures/variable-reference-other-variable-media-query1.expected.css');
-	});
+	test(
+		'should work with variables that reference other variables with at-rule changing the value',
+		'variable-reference-other-variable-media-query1'
+	);
+	test(
+		'should work with local variables that reference other variables with at-rule changing the value',
+		'variable-reference-other-variable-media-query2'
+	);
 
-	it('should work with local variables that reference other variables with at-rule changing the value', function() {
-		return testPlugin('./test/fixtures/variable-reference-other-variable-media-query2.css', './test/fixtures/variable-reference-other-variable-media-query2.expected.css');
-	});
 
 
-
-	it('should work with variables that try to self reference', function() {
-		return testPlugin('./test/fixtures/self-reference.css', './test/fixtures/self-reference.expected.css');
-	});
-	it('should work with variables that try to self reference and fallback properly', function() {
-		return testPlugin('./test/fixtures/self-reference-fallback.css', './test/fixtures/self-reference-fallback.expected.css');
-	});
-
-	it('should work with circular reference', function() {
-		return testPlugin('./test/fixtures/circular-reference.css', './test/fixtures/circular-reference.expected.css');
-	});
-
+	test('should work with variables that try to self reference', 'self-reference');
+	test('should work with variables that try to self reference and fallback properly', 'self-reference-fallback');
+	test('should work with circular reference', 'circular-reference');
 
 
 	describe('with `options.variables`', function() {
-		it('should work with JS defined variables', function() {
-			return testPlugin(
-				'./test/fixtures/js-defined.css',
-				'./test/fixtures/js-defined.expected.css',
-				{
-					variables: {
-						'--js-defined1': '75px',
-						'--js-defined2': {
-							value: '80px'
-						},
-						// Should be automatically prefixed with `--`
-						'js-defined-no-prefix': '#ff0000'
-					}
+		test(
+			'should work with JS defined variables',
+			'js-defined',
+			{
+				variables: {
+					'--js-defined1': '75px',
+					'--js-defined2': {
+						value: '80px'
+					},
+					// Should be automatically prefixed with `--`
+					'js-defined-no-prefix': '#ff0000'
 				}
-			);
-		});
+			}
+		);
 	});
 
 
 	describe('with `options.preserve`', function() {
-		it('preserves variables when `preserve` is `true`', function() {
-			return testPlugin('./test/fixtures/preserve-variables.css', './test/fixtures/preserve-variables.expected.css', { preserve: true });
-		});
+		test(
+			'preserves variables when `preserve` is `true`',
+			'preserve-variables',
+			{ preserve: true }
+		);
 
-		it('preserves computed value when `preserve` is `\'computed\'`', function() {
-			return testPlugin('./test/fixtures/preserve-computed.css', './test/fixtures/preserve-computed.expected.css', { preserve: 'computed' });
-		});
+		test(
+			'preserves computed value when `preserve` is `\'computed\'`',
+			'preserve-computed',
+			{ preserve: 'computed' }
+		);
 	});
 
 
 	describe('missing variable declarations', function() {
-		it('should work with missing variables', function() {
-			return testPlugin('./test/fixtures/missing-variable-usage.css', './test/fixtures/missing-variable-usage.expected.css');
-		});
-
-		it('should use fallback value if provided with missing variables', function() {
-			return testPlugin('./test/fixtures/missing-variable-should-fallback.css', './test/fixtures/missing-variable-should-fallback.expected.css');
-		});
+		test('should work with missing variables', 'missing-variable-usage');
+		test('should use fallback value if provided with missing variables', 'missing-variable-should-fallback');
 	});
 
 	it('should not parse malformed var() declarations', function() {
 		return expect(testPlugin(
-			'./test/fixtures/malformed-variable-usage.css', 
+			'./test/fixtures/malformed-variable-usage.css',
 			'./test/fixtures/malformed-variable-usage.expected.css'
 			)
 		).to.eventually.be.rejected;
 	});
 
 	describe('rule clean up', function() {
-		it('should clean up rules if we removed variable declarations to make it empty', function() {
-			return testPlugin('./test/fixtures/remove-empty-rules-after-variable-collection.css', './test/fixtures/remove-empty-rules-after-variable-collection.expected.css');
-		});
-
-		it('should clean up neseted rules if we removed variable declarations to make it empty', function() {
-			return testPlugin('./test/fixtures/remove-nested-empty-rules-after-variable-collection.css', './test/fixtures/remove-nested-empty-rules-after-variable-collection.expected.css');
-		});
+		test(
+			'should clean up rules if we removed variable declarations to make it empty',
+			'remove-empty-rules-after-variable-collection'
+		);
+		test(
+			'should clean up neseted rules if we removed variable declarations to make it empty',
+			'remove-nested-empty-rules-after-variable-collection'
+		);
 	});
 
 
