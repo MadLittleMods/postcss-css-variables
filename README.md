@@ -8,7 +8,6 @@ CSS variables or CSS Custom Properties limited subset polyfill/shim.
 
 We strive for the most complete transformation but we/no plugin can achieve true complete parity according to the [specification](http://dev.w3.org/csswg/css-variables/) because of the DOM cascade unknowns.
 
-## Latest Version: v0.5.0
 ### [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
 
 ### Install
@@ -281,7 +280,7 @@ A custom property can be declared multiple times.
 ### `preserve` (default: `false`)
 
 Allows you to preserve custom properties & var() usage in output.
-Allowed values: 
+Allowed values:
  - `false`: Removes `--var` declarations and replaces `var()` with their resolved/computed values.
  - `true`: Keeps `var()` declarations in the output and has the computed value as a fallback declaration. Also keeps computed `--var` declarations
  - `'computed'`: Keeps computed `--var` declarations in the output. Handy to make them available to your JavaScript.
@@ -292,7 +291,7 @@ Define an object map of variables in JavaScript that will be declared at the `:r
 
 Can be a simple key-value pair or an object with a `value` property and an optional `isImportant` bool property
 
-The object keys are automatically prefixed with `--` (according to CSS custom property syntax) if you do not provide it. 
+The object keys are automatically prefixed with `--` (according to CSS custom property syntax) if you do not provide it.
 
 
 ```

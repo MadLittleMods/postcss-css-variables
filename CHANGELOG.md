@@ -1,4 +1,9 @@
 
+# v0.5.1 - 2015-10-24
+
+ - Fix postcss/postcss#611 where we were trying to remove the root node on clean up
+ - Improved test setup
+
 # v0.5.0 - 2015-9-12
 
  - Upgrade to PostCSS v5. Fix #20
@@ -40,7 +45,7 @@
 
 # v0.3.3 - 2015-5-11
 
- - Add support for last piece of combinator chain in selector resolution matching. 
+ - Add support for last piece of combinator chain in selector resolution matching.
  	 - `.foo + .bar` can match variables declared in `.bar`
 
 # v0.3.1 - 2015-5-5

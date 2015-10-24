@@ -34,15 +34,23 @@ function eachCssVariableDeclaration(css, cb) {
 
 
 
-function cleanUpNode(currentNodeToRemove) {
-	// If we removed all of the declarations in the rule(making it empty), then just remove it
-	var currentNodeToPossiblyCleanUp = currentNodeToRemove;
-	while(currentNodeToPossiblyCleanUp && currentNodeToPossiblyCleanUp.nodes.length <= 0) {
-		var nodeToRemove = currentNodeToPossiblyCleanUp;
-		// Get a reference to it before we remove and lose reference to the child after removing it
-		currentNodeToPossiblyCleanUp = currentNodeToPossiblyCleanUp.parent;
+function cleanUpNode(node) {
+	// If we removed all of the declarations in the rule(making it empty),
+	// then just remove it
+	var nodeToPossiblyCleanUp = node;
+	while(nodeToPossiblyCleanUp && nodeToPossiblyCleanUp.nodes.length <= 0) {
+		var nodeToRemove = nodeToPossiblyCleanUp.type !== 'root' ? nodeToPossiblyCleanUp : null;
 
-		nodeToRemove.remove();
+		if(nodeToRemove) {
+			// Get a reference to it before we remove
+			// and lose reference to the child after removing it
+			nodeToPossiblyCleanUp = nodeToRemove.parent;
+
+			nodeToRemove.remove();
+		}
+		else {
+			nodeToPossiblyCleanUp = null;
+		}
 	}
 }
 

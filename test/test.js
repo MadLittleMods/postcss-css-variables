@@ -61,6 +61,7 @@ describe('postcss-css-variables', function() {
 
 	// Just make sure it doesn't mangle anything
 	test('should work when there are no var() functions to consume declarations', 'no-var-func');
+	test('should work when there are no var() functions(just `:root`) to consume declarations', 'no-var-func-just-root');
 	test('should work when no variable name passed to `var()`', 'empty-var-func');
 
 
