@@ -14,7 +14,7 @@ System.config({
   },
   "bundles": {
     "build": [
-      "npm:process@0.10.1/browser",
+      "npm:process@0.11.2/browser",
       "npm:react@0.13.3/lib/PooledClass",
       "npm:react@0.13.3/lib/Object.assign",
       "npm:react@0.13.3/lib/emptyObject",
@@ -113,40 +113,40 @@ System.config({
       "npm:keymirror@0.1.1/index",
       "npm:immutable@3.7.5/dist/immutable",
       "npm:events@1.0.2/events",
-      "npm:postcss@5.0.5/lib/warn-once",
-      "npm:supports-color@3.1.1/browser",
-      "npm:postcss@5.0.5/lib/stringifier",
-      "npm:postcss@5.0.5/lib/stringify",
-      "npm:postcss@5.0.5/package.json!github:systemjs/plugin-json@0.1.0",
+      "npm:postcss@5.0.10/lib/warn-once",
+      "npm:supports-color@3.1.2/browser",
+      "npm:postcss@5.0.10/lib/stringifier",
+      "npm:postcss@5.0.10/lib/stringify",
+      "npm:postcss@5.0.10/package.json!github:systemjs/plugin-json@0.1.0",
       "npm:base64-js@0.0.8/lib/b64",
       "npm:ieee754@1.1.6/index",
       "npm:is-array@1.0.1/index",
-      "npm:source-map@0.5.0/lib/base64",
-      "npm:source-map@0.5.0/lib/util",
-      "npm:source-map@0.5.0/lib/array-set",
-      "npm:source-map@0.5.0/lib/mapping-list",
-      "npm:source-map@0.5.0/lib/binary-search",
-      "npm:source-map@0.5.0/lib/quick-sort",
-      "npm:source-map@0.5.0/lib/source-node",
+      "npm:source-map@0.5.3/lib/base64",
+      "npm:source-map@0.5.3/lib/util",
+      "npm:source-map@0.5.3/lib/array-set",
+      "npm:source-map@0.5.3/lib/mapping-list",
+      "npm:source-map@0.5.3/lib/binary-search",
+      "npm:source-map@0.5.3/lib/quick-sort",
+      "npm:source-map@0.5.3/lib/source-node",
       "npm:path-browserify@0.0.0/index",
-      "npm:postcss@5.0.5/lib/warning",
-      "npm:postcss@5.0.5/lib/tokenize",
-      "npm:postcss@5.0.5/lib/comment",
-      "npm:postcss@5.0.5/lib/list",
-      "npm:postcss@5.0.5/lib/root",
+      "npm:postcss@5.0.10/lib/warning",
+      "npm:postcss@5.0.10/lib/tokenize",
+      "npm:postcss@5.0.10/lib/comment",
+      "npm:postcss@5.0.10/lib/list",
+      "npm:postcss@5.0.10/lib/root",
       "github:jspm/nodelibs-fs@0.1.2/index",
       "npm:postcss-safe-parser@1.0.1/lib/safe-tokenize",
-      "npm:postcss@5.0.5/lib/vendor",
+      "npm:postcss@5.0.10/lib/vendor",
       "npm:extend@2.0.1/index",
-      "npm:postcss-css-variables@0.5.0/lib/shallow-clone-node",
-      "npm:postcss-css-variables@0.5.0/lib/generate-descendant-pieces-from-selector",
+      "npm:postcss-css-variables@0.5.1/lib/shallow-clone-node",
+      "npm:postcss-css-variables@0.5.1/lib/generate-descendant-pieces-from-selector",
       "npm:escape-string-regexp@1.0.3/index",
-      "npm:postcss-css-variables@0.5.0/lib/is-piece-always-ancestor-selector",
-      "npm:postcss-css-variables@0.5.0/lib/generate-direct-descendant-pieces-from-selector",
-      "npm:postcss-css-variables@0.5.0/lib/gather-variable-dependencies",
-      "npm:postcss-css-variables@0.5.0/lib/find-node-ancestor-with-selector",
-      "npm:postcss-css-variables@0.5.0/lib/clone-splice-parent-onto-node-when",
-      "npm:postcss-css-variables@0.5.0/lib/resolve-decl",
+      "npm:postcss-css-variables@0.5.1/lib/is-piece-always-ancestor-selector",
+      "npm:postcss-css-variables@0.5.1/lib/generate-direct-descendant-pieces-from-selector",
+      "npm:postcss-css-variables@0.5.1/lib/gather-variable-dependencies",
+      "npm:postcss-css-variables@0.5.1/lib/find-node-ancestor-with-selector",
+      "npm:postcss-css-variables@0.5.1/lib/clone-splice-parent-onto-node-when",
+      "npm:postcss-css-variables@0.5.1/lib/resolve-decl",
       "src/js/actions/PlaygroundActions",
       "npm:babel-runtime@5.2.6/helpers/define-property",
       "npm:core-js@0.9.6/library/fn/object/keys",
@@ -155,7 +155,7 @@ System.config({
       "npm:localforage@1.2.10/src/utils/serializer",
       "npm:localforage@1.2.10/src/drivers/websql",
       "github:wjbryant/taboverride@4.0.2/build/output/taboverride.min",
-      "npm:process@0.10.1",
+      "npm:process@0.11.2",
       "npm:react@0.13.3/lib/warning",
       "npm:react@0.13.3/lib/ReactInstanceHandles",
       "npm:react@0.13.3/lib/ReactRef",
@@ -196,25 +196,25 @@ System.config({
       "npm:keymirror@0.1.1",
       "npm:immutable@3.7.5",
       "npm:events@1.0.2",
-      "npm:supports-color@3.1.1",
+      "npm:supports-color@3.1.2",
       "npm:base64-js@0.0.8",
       "npm:ieee754@1.1.6",
       "npm:is-array@1.0.1",
-      "npm:source-map@0.5.0/lib/base64-vlq",
-      "npm:source-map@0.5.0/lib/source-map-consumer",
+      "npm:source-map@0.5.3/lib/base64-vlq",
+      "npm:source-map@0.5.3/lib/source-map-consumer",
       "npm:path-browserify@0.0.0",
-      "npm:postcss@5.0.5/lib/result",
-      "npm:postcss@5.0.5/lib/rule",
+      "npm:postcss@5.0.10/lib/result",
+      "npm:postcss@5.0.10/lib/rule",
       "github:jspm/nodelibs-fs@0.1.2",
       "npm:postcss-safe-parser@1.0.1/lib/safe-parser",
       "npm:extend@2.0.1",
-      "npm:postcss-css-variables@0.5.0/lib/generate-scope-list",
+      "npm:postcss-css-variables@0.5.1/lib/generate-scope-list",
       "npm:escape-string-regexp@1.0.3",
       "npm:babel-runtime@5.2.6/core-js/object/keys",
       "npm:asap@1.0.0",
       "npm:localforage@1.2.10/src/drivers/localstorage",
       "github:wjbryant/taboverride@4.0.2",
-      "github:jspm/nodelibs-process@0.1.1/index",
+      "github:jspm/nodelibs-process@0.1.2/index",
       "npm:react@0.13.3/lib/ReactContext",
       "npm:react@0.13.3/lib/traverseAllChildren",
       "npm:react@0.13.3/lib/ReactReconciler",
@@ -239,17 +239,17 @@ System.config({
       "npm:flux@2.1.1/index",
       "src/js/constants/PlaygroundConstants",
       "src/js/stores/PlaygroundSettingsStore",
-      "npm:postcss@5.0.5/lib/css-syntax-error",
-      "npm:buffer@3.4.3/index",
-      "npm:source-map@0.5.0/lib/source-map-generator",
+      "npm:postcss@5.0.10/lib/css-syntax-error",
+      "npm:buffer@3.5.1/index",
+      "npm:source-map@0.5.3/lib/source-map-generator",
       "github:jspm/nodelibs-path@0.1.0/index",
-      "npm:postcss@5.0.5/lib/container",
-      "npm:postcss@5.0.5/lib/previous-map",
+      "npm:postcss@5.0.10/lib/container",
+      "npm:postcss@5.0.10/lib/previous-map",
       "npm:postcss-safe-parser@1.0.1/lib/safe-parse",
-      "npm:postcss-css-variables@0.5.0/lib/is-under-scope",
+      "npm:postcss-css-variables@0.5.1/lib/is-under-scope",
       "npm:promise@5.0.0/core",
       "src/js/components/EditorTextarea",
-      "github:jspm/nodelibs-process@0.1.1",
+      "github:jspm/nodelibs-process@0.1.2",
       "npm:react@0.13.3/lib/ReactElement",
       "npm:react@0.13.3/lib/ReactUpdates",
       "npm:react@0.13.3/lib/Danger",
@@ -261,14 +261,14 @@ System.config({
       "npm:babel-runtime@5.2.6/core-js/object/get-own-property-descriptor",
       "npm:lodash.debounce@3.1.1",
       "npm:flux@2.1.1",
-      "npm:postcss@5.0.5/lib/node",
-      "npm:buffer@3.4.3",
-      "npm:source-map@0.5.0/source-map",
+      "npm:postcss@5.0.10/lib/node",
+      "npm:buffer@3.5.1",
+      "npm:source-map@0.5.3/source-map",
       "github:jspm/nodelibs-path@0.1.0",
-      "npm:postcss@5.0.5/lib/at-rule",
-      "npm:postcss@5.0.5/lib/input",
+      "npm:postcss@5.0.10/lib/at-rule",
+      "npm:postcss@5.0.10/lib/input",
       "npm:postcss-safe-parser@1.0.1",
-      "npm:postcss-css-variables@0.5.0/lib/is-node-under-scope",
+      "npm:postcss-css-variables@0.5.1/lib/is-node-under-scope",
       "npm:promise@5.0.0/index",
       "npm:react@0.13.3/lib/invariant",
       "npm:react@0.13.3/lib/ReactFragment",
@@ -279,11 +279,11 @@ System.config({
       "npm:babel-runtime@5.2.6/helpers/get",
       "npm:lodash.throttle@3.0.4/index",
       "src/js/dispatcher/AppDispatcher",
-      "npm:postcss@5.0.5/lib/declaration",
+      "npm:postcss@5.0.10/lib/declaration",
       "github:jspm/nodelibs-buffer@0.1.0/index",
-      "npm:source-map@0.5.0",
-      "npm:postcss@5.0.5/lib/parser",
-      "npm:postcss-css-variables@0.5.0/lib/resolve-value",
+      "npm:source-map@0.5.3",
+      "npm:postcss@5.0.10/lib/parser",
+      "npm:postcss-css-variables@0.5.1/lib/resolve-value",
       "npm:promise@5.0.0",
       "npm:react@0.13.3/lib/keyMirror",
       "npm:react@0.13.3/lib/ReactChildren",
@@ -291,27 +291,27 @@ System.config({
       "npm:react@0.13.3/lib/ReactDOMIDOperations",
       "npm:lodash.throttle@3.0.4",
       "github:jspm/nodelibs-buffer@0.1.0",
-      "npm:postcss@5.0.5/lib/parse",
-      "npm:postcss-css-variables@0.5.0/index",
+      "npm:postcss@5.0.10/lib/parse",
+      "npm:postcss-css-variables@0.5.1/index",
       "npm:localforage@1.2.10/src/localforage",
       "npm:react@0.13.3/lib/EventConstants",
       "npm:react@0.13.3/lib/ReactComponentBrowserEnvironment",
       "npm:js-base64@2.1.9/base64",
-      "npm:postcss-css-variables@0.5.0",
+      "npm:postcss-css-variables@0.5.1",
       "npm:localforage@1.2.10",
       "npm:react@0.13.3/lib/EventPluginUtils",
       "npm:react@0.13.3/lib/ReactDOMTextComponent",
       "npm:js-base64@2.1.9",
       "src/js/services/PlaygroundPersistentSettingsDAO",
       "npm:react@0.13.3/lib/React",
-      "npm:postcss@5.0.5/lib/map-generator",
+      "npm:postcss@5.0.10/lib/map-generator",
       "src/js/components/PlaygroundHeader",
       "npm:react@0.13.3/react",
-      "npm:postcss@5.0.5/lib/lazy-result",
+      "npm:postcss@5.0.10/lib/lazy-result",
       "npm:react@0.13.3",
-      "npm:postcss@5.0.5/lib/processor",
-      "npm:postcss@5.0.5/lib/postcss",
-      "npm:postcss@5.0.5",
+      "npm:postcss@5.0.10/lib/processor",
+      "npm:postcss@5.0.10/lib/postcss",
+      "npm:postcss@5.0.10",
       "src/js/stores/PlaygroundStore",
       "src/js/components/PlaygroundApp",
       "src/js/main"
@@ -336,8 +336,8 @@ System.config({
     "localforage": "npm:localforage@1.2.10",
     "object-assign": "npm:object-assign@2.1.1",
     "plugin-postcss": "github:geelen/plugin-postcss@0.1.0",
-    "postcss": "npm:postcss@5.0.5",
-    "postcss-css-variables": "npm:postcss-css-variables@0.5.0",
+    "postcss": "npm:postcss@5.0.10",
+    "postcss-css-variables": "npm:postcss-css-variables@0.5.1",
     "postcss-inline-comment": "npm:postcss-inline-comment@2.0.0",
     "postcss-mixins": "npm:postcss-mixins@1.0.0",
     "postcss-nested": "npm:postcss-nested@1.0.0",
@@ -348,13 +348,13 @@ System.config({
     "throttle-function": "npm:throttle-function@0.1.0",
     "wjbryant/taboverride": "github:wjbryant/taboverride@4.0.2",
     "github:geelen/plugin-postcss@0.1.0": {
-      "postcss": "npm:postcss@5.0.5"
+      "postcss": "npm:postcss@5.0.10"
     },
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.3.0"
     },
     "github:jspm/nodelibs-buffer@0.1.0": {
-      "buffer": "npm:buffer@3.4.3"
+      "buffer": "npm:buffer@3.5.1"
     },
     "github:jspm/nodelibs-domain@0.1.0": {
       "domain-browser": "npm:domain-browser@1.1.4"
@@ -365,8 +365,8 @@ System.config({
     "github:jspm/nodelibs-path@0.1.0": {
       "path-browserify": "npm:path-browserify@0.0.0"
     },
-    "github:jspm/nodelibs-process@0.1.1": {
-      "process": "npm:process@0.10.1"
+    "github:jspm/nodelibs-process@0.1.2": {
+      "process": "npm:process@0.11.2"
     },
     "github:jspm/nodelibs-stream@0.1.0": {
       "stream-browserify": "npm:stream-browserify@1.0.0"
@@ -378,14 +378,14 @@ System.config({
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "module": "github:jspm/nodelibs-module@0.1.0",
       "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:asap@1.0.0": {
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:asap@2.0.3": {
       "domain": "github:jspm/nodelibs-domain@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:assert@1.3.0": {
       "util": "npm:util@0.10.3"
@@ -943,12 +943,12 @@ System.config({
       "caniuse-db/region-usage-json/alt-sa": "npm:caniuse-db@1.0.30000304/region-usage-json/alt-sa.json!",
       "caniuse-db/region-usage-json/alt-ww": "npm:caniuse-db@1.0.30000304/region-usage-json/alt-ww.json!",
       "num2fraction": "npm:num2fraction@1.1.0",
-      "postcss": "npm:postcss@5.0.5",
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "postcss": "npm:postcss@5.0.10",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.0"
     },
     "npm:bluebird@2.10.0": {
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:brace-expansion@1.1.0": {
       "balanced-match": "npm:balanced-match@0.2.0",
@@ -1507,10 +1507,10 @@ System.config({
       "caniuse-db/region-usage-json/alt-ww": "npm:caniuse-db@1.0.30000304/region-usage-json/alt-ww.json!",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.0"
     },
-    "npm:buffer@3.4.3": {
+    "npm:buffer@3.5.1": {
       "base64-js": "npm:base64-js@0.0.8",
       "ieee754": "npm:ieee754@1.1.6",
       "is-array": "npm:is-array@1.0.1"
@@ -1519,11 +1519,11 @@ System.config({
       "assert": "github:jspm/nodelibs-assert@0.1.0"
     },
     "npm:core-js@0.9.6": {
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:core-js@1.1.4": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.0"
     },
     "npm:core-util-is@1.0.1": {
@@ -1534,27 +1534,22 @@ System.config({
     },
     "npm:envify@3.4.0": {
       "jstransform": "npm:jstransform@10.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "through": "npm:through@2.3.8"
-    },
-    "npm:es6-promise@2.3.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.1",
-      "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:esprima-fb@13001.1001.0-dev-harmony-fb": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:fbemitter@2.0.0": {
       "fbjs": "npm:fbjs@0.1.0-alpha.7",
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:fbjs@0.1.0-alpha.7": {
       "core-js": "npm:core-js@1.1.4",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "promise": "npm:promise@7.0.4",
       "whatwg-fetch": "npm:whatwg-fetch@0.9.0"
     },
@@ -1562,7 +1557,7 @@ System.config({
       "fbemitter": "npm:fbemitter@2.0.0",
       "fbjs": "npm:fbjs@0.1.0-alpha.7",
       "immutable": "npm:immutable@3.7.5",
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:glob@5.0.14": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
@@ -1574,15 +1569,15 @@ System.config({
       "once": "npm:once@1.3.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "path-is-absolute": "npm:path-is-absolute@1.0.0",
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:has-flag@1.0.0": {
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:inflight@1.0.4": {
       "once": "npm:once@1.3.2",
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "wrappy": "npm:wrappy@1.0.1"
     },
     "npm:inherits@2.0.1": {
@@ -1596,12 +1591,12 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "esprima-fb": "npm:esprima-fb@13001.1001.0-dev-harmony-fb",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "source-map": "npm:source-map@0.1.31"
     },
     "npm:localforage@1.2.10": {
       "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "promise": "npm:promise@5.0.0"
     },
     "npm:lodash.debounce@3.1.1": {
@@ -1618,44 +1613,47 @@ System.config({
       "wrappy": "npm:wrappy@1.0.1"
     },
     "npm:path-browserify@0.0.0": {
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:path-is-absolute@1.0.0": {
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:postcss-css-variables@0.5.0": {
+    "npm:postcss-css-variables@0.5.1": {
       "escape-string-regexp": "npm:escape-string-regexp@1.0.3",
       "extend": "npm:extend@2.0.1",
-      "postcss": "npm:postcss@5.0.5"
+      "postcss": "npm:postcss@5.0.10"
     },
     "npm:postcss-inline-comment@2.0.0": {
-      "postcss": "npm:postcss@5.0.5"
+      "postcss": "npm:postcss@5.0.10"
     },
     "npm:postcss-mixins@1.0.0": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "glob": "npm:glob@5.0.14",
       "path": "github:jspm/nodelibs-path@0.1.0",
-      "postcss": "npm:postcss@5.0.5",
+      "postcss": "npm:postcss@5.0.10",
       "postcss-simple-vars": "npm:postcss-simple-vars@1.0.0"
     },
     "npm:postcss-nested@1.0.0": {
-      "postcss": "npm:postcss@5.0.5",
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "postcss": "npm:postcss@5.0.10",
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:postcss-safe-parser@1.0.1": {
-      "postcss": "npm:postcss@5.0.5"
+      "postcss": "npm:postcss@5.0.10"
     },
     "npm:postcss-simple-vars@1.0.0": {
-      "postcss": "npm:postcss@5.0.5"
+      "postcss": "npm:postcss@5.0.10"
     },
-    "npm:postcss@5.0.5": {
+    "npm:postcss@5.0.10": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "js-base64": "npm:js-base64@2.1.9",
       "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.1",
-      "source-map": "npm:source-map@0.5.0",
-      "supports-color": "npm:supports-color@3.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "source-map": "npm:source-map@0.5.3",
+      "supports-color": "npm:supports-color@3.1.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.0"
+    },
+    "npm:process@0.11.2": {
+      "assert": "github:jspm/nodelibs-assert@0.1.0"
     },
     "npm:promise@5.0.0": {
       "asap": "npm:asap@1.0.0"
@@ -1667,7 +1665,7 @@ System.config({
     "npm:react@0.13.3": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "envify": "npm:envify@3.4.0",
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:readable-stream@1.1.13": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
@@ -1675,7 +1673,7 @@ System.config({
       "events": "github:jspm/nodelibs-events@0.1.1",
       "inherits": "npm:inherits@2.0.1",
       "isarray": "npm:isarray@0.0.1",
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "stream": "github:jspm/nodelibs-stream@0.1.0",
       "stream-browserify": "npm:stream-browserify@1.0.0",
       "string_decoder": "npm:string_decoder@0.10.31",
@@ -1685,14 +1683,10 @@ System.config({
       "amdefine": "npm:amdefine@1.0.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:source-map@0.4.4": {
-      "amdefine": "npm:amdefine@1.0.0",
-      "process": "github:jspm/nodelibs-process@0.1.1"
-    },
-    "npm:source-map@0.5.0": {
-      "process": "github:jspm/nodelibs-process@0.1.1"
+    "npm:source-map@0.5.3": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:stream-browserify@1.0.0": {
       "events": "github:jspm/nodelibs-events@0.1.1",
@@ -1702,17 +1696,17 @@ System.config({
     "npm:string_decoder@0.10.31": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0"
     },
-    "npm:supports-color@3.1.1": {
+    "npm:supports-color@3.1.2": {
       "has-flag": "npm:has-flag@1.0.0",
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:through@2.3.8": {
-      "process": "github:jspm/nodelibs-process@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
       "stream": "github:jspm/nodelibs-stream@0.1.0"
     },
     "npm:util@0.10.3": {
       "inherits": "npm:inherits@2.0.1",
-      "process": "github:jspm/nodelibs-process@0.1.1"
+      "process": "github:jspm/nodelibs-process@0.1.2"
     }
   }
 });
