@@ -129,6 +129,11 @@ describe('postcss-css-variables', function() {
 	);
 
 	test(
+		'should work with variable when the fallback is a function',
+		'variable-with-fallback-as-function'
+	);
+
+	test(
 		'should work with variables that reference other variables with at-rule changing the value',
 		'variable-reference-other-variable-media-query1'
 	);
@@ -180,6 +185,8 @@ describe('postcss-css-variables', function() {
 	describe('missing variable declarations', function() {
 		test('should work with missing variables', 'missing-variable-usage');
 		test('should use fallback value if provided with missing variables', 'missing-variable-should-fallback');
+		test('should work as function arguments', 'missing-variable-as-function-argument');
+		test('should work with two consecutive vars', 'missing-variable-two-vars');
 	});
 
 	it('should not parse malformed var() declarations', function() {

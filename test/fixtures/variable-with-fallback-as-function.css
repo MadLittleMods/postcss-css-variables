@@ -1,0 +1,4 @@
+div {
+	--foo-color: #fff;
+	background-color: var(--foo-color, rgb(0, 0, 0));
+}

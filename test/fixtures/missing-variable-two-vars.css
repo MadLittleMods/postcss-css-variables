@@ -1,0 +1,3 @@
+div {
+	border: var(--foo-br-style, solid) var(--foo-color, red);
+}
