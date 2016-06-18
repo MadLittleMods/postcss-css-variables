@@ -335,7 +335,8 @@ If you are/were already using [`postcss-custom-properties`](https://github.com/p
 
 ### Differences from `postcss-custom-properties`
 
-In [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), CSS variable declarations are specifically restricted to the `:root` selector. In `postcss-css-variables`, this is not the case, but they may be declared anywhere, and the values are substituted based on statically known CSS selector inheritance.
+In [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), CSS variable declarations are specifically restricted to the `:root` selector. In `postcss-css-variables`, this is not the case and they may be declared inside any rule with whatever selector.
+ 
 
 Here's a quick overview of the differences:
 
@@ -386,7 +387,7 @@ When nesting the markup like this, you may get incorrect behavior, because this 
 </div>
 ```
 
-This spec deviation is intentional, as there's nothing this tool can do about that. [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties) avoids this problem entirely by restricting itself to just the `:root` selector. This is because the developers there would prefer to not support a feature instead of supporting it almost-correct like what this plugin does.
+This spec deviation is intentional, as there's nothing this tool can do about that. [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties) avoids this problem entirely by restricting itself to just the `:root` selector. This is because the developers there would prefer to not support a feature instead of supporting it almost-correctly like what this plugin does.
 
 
 # Options
