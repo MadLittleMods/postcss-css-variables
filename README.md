@@ -230,7 +230,7 @@ With also `postcss-nesting`, this will be transformed to:
 }
 ```
 
-For a more complex example, with a media query and a `:root` selector:
+For a more complex example with a media query:
 
 ```css
 :root {
