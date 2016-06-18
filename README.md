@@ -15,8 +15,8 @@ npm install postcss-css-variables --save-dev
  - [Code Playground](#code-playground)
  - [Usage](#usage)
  - [Syntax](#syntax)
-	 - [Defining Custom Properties: the `--*` family of properties](#defining-custom-properties-the----family-of-properties)
-	 - [Using Cascading Variables: the `var()` notation](#using-cascading-variables-the-var-notation)
+	 - [Defining Custom Properties with `--*`](#defining-custom-properties-with---)
+	 - [Using Variables/Custom Properties with `var()`](#using-variables-custom-properties-with-var)
  - [Features](#features)
 	 - [At-rules like `@media`, `@support`, etc.](#at-rules-like-media-support-etc)
 	 - [Pseudo-classes and Elements](#pseudo-classes-and-elements)
@@ -62,11 +62,11 @@ console.log(output);
 
 # Syntax
 
-### Defining Custom Properties: the `--*` family of properties
+### Defining Custom Properties with `--*`
 
-A [custom property](http://dev.w3.org/csswg/css-variables/#defining-variables) is any property whose name starts with two dashes (U+002D HYPHEN-MINUS). A property must be in a rule.
+A custom property is any property whose name starts with two dashes (U+002D HYPHEN-MINUS). A property must be in a rule.
 
-You may declare them in a special `:root` selector that represents the root DOM node.
+*Note: `:root` is nothing more than the selector for the root DOM node.*
 
 ```css
 :root {
@@ -75,7 +75,7 @@ You may declare them in a special `:root` selector that represents the root DOM 
 }
 ```
 
-You may also declare them in a normal selector.
+You may also declare custom properties in a normal selector. Any other selector like `.class`, `#id`, or even `#foo ~ .bar > span.baz` works.
 
 ```css
 .foo {
@@ -103,9 +103,7 @@ A custom property can be declared multiple times, but only the last one takes pr
 
 *[W3C Draft: CSS Custom Properties for Cascading Variables, section 2](http://dev.w3.org/csswg/css-variables/#defining-variables)*
 
-### Using Cascading Variables: the `var()` notation
-
-You can use a CSS variable with [`var(--variable-name)`](http://dev.w3.org/csswg/css-variables/#using-variables).
+### Using Variables/Custom Properties with `var()`
 
 ```css
 .foo {
