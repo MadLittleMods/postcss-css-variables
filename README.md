@@ -64,40 +64,44 @@ console.log(output);
 
 ### Defining Custom Properties with `--*`
 
-A custom property is any property whose name starts with two dashes (U+002D HYPHEN-MINUS). A property must be in a rule.
+A custom property is any property whose name starts with two dashes `--`. A property must be in a rule.
 
-*Note: `:root` is nothing more than the selector for the root DOM node.*
+*Note: `:root` is nothing more than the selector for the root DOM node. Any other selector like `.class`, `#id`, or even `#foo ~ .bar > span.baz` works.*
 
 ```css
 :root {
 	--foo-width: 100px;
 	--foo-bg-color: rgba(255, 0, 0, 0.85);
 }
-```
 
-You may also declare custom properties in a normal selector. Any other selector like `.class`, `#id`, or even `#foo ~ .bar > span.baz` works.
-
-```css
 .foo {
 	--foo-width: 100px;
 	--foo-bg-color: rgba(255, 0, 0, 0.85);
 }
 ```
 
-A custom property can be declared multiple times, but only the last one takes precedence.
+Custom properties can be declared multiple times, but like variable scope in other languages, only the most specific one takes precedence.
 
 ```css
-:root {
-	--foo-width: 100px;
-	--foo-width: 200px; /* This is the declaration used. */
+:root: {
+    --some-color: red;
 }
 
 .foo {
-	--foo-width: 100px;
+    /* red */
+    color: var(--some-color);
 }
 
-.foo {
-	--foo-width: 200px; /* This is the declaration used. */
+
+.bar {
+    --some-color: blue;
+    /* blue */
+    color: var(--some-color);
+}
+
+.bar:hover {
+    --some-color: green;
+    /* Automically gets a `color: green;` declaration because we `--some-color` used within scope elsewhere */
 }
 ```
 
@@ -138,7 +142,7 @@ It's perfectly okay to declare CSS variables inside media queries and the like. 
 }
 ```
 
-This will be transformed to:
+Will be transformed to:
 
 ```css
 .box {
@@ -167,7 +171,7 @@ Psuedo-classes are also dealt with correctly, because it's easy to statically de
 }
 ```
 
-This will be transformed to:
+Will be transformed to:
 
 ```css
 .foo {
@@ -350,7 +354,7 @@ Continue to the next section to see where some of these might be unsafe to do. T
 
 # Caveats
 
-When declaring a CSS variable inside one selector, but consume it in another, this does make an unsafe assumption which can be non-conforming in certain edge cases. Here is an example where these limitations unavoidably result in non-conforming behavior.
+When you declare a CSS variable inside one selector, but consume it in another, this does make an unsafe assumption about it which can be non-conforming in certain edge cases. Here is an example where these limitations result in non-conforming behavior.
 
 Using the following CSS:
 
