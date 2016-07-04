@@ -1,0 +1,8 @@
+:root {
+    --foo1: 100px;
+    --foo2: 150px;
+}
+
+.box-bar {
+     width: var(--missing, var(--missing, var(--foo1)));
+}
