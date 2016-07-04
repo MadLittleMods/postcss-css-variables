@@ -204,6 +204,9 @@ describe('postcss-css-variables', function() {
 					});
 				});
 		});
+		test('should use fallback variable if provided with missing variables', 'missing-variable-should-fallback-var');
+		test('should use fallback variable if provided with missing variables calc', 'missing-variable-should-fallback-calc');
+		test('should use fallback variable if provided with missing variables nested', 'missing-variable-should-fallback-nested');
 	});
 
 	it('should not parse malformed var() declarations', function() {
