@@ -1,11 +1,6 @@
 :root {
 	--foo-width: 150px;
 }
-
-.box-foo {
-	width: var(--missing);
-}
-
 .box-bar {
 	width: var(--missing, 30px);
 }
