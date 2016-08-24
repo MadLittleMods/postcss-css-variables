@@ -170,6 +170,12 @@ describe('postcss-css-variables', function() {
 		);
 
 		test(
+			'preserves variables in @media when `preserve` is `true`',
+			'preserve-variables-in-media',
+			{ preserve: true }
+		);
+
+		test(
 			'preserves computed value when `preserve` is `\'computed\'`',
 			'preserve-computed',
 			{ preserve: 'computed' }
