@@ -1,4 +1,11 @@
 
+
+# v0.5.2 - 2016-8-24
+
+ - Fix [#42](https://github.com/MadLittleMods/postcss-css-variables/issues/42) where `opts.preserve` was not working inside at-rules
+    - Thanks you to @muftiev for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/43)
+
+
 # v0.5.1 - 2015-10-24
 
  - Fix [postcss/postcss#611](https://github.com/postcss/postcss/issues/611) where we were trying to remove the root node on clean up
