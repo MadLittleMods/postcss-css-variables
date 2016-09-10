@@ -1,4 +1,11 @@
 
+
+# v0.5.2 - 2016-8-24
+
+ - Fix [#42](https://github.com/MadLittleMods/postcss-css-variables/issues/42) where `opts.preserve` was not working inside at-rules
+    - Thank you to [@muftiev](github.com/muftiev) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/43)
+
+
 # v0.5.1 - 2015-10-24
 
  - Fix [postcss/postcss#611](https://github.com/postcss/postcss/issues/611) where we were trying to remove the root node on clean up
@@ -6,19 +13,19 @@
 
 # v0.5.0 - 2015-9-12
 
- - Upgrade to PostCSS v5. Fix #20
+ - Upgrade to PostCSS v5. Fix [#20](https://github.com/MadLittleMods/postcss-css-variables/issues/20)
 
 # v0.4.0 - 2015-7-2
 
- - Fix #15
+ - Fix [#15](https://github.com/MadLittleMods/postcss-css-variables/issues/15)
  	 - Remove slowness from cloning the `root` with `node.clone().removeAll()`. Now using `./lib/shallow-clone-node.js` to avoid cloning children which will get removed right after.
- 	 - Thank you to @ddprrt for bringing up the slowness issue in this article, [PostCSS misconceptions](https://medium.com/@ddprrt/postcss-misconceptions-faf5dc5038df).
+ 	 - Thank you to [@ddprrt](https://github.com/ddprrt) for bringing up the slowness issue in this article, [PostCSS misconceptions](https://medium.com/@ddprrt/postcss-misconceptions-faf5dc5038df).
 
 
 
 # v0.3.9 - 2015-6-29
 
- - Remove `opts` global leak. Fix #13
+ - Remove `opts` global leak. Fix [#13](https://github.com/MadLittleMods/postcss-css-variables/issues/13)
 
 
 # v0.3.8 - 2015-5-28
@@ -27,12 +34,12 @@
 
 # v0.3.7 - 2015-5-27
 
- - Fix #7: Support for child combinator
+ - Fix [#7](https://github.com/MadLittleMods/postcss-css-variables/issues/7): Support for child combinator
  - Added tests for child-combinator/direct-descendant coverage
 
 # v0.3.6 - 2015-5-21
 
- - Fix #6. Variable usage in comma separated selector to use proper scope
+ - Fix [#6](https://github.com/MadLittleMods/postcss-css-variables/issues/6). Variable usage in comma separated selector to use proper scope
 
 # v0.3.5 - 2015-5-12
 
@@ -51,7 +58,7 @@
 # v0.3.1 - 2015-5-5
 
  - Large overhaul of code to make it more robust on proper scope resolution.
- - Fix #2
+ - Fix [#2]](https://github.com/MadLittleMods/postcss-css-variables/issues/2)
 
 # v0.2.3 - 2015-5-4
 
