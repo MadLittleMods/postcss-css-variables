@@ -32,7 +32,7 @@ npm install postcss-css-variables --save-dev
  - [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
 
 
-# Code Playground
+# [Code Playground](https://madlittlemods.github.io/postcss-css-variables/playground/)
 
 [Try it in the playground](https://madlittlemods.github.io/postcss-css-variables/playground/) and see what you think! Just add some CSS and see to see the final transformed/compiled CSS. You can try anything here in the playground, too.
 
@@ -185,13 +185,13 @@ Will be transformed to:
 
 ### Nested Rules
 
-This pairs very well with [`postcss-nested`](https://github.com/postcss/postcss-nested) or [`postcss-nesting`](https://github.com/jonathantneal/postcss-nesting), adding support for nested rules. For either one, you must use that plugin before `postcss-css-variables` in your setup so the `&` references can be expanded first (`postcss-css-variables` doesn't understand them). For example, with `postcss-nested`, your PostCSS setup can look like this:
+This pairs very well with [`postcss-nested`](https://github.com/postcss/postcss-nested) or [`postcss-nesting`](https://github.com/jonathantneal/postcss-nesting), adding support for nested rules. For either, you must put the plugin before `postcss-css-variables` in the plugin stack so that the `&` references are expanded first (`postcss-css-variables` doesn't understand them). For example, with `postcss-nested`, your PostCSS setup would look like this:
 
 
 ```js
 var postcss = require('postcss');
 var cssvariables = require('postcss-css-variables');
-var nestedcss = require('postcss-nested');
+var nested = require('postcss-nested');
 
 var fs = require('fs');
 
@@ -199,7 +199,7 @@ var mycss = fs.readFileSync('input.css', 'utf8');
 
 var output = postcss([
 		// Flatten/unnest rules
-		nestedcss,
+		nested,
 		// Then process any CSS variables
 		cssvariables(/*options*/)
 	])
@@ -256,7 +256,7 @@ For a more complex example with a media query:
 }
 ```
 
-This will be transformed to:
+Will be transformed to:
 
 ```css
 .box-foo {
@@ -278,64 +278,19 @@ This will be transformed to:
 }
 ```
 
-### `calc()`
-
-It also pairs well with [`postcss-calc`](https://github.com/postcss/postcss-calc) to reduce `calc()` expressions arising from using variables.
-
-```js
-var postcss = require('postcss');
-var cssvariables = require('postcss-css-variables');
-var calc = require('postcss-calc');
-
-var fs = require('fs');
-
-var mycss = fs.readFileSync('input.css', 'utf8');
-
-var output = postcss([
-		// Process any CSS variables
-		cssvariables(/*options*/)
-		// Then reduce `calc()` expressions
-		calc()
-	])
-	.process(mycss)
-	.css;
-
-console.log(output);
-```
-
-```css
-:root {
-	--page-margin: 1em;
-}
-
-/* Easy centering */
-.wrapper {
-	width: calc(100% - 2 * var(--page-margin));
-	margin-left: var(--page-margin);
-	margin-right: var(--page-margin);
-}
-```
-
-This will be transformed to:
-
-```css
-.wrapper {
-	width: calc(100% - 2em);
-	margin-left: 1em;
-	margin-right: 1em;
-}
-```
 
 
 # Why?
 
 This plugin was spawned out of a [discussion on the `cssnext` repo](https://github.com/cssnext/cssnext/issues/99) and a personal need.
 
-There is another similar plugin available, [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), although it restricts itself much more than this, preferring spec conformance over imperfect feature support.
+There is another similar plugin available, [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), although it restricts itself much more than this plugin, preferring partial spec conformance. This plugin has the same capabilities but also adds imperfect feature support which stem from not being to know what the DOM will look like when you compile your CSS. We instead look at the explicit structure of your CSS selectors.
 
 ### Interoperability
 
-If you are/were already using [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), this should work out of the box, without issue, and other than differences in the JavaScript API, it's a drop-in replacement. The only difference in CSS handling is that this attempts much broader support, and you can just start taking advantage immediately. Note the [caveats](#caveats), in that although this does correctly support what `postcss-custom-properties` does, there are certain edge cases it doesn't get perfectly.
+Putting `postcss-css-variables` in place of `postcss-custom-properties` should work out of the box.
+
+In `postcss-custom-properties`, CSS variable declarations are specifically restricted to the `:root` selector. In `postcss-css-variables`, this is not the case and they may be declared inside any rule with whatever selector. The variables are substituted based on statically known CSS selector inheritance.
 
 ### Differences from `postcss-custom-properties`
 
@@ -346,10 +301,10 @@ Here's a quick overview of the differences:
 
  - CSS variables may be declared in any selector like `.foo` or `.foo .bar:hover`, and is not limited to just `:root`
  - CSS variables may be declared in `@media`, `@support`, and other at-rules.
- - CSS variables may be declared in `:hover` and other psuedo-classes, and they are evaluated properly.
+ - CSS variables may be declared in `:hover` and other psuedo-classes, which get expanded properly.
  - Variables in nested rules can be deduced with the help of [`postcss-nested`](https://github.com/postcss/postcss-nested) or [`postcss-nesting`](https://github.com/jonathantneal/postcss-nesting).
 
-Continue to the next section to see where some of these might be unsafe to do. There are reasons behind the ethos of why the other plugin, `postcss-custom-properties`, is very limited in what it supports, due to differing opinions on whether broader, yet potentially incorrect, support is okay.
+Continue to the next section to see where some of these might be unsafe to do. There are reasons behind the ethos of why the other plugin, [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), is very limited in what it supports, due to differing opinions on what is okay to support.
 
 
 # Caveats
@@ -372,8 +327,8 @@ Using the following CSS:
   color: var(--text-color);
 }
 ```
-   
-When nesting the markup like this, you may get incorrect behavior, because this only knows the CSS inheritance, not the HTML structure. (Note the innermost `<h1 class="Title">`.)
+
+Note the nested markup below. We only know about the DOM's inheritance from your CSS selectors. If you want nest multiple times, you need to be explicit about it in your CSS which isn't necessary with browser that natively support CSS variables. See the innermost `<h1 class="title">`
 
 ```html
 <div class="component">
@@ -390,8 +345,7 @@ When nesting the markup like this, you may get incorrect behavior, because this 
     </h1>
 </div>
 ```
-
-This spec deviation is intentional, as there's nothing this tool can do about that. [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties) avoids this problem entirely by restricting itself to just the `:root` selector. This is because the developers there would prefer to not support a feature instead of supporting it almost-correctly like what this plugin does.
+[`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties) avoids this problem entirely by restricting itself to just the `:root` selector. This is because the developers there would prefer to not support a feature instead of something almost-spec-compliant like what `postcss-css-variables` does.
 
 
 # Options
