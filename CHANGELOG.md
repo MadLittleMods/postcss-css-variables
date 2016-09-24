@@ -1,4 +1,11 @@
 
+# v0.6.0 - 2016-9-23
+
+ - Update/refactor readme
+    - Thank you to [@isiahmeadows](github.com/isiahmeadows) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/36)
+ - Use string value for `undefined` variables to play nice with other plugings downstream
+    - Thank you to [@vincentorback](github.com/vincentorback) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/44)
+
 
 # v0.5.2 - 2016-8-24
 
