@@ -186,6 +186,25 @@ describe('postcss-css-variables', function() {
 	describe('missing variable declarations', function() {
 		test('should work with missing variables', 'missing-variable-usage');
 		test('should use fallback value if provided with missing variables', 'missing-variable-should-fallback');
+		it('should use string values for `undefined` values, see #22', function() {
+			return fs.readFileAsync('./test/fixtures/missing-variable-usage.css', 'utf8')
+				.then(function(buffer) {
+					var contents = String(buffer);
+						return postcss([
+							cssvariables()
+						])
+						.process(contents)
+						.then(function(result) {
+							var root = result.root;
+							var fooRule = root.nodes[0];
+							expect(fooRule.selector).to.equal('.box-foo');
+							var colorDecl = fooRule.nodes[0];
+							expect(colorDecl.value).to.be.a('string');
+							expect(colorDecl.value).to.be.equal('undefined');
+							return colorDecl.value;
+						});
+					});
+		});
 	});
 
 	it('should not parse malformed var() declarations', function() {
@@ -206,6 +225,5 @@ describe('postcss-css-variables', function() {
 			'remove-nested-empty-rules-after-variable-collection'
 		);
 	});
-
 
 });
