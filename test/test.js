@@ -190,20 +190,19 @@ describe('postcss-css-variables', function() {
 			return fs.readFileAsync('./test/fixtures/missing-variable-usage.css', 'utf8')
 				.then(function(buffer) {
 					var contents = String(buffer);
-						return postcss([
-							cssvariables()
-						])
-						.process(contents)
-						.then(function(result) {
-							var root = result.root;
-							var fooRule = root.nodes[0];
-							expect(fooRule.selector).to.equal('.box-foo');
-							var colorDecl = fooRule.nodes[0];
-							expect(colorDecl.value).to.be.a('string');
-							expect(colorDecl.value).to.be.equal('undefined');
-							return colorDecl.value;
-						});
+					return postcss([
+						cssvariables()
+					])
+					.process(contents)
+					.then(function(result) {
+						var root = result.root;
+						var fooRule = root.nodes[0];
+						expect(fooRule.selector).to.equal('.box-foo');
+						var colorDecl = fooRule.nodes[0];
+						expect(colorDecl.value).to.be.a('string');
+						expect(colorDecl.value).to.be.equal('undefined');
 					});
+				});
 		});
 	});
 
