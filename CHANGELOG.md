@@ -3,7 +3,7 @@
 
  - Update/refactor readme
     - Thank you to [@isiahmeadows](github.com/isiahmeadows) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/36)
- - Use string value for `undefined` variables to play nice with other plugings downstream
+ - Use string value for `undefined` variables to play nice with other plugins downstream
     - Thank you to [@vincentorback](github.com/vincentorback) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/44)
 
 
