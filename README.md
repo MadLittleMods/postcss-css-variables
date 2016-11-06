@@ -83,7 +83,7 @@ A custom property is any property whose name starts with two dashes `--`. A prop
 Custom properties can be declared multiple times, but like variable scope in other languages, only the most specific one takes precedence.
 
 ```css
-:root: {
+:root {
     --some-color: red;
 }
 
