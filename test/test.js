@@ -170,6 +170,12 @@ describe('postcss-css-variables', function() {
 		);
 
 		test(
+			'preserves variables in @media when `preserve` is `true`',
+			'preserve-variables-in-media',
+			{ preserve: true }
+		);
+
+		test(
 			'preserves computed value when `preserve` is `\'computed\'`',
 			'preserve-computed',
 			{ preserve: 'computed' }
@@ -183,6 +189,26 @@ describe('postcss-css-variables', function() {
 		test('should use fallback variable if provided with missing variables', 'missing-variable-should-fallback-var');
 		test('should use fallback variable if provided with missing variables calc', 'missing-variable-should-fallback-calc');
 		test('should use fallback variable if provided with missing variables nested', 'missing-variable-should-fallback-nested');
+
+		it('should use string values for `undefined` values, see #22', function() {
+			return fs.readFileAsync('./test/fixtures/missing-variable-usage.css', 'utf8')
+				.then(function(buffer) {
+					var contents = String(buffer);
+					return postcss([
+						cssvariables()
+					])
+					.process(contents)
+					.then(function(result) {
+						var root = result.root;
+						var fooRule = root.nodes[0];
+						expect(fooRule.selector).to.equal('.box-foo');
+						var colorDecl = fooRule.nodes[0];
+						expect(colorDecl.value).to.be.a('string');
+						expect(colorDecl.value).to.be.equal('undefined');
+					});
+				});
+		});
+
 	});
 
 	it('should not parse malformed var() declarations', function() {
@@ -203,6 +229,5 @@ describe('postcss-css-variables', function() {
 			'remove-nested-empty-rules-after-variable-collection'
 		);
 	});
-
 
 });

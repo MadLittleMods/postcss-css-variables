@@ -1,0 +1,13 @@
+:root {
+    --width: 100px;
+}
+
+@media (max-width: 1000px) {
+    :root {
+        --width: 200px;
+    }
+}
+
+.box {
+    width: var(--width);
+}
