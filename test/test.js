@@ -186,6 +186,10 @@ describe('postcss-css-variables', function() {
 	describe('missing variable declarations', function() {
 		test('should work with missing variables', 'missing-variable-usage');
 		test('should use fallback value if provided with missing variables', 'missing-variable-should-fallback');
+		test('should use fallback variable if provided with missing variables', 'missing-variable-should-fallback-var');
+		test('should use fallback variable if provided with missing variables calc', 'missing-variable-should-fallback-calc');
+		test('should use fallback variable if provided with missing variables nested', 'missing-variable-should-fallback-nested');
+
 		it('should use string values for `undefined` values, see #22', function() {
 			return fs.readFileAsync('./test/fixtures/missing-variable-usage.css', 'utf8')
 				.then(function(buffer) {
@@ -204,6 +208,7 @@ describe('postcss-css-variables', function() {
 					});
 				});
 		});
+
 	});
 
 	it('should not parse malformed var() declarations', function() {
