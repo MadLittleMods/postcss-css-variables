@@ -1,4 +1,10 @@
 
+# v0.7.0 - 2017-3-12
+
+ - Resolve `var` usage in fallbacks, [#37](https://github.com/MadLittleMods/postcss-css-variables/issues/37)
+    - Thank you to [@asvny](https://github.com/asvny) and [@marklu](https://github.com/marklu) for the contribution, [#39](https://github.com/MadLittleMods/postcss-css-variables/issues/39) -> [#49](https://github.com/MadLittleMods/postcss-css-variables/pull/49)
+
+
 # v0.6.0 - 2016-9-23
 
  - Update/refactor readme
