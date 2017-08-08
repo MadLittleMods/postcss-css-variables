@@ -1,4 +1,11 @@
 
+
+# v0.8.0 - 2017-8-8
+
+ - Remove PostCSS `moveTo`/`append` deprecation warnings, [#50](https://github.com/MadLittleMods/postcss-css-variables/issues/50)
+    - Thank you to [@modosc](https://github.com/modosc) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/56)
+
+
 # v0.7.0 - 2017-3-12
 
  - Resolve `var` usage in fallbacks, [#37](https://github.com/MadLittleMods/postcss-css-variables/issues/37)
