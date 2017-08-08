@@ -1,9 +1,9 @@
 import React from 'react';
 import assign from 'object-assign';
 import classnames from 'classnames';
-import throttle from 'throttle';
+import throttle from 'lodash.throttle';
 
-import '../../postcss/playground.css!';
+import '../../postcss/playground.css';
 import PlaygroundStore from '../stores/PlaygroundStore';
 import PlaygroundSettingsStore from '../stores/PlaygroundSettingsStore';
 import PlaygroundActions from '../actions/PlaygroundActions';

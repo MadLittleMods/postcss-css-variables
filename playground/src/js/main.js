@@ -5,4 +5,3 @@ import * as PlaygroundPersistentSettingsDAO from './services/PlaygroundPersisten
 PlaygroundPersistentSettingsDAO.init();
 
 React.render(<PlaygroundApp />, document.querySelector('.playground-app-entry-point'));
-
