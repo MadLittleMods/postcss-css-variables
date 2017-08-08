@@ -104,7 +104,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 					prop: variableName,
 					value: variableValue
 				});
-				varDecl.moveTo(variableRootRule);
+				variableRootRule.append(varDecl);
 
 				// Add the entry to the map
 				prevVariableMap[variableName] = (prevVariableMap[variableName] || []).concat({
@@ -151,7 +151,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				splitOutRule.parent = decl.parent.parent;
 
 				var declClone = decl.clone();
-				declClone.moveTo(splitOutRule);
+				splitOutRule.append(declClone);
 
 				var prop = decl.prop;
 				map[prop] = (map[prop] || []).concat({
