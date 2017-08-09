@@ -1,5 +1,3 @@
-
-
 html,
 body {
 	padding: 0;
@@ -74,10 +72,10 @@ a {
 	margin: 0;
 	padding: 0;
 	background: transparent;
-	
+
 	color: inherit;
 	text-decoration: none;
-	
+
 	transition: all 0.3s ease;
 
 	&:visited {
@@ -113,7 +111,7 @@ img {
 
 body {
 	background-color: #dddddd;
-	
+
 	/*font: 400 95%/1 "Helvetica Neue", Helvetica, Arial, sans-serif;*/
 	font-family: Calibri, Candara, Segoe, 'Segoe UI', Arial, sans-serif;
 	font-size: 16px;
@@ -155,14 +153,14 @@ input[type='range'] {
 	-webkit-appearance: none;
 	width: 140px;
 	height: 6px;
-	
+
 	background: transparent;
 	box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.50);
-	
+
 	outline: 0;
-	
+
 	border-radius: 3px;
-	
+
 	transition: all 0.3s ease-out;
 
 	&:focus {
@@ -191,16 +189,16 @@ input[type='range'] {
 		-webkit-appearance: none;
 		width: 20px;
 		height: 20px;
-		
+
 		background: #dddddd;
 		border: 1px solid rgba(110, 110, 110, 1);
 		box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-		
+
 		border-radius: 50%;
-		
+
 		transition: all 0.3s ease-out;
 
-		&:focus::-webkit-slider-thumb {    
+		&:focus::-webkit-slider-thumb {
 			box-shadow: 0 0 10px rgba(150, 150, 150, 0.50);
 		}
 
@@ -347,8 +345,8 @@ input[type='range'] {
 	background-size: 50%;*/
 
 	background: linear-gradient(45deg, var(--background-color) 25%,
-		var(--stripe-color) 25%, var(--stripe-color) 50%, 
-		var(--background-color) 50%, var(--background-color) 75%, 
+		var(--stripe-color) 25%, var(--stripe-color) 50%,
+		var(--background-color) 50%, var(--background-color) 75%,
 		var(--stripe-color) 75%);
 	background-size: 40px 40px;
 
@@ -507,14 +505,14 @@ input[type='range'] {
 .playground-options-menu {
 	visibility: hidden;
 	display: inline-block;
-	
+
 	background: #eeeeff;
 	border-left: 1px solid #555555;
 	border-bottom: 1px solid #555555;
 	border-right: 1px solid #555555;
 	box-shadow:
 		/* outside shadow */
-		0 3px 8px 0 rgba(0, 0, 0, 0.20), 
+		0 3px 8px 0 rgba(0, 0, 0, 0.20),
 		/* top inner shadow */
 		inset 0 4px 4px -4px rgba(0, 0, 0, 0.25);
 

@@ -18,72 +18,22 @@ var jspm = require('jspm');
 
 
 var config = {
-	paths: {
-		'js': ['src/js/**/*.js'],
-		'postcss': ['src/postcss/**/*.css']
-	}
+	// `gulp --dev`
+	isDev: gutil.env.dev === true
 };
 
-// `gulp --dev`
-// When the `dev` flag is added
-if(gutil.env.dev === true) {
-	// Can be used with `gulp-if`
-	config.isDev = true;
-}
-
-
 
 // Clears the distribution folder before running the other tasks
-gulp.task('build-clean', function(done) {
-	del(['./dist'], done);
-});
-
-
-
-
-// Read caniuse-db json and generate a map to paste into the System.js map config.js
-gulp.task('generate-caniuse-db-json-systemjs-paths', function(done) {
-
-	var jsonFileMap = {};
-
-	var jsonGlobPatternString = 'jspm_packages/npm/caniuse-db@1.0.30000304/**/*.json';
-	var jsonBaseGlobPath = glob2base(new glob.Glob(jsonGlobPatternString));
-
-	glob(jsonGlobPatternString, {})
-		.then(function(completeFilePaths) {
-			completeFilePaths.forEach(function(completeFilePath) {
-				var filePath = path.join(
-						'caniuse-db@1.0.30000304/',
-						path.relative(jsonBaseGlobPath, completeFilePath)
-					)
-					.replace(/\\/g, '/');
-
-				var fileKey = path.join(
-						'caniuse-db/',
-						path.dirname(path.relative(jsonBaseGlobPath, completeFilePath)),
-						path.basename(filePath, '.json')
-					)
-					.replace(/\\/g, '/');
-
-				jsonFileMap[fileKey] = 'npm:' + filePath + '!';
-			});
-		})
-		.then(function() {
-			var output = JSON.stringify(jsonFileMap, null, '\t');
-
-			return fs.outputFile('./caniuse-db-json-systemjs-paths.json', output);
-
-		})
-		.then(function() {
-			done();
-		});
-
+gulp.task('build-clean', function() {
+	return del(['./dist', 'jspm-bundle.js', 'jspm-bundle.js.map', './build.js', './build.js.map']);
 });
 
 
 
 // Clears the distribution folder before running the other tasks
-gulp.task('build-setup', function(done) {
+gulp.task('build-setup', function() {
+	jspm.setPackagePath('.');
+	var builder = new jspm.Builder();
 
 	if(config.isDev) {
 		var pkg = require('./package.json');
@@ -92,51 +42,24 @@ gulp.task('build-setup', function(done) {
 		var moduleList = modules.join(' + ');
 		console.log('\n' + moduleList + '\n');
 
-		Promise.join(
-			jspm.unbundle(),
+		return Promise.join(
+			builder.unbundle(),
 			// Thanks to @OrKoN for this incremental jspm bundle
-			jspm.bundle(moduleList, 'jspm-bundle.js', { mangle: false, sourceMaps: true, inject: true })
+			builder.bundle(moduleList, 'jspm-bundle.js', { mangle: false, sourceMaps: true, inject: true })
 		)
-		.then(function() {
-			done();
-		});
 
 	}
 	else {
-		jspm.setPackagePath('.');
-		jspm.bundle(
-			'src/js/main',
+		return builder.bundle(
+			'src/js/main.js',
 			'build.js',
 			{
 				mangle: false,
 				sourceMaps: true,
 				inject: true
 			}
-		)
-		.then(function() {
-			done();
-		});
+		);
 	}
-
-	/* * /
-	var commandString = '';
-	if(config.isDev) {
-		commandString = 'iojs ./node_modules/jspm/jspm.js unbundle';
-	}
-	else {
-		commandString = 'iojs ./node_modules/jspm/jspm.js bundle src/js/main --inject';
-	}
-
-
-	exec(commandString, function(error, stdout, stderr) {
-		console.log(stdout);
-		if(error) {
-			console.log(error, stderr);
-		}
-
-		done();
-	});
-	/* */
 });
 
 
