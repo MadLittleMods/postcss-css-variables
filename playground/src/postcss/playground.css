@@ -560,7 +560,7 @@ input[type='range'] {
 }
 
 .playground-live-reload-toggle-togglebox {
-	@mixin toggle-checkbox-enclosed .playground-live-reload-toggle-checkbox 'live reload' 'off';
+	@mixin toggle-checkbox-enclosed .playground-live-reload-toggle-checkbox, 'live reload', 'off';
 
 	margin-right: 1em;
 }
