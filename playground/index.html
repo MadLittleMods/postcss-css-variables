@@ -23,13 +23,9 @@
 
 	<script src="jspm_packages/system.js"></script>
 	<script src="jspm.config.js"></script>
+	<script src="build.js"></script>
 	<script>
-		// Change the config based on deployment
-		if(window.location.host === 'madlittlemods.github.io') {
-			System.baseURL = '/postcss-css-variables/playground/';
-		}
-
-		System.import('src/js/main');
+		System.import('src/js/main.js');
 	</script>
 </body>
 </html>
