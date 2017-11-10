@@ -1,0 +1,3 @@
+.box-foo {
+	background-color: color(var(--some-color, white));
+}

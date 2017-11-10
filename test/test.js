@@ -57,8 +57,6 @@ var test = function(message, fixtureName, options) {
 
 
 describe('postcss-css-variables', function() {
-
-
 	// Just make sure it doesn't mangle anything
 	test('should work when there are no var() functions to consume declarations', 'no-var-func');
 	test('should work when there are no var() functions(just `:root`) to consume declarations', 'no-var-func-just-root');
@@ -207,6 +205,7 @@ describe('postcss-css-variables', function() {
 		test('should use fallback variable if provided with missing variables', 'missing-variable-should-fallback-var');
 		test('should use fallback variable if provided with missing variables calc', 'missing-variable-should-fallback-calc');
 		test('should use fallback variable if provided with missing variables nested', 'missing-variable-should-fallback-nested');
+		test('should not mangle outer function parentheses', 'nested-inside-other-func');
 	});
 
 	it('should not parse malformed var() declarations', function() {
