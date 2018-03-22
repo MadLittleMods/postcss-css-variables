@@ -199,6 +199,9 @@ describe('postcss-css-variables', function() {
 						var colorDecl = fooRule.nodes[0];
 						expect(colorDecl.value).to.be.a('string');
 						expect(colorDecl.value).to.be.equal('undefined');
+
+						expect(result.warnings()[0].type).to.be.equal('warning');
+						expect(result.warnings()[0].text).to.be.equal('variable --missing is undefined and used without a fallback');
 					});
 				});
 		});
