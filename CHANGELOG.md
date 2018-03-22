@@ -1,4 +1,9 @@
 
+# v0.8.1 - 2018-3-21
+
+ - Log `undefined` variables (available in `result.warnings()`)
+    - Thank you to [@pixeldrew](https://github.com/pixeldrew) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/69)
+
 
 # v0.8.0 - 2017-8-8
 
