@@ -368,6 +368,12 @@ Can be a simple key-value pair or an object with a `value` property and an optio
 
 The object keys are automatically prefixed with `--` (according to CSS custom property syntax) if you do not provide it.
 
+### `cleanInjectedVariables` (default: `false`)
+
+Removes custom property declarations inserted via the `variables` option from final output.
+
+A typical use case is [CSS Modules](https://github.com/css-modules/css-modules), where you would want to avoid
+repeating custom property definitions in every module passed through this plugin.
 
 ```js
 var postcss = require('postcss');
