@@ -165,12 +165,12 @@ describe('postcss-css-variables', function() {
 			}
 		);
 		test(
-			'should preserve var() values and clean injected declarations with `options.variables` AND `options.preserve` AND `options.cleanInjectedVariables`',
-			'js-defined-preserve-cleanInjected',
+			'should preserve var() values and clean injected declarations with `options.variables` AND `options.preserve` AND `options.preserveInjectedVariables: false`',
+			'js-defined-preserve-injected',
 			{
 				variables: MOCK_JS_VARIABLES,
 				preserve: true,
-				cleanInjectedVariables: true
+				preserveInjectedVariables: false,
 			}
 		);
 	});

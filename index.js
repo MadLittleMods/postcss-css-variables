@@ -65,7 +65,7 @@ var defaults = {
 	variables: {},
 	// Remove variables injected via JS with the `variables` option above
 	// before serializing to CSS
-	cleanInjectedVariables: false
+	preserveInjectedVariables: true
 };
 
 module.exports = postcss.plugin('postcss-css-variables', function(options) {
@@ -86,7 +86,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		var nodesToRemoveAtEnd = [];
 
 		// List of declarations injected from `opts.variables` to remove at the end
-		// if user passes `opts.cleanInjectedVariables`
+		// if user passes `opts.preserveInjectedVariables`
 		var injectedDeclsToRemoveAtEnd = [];
 
 		// Map of variable names to a list of declarations
@@ -113,9 +113,9 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				});
 				variableRootRule.append(varDecl);
 
-				// mark JS-injected variables for removal if `cleanInjectedVariables`
+				// mark JS-injected variables for removal if `preserveInjectedVariables`
 				// option is passed.
-				if (opts.cleanInjectedVariables) {
+				if (!opts.preserveInjectedVariables) {
 					injectedDeclsToRemoveAtEnd.push(varDecl);
 				}
 
