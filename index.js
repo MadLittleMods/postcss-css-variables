@@ -63,8 +63,8 @@ var defaults = {
 	// Simple key-value pair
 	// or an object with a `value` property and an optional `isImportant` bool property
 	variables: {},
-	// Remove variables injected via JS with the `variables` option above
-	// before serializing to CSS
+	// Preserve variables injected via JS with the `variables` option above
+	// before serializing to CSS (`false` will remove these variables from output)
 	preserveInjectedVariables: true
 };
 
