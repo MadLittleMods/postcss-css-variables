@@ -113,7 +113,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				});
 				variableRootRule.append(varDecl);
 
-				// Colect JS-injected variables for removal if `opts.preserveInjectedVariables = false`
+				// Collect JS-injected variables for removal if `opts.preserveInjectedVariables = false`
 				if (!opts.preserveInjectedVariables) {
 					injectedDeclsToRemoveAtEnd.push(varDecl);
 				}
