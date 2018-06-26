@@ -85,8 +85,8 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		// We use this because we don't want to modify the AST when we still need to reference these later on
 		var nodesToRemoveAtEnd = [];
 
-		// List of declarations injected from `opts.variables` to remove at the end
-		// if user passes `opts.preserveInjectedVariables`
+		// Keep track of the injected from `opts.variables` to remove at the end
+		// if user passes `opts.preserveInjectedVariables = false`
 		var injectedDeclsToRemoveAtEnd = [];
 
 		// Map of variable names to a list of declarations
@@ -113,8 +113,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				});
 				variableRootRule.append(varDecl);
 
-				// mark JS-injected variables for removal if `preserveInjectedVariables`
-				// option is passed.
+				// Colect JS-injected variables for removal if `opts.preserveInjectedVariables = false`
 				if (!opts.preserveInjectedVariables) {
 					injectedDeclsToRemoveAtEnd.push(varDecl);
 				}
