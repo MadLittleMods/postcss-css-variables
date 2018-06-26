@@ -12,6 +12,14 @@ var cssvariables = require('../');
 
 var CleanCSS = require('clean-css');
 
+var MOCK_JS_VARIABLES =  {
+	'--js-defined1': '75px',
+	'--js-defined2': {
+		value: '80px'
+	},
+	// Should be automatically prefixed with `--`
+	'js-defined-no-prefix': '#ff0000'
+};
 
 var testPlugin = function(filePath, expectedFilePath, options) {
 	options = options || {};
@@ -146,19 +154,26 @@ describe('postcss-css-variables', function() {
 		test(
 			'should work with JS defined variables',
 			'js-defined',
+			{ variables: MOCK_JS_VARIABLES }
+		);
+		test(
+			'should preserve -- declarations and var() values with `options.variables` AND `options.preserve`',
+			'js-defined-preserve',
 			{
-				variables: {
-					'--js-defined1': '75px',
-					'--js-defined2': {
-						value: '80px'
-					},
-					// Should be automatically prefixed with `--`
-					'js-defined-no-prefix': '#ff0000'
-				}
+				variables: MOCK_JS_VARIABLES,
+				preserve: true
+			}
+		);
+		test(
+			'should preserve var() values and clean injected declarations with `options.variables` AND `options.preserve` AND `options.preserveInjectedVariables: false`',
+			'js-defined-preserve-injected',
+			{
+				variables: MOCK_JS_VARIABLES,
+				preserve: true,
+				preserveInjectedVariables: false,
 			}
 		);
 	});
-
 
 	describe('with `options.preserve`', function() {
 		test(

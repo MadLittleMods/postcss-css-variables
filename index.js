@@ -62,7 +62,10 @@ var defaults = {
 	// Define variables via JS
 	// Simple key-value pair
 	// or an object with a `value` property and an optional `isImportant` bool property
-	variables: {}
+	variables: {},
+	// Preserve variables injected via JS with the `variables` option above
+	// before serializing to CSS (`false` will remove these variables from output)
+	preserveInjectedVariables: true
 };
 
 module.exports = postcss.plugin('postcss-css-variables', function(options) {
@@ -81,6 +84,10 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		// List of nodes that if empty, will be removed
 		// We use this because we don't want to modify the AST when we still need to reference these later on
 		var nodesToRemoveAtEnd = [];
+
+		// Keep track of the injected from `opts.variables` to remove at the end
+		// if user passes `opts.preserveInjectedVariables = false`
+		var injectedDeclsToRemoveAtEnd = [];
 
 		// Map of variable names to a list of declarations
 		var map = {};
@@ -105,6 +112,11 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 					value: variableValue
 				});
 				variableRootRule.append(varDecl);
+
+				// Collect JS-injected variables for removal if `opts.preserveInjectedVariables = false`
+				if (!opts.preserveInjectedVariables) {
+					injectedDeclsToRemoveAtEnd.push(varDecl);
+				}
 
 				// Add the entry to the map
 				prevVariableMap[variableName] = (prevVariableMap[variableName] || []).concat({
@@ -248,6 +260,11 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		// Clean up any nodes we don't want anymore
 		// We clean up at the end because we don't want to modify the AST when we still need to reference these later on
 		nodesToRemoveAtEnd.forEach(cleanUpNode);
+
+		// Clean up JS-injected variables marked for removal
+		injectedDeclsToRemoveAtEnd.forEach(function(injectedDecl) {
+			injectedDecl.remove();
+		});
 
 
 		//console.log('map', map);

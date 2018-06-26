@@ -1,0 +1,8 @@
+.box1 {
+	width: 75px;
+	width: var(--js-defined1);
+	height: 80px;
+	height: var(--js-defined2);
+	background: #ff0000;
+	background: var(--js-defined-no-prefix);
+}
