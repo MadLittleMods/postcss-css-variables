@@ -1,4 +1,10 @@
 
+# v0.9.0 - 2018-6-26
+
+ - Adds `opts.preserveInjectedVariables`, which when set to `false`, removes the `:root { ... }` custom property declarations added via `opts.variables`
+    - Thank you to [@akdetrick](https://github.com/akdetrick) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/74)
+
+
 # v0.8.1 - 2018-3-21
 
  - Log `undefined` variables (available in `result.warnings()`)
