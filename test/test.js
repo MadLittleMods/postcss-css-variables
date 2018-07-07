@@ -9,8 +9,8 @@ chai.use(chaiAsPromised);
 
 var postcss = require('postcss');
 var cssvariables = require('../');
-
-var CleanCSS = require('clean-css');
+var cssnano = require('cssnano');
+var normalizeWhitespace = require('postcss-normalize-whitespace');
 
 var MOCK_JS_VARIABLES =  {
 	'--js-defined1': '75px',
@@ -23,31 +23,33 @@ var MOCK_JS_VARIABLES =  {
 
 var testPlugin = function(filePath, expectedFilePath, options) {
 	options = options || {};
-	return fs.readFileAsync(filePath)
-		.then(function(buffer) {
-			var contents = String(buffer);
-			var actual = postcss(cssvariables(options)).process(contents);
+	return Promise.props({
+		actualBuffer: fs.readFileAsync(filePath),
+		expectedBuffer: fs.readFileAsync(expectedFilePath)
+	})
+		.then(function({ actualBuffer, expectedBuffer }) {
+			var actualResult = postcss([
+				cssvariables(options),
+				cssnano({
+					preset: { plugins: [normalizeWhitespace] }
+				})
+			])
+				.process(String(actualBuffer));
 
-			return actual.css;
+			var expectedResult = postcss([
+				cssnano({
+					preset: { plugins: [normalizeWhitespace] }
+				})
+			])
+				.process(String(expectedBuffer));
+
+			return Promise.props({
+				actualResult: actualResult,
+				expectedResult: expectedResult
+			});
 		})
-		.then(function(actual) {
-			return fs.readFileAsync(expectedFilePath)
-				.then(function(buffer) {
-					var contents = String(buffer);
-
-					var cleanCss = new CleanCSS({
-						advanced: false,
-						aggressiveMerging: false,
-						mediaMerging: false,
-						restructuring: false,
-						shorthandCompacting: false,
-						//keepBreaks: true,
-						compatibility: '-properties.merging'
-					});
-
-					expect(cleanCss.minify(actual).styles).to.equal(cleanCss.minify(contents).styles);
-					//expect(actual).to.equal(contents);
-				});
+		.then(({ actualResult, expectedResult }) => {
+			expect(actualResult.css.replace(/\r?\n/g, '')).to.equal(expectedResult.css.replace(/\r?\n/g, ''));
 		});
 };
 
