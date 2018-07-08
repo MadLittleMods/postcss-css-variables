@@ -11,6 +11,7 @@ var postcss = require('postcss');
 var cssvariables = require('../');
 var cssnano = require('cssnano');
 var normalizeWhitespace = require('postcss-normalize-whitespace');
+var discardComments = require('postcss-discard-comments');
 
 var MOCK_JS_VARIABLES =  {
 	'--js-defined1': '75px',
@@ -31,14 +32,14 @@ var testPlugin = function(filePath, expectedFilePath, options) {
 			var actualResult = postcss([
 				cssvariables(options),
 				cssnano({
-					preset: { plugins: [normalizeWhitespace] }
+					preset: { plugins: [normalizeWhitespace, discardComments] }
 				})
 			])
 				.process(String(actualBuffer));
 
 			var expectedResult = postcss([
 				cssnano({
-					preset: { plugins: [normalizeWhitespace] }
+					preset: { plugins: [normalizeWhitespace, discardComments] }
 				})
 			])
 				.process(String(expectedBuffer));
@@ -99,6 +100,7 @@ describe('postcss-css-variables', function() {
 
 
 	test('should work with pseudo selectors', 'pseudo-selector');
+	//test('should work with multiple pseudo selectors', 'pseudo-multi');
 	test('should work with variables declared in pseudo selectors', 'pseudo-selector-declare-variable');
 
 
