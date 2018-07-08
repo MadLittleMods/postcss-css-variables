@@ -17,15 +17,15 @@ module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 	// You could use this package with their string substitution feature: https://github.com/sindresorhus/multiline
 	var checkboxEnclosedCss = `& {
 		position: relative;
-		
+
 		display: inline-block;
 		vertical-align: middle;
-		
+
 		width: ${totalCheckboxWidth}ch;
 		height: 2rem;
-		
+
 		padding: 0.5ch 0.8ch;
-	
+
 		background: #666666;
 		border-radius: 4px;
   		border: 2px solid #444;
@@ -75,15 +75,15 @@ module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 			position: relative;
 			top: 0;
 			left: 0;
-			
+
 			display: inline-block;
 			/* use the opposite width to cover up the other label */
 			width: ${labelOnWidth}ch;
 			height: 100%;
-			
+
 			padding: 0;
 			margin: 0;
-			
+
 			background: #cc8888;
 			border: 2px solid rgba(0, 0, 0, 0.2);
 
@@ -93,12 +93,12 @@ module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 
 			cursor: pointer;
 			cursor: hand;
-			
+
 			/* Autoprexier doesn't have this yet :/ - https://github.com/postcss/autoprefixer/issues/43 */
 			-webkit-appearance: none;
 			-moz-appearance: none;
 			appearance: none;
-			
+
 			transition: all 0.1s linear;
 
 
@@ -137,7 +137,7 @@ module.exports = function(mixins, checkboxSelector, labelOn, labelOff) {
 
 				width: ${(Math.min(labelOnWidth, labelOffWidth)/2) - 1}ch;
 				height: 0.8ch;
-	
+
 				background: rgba(0, 0, 0, 0.25);
 				border: 1px solid rgba(0, 0, 0, 0.2);
 

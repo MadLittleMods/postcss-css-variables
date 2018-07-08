@@ -5,7 +5,7 @@ module.exports = function(mixins) {
 		cursor: pointer;
 		cusror: hand;
 	}`;
-	
+
 	var root = corepostcss.parse(cursorCss);
 
 	mixins.replaceWith(root);

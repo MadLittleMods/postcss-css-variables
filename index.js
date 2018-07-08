@@ -151,6 +151,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		// Collect all of the variables defined
 		// ---------------------------------------------------------
 		// ---------------------------------------------------------
+		//console.log('Collecting variables defined START');
 		eachCssVariableDeclaration(css, function(decl) {
 			var declParentRule = decl.parent;
 
@@ -195,6 +196,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				nodesToRemoveAtEnd.push(declParentRule);
 			}
 		});
+		//console.log('Collecting variables defined END');
 
 
 
