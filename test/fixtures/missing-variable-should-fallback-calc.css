@@ -1,7 +1,7 @@
 :root {
-    --foo1: 150px;
+	--foo1: 150px;
 }
 
 .box-bar {
-     width: var(--missing,calc(var(--foo1) + 100px));
+	width: var(--missing,calc(var(--foo1) + 100px));
 }

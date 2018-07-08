@@ -35,14 +35,18 @@ var testPlugin = function(filePath, expectedFilePath, options) {
 					preset: { plugins: [normalizeWhitespace, discardComments] }
 				})
 			])
-				.process(String(actualBuffer));
+				.process(String(actualBuffer), {
+					from: filePath,
+				});
 
 			var expectedResult = postcss([
 				cssnano({
 					preset: { plugins: [normalizeWhitespace, discardComments] }
 				})
 			])
-				.process(String(expectedBuffer));
+				.process(String(expectedBuffer), {
+					from: expectedFilePath,
+				});
 
 			return Promise.props({
 				actualResult: actualResult,
@@ -56,7 +60,7 @@ var testPlugin = function(filePath, expectedFilePath, options) {
 
 var fixtureBasePath = './test/fixtures/';
 var test = function(message, fixtureName, options) {
-	it(message, function() {
+	it(`${message} (${fixtureName})`, function() {
 		return testPlugin(
 			path.join(fixtureBasePath, fixtureName + '.css'),
 			path.join(fixtureBasePath, fixtureName + '.expected.css'),

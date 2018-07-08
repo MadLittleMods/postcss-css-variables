@@ -5,3 +5,7 @@
 .foo:hover {
 	color: #00ff00;
 }
+
+.bar:hover + .foo {
+	color: #f0f000;
+}
