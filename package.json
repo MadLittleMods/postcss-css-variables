@@ -14,9 +14,11 @@
     "url": "https://github.com/MadLittleMods/postcss-css-variables.git"
   },
   "dependencies": {
+    "debug": "^3.1.0",
     "escape-string-regexp": "^1.0.3",
-    "extend": "^3.0.1",
-    "postcss": "^6.0.8"
+    "postcss": "^6.0.23",
+    "postcss-node-scope-utility": "0.1.0",
+    "specificity": "^0.3.2"
   },
   "devDependencies": {
     "bluebird": "^3.5.0",

@@ -1,0 +1,15 @@
+.bar {
+	color: pink;
+}
+
+.bar:active {
+	color: blue;
+}
+
+.bar:hover {
+	color: red;
+}
+
+.bar:focus {
+	color: green;
+}

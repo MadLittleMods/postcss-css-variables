@@ -100,7 +100,7 @@ describe('postcss-css-variables', function() {
 
 
 	test('should work with pseudo selectors', 'pseudo-selector');
-	//test('should work with multiple pseudo selectors', 'pseudo-multi');
+	test('should work with multiple pseudo selectors', 'pseudo-multi');
 	test('should work with variables declared in pseudo selectors', 'pseudo-selector-declare-variable');
 
 
