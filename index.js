@@ -4,11 +4,13 @@ const specificityLib = require('specificity');
 const generateSelectorBranchesFromPostcssNode = require('postcss-node-scope-utility/lib/generate-branches');
 const isSelectorBranchUnderScope = require('postcss-node-scope-utility/lib/is-branch-under-scope');
 
-// A custom property is any property whose name starts with two dashes (U+002D HYPHEN-MINUS)
-// `--foo`
-// See: http://dev.w3.org/csswg/css-variables/#custom-property
-const RE_VAR_PROP = (/(--(.+))/);
-const RE_VAR_FUNC = (/var\((--[^,\s]+?)(?:\s*,\s*(.+))?\)/);
+const {
+	RE_VAR_PROP,
+	RE_VAR_FUNC
+} = require('./lib/var-regex');
+const expandVarUsageFromVarDefinition = require('./lib/expand-var-usage-from-var-definition');
+
+
 
 function getSpecificity(selector) {
 	// We only care about the first piece because we have already split the comma-separated pieces before we use this
@@ -31,30 +33,6 @@ function eachCssVariableDeclaration(css, cb) {
 			cb(decl);
 		}
 	});
-}
-
-function cloneParentAncestry(node) {
-	const clone = node.clone();
-	clone.removeAll();
-
-	if(node.parent && node.parent.type !== 'root') {
-		const parentClone = node.parent.clone();
-		parentClone.removeAll();
-		parentClone.append(clone);
-
-		return cloneParentAncestry(parentClone);
-	}
-
-	return clone;
-}
-
-function insertNodeIntoAncestry(ancestry, insertNode) {
-	let deepestNode = ancestry;
-	while(!deepestNode.nodes || deepestNode.nodes.length > 0) {
-		deepestNode = deepestNode.nodes[0];
-	}
-
-	deepestNode.append(insertNode);
 }
 
 
@@ -117,22 +95,25 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		// Collect all of the variables defined `--foo: #f00;`
 		// ---------------------------------------------------------
 		// ---------------------------------------------------------
+		const usageDeclsToSkip = [];
 		eachCssVariableDeclaration(css, function(variableDecl) {
 			// We cache the parent rule because after decl removal, it will be undefined
 			const variableDeclParentRule = variableDecl.parent;
 			const variableName = variableDecl.prop;
 			const variableValue = variableDecl.value;
 			const isImportant = variableDecl.important || false;
-			const variableSelectorBranchs = generateSelectorBranchesFromPostcssNode(variableDeclParentRule);
+			const variableSelectorBranches = generateSelectorBranchesFromPostcssNode(variableDeclParentRule);
 
 			debug(`Collecting ${variableName}=${variableValue} isImportant=${isImportant} from ${variableDeclParentRule.selector.toString()}`);
 
-			map[variableName] = (map[variableName] || []).concat({
+			const variableEntry = {
 				name: variableName,
 				value: variableValue,
 				isImportant,
-				selectorBranches: variableSelectorBranchs
-			});
+				selectorBranches: variableSelectorBranches
+			};
+
+			map[variableName] = (map[variableName] || []).concat(variableEntry);
 
 
 			// Expand/rollout/unroll variable usage
@@ -146,67 +127,24 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			// .foo:hover { --color: #0f0; color: var(--color); }
 			// --------------------------------
 			css.walkDecls(function(usageDecl) {
-				// Avoid duplicating the usage decl on itself
-				// And make sure this decl has `var()` usage
-				if(variableDeclParentRule === usageDecl.parent || !RE_VAR_FUNC.test(usageDecl.value)) {
+				if(
+					// Avoid iterating a var declaration `--var: #f00`
+					RE_VAR_PROP.test(usageDecl.prop) ||
+					// Make sure this decl has `var()` usage
+					!RE_VAR_FUNC.test(usageDecl.value) ||
+					// Avoid duplicating the usage decl on itself
+					variableDeclParentRule === usageDecl.parent ||
+					// Avoid iterating a clone we may have just added before
+					usageDeclsToSkip.some((skipDecl) => skipDecl === usageDecl)
+				) {
 					return;
 				}
 
-				const usageSelectorBranches = generateSelectorBranchesFromPostcssNode(usageDecl.parent);
-
-				variableSelectorBranchs.some((variableSelectorBranch) => {
-					return usageSelectorBranches.some((usageSelectorBranch) => {
-						// In this case, we look whether the usage is under the scope of the definition
-						const isUnderScope = isSelectorBranchUnderScope(usageSelectorBranch, variableSelectorBranch);
-
-						debug(`Should unroll decl? isUnderScope=${isUnderScope}`, usageSelectorBranch.selector.toString(), '|', variableSelectorBranch.selector.toString())
-
-						// For general cases, we can put variable usage right-below the variable definition
-						if(isUnderScope) {
-							usageDecl.value.replace(new RegExp(RE_VAR_FUNC.source, 'g'), (match, matchedVariableName) => {
-								if(matchedVariableName === variableName) {
-									variableDecl.after(usageDecl.clone());
-								}
-							});
-						}
-						// For at-rules
-						else {
-							// If there is a conditional like a atrule/media-query, then we should check whether
-							// the variable can apply and put our usage within that same context
-							// Before:
-							// :root { --color: #f00; }
-							// @media (max-width: 1000px) { :root { --color: #0f0; } }
-							// .box { color: var(--color); }
-							// After:
-							// .box { color: #f00; }
-							// @media (max-width: 1000px) {.box { color: #0f0; } }
-							const hasAtRule = (variableSelectorBranch.conditionals || []).some((conditional) => {
-								return conditional.type === 'atrule';
-							})
-							if(hasAtRule) {
-								const doesVariableApplyToUsage = isSelectorBranchUnderScope(variableSelectorBranch, usageSelectorBranch, { ignoreConditionals: true });
-								debug(`Should expand atrule? doesVariableApplyToUsage=${doesVariableApplyToUsage}`, variableSelectorBranch.selector.toString(), '|', usageSelectorBranch.selector.toString())
-
-								if(doesVariableApplyToUsage) {
-									// Create a new usage clone with only the usage decl
-									const newUsageRule = usageDecl.parent.clone();
-									newUsageRule.removeAll();
-									newUsageRule.append(usageDecl.clone());
-
-									const variableAncestry = cloneParentAncestry(variableDecl.parent.parent);
-									insertNodeIntoAncestry(variableAncestry, newUsageRule);
-
-									usageDecl.parent.cloneBefore();
-									usageDecl.parent.replaceWith(variableAncestry);
-								}
-							}
-						}
-
-
-						return isUnderScope;
-					});
-				});
+				const newUsageDecl = expandVarUsageFromVarDefinition(variableEntry, variableDecl, usageDecl);
+				// Keep track of the cloned decls we should skip over
+				usageDeclsToSkip.push(newUsageDecl);
 			});
+
 
 
 			// Remove the variable declaration because they are pretty much useless after we resolve them
@@ -270,7 +208,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 								const isUnderScope = isSelectorBranchUnderScope(variableSelectorBranch, selectorBranch);
 								const specificity = getSpecificity(variableSelectorBranch.selector.toString());
 
-								debug(`isUnderScope=${isUnderScope} compareSpecificity=${compareSpecificity(specificity, currentGreatestSpecificity)} specificity=${specificity}`, variableSelectorBranch.selector.toString(), '|', selectorBranch.selector.toString())
+								debug(`isUnderScope=${isUnderScope} compareSpecificity=${compareSpecificity(specificity, currentGreatestSpecificity)} specificity=${specificity}`, variableSelectorBranch.selector.toString(), '|', selectorBranch.selector.toString(), '-->', variableEntry.value)
 
 								if(isUnderScope && compareSpecificity(specificity, currentGreatestSpecificity) >= 0) {
 									currentGreatestSpecificity = specificity;
