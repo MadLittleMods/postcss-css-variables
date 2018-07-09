@@ -33,6 +33,30 @@ function eachCssVariableDeclaration(css, cb) {
 	});
 }
 
+function cloneParentAncestry(node) {
+	const clone = node.clone();
+	clone.removeAll();
+
+	if(node.parent && node.parent.type !== 'root') {
+		const parentClone = node.parent.clone();
+		parentClone.removeAll();
+		parentClone.append(clone);
+
+		return cloneParentAncestry(parentClone);
+	}
+
+	return clone;
+}
+
+function insertNodeIntoAncestry(ancestry, insertNode) {
+	let deepestNode = ancestry;
+	while(!deepestNode.nodes || deepestNode.nodes.length > 0) {
+		deepestNode = deepestNode.nodes[0];
+	}
+
+	deepestNode.append(insertNode);
+}
+
 
 var defaults = {
 	// Allows you to preserve custom properties & var() usage in output.
@@ -123,7 +147,8 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			// --------------------------------
 			css.walkDecls(function(usageDecl) {
 				// Avoid duplicating the usage decl on itself
-				if(variableDeclParentRule === usageDecl.parent) {
+				// And make sure this decl has `var()` usage
+				if(variableDeclParentRule === usageDecl.parent || !RE_VAR_FUNC.test(usageDecl.value)) {
 					return;
 				}
 
@@ -133,10 +158,8 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 					return usageSelectorBranches.some((usageSelectorBranch) => {
 						// In this case, we look whether the usage is under the scope of the definition
 						const isUnderScope = isSelectorBranchUnderScope(usageSelectorBranch, variableSelectorBranch);
-						//const isUnderScope = isSelectorBranchUnderScope(variableSelectorBranch, usageSelectorBranch, { ignoreConditionals: true });
 
-						debug(`Should expand usage? isUnderScope=${isUnderScope}`, usageSelectorBranch.selector.toString(), '|', variableSelectorBranch.selector.toString())
-						//debug(`Should expand usage? isUnderScope=${isUnderScope}`, variableSelectorBranch.selector.toString(), '|', usageSelectorBranch.selector.toString())
+						debug(`Should unroll decl? isUnderScope=${isUnderScope}`, usageSelectorBranch.selector.toString(), '|', variableSelectorBranch.selector.toString())
 
 						if(isUnderScope) {
 							usageDecl.value.replace(new RegExp(RE_VAR_FUNC.source, 'g'), (match, matchedVariableName) => {
@@ -145,6 +168,36 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 								}
 							});
 						}
+						else {
+							// If there is a conditional like a atrule/media-query, then we should check whether
+							// the variable can apply and put our usage within that same context
+							// Before:
+							// :root { --color: #f00; }
+							// @media (max-width: 1000px) { :root { --color: #0f0; } }
+							// .box { color: var(--color); }
+							// After:
+							// .box { color: #f00; }
+							// @media (max-width: 1000px) {.box { color: #0f0; } }
+							const hasAtRule = (variableSelectorBranch.conditionals || []).some((conditional) => {
+								return conditional.type === 'atrule';
+							})
+							if(hasAtRule) {
+								const doesVariableApplyToUsage = isSelectorBranchUnderScope(variableSelectorBranch, usageSelectorBranch, { ignoreConditionals: true });
+								debug(`Should expand usage? doesVariableApplyToUsage=${doesVariableApplyToUsage}`, variableSelectorBranch.selector.toString(), '|', usageSelectorBranch.selector.toString())
+
+								// Create a new usage clone with only the usage decl
+								const newUsageRule = usageDecl.parent.clone();
+								newUsageRule.removeAll();
+								newUsageRule.append(usageDecl.clone());
+
+								const variableAncestry = cloneParentAncestry(variableDecl.parent.parent);
+								insertNodeIntoAncestry(variableAncestry, newUsageRule);
+
+								usageDecl.parent.cloneBefore();
+								usageDecl.parent.replaceWith(variableAncestry);
+							}
+						}
+
 
 						return isUnderScope;
 					});
@@ -164,8 +217,11 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			// else {}
 
 			// Clean up the rule that declared them if it doesn't have anything left after we potentially remove the variable decl
-			if(variableDeclParentRule.nodes.length <= 0) {
-				variableDeclParentRule.remove();
+			let currentNodeToCheckEmpty = variableDeclParentRule;
+			while(currentNodeToCheckEmpty.nodes.length === 0) {
+				const nodeToRemove = currentNodeToCheckEmpty;
+				currentNodeToCheckEmpty = nodeToRemove.parent;
+				nodeToRemove.remove();
 			}
 		});
 
