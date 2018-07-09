@@ -161,6 +161,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 						debug(`Should unroll decl? isUnderScope=${isUnderScope}`, usageSelectorBranch.selector.toString(), '|', variableSelectorBranch.selector.toString())
 
+						// For general cases, we can put variable usage right-below the variable definition
 						if(isUnderScope) {
 							usageDecl.value.replace(new RegExp(RE_VAR_FUNC.source, 'g'), (match, matchedVariableName) => {
 								if(matchedVariableName === variableName) {
@@ -168,6 +169,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 								}
 							});
 						}
+						// For at-rules
 						else {
 							// If there is a conditional like a atrule/media-query, then we should check whether
 							// the variable can apply and put our usage within that same context
@@ -183,18 +185,20 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 							})
 							if(hasAtRule) {
 								const doesVariableApplyToUsage = isSelectorBranchUnderScope(variableSelectorBranch, usageSelectorBranch, { ignoreConditionals: true });
-								debug(`Should expand usage? doesVariableApplyToUsage=${doesVariableApplyToUsage}`, variableSelectorBranch.selector.toString(), '|', usageSelectorBranch.selector.toString())
+								debug(`Should expand atrule? doesVariableApplyToUsage=${doesVariableApplyToUsage}`, variableSelectorBranch.selector.toString(), '|', usageSelectorBranch.selector.toString())
 
-								// Create a new usage clone with only the usage decl
-								const newUsageRule = usageDecl.parent.clone();
-								newUsageRule.removeAll();
-								newUsageRule.append(usageDecl.clone());
+								if(doesVariableApplyToUsage) {
+									// Create a new usage clone with only the usage decl
+									const newUsageRule = usageDecl.parent.clone();
+									newUsageRule.removeAll();
+									newUsageRule.append(usageDecl.clone());
 
-								const variableAncestry = cloneParentAncestry(variableDecl.parent.parent);
-								insertNodeIntoAncestry(variableAncestry, newUsageRule);
+									const variableAncestry = cloneParentAncestry(variableDecl.parent.parent);
+									insertNodeIntoAncestry(variableAncestry, newUsageRule);
 
-								usageDecl.parent.cloneBefore();
-								usageDecl.parent.replaceWith(variableAncestry);
+									usageDecl.parent.cloneBefore();
+									usageDecl.parent.replaceWith(variableAncestry);
+								}
 							}
 						}
 
