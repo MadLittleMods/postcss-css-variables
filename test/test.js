@@ -54,7 +54,7 @@ var testPlugin = function(filePath, expectedFilePath, options) {
 			});
 		})
 		.then(({ actualResult, expectedResult }) => {
-			expect(actualResult.css.replace(/\r?\n/g, '')).to.equal(expectedResult.css.replace(/\r?\n/g, ''));
+			expect(actualResult.css.replace(/(\r?\n)|\s/g, '')).to.equal(expectedResult.css.replace(/(\r?\n)|\s/g, ''));
 		});
 };
 

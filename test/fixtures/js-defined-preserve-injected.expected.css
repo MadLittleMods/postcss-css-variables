@@ -1,10 +1,3 @@
-:root {
-}
-:root {
-}
-:root {
-}
-
 .box1 {
 	width: 75px;
 	width: var(--js-defined1);

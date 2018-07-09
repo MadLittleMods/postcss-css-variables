@@ -57,8 +57,16 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		// Map of variable names to a list of declarations
 		let map = {};
 
+
 		// Add the js defined variables `opts.variables` to the map
-		Object.keys(opts.variables).forEach(function(prevVariableMap, variableKey) {
+		// ---------------------------------------------------------
+		// ---------------------------------------------------------
+		const rootNode = postcss.rule({ selector: ':root' });
+		if(opts.variables && Object.keys(opts.variables).length > 0 && opts.preserve && opts.preserveInjectedVariables) {
+			css.prepend(rootNode);
+		}
+
+		Object.keys(opts.variables).forEach(function(variableKey) {
 			const variableEntry = opts.variables[variableKey];
 			// Automatically prefix any variable with `--` (CSS custom property syntax) if it doesn't have it already
 			const variableName = variableKey.slice(0, 2) === '--' ? variableKey : '--' + variableKey;
@@ -70,14 +78,19 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				name: variableName,
 				value: variableValue,
 				isImportant,
-				selectorBranches: [':root']
+				selectorBranches: generateSelectorBranchesFromPostcssNode(rootNode)
 			});
+
+			if(opts.preserve && opts.preserveInjectedVariables) {
+				const variableDecl = postcss.decl({ prop: variableName, value: variableValue });
+				rootNode.append(variableDecl);
+			}
 		});
 
 
 
 
-		// Collect all of the variables defined
+		// Collect all of the variables defined `--foo: #f00;`
 		// ---------------------------------------------------------
 		// ---------------------------------------------------------
 		eachCssVariableDeclaration(css, function(variableDecl) {
@@ -105,8 +118,8 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			// .foo { --color: #f00; color: var(--color); }
 			// .foo:hover { --color: #0f0; };
 			// After:
-			// .foo { color: #f00; }
-			// .foo:hover { color: #0f0; }
+			// .foo { --color: #f00; color: var(--color); }
+			// .foo:hover { --color: #0f0; color: var(--color); }
 			// --------------------------------
 			css.walkDecls(function(usageDecl) {
 				// Avoid duplicating the usage decl on itself
@@ -120,8 +133,10 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 					return usageSelectorBranches.some((usageSelectorBranch) => {
 						// In this case, we look whether the usage is under the scope of the definition
 						const isUnderScope = isSelectorBranchUnderScope(usageSelectorBranch, variableSelectorBranch);
+						//const isUnderScope = isSelectorBranchUnderScope(variableSelectorBranch, usageSelectorBranch, { ignoreConditionals: true });
 
 						debug(`Should expand usage? isUnderScope=${isUnderScope}`, usageSelectorBranch.selector.toString(), '|', variableSelectorBranch.selector.toString())
+						//debug(`Should expand usage? isUnderScope=${isUnderScope}`, variableSelectorBranch.selector.toString(), '|', usageSelectorBranch.selector.toString())
 
 						if(isUnderScope) {
 							usageDecl.value.replace(new RegExp(RE_VAR_FUNC.source, 'g'), (match, matchedVariableName) => {
@@ -137,7 +152,6 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			});
 
 
-
 			// Remove the variable declaration because they are pretty much useless after we resolve them
 			if(!opts.preserve) {
 				variableDecl.remove();
@@ -146,6 +160,8 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			else if(opts.preserve === 'computed') {
 				// TODO: put computed value here
 			}
+			// Otherwise just leave them alone
+			// else {}
 
 			// Clean up the rule that declared them if it doesn't have anything left after we potentially remove the variable decl
 			if(variableDeclParentRule.nodes.length <= 0) {
@@ -160,7 +176,17 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		debug('---------------------------------');
 
 
-		// Resolve variables everywhere
+
+
+		// Resolve variable values
+		// ---------------------------------------------------------
+		// ---------------------------------------------------------
+		// TODO
+
+
+
+
+		// Resolve variable usage everywhere `var(--foo)`
 		// ---------------------------------------------------------
 		// ---------------------------------------------------------
 		css.walkDecls(function(decl) {
@@ -168,7 +194,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 			if(!RE_VAR_PROP.test(decl.prop)) {
 				const selectorBranches = generateSelectorBranchesFromPostcssNode(decl.parent);
 
-				decl.value = decl.value.replace(new RegExp(RE_VAR_FUNC.source, 'g'), (match, variableName, fallback) => {
+				const newDeclValue = decl.value.replace(new RegExp(RE_VAR_FUNC.source, 'g'), (match, variableName, fallback) => {
 					debug('usage', variableName);
 					const variableEntries = map[variableName] || [];
 
@@ -204,11 +230,30 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 						result.warn(['variable ' + variableName + ' is undefined and used without a fallback', { node: decl }]);
 					}
 
+					// We use 'undefined' value as a string to avoid making other plugins down the line unhappy, see #22
 					return resultantValue || 'undefined';
 				});
+
+
+				if(newDeclValue !== decl.value) {
+					let potentialClone = decl;
+					if(opts.preserve === true) {
+						potentialClone = decl.cloneBefore();
+					}
+
+					// We `cloneBefore` and put the value on the clone so that
+					// `walkDecl` doesn't try to iterate on the new decl
+					potentialClone.value = newDeclValue;
+				}
+
 			}
 		});
 
+
+
+		debug('postcss-css-variables completed -');
+		debug(css.toString());
+		debug('---------------------------------');
 
 	};
 });

@@ -6,7 +6,6 @@
 	}
 
 	@media (max-width: 800px) {
-
 		.box-bar {
 			width: 300px;
 		}
@@ -14,7 +13,6 @@
 }
 
 @media (max-width: 800px) {
-
 	.box-foo {
 		width: 300px;
 	}

@@ -1,11 +1,7 @@
 :root {
-	--js-defined-no-prefix: #ff0000;
-}
-:root {
-	--js-defined2: 80px;
-}
-:root {
 	--js-defined1: 75px;
+	--js-defined2: 80px;
+	--js-defined-no-prefix: #ff0000;
 }
 
 .box1 {

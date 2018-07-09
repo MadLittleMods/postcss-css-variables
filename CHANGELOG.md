@@ -1,3 +1,10 @@
+# v1.0.0 - *upcoming*
+
+ - Complete rewrite of the codebase using `postcss-node-scope-utility`
+ - Order is preserved instead of reversed, https://github.com/MadLittleMods/postcss-css-variables/issues/30
+ - Fix variable only used from last pseudo-element, https://github.com/MadLittleMods/postcss-css-variables/issues/46
+ - Variables supplied by `opts.variables` now live a single `:root` rule and don't leave empty `:root` around
+
 
 # v0.9.0 - 2018-6-26
 

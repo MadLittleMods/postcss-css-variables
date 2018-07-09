@@ -2,14 +2,14 @@
 	color: pink;
 }
 
-.bar:active {
-	color: blue;
+.bar:focus {
+	color: green;
 }
 
 .bar:hover {
 	color: red;
 }
 
-.bar:focus {
-	color: green;
+.bar:active {
+	color: blue;
 }
