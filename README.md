@@ -286,16 +286,13 @@ This plugin was spawned out of a [discussion on the `cssnext` repo](https://gith
 
 There is another similar plugin available, [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), although it restricts itself much more than this plugin, preferring partial spec conformance. This plugin has the same capabilities but also adds imperfect feature support which stem from not being to know what the DOM will look like when you compile your CSS. We instead look at the explicit structure of your CSS selectors.
 
-### Interoperability
+### Interoperability and differences from `postcss-custom-properties`
 
 Putting `postcss-css-variables` in place of `postcss-custom-properties` should work out of the box.
 
-In `postcss-custom-properties`, CSS variable declarations are specifically restricted to the `:root` selector. In `postcss-css-variables`, this is not the case and they may be declared inside any rule with whatever selector. The variables are substituted based on statically known CSS selector inheritance.
+In [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), CSS variable declarations are specifically restricted to the `:root` selector.
 
-### Differences from `postcss-custom-properties`
-
-In [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), CSS variable declarations are specifically restricted to the `:root` selector. In `postcss-css-variables`, this is not the case and they may be declared inside any rule with whatever selector.
- 
+In `postcss-css-variables`, this is not the case and they may be declared inside any rule with whatever selector. The variables are substituted based on statically known CSS selector inheritance.
 
 Here's a quick overview of the differences:
 
