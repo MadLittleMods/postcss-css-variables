@@ -49,11 +49,9 @@ var defaults = {
 	preserveInjectedVariables: true
 };
 
-module.exports = postcss.plugin('postcss-css-variables', function(options) {
+const cssvariables = postcss.plugin('postcss-css-variables', function(options) {
 
 	var opts = Object.assign({}, defaults, options);
-
-	// Work with opts here
 
 	return function (css, result) {
 		// Map of variable names to a list of declarations
@@ -140,6 +138,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 					return;
 				}
 
+				// TODO: Is there a way to walk the decls backwards so we can get the @media queries in the correct order
 				const newUsageDecl = expandVarUsageFromVarDefinition(variableEntry, variableDecl, usageDecl);
 				// Keep track of the cloned decls we should skip over
 				usageDeclsToSkip.push(newUsageDecl);
@@ -160,7 +159,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 			// Clean up the rule that declared them if it doesn't have anything left after we potentially remove the variable decl
 			let currentNodeToCheckEmpty = variableDeclParentRule;
-			while(currentNodeToCheckEmpty.nodes.length === 0) {
+			while(currentNodeToCheckEmpty && currentNodeToCheckEmpty.nodes.length === 0) {
 				const nodeToRemove = currentNodeToCheckEmpty;
 				currentNodeToCheckEmpty = nodeToRemove.parent;
 				nodeToRemove.remove();
@@ -255,3 +254,6 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 	};
 });
+
+
+module.exports = cssvariables;
