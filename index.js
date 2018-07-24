@@ -183,6 +183,15 @@ const cssvariables = postcss.plugin('postcss-css-variables', function(options) {
 
 
 
+
+		// Split comma separated selectors into separate rules
+		// ---------------------------------------------------------
+		// ---------------------------------------------------------
+		// TODO
+
+
+
+
 		// Resolve variable usage everywhere `var(--foo)`
 		// ---------------------------------------------------------
 		// ---------------------------------------------------------
@@ -190,6 +199,7 @@ const cssvariables = postcss.plugin('postcss-css-variables', function(options) {
 			// Avoid any variable decls, `--foo: var(--bar);`, that may have been preserved
 			if(!RE_VAR_PROP.test(decl.prop)) {
 				const selectorBranches = generateSelectorBranchesFromPostcssNode(decl.parent);
+				console.log('selectorBranches', selectorBranches.map((branch) => branch.selector.toString()));
 
 				const newDeclValue = decl.value.replace(new RegExp(RE_VAR_FUNC.source, 'g'), (match, variableName, fallback) => {
 					debug('usage', variableName);

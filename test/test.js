@@ -113,7 +113,8 @@ describe('postcss-css-variables', function() {
 	test('should work with variables defined in comma separated selector', 'comma-separated-variable-declaration');
 
 
-	test('should work use the correct variable in comma separated selector', 'comma-separated-variable-usage');
+	test('should use the correct variable in comma separated selector', 'comma-separated-variable-usage');
+	test('should use the correct variable in nested comma separated selector', 'comma-separated-variable-nested-usage');
 
 
 	test('should work with star selector', 'star-selector-scope');

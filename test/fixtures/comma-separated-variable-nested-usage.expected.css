@@ -1,0 +1,15 @@
+.foo {
+	.bar {
+		.qux {
+			color: red;
+		}
+	}
+}
+
+.foo {
+	.baz {
+		.qux {
+			color: blue;
+		}
+	}
+}
