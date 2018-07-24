@@ -311,35 +311,19 @@ When you declare a CSS variable inside one selector, but consume it in another, 
 Using the following CSS:
 
 ```css
-.component {
-  --text-color: blue;
-}
+:root { --color: red }
+.theme-blue { --color: blue }
 
-.component .header {
-  color: var(--text-color);
-}
-
-.component .text {
-  --text-color: green;
-  color: var(--text-color);
+.block {
+  color: var(--color);
 }
 ```
 
-Note the nested markup below. We only know about the DOM's inheritance from your CSS selectors. If you want nest multiple times, you need to be explicit about it in your CSS which isn't necessary with browser that natively support CSS variables. See the innermost `<h1 class="title">`
+Note the nested markup below. We only know about the DOM's inheritance from your CSS selectors. If you want nest multiple times, you need to be explicit about it in your CSS which isn't necessary with browser that natively support CSS variables.
 
 ```html
-<div class="component">
-    Black
-
-    <h1 class="title">
-        Blue
-
-        <p class="decoration">
-            Green
-
-            <h1 class="title">Blue with this plugin, but green per spec</h1>
-        </p>
-    </h1>
+<div class="block theme-blue">
+  Red in plugin, but blue in spec
 </div>
 ```
 [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties) avoids this problem entirely by restricting itself to just the `:root` selector. This is because the developers there would prefer to not support a feature instead of something almost-spec-compliant like what `postcss-css-variables` does.
