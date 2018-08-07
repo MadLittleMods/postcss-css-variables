@@ -271,7 +271,7 @@ Will be transformed to:
 	.box-foo {
 		width: 300px;
 	}
-	
+
 	.box-foo .box-bar {
 		width: 300px;
 	}
@@ -308,40 +308,40 @@ Continue to the next section to see where some of these might be unsafe to do. T
 
 When you declare a CSS variable inside one selector, but consume it in another, this does make an unsafe assumption about it which can be non-conforming in certain edge cases. Here is an example where these limitations result in non-conforming behavior.
 
-Using the following CSS:
-
-```css
-.component {
-  --text-color: blue;
-}
-
-.component .header {
-  color: var(--text-color);
-}
-
-.component .text {
-  --text-color: green;
-  color: var(--text-color);
-}
-```
-
 Note the nested markup below. We only know about the DOM's inheritance from your CSS selectors. If you want nest multiple times, you need to be explicit about it in your CSS which isn't necessary with browser that natively support CSS variables. See the innermost `<h1 class="title">`
 
 ```html
 <div class="component">
     Black
 
-    <h1 class="title">
+    <div class="title">
         Blue
 
-        <p class="decoration">
+        <div class="decoration">
             Green
 
-            <h1 class="title">Blue with this plugin, but green per spec</h1>
-        </p>
-    </h1>
+            <div class="title">Blue with this plugin, but green per spec</div>
+        </div>
+    </div>
 </div>
 ```
+
+```css
+.component {
+  --text-color: blue;
+}
+
+.component .title {
+  color: var(--text-color);
+}
+
+.component .decoration {
+  --text-color: green;
+  color: var(--text-color);
+}
+```
+
+
 [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties) avoids this problem entirely by restricting itself to just the `:root` selector. This is because the developers there would prefer to not support a feature instead of something almost-spec-compliant like what `postcss-css-variables` does.
 
 
