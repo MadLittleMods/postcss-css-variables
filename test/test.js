@@ -22,6 +22,16 @@ var MOCK_JS_VARIABLES =  {
 	'js-defined-no-prefix': '#ff0000'
 };
 
+var NON_STRING_VARIABLES = {
+	'number-value': 50,
+	'zero-value': 0,
+	'null-value': null,
+	'undefined-value': undefined,
+	'object-value-passed-by-mistake': {},
+	'true-value': true,
+	'false-value': false,
+};
+
 var testPlugin = function(filePath, expectedFilePath, options) {
 	options = options || {};
 	return Promise.props({
@@ -177,6 +187,13 @@ describe('postcss-css-variables', function() {
 				preserveInjectedVariables: false,
 			}
 		);
+		test(
+			'should cast non-string values to string',
+			'js-defined-non-string-values-casted-to-string',
+			{
+				variables: NON_STRING_VARIABLES
+			}
+		);
 	});
 
 	describe('with `options.preserve`', function() {
@@ -249,5 +266,4 @@ describe('postcss-css-variables', function() {
 			'remove-nested-empty-rules-after-variable-collection'
 		);
 	});
-
 });

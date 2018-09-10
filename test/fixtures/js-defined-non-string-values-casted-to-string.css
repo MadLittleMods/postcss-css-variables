@@ -1,0 +1,9 @@
+.box {
+    top: var(--number-value);
+    width: var(--zero-value);
+    height: var(--null-value);
+    overflow: var(--undefined-value);
+    font-size: var(--object-value-passed-by-mistake);
+    visibility: var(--true-value);
+    opacity: var(--false-value);
+}
