@@ -25,7 +25,7 @@
     "cssnano": "^4.0.0",
     "eslint": "^4.4.1",
     "eslint-plugin-react": "^7.1.0",
-    "mocha": "^3.5.0",
+    "mocha": "^5.2.0",
     "postcss-discard-comments": "^4.0.0",
     "postcss-normalize-whitespace": "^4.0.0"
   },
