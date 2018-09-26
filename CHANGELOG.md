@@ -1,3 +1,8 @@
+# v0.10.0 - 2018-9-25
+
+ - Cast `opts.variables` variable values to string
+    - Thank you to [@shonie](https://github.com/shonie) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/84)
+
 
 # v0.9.0 - 2018-6-26
 
