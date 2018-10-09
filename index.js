@@ -109,7 +109,8 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				// Add the variable decl to the root node
 				var varDecl = postcss.decl({
 					prop: variableName,
-					value: variableValue
+					value: variableValue,
+					important: isImportant
 				});
 				variableRootRule.append(varDecl);
 

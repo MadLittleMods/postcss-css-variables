@@ -1,0 +1,7 @@
+:root {
+  --js-defined-important: #000;
+}
+
+.box1 {
+  background-color: var(--js-defined-important);
+}
