@@ -2,6 +2,9 @@
 	--js-defined-no-prefix: #ff0000;
 }
 :root {
+	--js-defined-important: #0f0 !important;
+}
+:root {
 	--js-defined2: 80px;
 }
 :root {

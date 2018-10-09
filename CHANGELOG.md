@@ -1,3 +1,8 @@
+# v0.11.0 - 2018-10-9
+
+ - Fix JS-defined variables using `isImportant`, https://github.com/MadLittleMods/postcss-css-variables/pull/87
+
+
 # v0.10.0 - 2018-9-25
 
  - Cast `opts.variables` variable values to string

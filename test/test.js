@@ -18,6 +18,10 @@ var MOCK_JS_VARIABLES =  {
 	'--js-defined2': {
 		value: '80px'
 	},
+	'--js-defined-important': {
+		value: '#0f0',
+		isImportant: true
+	},
 	// Should be automatically prefixed with `--`
 	'js-defined-no-prefix': '#ff0000'
 };
@@ -168,6 +172,11 @@ describe('postcss-css-variables', function() {
 		test(
 			'should work with JS defined variables',
 			'js-defined',
+			{ variables: MOCK_JS_VARIABLES }
+		);
+		test(
+			'should work with JS defined important variables',
+			'js-defined-important',
 			{ variables: MOCK_JS_VARIABLES }
 		);
 		test(
