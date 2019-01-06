@@ -101,7 +101,7 @@ Custom properties can be declared multiple times, but like variable scope in oth
 
 .bar:hover {
     --some-color: green;
-    /* Automically gets a `color: green;` declaration because we `--some-color` used within scope elsewhere */
+    /* Automatically gets a `color: green;` declaration because we `--some-color` used within scope elsewhere */
 }
 ```
 
@@ -397,7 +397,7 @@ postcss([
 
 # Quick Reference/Notes
 
- - This plugin was spawned out of a [discussion on the `cssnext` repo](https://github.com/cssnext/cssnext/issues/99)
+ - This plugin was spawned out of a [discussion on the `cssnext` repo](https://github.com/cssnext/cssnext/issues/99).
  - We provide a larger CSS variable feature subset than [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties).
  - Related links and issues:
  	 - [var declared in media query should pull in properties that use/reference that var *on `cssnext/cssnext`*](https://github.com/cssnext/cssnext/issues/99)
