@@ -135,7 +135,11 @@ describe('postcss-css-variables', function() {
 		test('should add rule declaration of property in @media', 'media-query');
 		test('should add rule declaration of property in @support', 'support-directive');
 
-		test('should work with nested @media', 'media-query-nested');
+		test('should work with @media, preserving rule order', 'media-query-preserve-rule-order', { preserveAtRulesOrder: true });
+
+		test('should work with nested @media', 'media-query-nested', { preserveAtRulesOrder: false });
+		test('should work with nested @media, preserving rule order', 'media-query-nested-preserver-rule-order', { preserveAtRulesOrder: true });
+
 
 		test('should cascade to nested rules', 'cascade-on-nested-rules');
 

@@ -395,6 +395,13 @@ postcss([
 ```
 
 
+### `preserveAtRulesOrder` (default: `false`)
+
+Keeps your at-rules like media queries in the order to defined them.
+
+Ideally, this would be defaulted to `true` and it will be in the next major version. All of the tests expecations need to be updated and probably just drop support for `preserveAtRulesOrder: false`
+
+
 # Quick Reference/Notes
 
  - This plugin was spawned out of a [discussion on the `cssnext` repo](https://github.com/cssnext/cssnext/issues/99).
