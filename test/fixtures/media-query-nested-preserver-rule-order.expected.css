@@ -1,0 +1,26 @@
+.box {
+	width: 150px;
+}
+
+@media print {
+
+	@media (min-width: 1000px) {
+
+		.box{
+			width: 300px;
+		}
+	}
+}
+
+@media print {
+
+	@media (min-width: 1000px) {
+
+		@media (min-width: 1250px) {
+
+			.box {
+				width: 450px;
+			}
+		}
+	}
+}
