@@ -352,9 +352,6 @@ SystemJS.config({
           }
         }
       }
-    },
-    "npm:es6-promise@2.3.0": {
-      "map": {}
     }
   },
   map: {

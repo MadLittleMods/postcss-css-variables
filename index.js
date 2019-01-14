@@ -65,7 +65,10 @@ var defaults = {
 	variables: {},
 	// Preserve variables injected via JS with the `variables` option above
 	// before serializing to CSS (`false` will remove these variables from output)
-	preserveInjectedVariables: true
+	preserveInjectedVariables: true,
+	// Will write media queries in the same order as in the original file.
+	// Set it to true if you're working with min-width
+	preserveAtRulesOrder: false
 };
 
 module.exports = postcss.plugin('postcss-css-variables', function(options) {
@@ -249,7 +252,7 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				ruleToWorkOn.nodes.slice(0).forEach(function(node) {
 					if(node.type === 'decl') {
 						var decl = node;
-						resolveDecl(decl, map, opts.preserve, logResolveValueResult);
+						resolveDecl(decl, map, opts.preserve, logResolveValueResult, opts.preserveAtRulesOrder);
 					}
 				});
 			});
