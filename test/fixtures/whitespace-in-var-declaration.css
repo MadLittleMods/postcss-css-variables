@@ -1,0 +1,9 @@
+:root {
+    --foo: 1px;
+}
+
+.bar {
+    width: var( --foo );
+    height: var( --foo);
+    margin-top: var(--foo );
+}

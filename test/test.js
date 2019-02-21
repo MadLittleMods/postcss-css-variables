@@ -257,6 +257,8 @@ describe('postcss-css-variables', function() {
 		test('should not mangle outer function parentheses', 'nested-inside-other-func');
 	});
 
+	test('should accept whitespace in var() declarations', 'whitespace-in-var-declaration' )
+
 	it('should not parse malformed var() declarations', function() {
 		return expect(testPlugin(
 			'./test/fixtures/malformed-variable-usage.css',
