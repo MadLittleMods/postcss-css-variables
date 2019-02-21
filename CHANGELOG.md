@@ -1,3 +1,9 @@
+# v0.12.0 - 2019-2-21
+
+ - Accept whitespace in `var( --var )` expression
+    - Thank you to [@benwest](https://github.com/benwest) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/93)
+
+
 # v0.11.0 - 2018-10-9
 
  - Fix JS-defined variables using `isImportant`, https://github.com/MadLittleMods/postcss-css-variables/pull/87
