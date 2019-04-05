@@ -308,7 +308,7 @@ Continue to the next section to see where some of these might be unsafe to do. T
 
 When you declare a CSS variable inside one selector, but consume it in another, this does make an unsafe assumption about it which can be non-conforming in certain edge cases. Here is an example where these limitations result in non-conforming behavior.
 
-Note the nested markup below. We only know about the DOM's inheritance from your CSS selectors. If you want nest multiple times, you need to be explicit about it in your CSS which isn't necessary with browser that natively support CSS variables. See the innermost `<h1 class="title">`
+Note the nested markup below. We only know about the DOM's inheritance from your CSS selectors. If you want nest multiple times, you need to be explicit about it in your CSS which isn't necessary with browser that natively support CSS variables. See the innermost `<div class="title">`
 
 ```html
 <div class="component">
