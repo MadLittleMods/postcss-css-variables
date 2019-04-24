@@ -1,3 +1,15 @@
+:root {
+	--some-width: 150px;
+}
+
 .box-foo {
 	background-color: color(var(--some-color, white));
+}
+
+.box-foo {
+	width: calc(58.3333333333% - var(--some-width, 100px)); 
+}
+
+.box-foo {
+	width: calc(58.3333333333% - var(--missing, 100px)); 
 }
