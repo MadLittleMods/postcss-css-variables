@@ -9,3 +9,15 @@
 .box-foo {
 	width: calc(58.3333333333% - 100px); 
 }
+
+.box-foo {
+	width: calc(58.3333333333% - 150px); 
+}
+
+.box-foo {
+	width: undefined; 
+}
+
+.box-foo {
+	width: calc(150px - 50px); 
+}
