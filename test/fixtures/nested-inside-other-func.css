@@ -1,10 +1,17 @@
 :root {
+	--some-color: red;
 	--some-width: 150px;
 	--some-other-width: 50px;
+	--some-margin: 20px;
+	--some-padding: 20px;
 }
 
 .box-foo {
-	background-color: color(var(--some-color, white));
+	background-color: color(var(--some-color));
+}
+
+.box-foo {
+	background-color: color(var(--missing, white));
 }
 
 .box-foo {
@@ -25,4 +32,19 @@
 
 .box-foo {
 	width: calc(var(--some-width) - var(--some-other-width)); 
+}
+
+.box-foo {
+  --widthA: 100px;
+  --widthB: calc(var(--widthA) / 2);
+  --widthC: calc(var(--widthB) / 2);
+  width: var(--widthC);
+}
+
+.box-foo {
+	margin: calc(var(--some-margin) - 2px) calc(1rem - var(--missing));
+}
+
+.box-foo {
+	padding: calc(var(--some-padding) - 2px) calc(100px - var(--some-padding)) calc(100px - calc(var(--missing, 20px) - 10px));
 }

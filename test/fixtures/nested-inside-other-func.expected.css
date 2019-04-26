@@ -1,4 +1,8 @@
 .box-foo {
+	background-color: color(red);
+}
+
+.box-foo {
 	background-color: color(white);
 }
 
@@ -21,3 +25,16 @@
 .box-foo {
 	width: calc(150px - 50px); 
 }
+
+.box-foo {
+	width: calc(calc(100px / 2) / 2);
+}
+
+.box-foo {
+	margin: undefined
+}
+
+.box-foo {
+	padding: calc(20px - 2px) calc(100px - 20px) calc(100px - calc(20px - 10px));
+}
+
