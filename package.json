@@ -13,6 +13,7 @@
     "type": "git",
     "url": "https://github.com/MadLittleMods/postcss-css-variables.git"
   },
+  "preinstall": "npm install escape-string-regexp extend match-recursive postcss",
   "dependencies": {
     "escape-string-regexp": "^1.0.3",
     "extend": "^3.0.1",
