@@ -21,7 +21,6 @@ npm install postcss-css-variables --save-dev
 	 - [At-rules like `@media`, `@support`, etc.](#at-rules-like-media-support-etc)
 	 - [Pseudo-classes and Elements](#pseudo-classes-and-elements)
 	 - [Nested Rules](#nested-rules)
-	 - [`calc()`](#calc)
  - [Why?](#why)
 	 - [Interoperability](#interoperability)
 	 - [Differences from `postcss-custom-properties`](#differences-from-postcss-custom-properties)
