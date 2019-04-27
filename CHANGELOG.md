@@ -1,3 +1,8 @@
+# v0.13.0 - *upcoming*
+
+ - Remove `calc` from readme table of contents for non-existent section
+    - Thank you to [@AlexandreArpin](https://github.com/AlexandreArpin) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/99)
+
 # v0.12.0 - 2019-2-21
 
  - Accept whitespace in `var( --var )` expression
