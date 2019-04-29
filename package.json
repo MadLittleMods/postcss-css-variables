@@ -14,9 +14,9 @@
     "url": "https://github.com/MadLittleMods/postcss-css-variables.git"
   },
   "dependencies": {
+    "balanced-match": "^1.0.0",
     "escape-string-regexp": "^1.0.3",
     "extend": "^3.0.1",
-    "match-recursive": "^0.1.1",
     "postcss": "^6.0.8"
   },
   "devDependencies": {

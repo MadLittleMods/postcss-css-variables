@@ -15,6 +15,10 @@
 }
 
 .box-foo {
+	width: calc(80vw - 50px); 
+}
+
+.box-foo {
 	width: calc(58.3333333333% - 150px); 
 }
 

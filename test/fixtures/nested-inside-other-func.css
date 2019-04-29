@@ -2,7 +2,7 @@
 	--some-color: red;
 	--some-width: 150px;
 	--some-other-width: 50px;
-	--some-margin: 20px;
+	--some-margin: 25px;
 	--some-padding: 20px;
 }
 
@@ -23,11 +23,15 @@
 }
 
 .box-foo {
+	width: calc(80vw - var(--missing, var(--some-other-width))); 
+}
+
+.box-foo {
 	width: calc(58.3333333333% - var(--missing, var(--some-width, 100px))); 
 }
 
 .box-foo {
-	width: calc(58.3333333333% - var(--missing)); 
+	width: calc(100vw - var(--missing)); 
 }
 
 .box-foo {
