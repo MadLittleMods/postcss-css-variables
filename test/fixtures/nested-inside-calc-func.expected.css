@@ -1,0 +1,15 @@
+.box-foo {
+	width: calc(1000% - 150px); 
+}
+
+.box-foo {
+	width: undefined; 
+}
+
+.box-foo {
+	width: calc(150px - 50px); 
+}
+
+.box-foo {
+	width: calc(calc(100px / 2) / 2);
+}

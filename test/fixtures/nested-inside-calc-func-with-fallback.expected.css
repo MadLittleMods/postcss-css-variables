@@ -1,0 +1,7 @@
+.box-foo {
+	width: calc(58.3333333333% - 150px); 
+}
+
+.box-foo {
+	width: calc(58.3333333333% - 100px); 
+}

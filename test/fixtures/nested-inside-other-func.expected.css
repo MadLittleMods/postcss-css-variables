@@ -3,42 +3,9 @@
 }
 
 .box-foo {
-	background-color: color(white);
+	background-color: rgba(255, 0, 0, 0.3);
 }
 
 .box-foo {
-	width: calc(58.3333333333% - 150px); 
+	background-color: undefined;
 }
-
-.box-foo {
-	width: calc(58.3333333333% - 100px); 
-}
-
-.box-foo {
-	width: calc(80vw - 50px); 
-}
-
-.box-foo {
-	width: calc(58.3333333333% - 150px); 
-}
-
-.box-foo {
-	width: undefined; 
-}
-
-.box-foo {
-	width: calc(150px - 50px); 
-}
-
-.box-foo {
-	width: calc(calc(100px / 2) / 2);
-}
-
-.box-foo {
-	margin: undefined
-}
-
-.box-foo {
-	padding: calc(20px - 2px) calc(100px - 20px) calc(100px - calc(20px - 10px));
-}
-

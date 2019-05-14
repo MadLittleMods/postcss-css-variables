@@ -1,0 +1,23 @@
+:root {
+  --some-width: 150px;
+  --some-other-width: 50px;
+}
+
+.box-foo {
+	width: calc(1000% - var(--some-width)); 
+}
+
+.box-foo {
+	width: calc(1000% - var(--missing-width)); 
+}
+
+.box-foo {
+	width: calc(var(--some-width) - var(--some-other-width)); 
+}
+
+.box-foo {
+  --widthA: 100px;
+  --widthB: calc(var(--widthA) / 2);
+  --widthC: calc(var(--widthB) / 2);
+  width: var(--widthC);
+}
