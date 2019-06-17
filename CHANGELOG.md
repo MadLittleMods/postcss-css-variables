@@ -1,5 +1,7 @@
 # v0.13.0 - *upcoming*
 
+ - Add `options.preserveAtRulesOrder` so media queries are outputted in the order they are defined (as expected)
+    - Thank you to [@erikthalen](https://github.com/erikthalen) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/92) via https://github.com/MadLittleMods/postcss-css-variables/pull/101
  - Remove `calc` from readme table of contents for non-existent section
     - Thank you to [@AlexandreArpin](https://github.com/AlexandreArpin) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/99)
 
