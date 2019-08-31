@@ -175,6 +175,15 @@ describe("postcss-css-variables", function() {
       { preserveAtRulesOrder: true }
     );
 
+    test(
+      "should work with at-rules containing properties",
+      "at-rules-containing-properties"
+    );
+    test(
+      "should work with nested at-rules containing properties",
+      "nested-at-rules-containing-properties"
+    );
+
     test("should cascade to nested rules", "cascade-on-nested-rules");
 
     test(
