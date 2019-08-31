@@ -1,0 +1,8 @@
+:root {
+	--font-name: 'my-font-family-name';
+}
+
+@font-face {
+	font-family: var(--font-name);
+	src: url('myfont.woff2') format('woff2');
+}

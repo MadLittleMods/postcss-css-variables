@@ -1,0 +1,9 @@
+/*
+	Prince XML at-rules.
+	https://www.princexml.com/doc/11/at-rules/
+*/
+@page {
+	@footnote {
+		background-color: red;
+	}
+}

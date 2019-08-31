@@ -140,6 +140,9 @@ describe('postcss-css-variables', function() {
 		test('should work with nested @media', 'media-query-nested', { preserveAtRulesOrder: false });
 		test('should work with nested @media, preserving rule order', 'media-query-nested-preserver-rule-order', { preserveAtRulesOrder: true });
 
+		test('should work with at-rules containing properties', 'at-rules-containing-properties');
+		test('should work with nested at-rules containing properties', 'nested-at-rules-containing-properties');
+
 
 		test('should cascade to nested rules', 'cascade-on-nested-rules');
 
