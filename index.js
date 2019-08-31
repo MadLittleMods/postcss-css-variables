@@ -218,7 +218,10 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 
 		// Collect all the rules that have declarations that use variables
 		var rulesThatHaveDeclarationsWithVariablesList = [];
-		css.walkRules(function(rule) {
+		css.walk(function(rule) {
+			// We're only interested in Containers with children.
+			if (rule.nodes === undefined) return;
+
 			var doesRuleUseVariables = rule.nodes.some(function(node) {
 				if(node.type === 'decl') {
 					var decl = node;
@@ -240,8 +243,8 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 		rulesThatHaveDeclarationsWithVariablesList.forEach(function(rule) {
 			var rulesToWorkOn = [].concat(rule);
 			// Split out the rule into each comma separated selector piece
-			// We only need to split if is actually comma separted(selectors > 1)
-			if(rule.selectors.length > 1) {
+			// We only need to split if it's actually a Rule with multiple selectors
+			if(rule.type == 'rule' && rule.selectors.length > 1) {
 				// Reverse the selectors so that we can cloneAfter in the same comma separated order
 				rulesToWorkOn = rule.selectors.reverse().map(function(selector) {
 					var ruleClone = rule.cloneAfter();
