@@ -873,7 +873,7 @@ System.registerDynamic('npm:jspm-nodelibs-events@0.2.2/events.js', [], true, fun
     return arg === void 0;
   }
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/vendor.js', ['process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/vendor.js', ['process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -928,7 +928,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/vendor.js', ['process'], true, fun
     exports.default = vendor;
     module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/map-generator.js', ['source-map', 'path', 'process', 'buffer/global'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/map-generator.js', ['source-map', 'path', 'process', 'buffer/global'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process'), Buffer = $__require('buffer/global');
@@ -1261,7 +1261,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/map-generator.js', ['source-map', 
     exports.default = MapGenerator;
     module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/warning.js', ['process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/warning.js', ['process'], true, function ($__require, exports, module) {
   'use strict';
 
   var process = $__require('process');
@@ -1390,7 +1390,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/warning.js', ['process'], true, fu
   exports.default = Warning;
   module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/result.js', ['./warning', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/result.js', ['./warning', 'process'], true, function ($__require, exports, module) {
   'use strict';
 
   var process = $__require('process');
@@ -1610,7 +1610,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/result.js', ['./warning', 'process
 
   module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/declaration.js', ['./node', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/declaration.js', ['./node', 'process'], true, function ($__require, exports, module) {
   'use strict';
 
   var process = $__require('process');
@@ -1729,7 +1729,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/declaration.js', ['./node', 'proce
   exports.default = Declaration;
   module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/comment.js', ['./node', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/comment.js', ['./node', 'process'], true, function ($__require, exports, module) {
   'use strict';
 
   var process = $__require('process');
@@ -1807,7 +1807,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/comment.js', ['./node', 'process']
   exports.default = Comment;
   module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/stringifier.js', ['process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/stringifier.js', ['process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -2031,6 +2031,8 @@ System.registerDynamic('npm:postcss@6.0.8/lib/stringifier.js', ['process'], true
             });
             if (typeof value === 'undefined') {
                 value = this.raw(node, null, 'beforeDecl');
+            } else if (value) {
+                value = value.replace(/[^\s]/g, '');
             }
             return value;
         };
@@ -2048,6 +2050,8 @@ System.registerDynamic('npm:postcss@6.0.8/lib/stringifier.js', ['process'], true
             });
             if (typeof value === 'undefined') {
                 value = this.raw(node, null, 'beforeRule');
+            } else if (value) {
+                value = value.replace(/[^\s]/g, '');
             }
             return value;
         };
@@ -2065,6 +2069,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/stringifier.js', ['process'], true
                     }
                 }
             });
+            if (value) value = value.replace(/[^\s]/g, '');
             return value;
         };
 
@@ -2081,6 +2086,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/stringifier.js', ['process'], true
                     }
                 }
             });
+            if (value) value = value.replace(/[^\s]/g, '');
             return value;
         };
 
@@ -2153,7 +2159,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/stringifier.js', ['process'], true
     exports.default = Stringifier;
     module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/stringify.js', ['./stringifier', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/stringify.js', ['./stringifier', 'process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -2176,7 +2182,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/stringify.js', ['./stringifier', '
     }
     module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/warn-once.js', ['process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/warn-once.js', ['process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -2194,7 +2200,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/warn-once.js', ['process'], true, 
     }
     module.exports = exports['default'];
 });
-System.registerDynamic("npm:postcss@6.0.8/lib/node.js", ["./css-syntax-error", "./stringifier", "./stringify", "./warn-once", "process"], true, function ($__require, exports, module) {
+System.registerDynamic("npm:postcss@6.0.23/lib/node.js", ["./css-syntax-error", "./stringifier", "./stringify", "./warn-once", "process"], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require("process");
@@ -2550,6 +2556,7 @@ System.registerDynamic("npm:postcss@6.0.8/lib/node.js", ["./css-syntax-error", "
          */
 
         Node.prototype.next = function next() {
+            if (!this.parent) return undefined;
             var index = this.parent.index(this);
             return this.parent.nodes[index + 1];
         };
@@ -2568,6 +2575,7 @@ System.registerDynamic("npm:postcss@6.0.8/lib/node.js", ["./css-syntax-error", "
          */
 
         Node.prototype.prev = function prev() {
+            if (!this.parent) return undefined;
             var index = this.parent.index(this);
             return this.parent.nodes[index - 1];
         };
@@ -2817,7 +2825,7 @@ System.registerDynamic("npm:postcss@6.0.8/lib/node.js", ["./css-syntax-error", "
 
     module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/at-rule.js', ['./container', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/at-rule.js', ['./container', 'process'], true, function ($__require, exports, module) {
   'use strict';
 
   var process = $__require('process');
@@ -2965,7 +2973,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/at-rule.js', ['./container', 'proc
   exports.default = AtRule;
   module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/container.js', ['./declaration', './comment', './node', './parse', './rule', './at-rule', './root', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/container.js', ['./declaration', './comment', './node', './parse', './rule', './at-rule', './root', 'process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -3881,7 +3889,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/container.js', ['./declaration', '
 
     module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/list.js', ['process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/list.js', ['process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -3978,7 +3986,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/list.js', ['process'], true, funct
     exports.default = list;
     module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/rule.js', ['./container', './list', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/rule.js', ['./container', './list', 'process'], true, function ($__require, exports, module) {
   'use strict';
 
   var process = $__require('process');
@@ -4126,7 +4134,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/rule.js', ['./container', './list'
   exports.default = Rule;
   module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/parser.js', ['./declaration', './tokenize', './comment', './at-rule', './root', './rule', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/parser.js', ['./declaration', './tokenize', './comment', './at-rule', './root', './rule', 'process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -4374,13 +4382,13 @@ System.registerDynamic('npm:postcss@6.0.8/lib/parser.js', ['./declaration', './t
 
             for (var i = tokens.length - 1; i > 0; i--) {
                 token = tokens[i];
-                if (token[1] === '!important') {
+                if (token[1].toLowerCase() === '!important') {
                     node.important = true;
                     var string = this.stringFrom(tokens, i);
                     string = this.spacesFromEnd(tokens) + string;
                     if (string !== ' !important') node.raws.important = string;
                     break;
-                } else if (token[1] === 'important') {
+                } else if (token[1].toLowerCase() === 'important') {
                     var cache = tokens.slice(0);
                     var str = '';
                     for (var j = i; j > 0; j--) {
@@ -4528,9 +4536,27 @@ System.registerDynamic('npm:postcss@6.0.8/lib/parser.js', ['./declaration', './t
             var length = tokens.length;
             var value = '';
             var clean = true;
+            var next = void 0,
+                prev = void 0;
+            var pattern = /^([.|#])?([\w])+/i;
+
             for (var i = 0; i < length; i += 1) {
                 token = tokens[i];
                 type = token[0];
+
+                if (type === 'comment' && node.type === 'rule') {
+                    prev = tokens[i - 1];
+                    next = tokens[i + 1];
+
+                    if (prev[0] !== 'space' && next[0] !== 'space' && pattern.test(prev[1]) && pattern.test(next[1])) {
+                        value += token[1];
+                    } else {
+                        clean = false;
+                    }
+
+                    continue;
+                }
+
                 if (type === 'comment' || type === 'space' && i === length - 1) {
                     clean = false;
                 } else {
@@ -4838,7 +4864,7 @@ System.registerDynamic("npm:color-name@1.1.3/index.js", [], true, function ($__r
 		"yellowgreen": [154, 205, 50]
 	};
 });
-System.registerDynamic('npm:color-convert@1.9.0/conversions.js', ['color-name'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:color-convert@1.9.3/conversions.js', ['color-name'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	/* MIT license */
@@ -4938,41 +4964,44 @@ System.registerDynamic('npm:color-convert@1.9.0/conversions.js', ['color-name'],
 	};
 
 	convert.rgb.hsv = function (rgb) {
-		var r = rgb[0];
-		var g = rgb[1];
-		var b = rgb[2];
-		var min = Math.min(r, g, b);
-		var max = Math.max(r, g, b);
-		var delta = max - min;
+		var rdif;
+		var gdif;
+		var bdif;
 		var h;
 		var s;
-		var v;
 
-		if (max === 0) {
-			s = 0;
+		var r = rgb[0] / 255;
+		var g = rgb[1] / 255;
+		var b = rgb[2] / 255;
+		var v = Math.max(r, g, b);
+		var diff = v - Math.min(r, g, b);
+		var diffc = function (c) {
+			return (v - c) / 6 / diff + 1 / 2;
+		};
+
+		if (diff === 0) {
+			h = s = 0;
 		} else {
-			s = delta / max * 1000 / 10;
+			s = diff / v;
+			rdif = diffc(r);
+			gdif = diffc(g);
+			bdif = diffc(b);
+
+			if (r === v) {
+				h = bdif - gdif;
+			} else if (g === v) {
+				h = 1 / 3 + rdif - bdif;
+			} else if (b === v) {
+				h = 2 / 3 + gdif - rdif;
+			}
+			if (h < 0) {
+				h += 1;
+			} else if (h > 1) {
+				h -= 1;
+			}
 		}
 
-		if (max === min) {
-			h = 0;
-		} else if (r === max) {
-			h = (g - b) / delta;
-		} else if (g === max) {
-			h = 2 + (b - r) / delta;
-		} else if (b === max) {
-			h = 4 + (r - g) / delta;
-		}
-
-		h = Math.min(h * 60, 360);
-
-		if (h < 0) {
-			h += 360;
-		}
-
-		v = max / 255 * 1000 / 10;
-
-		return [h, s, v];
+		return [h * 360, s * 100, v * 100];
 	};
 
 	convert.rgb.hwb = function (rgb) {
@@ -5684,7 +5713,7 @@ System.registerDynamic('npm:color-convert@1.9.0/conversions.js', ['color-name'],
 		return [val / 255 * 100];
 	};
 });
-System.registerDynamic('npm:color-convert@1.9.0/route.js', ['./conversions'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:color-convert@1.9.3/route.js', ['./conversions'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	var conversions = $__require('./conversions');
@@ -5700,11 +5729,10 @@ System.registerDynamic('npm:color-convert@1.9.0/route.js', ['./conversions'], tr
  	conversions that are not possible simply are not included.
  */
 
-	// https://jsperf.com/object-keys-vs-for-in-with-closure/3
-	var models = Object.keys(conversions);
-
 	function buildGraph() {
 		var graph = {};
+		// https://jsperf.com/object-keys-vs-for-in-with-closure/3
+		var models = Object.keys(conversions);
 
 		for (var len = models.length, i = 0; i < len; i++) {
 			graph[models[i]] = {
@@ -5785,7 +5813,7 @@ System.registerDynamic('npm:color-convert@1.9.0/route.js', ['./conversions'], tr
 		return conversion;
 	};
 });
-System.registerDynamic("npm:color-convert@1.9.0.json", [], true, function() {
+System.registerDynamic("npm:color-convert@1.9.3.json", [], true, function() {
   return {
     "main": "index.js",
     "format": "cjs",
@@ -5797,7 +5825,7 @@ System.registerDynamic("npm:color-convert@1.9.0.json", [], true, function() {
   };
 });
 
-System.registerDynamic('npm:color-convert@1.9.0/index.js', ['./conversions', './route'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:color-convert@1.9.3/index.js', ['./conversions', './route'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	var conversions = $__require('./conversions');
@@ -5879,7 +5907,7 @@ System.registerDynamic('npm:color-convert@1.9.0/index.js', ['./conversions', './
 
 	module.exports = convert;
 });
-System.registerDynamic("npm:ansi-styles@3.2.0.json", [], true, function() {
+System.registerDynamic("npm:ansi-styles@3.2.1.json", [], true, function() {
   return {
     "main": "index.js",
     "format": "cjs",
@@ -5891,7 +5919,7 @@ System.registerDynamic("npm:ansi-styles@3.2.0.json", [], true, function() {
   };
 });
 
-System.registerDynamic('npm:ansi-styles@3.2.0/index.js', ['color-convert'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:ansi-styles@3.2.1/index.js', ['color-convert'], true, function ($__require, exports, module) {
 	'use strict';
 
 	var global = this || self,
@@ -5999,29 +6027,42 @@ System.registerDynamic('npm:ansi-styles@3.2.0/index.js', ['color-convert'], true
 			});
 		}
 
+		const ansi2ansi = n => n;
 		const rgb2rgb = (r, g, b) => [r, g, b];
 
 		styles.color.close = '\u001B[39m';
 		styles.bgColor.close = '\u001B[49m';
 
-		styles.color.ansi = {};
-		styles.color.ansi256 = {};
+		styles.color.ansi = {
+			ansi: wrapAnsi16(ansi2ansi, 0)
+		};
+		styles.color.ansi256 = {
+			ansi256: wrapAnsi256(ansi2ansi, 0)
+		};
 		styles.color.ansi16m = {
 			rgb: wrapAnsi16m(rgb2rgb, 0)
 		};
 
-		styles.bgColor.ansi = {};
-		styles.bgColor.ansi256 = {};
+		styles.bgColor.ansi = {
+			ansi: wrapAnsi16(ansi2ansi, 10)
+		};
+		styles.bgColor.ansi256 = {
+			ansi256: wrapAnsi256(ansi2ansi, 10)
+		};
 		styles.bgColor.ansi16m = {
 			rgb: wrapAnsi16m(rgb2rgb, 10)
 		};
 
-		for (const key of Object.keys(colorConvert)) {
+		for (let key of Object.keys(colorConvert)) {
 			if (typeof colorConvert[key] !== 'object') {
 				continue;
 			}
 
 			const suite = colorConvert[key];
+
+			if (key === 'ansi16') {
+				key = 'ansi';
+			}
 
 			if ('ansi16' in suite) {
 				styles.color.ansi[key] = wrapAnsi16(suite.ansi16, 0);
@@ -6048,7 +6089,7 @@ System.registerDynamic('npm:ansi-styles@3.2.0/index.js', ['color-convert'], true
 		get: assembleStyles
 	});
 });
-System.registerDynamic("npm:supports-color@4.2.1.json", [], true, function() {
+System.registerDynamic("npm:supports-color@5.5.0.json", [], true, function() {
   return {
     "main": "index.js",
     "format": "cjs",
@@ -6070,44 +6111,36 @@ System.registerDynamic("npm:supports-color@4.2.1.json", [], true, function() {
   };
 });
 
-System.registerDynamic('npm:supports-color@4.2.1/browser.js', ['process'], true, function ($__require, exports, module) {
-  'use strict';
-
-  var process = $__require('process');
-  var global = this || self,
-      GLOBAL = global;
-  module.exports = false;
-});
-System.registerDynamic('npm:chalk@2.1.0/templates.js', ['process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:supports-color@5.5.0/browser.js', ['process'], true, function ($__require, exports, module) {
 	'use strict';
 
 	var process = $__require('process');
 	var global = this || self,
 	    GLOBAL = global;
-	const TEMPLATE_REGEX = /(?:\\(u[a-f0-9]{4}|x[a-f0-9]{2}|.))|(?:\{(~)?(\w+(?:\([^)]*\))?(?:\.\w+(?:\([^)]*\))?)*)(?:[ \t]|(?=\r?\n)))|(\})|((?:.|[\r\n\f])+?)/gi;
+	module.exports = {
+		stdout: false,
+		stderr: false
+	};
+});
+System.registerDynamic('npm:chalk@2.4.2/templates.js', ['process'], true, function ($__require, exports, module) {
+	'use strict';
+
+	var process = $__require('process');
+	var global = this || self,
+	    GLOBAL = global;
+	const TEMPLATE_REGEX = /(?:\\(u[a-f\d]{4}|x[a-f\d]{2}|.))|(?:\{(~)?(\w+(?:\([^)]*\))?(?:\.\w+(?:\([^)]*\))?)*)(?:[ \t]|(?=\r?\n)))|(\})|((?:.|[\r\n\f])+?)/gi;
 	const STYLE_REGEX = /(?:^|\.)(\w+)(?:\(([^)]*)\))?/g;
 	const STRING_REGEX = /^(['"])((?:\\.|(?!\1)[^\\])*)\1$/;
-	const ESCAPE_REGEX = /\\(u[0-9a-f]{4}|x[0-9a-f]{2}|.)|([^\\])/gi;
+	const ESCAPE_REGEX = /\\(u[a-f\d]{4}|x[a-f\d]{2}|.)|([^\\])/gi;
 
-	const ESCAPES = {
-		n: '\n',
-		r: '\r',
-		t: '\t',
-		b: '\b',
-		f: '\f',
-		v: '\v',
-		0: '\0',
-		'\\': '\\',
-		e: '\u001b',
-		a: '\u0007'
-	};
+	const ESCAPES = new Map([['n', '\n'], ['r', '\r'], ['t', '\t'], ['b', '\b'], ['f', '\f'], ['v', '\v'], ['0', '\0'], ['\\', '\\'], ['e', '\u001B'], ['a', '\u0007']]);
 
 	function unescape(c) {
 		if (c[0] === 'u' && c.length === 5 || c[0] === 'x' && c.length === 3) {
 			return String.fromCharCode(parseInt(c.slice(1), 16));
 		}
 
-		return ESCAPES[c] || c;
+		return ESCAPES.get(c) || c;
 	}
 
 	function parseArguments(name, args) {
@@ -6212,7 +6245,7 @@ System.registerDynamic('npm:chalk@2.1.0/templates.js', ['process'], true, functi
 		return chunks.join('');
 	};
 });
-System.registerDynamic("npm:chalk@2.1.0.json", [], true, function() {
+System.registerDynamic("npm:chalk@2.4.2.json", [], true, function() {
   return {
     "main": "index.js",
     "format": "cjs",
@@ -6229,7 +6262,7 @@ System.registerDynamic("npm:chalk@2.1.0.json", [], true, function() {
   };
 });
 
-System.registerDynamic('npm:chalk@2.1.0/index.js', ['escape-string-regexp', 'ansi-styles', 'supports-color', './templates.js', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:chalk@2.4.2/index.js', ['escape-string-regexp', 'ansi-styles', 'supports-color', './templates.js', 'process'], true, function ($__require, exports, module) {
 	'use strict';
 
 	var process = $__require('process');
@@ -6237,7 +6270,7 @@ System.registerDynamic('npm:chalk@2.1.0/index.js', ['escape-string-regexp', 'ans
 	    GLOBAL = global;
 	const escapeStringRegexp = $__require('escape-string-regexp');
 	const ansiStyles = $__require('ansi-styles');
-	const supportsColor = $__require('supports-color');
+	const stdoutColor = $__require('supports-color').stdout;
 
 	const template = $__require('./templates.js');
 
@@ -6255,7 +6288,7 @@ System.registerDynamic('npm:chalk@2.1.0/index.js', ['escape-string-regexp', 'ans
 		options = options || {};
 
 		// Detect level if not set manually
-		const scLevel = supportsColor ? supportsColor.level : 0;
+		const scLevel = stdoutColor ? stdoutColor.level : 0;
 		obj.level = options.level === undefined ? scLevel : options.level;
 		obj.enabled = 'enabled' in options ? options.enabled : obj.level > 0;
 	}
@@ -6294,10 +6327,16 @@ System.registerDynamic('npm:chalk@2.1.0/index.js', ['escape-string-regexp', 'ans
 		styles[key] = {
 			get() {
 				const codes = ansiStyles[key];
-				return build.call(this, this._styles ? this._styles.concat(codes) : [codes], key);
+				return build.call(this, this._styles ? this._styles.concat(codes) : [codes], this._empty, key);
 			}
 		};
 	}
+
+	styles.visible = {
+		get() {
+			return build.call(this, this._styles || [], true, 'visible');
+		}
+	};
 
 	ansiStyles.color.closeRe = new RegExp(escapeStringRegexp(ansiStyles.color.close), 'g');
 	for (const model of Object.keys(ansiStyles.color.ansi)) {
@@ -6315,7 +6354,7 @@ System.registerDynamic('npm:chalk@2.1.0/index.js', ['escape-string-regexp', 'ans
 						close: ansiStyles.color.close,
 						closeRe: ansiStyles.color.closeRe
 					};
-					return build.call(this, this._styles ? this._styles.concat(codes) : [codes], model);
+					return build.call(this, this._styles ? this._styles.concat(codes) : [codes], this._empty, model);
 				};
 			}
 		};
@@ -6338,7 +6377,7 @@ System.registerDynamic('npm:chalk@2.1.0/index.js', ['escape-string-regexp', 'ans
 						close: ansiStyles.bgColor.close,
 						closeRe: ansiStyles.bgColor.closeRe
 					};
-					return build.call(this, this._styles ? this._styles.concat(codes) : [codes], model);
+					return build.call(this, this._styles ? this._styles.concat(codes) : [codes], this._empty, model);
 				};
 			}
 		};
@@ -6346,12 +6385,13 @@ System.registerDynamic('npm:chalk@2.1.0/index.js', ['escape-string-regexp', 'ans
 
 	const proto = Object.defineProperties(() => {}, styles);
 
-	function build(_styles, key) {
+	function build(_styles, _empty, key) {
 		const builder = function () {
 			return applyStyle.apply(builder, arguments);
 		};
 
 		builder._styles = _styles;
+		builder._empty = _empty;
 
 		const self = this;
 
@@ -6403,7 +6443,7 @@ System.registerDynamic('npm:chalk@2.1.0/index.js', ['escape-string-regexp', 'ans
 		}
 
 		if (!this.enabled || this.level <= 0 || !str) {
-			return str;
+			return this._empty ? '' : str;
 		}
 
 		// Turns out that on Windows dimmed gray text becomes invisible in cmd.exe,
@@ -6453,9 +6493,10 @@ System.registerDynamic('npm:chalk@2.1.0/index.js', ['escape-string-regexp', 'ans
 	Object.defineProperties(Chalk.prototype, styles);
 
 	module.exports = Chalk(); // eslint-disable-line new-cap
-	module.exports.supportsColor = supportsColor;
+	module.exports.supportsColor = stdoutColor;
+	module.exports.default = module.exports; // For TypeScript
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/tokenize.js', ['process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/tokenize.js', ['process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -6483,7 +6524,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/tokenize.js', ['process'], true, f
     var COLON = 58;
     var AT = 64;
 
-    var RE_AT_END = /[ \n\t\r\f\{\(\)'"\\;/\[\]#]/g;
+    var RE_AT_END = /[ \n\t\r\f\{\}\(\)'"\\;/\[\]#]/g;
     var RE_WORD_END = /[ \n\t\r\f\(\)\{\}:;@!'"\\\]\[#]|\/(?=\*)/g;
     var RE_BAD_BRACKET = /.[\\\/\("'\n]/;
     var RE_HEX_ESCAPE = /[a-f0-9]/i;
@@ -6765,7 +6806,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/tokenize.js', ['process'], true, f
     }
     module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/terminal-highlight.js', ['chalk', './tokenize', './input', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/terminal-highlight.js', ['chalk', './tokenize', './input', 'process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -6854,7 +6895,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/terminal-highlight.js', ['chalk', 
     exports.default = terminalHighlight;
     module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/css-syntax-error.js', ['supports-color', 'chalk', './terminal-highlight', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/css-syntax-error.js', ['supports-color', 'chalk', './terminal-highlight', 'process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -7044,7 +7085,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/css-syntax-error.js', ['supports-c
             if (!this.source) return '';
 
             var css = this.source;
-            if (typeof color === 'undefined') color = _supportsColor2.default;
+            if (typeof color === 'undefined') color = _supportsColor2.default.stdout;
             if (color) css = (0, _terminalHighlight2.default)(css);
 
             var lines = css.split(/\r?\n/);
@@ -7054,14 +7095,14 @@ System.registerDynamic('npm:postcss@6.0.8/lib/css-syntax-error.js', ['supports-c
             var maxWidth = String(end).length;
 
             function mark(text) {
-                if (color) {
+                if (color && _chalk2.default.red) {
                     return _chalk2.default.red.bold(text);
                 } else {
                     return text;
                 }
             }
             function aside(text) {
-                if (color) {
+                if (color && _chalk2.default.gray) {
                     return _chalk2.default.gray(text);
                 } else {
                     return text;
@@ -7118,7 +7159,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/css-syntax-error.js', ['supports-c
     exports.default = CssSyntaxError;
     module.exports = exports['default'];
 });
-System.registerDynamic("npm:source-map@0.5.6/lib/binary-search.js", [], true, function ($__require, exports, module) {
+System.registerDynamic("npm:source-map@0.6.1/lib/binary-search.js", [], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -7230,7 +7271,7 @@ System.registerDynamic("npm:source-map@0.5.6/lib/binary-search.js", [], true, fu
     return index;
   };
 });
-System.registerDynamic("npm:source-map@0.5.6/lib/quick-sort.js", [], true, function ($__require, exports, module) {
+System.registerDynamic("npm:source-map@0.6.1/lib/quick-sort.js", [], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -7348,7 +7389,7 @@ System.registerDynamic("npm:source-map@0.5.6/lib/quick-sort.js", [], true, funct
     doQuickSort(ary, comparator, 0, ary.length - 1);
   };
 });
-System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./util', './binary-search', './array-set', './base64-vlq', './quick-sort'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:source-map@0.6.1/lib/source-map-consumer.js', ['./util', './binary-search', './array-set', './base64-vlq', './quick-sort'], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -7364,17 +7405,17 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
   var base64VLQ = $__require('./base64-vlq');
   var quickSort = $__require('./quick-sort').quickSort;
 
-  function SourceMapConsumer(aSourceMap) {
+  function SourceMapConsumer(aSourceMap, aSourceMapURL) {
     var sourceMap = aSourceMap;
     if (typeof aSourceMap === 'string') {
-      sourceMap = JSON.parse(aSourceMap.replace(/^\)\]\}'/, ''));
+      sourceMap = util.parseSourceMapInput(aSourceMap);
     }
 
-    return sourceMap.sections != null ? new IndexedSourceMapConsumer(sourceMap) : new BasicSourceMapConsumer(sourceMap);
+    return sourceMap.sections != null ? new IndexedSourceMapConsumer(sourceMap, aSourceMapURL) : new BasicSourceMapConsumer(sourceMap, aSourceMapURL);
   }
 
-  SourceMapConsumer.fromSourceMap = function (aSourceMap) {
-    return BasicSourceMapConsumer.fromSourceMap(aSourceMap);
+  SourceMapConsumer.fromSourceMap = function (aSourceMap, aSourceMapURL) {
+    return BasicSourceMapConsumer.fromSourceMap(aSourceMap, aSourceMapURL);
   };
 
   /**
@@ -7414,6 +7455,8 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
 
   SourceMapConsumer.prototype.__generatedMappings = null;
   Object.defineProperty(SourceMapConsumer.prototype, '_generatedMappings', {
+    configurable: true,
+    enumerable: true,
     get: function () {
       if (!this.__generatedMappings) {
         this._parseMappings(this._mappings, this.sourceRoot);
@@ -7425,6 +7468,8 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
 
   SourceMapConsumer.prototype.__originalMappings = null;
   Object.defineProperty(SourceMapConsumer.prototype, '_originalMappings', {
+    configurable: true,
+    enumerable: true,
     get: function () {
       if (!this.__originalMappings) {
         this._parseMappings(this._mappings, this.sourceRoot);
@@ -7489,9 +7534,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
     var sourceRoot = this.sourceRoot;
     mappings.map(function (mapping) {
       var source = mapping.source === null ? null : this._sources.at(mapping.source);
-      if (source != null && sourceRoot != null) {
-        source = util.join(sourceRoot, source);
-      }
+      source = util.computeSourceURL(sourceRoot, source, this._sourceMapURL);
       return {
         source: source,
         generatedLine: mapping.generatedLine,
@@ -7514,13 +7557,16 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    * The only argument is an object with the following properties:
    *
    *   - source: The filename of the original source.
-   *   - line: The line number in the original source.
+   *   - line: The line number in the original source.  The line number is 1-based.
    *   - column: Optional. the column number in the original source.
+   *    The column number is 0-based.
    *
    * and an array of objects is returned, each with the following properties:
    *
-   *   - line: The line number in the generated source, or null.
+   *   - line: The line number in the generated source, or null.  The
+   *    line number is 1-based.
    *   - column: The column number in the generated source, or null.
+   *    The column number is 0-based.
    */
   SourceMapConsumer.prototype.allGeneratedPositionsFor = function SourceMapConsumer_allGeneratedPositionsFor(aArgs) {
     var line = util.getArg(aArgs, 'line');
@@ -7535,13 +7581,10 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
       originalColumn: util.getArg(aArgs, 'column', 0)
     };
 
-    if (this.sourceRoot != null) {
-      needle.source = util.relative(this.sourceRoot, needle.source);
-    }
-    if (!this._sources.has(needle.source)) {
+    needle.source = this._findSourceIndex(needle.source);
+    if (needle.source < 0) {
       return [];
     }
-    needle.source = this._sources.indexOf(needle.source);
 
     var mappings = [];
 
@@ -7594,7 +7637,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    * query for information about the original file positions by giving it a file
    * position in the generated source.
    *
-   * The only parameter is the raw source map (either as a JSON string, or
+   * The first parameter is the raw source map (either as a JSON string, or
    * already parsed to an object). According to the spec, source maps have the
    * following attributes:
    *
@@ -7617,12 +7660,16 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    *       mappings: "AA,AB;;ABCDE;"
    *     }
    *
+   * The second parameter, if given, is a string whose value is the URL
+   * at which the source map was found.  This URL is used to compute the
+   * sources array.
+   *
    * [0]: https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/edit?pli=1#
    */
-  function BasicSourceMapConsumer(aSourceMap) {
+  function BasicSourceMapConsumer(aSourceMap, aSourceMapURL) {
     var sourceMap = aSourceMap;
     if (typeof aSourceMap === 'string') {
-      sourceMap = JSON.parse(aSourceMap.replace(/^\)\]\}'/, ''));
+      sourceMap = util.parseSourceMapInput(aSourceMap);
     }
 
     var version = util.getArg(sourceMap, 'version');
@@ -7639,6 +7686,10 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
     // string rather than a number, so we use loose equality checking here.
     if (version != this._version) {
       throw new Error('Unsupported version: ' + version);
+    }
+
+    if (sourceRoot) {
+      sourceRoot = util.normalize(sourceRoot);
     }
 
     sources = sources.map(String)
@@ -7661,9 +7712,14 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
     this._names = ArraySet.fromArray(names.map(String), true);
     this._sources = ArraySet.fromArray(sources, true);
 
+    this._absoluteSources = this._sources.toArray().map(function (s) {
+      return util.computeSourceURL(sourceRoot, s, aSourceMapURL);
+    });
+
     this.sourceRoot = sourceRoot;
     this.sourcesContent = sourcesContent;
     this._mappings = mappings;
+    this._sourceMapURL = aSourceMapURL;
     this.file = file;
   }
 
@@ -7671,13 +7727,41 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
   BasicSourceMapConsumer.prototype.consumer = SourceMapConsumer;
 
   /**
+   * Utility function to find the index of a source.  Returns -1 if not
+   * found.
+   */
+  BasicSourceMapConsumer.prototype._findSourceIndex = function (aSource) {
+    var relativeSource = aSource;
+    if (this.sourceRoot != null) {
+      relativeSource = util.relative(this.sourceRoot, relativeSource);
+    }
+
+    if (this._sources.has(relativeSource)) {
+      return this._sources.indexOf(relativeSource);
+    }
+
+    // Maybe aSource is an absolute URL as returned by |sources|.  In
+    // this case we can't simply undo the transform.
+    var i;
+    for (i = 0; i < this._absoluteSources.length; ++i) {
+      if (this._absoluteSources[i] == aSource) {
+        return i;
+      }
+    }
+
+    return -1;
+  };
+
+  /**
    * Create a BasicSourceMapConsumer from a SourceMapGenerator.
    *
    * @param SourceMapGenerator aSourceMap
    *        The source map that will be consumed.
+   * @param String aSourceMapURL
+   *        The URL at which the source map can be found (optional)
    * @returns BasicSourceMapConsumer
    */
-  BasicSourceMapConsumer.fromSourceMap = function SourceMapConsumer_fromSourceMap(aSourceMap) {
+  BasicSourceMapConsumer.fromSourceMap = function SourceMapConsumer_fromSourceMap(aSourceMap, aSourceMapURL) {
     var smc = Object.create(BasicSourceMapConsumer.prototype);
 
     var names = smc._names = ArraySet.fromArray(aSourceMap._names.toArray(), true);
@@ -7685,6 +7769,10 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
     smc.sourceRoot = aSourceMap._sourceRoot;
     smc.sourcesContent = aSourceMap._generateSourcesContent(smc._sources.toArray(), smc.sourceRoot);
     smc.file = aSourceMap._file;
+    smc._sourceMapURL = aSourceMapURL;
+    smc._absoluteSources = smc._sources.toArray().map(function (s) {
+      return util.computeSourceURL(smc.sourceRoot, s, aSourceMapURL);
+    });
 
     // Because we are modifying the entries (by converting string sources and
     // names to indices into the sources and names ArraySets), we have to make
@@ -7731,9 +7819,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    */
   Object.defineProperty(BasicSourceMapConsumer.prototype, 'sources', {
     get: function () {
-      return this._sources.toArray().map(function (s) {
-        return this.sourceRoot != null ? util.join(this.sourceRoot, s) : s;
-      }, this);
+      return this._absoluteSources.slice();
     }
   });
 
@@ -7906,8 +7992,10 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    * source's line and column positions provided. The only argument is an object
    * with the following properties:
    *
-   *   - line: The line number in the generated source.
-   *   - column: The column number in the generated source.
+   *   - line: The line number in the generated source.  The line number
+   *     is 1-based.
+   *   - column: The column number in the generated source.  The column
+   *     number is 0-based.
    *   - bias: Either 'SourceMapConsumer.GREATEST_LOWER_BOUND' or
    *     'SourceMapConsumer.LEAST_UPPER_BOUND'. Specifies whether to return the
    *     closest element that is smaller than or greater than the one we are
@@ -7917,8 +8005,10 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    * and an object is returned with the following properties:
    *
    *   - source: The original source file, or null.
-   *   - line: The line number in the original source, or null.
-   *   - column: The column number in the original source, or null.
+   *   - line: The line number in the original source, or null.  The
+   *     line number is 1-based.
+   *   - column: The column number in the original source, or null.  The
+   *     column number is 0-based.
    *   - name: The original identifier, or null.
    */
   BasicSourceMapConsumer.prototype.originalPositionFor = function SourceMapConsumer_originalPositionFor(aArgs) {
@@ -7936,9 +8026,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
         var source = util.getArg(mapping, 'source', null);
         if (source !== null) {
           source = this._sources.at(source);
-          if (this.sourceRoot != null) {
-            source = util.join(this.sourceRoot, source);
-          }
+          source = util.computeSourceURL(this.sourceRoot, source, this._sourceMapURL);
         }
         var name = util.getArg(mapping, 'name', null);
         if (name !== null) {
@@ -7984,12 +8072,14 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
       return null;
     }
 
-    if (this.sourceRoot != null) {
-      aSource = util.relative(this.sourceRoot, aSource);
+    var index = this._findSourceIndex(aSource);
+    if (index >= 0) {
+      return this.sourcesContent[index];
     }
 
-    if (this._sources.has(aSource)) {
-      return this.sourcesContent[this._sources.indexOf(aSource)];
+    var relativeSource = aSource;
+    if (this.sourceRoot != null) {
+      relativeSource = util.relative(this.sourceRoot, relativeSource);
     }
 
     var url;
@@ -7998,13 +8088,13 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
       // many users. We can help them out when they expect file:// URIs to
       // behave like it would if they were running a local HTTP server. See
       // https://bugzilla.mozilla.org/show_bug.cgi?id=885597.
-      var fileUriAbsPath = aSource.replace(/^file:\/\//, "");
+      var fileUriAbsPath = relativeSource.replace(/^file:\/\//, "");
       if (url.scheme == "file" && this._sources.has(fileUriAbsPath)) {
         return this.sourcesContent[this._sources.indexOf(fileUriAbsPath)];
       }
 
-      if ((!url.path || url.path == "/") && this._sources.has("/" + aSource)) {
-        return this.sourcesContent[this._sources.indexOf("/" + aSource)];
+      if ((!url.path || url.path == "/") && this._sources.has("/" + relativeSource)) {
+        return this.sourcesContent[this._sources.indexOf("/" + relativeSource)];
       }
     }
 
@@ -8015,7 +8105,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
     if (nullOnMissing) {
       return null;
     } else {
-      throw new Error('"' + aSource + '" is not in the SourceMap.');
+      throw new Error('"' + relativeSource + '" is not in the SourceMap.');
     }
   };
 
@@ -8025,8 +8115,10 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    * the following properties:
    *
    *   - source: The filename of the original source.
-   *   - line: The line number in the original source.
-   *   - column: The column number in the original source.
+   *   - line: The line number in the original source.  The line number
+   *     is 1-based.
+   *   - column: The column number in the original source.  The column
+   *     number is 0-based.
    *   - bias: Either 'SourceMapConsumer.GREATEST_LOWER_BOUND' or
    *     'SourceMapConsumer.LEAST_UPPER_BOUND'. Specifies whether to return the
    *     closest element that is smaller than or greater than the one we are
@@ -8035,22 +8127,21 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    *
    * and an object is returned with the following properties:
    *
-   *   - line: The line number in the generated source, or null.
+   *   - line: The line number in the generated source, or null.  The
+   *     line number is 1-based.
    *   - column: The column number in the generated source, or null.
+   *     The column number is 0-based.
    */
   BasicSourceMapConsumer.prototype.generatedPositionFor = function SourceMapConsumer_generatedPositionFor(aArgs) {
     var source = util.getArg(aArgs, 'source');
-    if (this.sourceRoot != null) {
-      source = util.relative(this.sourceRoot, source);
-    }
-    if (!this._sources.has(source)) {
+    source = this._findSourceIndex(source);
+    if (source < 0) {
       return {
         line: null,
         column: null,
         lastColumn: null
       };
     }
-    source = this._sources.indexOf(source);
 
     var needle = {
       source: source,
@@ -8087,7 +8178,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    * that it takes "indexed" source maps (i.e. ones with a "sections" field) as
    * input.
    *
-   * The only parameter is a raw source map (either as a JSON string, or already
+   * The first parameter is a raw source map (either as a JSON string, or already
    * parsed to an object). According to the spec for indexed source maps, they
    * have the following attributes:
    *
@@ -8124,12 +8215,16 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    *    }],
    *  }
    *
+   * The second parameter, if given, is a string whose value is the URL
+   * at which the source map was found.  This URL is used to compute the
+   * sources array.
+   *
    * [0]: https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/edit#heading=h.535es3xeprgt
    */
-  function IndexedSourceMapConsumer(aSourceMap) {
+  function IndexedSourceMapConsumer(aSourceMap, aSourceMapURL) {
     var sourceMap = aSourceMap;
     if (typeof aSourceMap === 'string') {
-      sourceMap = JSON.parse(aSourceMap.replace(/^\)\]\}'/, ''));
+      sourceMap = util.parseSourceMapInput(aSourceMap);
     }
 
     var version = util.getArg(sourceMap, 'version');
@@ -8168,7 +8263,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
           generatedLine: offsetLine + 1,
           generatedColumn: offsetColumn + 1
         },
-        consumer: new SourceMapConsumer(util.getArg(s, 'map'))
+        consumer: new SourceMapConsumer(util.getArg(s, 'map'), aSourceMapURL)
       };
     });
   }
@@ -8201,14 +8296,18 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    * source's line and column positions provided. The only argument is an object
    * with the following properties:
    *
-   *   - line: The line number in the generated source.
-   *   - column: The column number in the generated source.
+   *   - line: The line number in the generated source.  The line number
+   *     is 1-based.
+   *   - column: The column number in the generated source.  The column
+   *     number is 0-based.
    *
    * and an object is returned with the following properties:
    *
    *   - source: The original source file, or null.
-   *   - line: The line number in the original source, or null.
-   *   - column: The column number in the original source, or null.
+   *   - line: The line number in the original source, or null.  The
+   *     line number is 1-based.
+   *   - column: The column number in the original source, or null.  The
+   *     column number is 0-based.
    *   - name: The original identifier, or null.
    */
   IndexedSourceMapConsumer.prototype.originalPositionFor = function IndexedSourceMapConsumer_originalPositionFor(aArgs) {
@@ -8282,13 +8381,17 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
    * the following properties:
    *
    *   - source: The filename of the original source.
-   *   - line: The line number in the original source.
-   *   - column: The column number in the original source.
+   *   - line: The line number in the original source.  The line number
+   *     is 1-based.
+   *   - column: The column number in the original source.  The column
+   *     number is 0-based.
    *
    * and an object is returned with the following properties:
    *
-   *   - line: The line number in the generated source, or null.
+   *   - line: The line number in the generated source, or null.  The
+   *     line number is 1-based. 
    *   - column: The column number in the generated source, or null.
+   *     The column number is 0-based.
    */
   IndexedSourceMapConsumer.prototype.generatedPositionFor = function IndexedSourceMapConsumer_generatedPositionFor(aArgs) {
     for (var i = 0; i < this._sections.length; i++) {
@@ -8296,7 +8399,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
 
       // Only consider this section if the requested source is in the list of
       // sources of the consumer.
-      if (section.consumer.sources.indexOf(util.getArg(aArgs, 'source')) === -1) {
+      if (section.consumer._findSourceIndex(util.getArg(aArgs, 'source')) === -1) {
         continue;
       }
       var generatedPosition = section.consumer.generatedPositionFor(aArgs);
@@ -8330,15 +8433,16 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
         var mapping = sectionMappings[j];
 
         var source = section.consumer._sources.at(mapping.source);
-        if (section.consumer.sourceRoot !== null) {
-          source = util.join(section.consumer.sourceRoot, source);
-        }
+        source = util.computeSourceURL(section.consumer.sourceRoot, source, this._sourceMapURL);
         this._sources.add(source);
         source = this._sources.indexOf(source);
 
-        var name = section.consumer._names.at(mapping.name);
-        this._names.add(name);
-        name = this._names.indexOf(name);
+        var name = null;
+        if (mapping.name) {
+          name = section.consumer._names.at(mapping.name);
+          this._names.add(name);
+          name = this._names.indexOf(name);
+        }
 
         // The mappings coming from the consumer for the section have
         // generated positions relative to the start of the section, so we
@@ -8366,7 +8470,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-consumer.js', ['./ut
 
   exports.IndexedSourceMapConsumer = IndexedSourceMapConsumer;
 });
-System.registerDynamic('npm:source-map@0.5.6/lib/base64.js', [], true, function ($__require, exports, module) {
+System.registerDynamic('npm:source-map@0.6.1/lib/base64.js', [], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -8437,7 +8541,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/base64.js', [], true, function 
     return -1;
   };
 });
-System.registerDynamic("npm:source-map@0.5.6/lib/base64-vlq.js", ["./base64"], true, function ($__require, exports, module) {
+System.registerDynamic("npm:source-map@0.6.1/lib/base64-vlq.js", ["./base64"], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -8577,7 +8681,7 @@ System.registerDynamic("npm:source-map@0.5.6/lib/base64-vlq.js", ["./base64"], t
     aOutParam.rest = aIndex;
   };
 });
-System.registerDynamic('npm:source-map@0.5.6/lib/array-set.js', ['./util'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:source-map@0.6.1/lib/array-set.js', ['./util'], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -8589,6 +8693,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/array-set.js', ['./util'], true
 
   var util = $__require('./util');
   var has = Object.prototype.hasOwnProperty;
+  var hasNativeMap = typeof Map !== "undefined";
 
   /**
    * A data structure which is a combination of an array and a set. Adding a new
@@ -8598,7 +8703,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/array-set.js', ['./util'], true
    */
   function ArraySet() {
     this._array = [];
-    this._set = Object.create(null);
+    this._set = hasNativeMap ? new Map() : Object.create(null);
   }
 
   /**
@@ -8619,7 +8724,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/array-set.js', ['./util'], true
    * @returns Number
    */
   ArraySet.prototype.size = function ArraySet_size() {
-    return Object.getOwnPropertyNames(this._set).length;
+    return hasNativeMap ? this._set.size : Object.getOwnPropertyNames(this._set).length;
   };
 
   /**
@@ -8628,14 +8733,18 @@ System.registerDynamic('npm:source-map@0.5.6/lib/array-set.js', ['./util'], true
    * @param String aStr
    */
   ArraySet.prototype.add = function ArraySet_add(aStr, aAllowDuplicates) {
-    var sStr = util.toSetString(aStr);
-    var isDuplicate = has.call(this._set, sStr);
+    var sStr = hasNativeMap ? aStr : util.toSetString(aStr);
+    var isDuplicate = hasNativeMap ? this.has(aStr) : has.call(this._set, sStr);
     var idx = this._array.length;
     if (!isDuplicate || aAllowDuplicates) {
       this._array.push(aStr);
     }
     if (!isDuplicate) {
-      this._set[sStr] = idx;
+      if (hasNativeMap) {
+        this._set.set(aStr, idx);
+      } else {
+        this._set[sStr] = idx;
+      }
     }
   };
 
@@ -8645,8 +8754,12 @@ System.registerDynamic('npm:source-map@0.5.6/lib/array-set.js', ['./util'], true
    * @param String aStr
    */
   ArraySet.prototype.has = function ArraySet_has(aStr) {
-    var sStr = util.toSetString(aStr);
-    return has.call(this._set, sStr);
+    if (hasNativeMap) {
+      return this._set.has(aStr);
+    } else {
+      var sStr = util.toSetString(aStr);
+      return has.call(this._set, sStr);
+    }
   };
 
   /**
@@ -8655,10 +8768,18 @@ System.registerDynamic('npm:source-map@0.5.6/lib/array-set.js', ['./util'], true
    * @param String aStr
    */
   ArraySet.prototype.indexOf = function ArraySet_indexOf(aStr) {
-    var sStr = util.toSetString(aStr);
-    if (has.call(this._set, sStr)) {
-      return this._set[sStr];
+    if (hasNativeMap) {
+      var idx = this._set.get(aStr);
+      if (idx >= 0) {
+        return idx;
+      }
+    } else {
+      var sStr = util.toSetString(aStr);
+      if (has.call(this._set, sStr)) {
+        return this._set[sStr];
+      }
     }
+
     throw new Error('"' + aStr + '" is not in the set.');
   };
 
@@ -8685,7 +8806,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/array-set.js', ['./util'], true
 
   exports.ArraySet = ArraySet;
 });
-System.registerDynamic('npm:source-map@0.5.6/lib/mapping-list.js', ['./util'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:source-map@0.6.1/lib/mapping-list.js', ['./util'], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -8766,7 +8887,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/mapping-list.js', ['./util'], t
 
   exports.MappingList = MappingList;
 });
-System.registerDynamic('npm:source-map@0.5.6/lib/source-map-generator.js', ['./base64-vlq', './util', './array-set', './mapping-list'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:source-map@0.6.1/lib/source-map-generator.js', ['./base64-vlq', './util', './array-set', './mapping-list'], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -8842,6 +8963,15 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-generator.js', ['./b
       generator.addMapping(newMapping);
     });
     aSourceMapConsumer.sources.forEach(function (sourceFile) {
+      var sourceRelative = sourceFile;
+      if (sourceRoot !== null) {
+        sourceRelative = util.relative(sourceRoot, sourceFile);
+      }
+
+      if (!generator._sources.has(sourceRelative)) {
+        generator._sources.add(sourceRelative);
+      }
+
       var content = aSourceMapConsumer.sourceContentFor(sourceFile);
       if (content != null) {
         generator.setSourceContent(sourceFile, content);
@@ -9020,6 +9150,14 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-generator.js', ['./b
    * in to one of these categories.
    */
   SourceMapGenerator.prototype._validateMapping = function SourceMapGenerator_validateMapping(aGenerated, aOriginal, aSource, aName) {
+    // When aOriginal is truthy but has empty values for .line and .column,
+    // it is most likely a programmer error. In this case we throw a very
+    // specific error message to try to guide them the right way.
+    // For example: https://github.com/Polymer/polymer-bundler/pull/519
+    if (aOriginal && typeof aOriginal.line !== 'number' && typeof aOriginal.column !== 'number') {
+      throw new Error('original.line and original.column are not numbers -- you probably meant to omit ' + 'the original mapping entirely and only map the generated position. If so, pass ' + 'null for the original mapping instead of an object with empty or null values.');
+    }
+
     if (aGenerated && 'line' in aGenerated && 'column' in aGenerated && aGenerated.line > 0 && aGenerated.column >= 0 && !aOriginal && !aSource && !aName) {
       // Case 1.
       return;
@@ -9146,7 +9284,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-map-generator.js', ['./b
 
   exports.SourceMapGenerator = SourceMapGenerator;
 });
-System.registerDynamic('npm:source-map@0.5.6/lib/util.js', [], true, function ($__require, exports, module) {
+System.registerDynamic('npm:source-map@0.6.1/lib/util.js', [], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -9177,7 +9315,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/util.js', [], true, function ($
   }
   exports.getArg = getArg;
 
-  var urlRegexp = /^(?:([\w+\-.]+):)?\/\/(?:(\w+:\w+)@)?([\w.]*)(?::(\d+))?(\S*)$/;
+  var urlRegexp = /^(?:([\w+\-.]+):)?\/\/(?:(\w+:\w+)@)?([\w.-]*)(?::(\d+))?(.*)$/;
   var dataUrlRegexp = /^data:.+\,.+$/;
 
   function urlParse(aUrl) {
@@ -9331,7 +9469,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/util.js', [], true, function ($
   exports.join = join;
 
   exports.isAbsolute = function (aPath) {
-    return aPath.charAt(0) === '/' || !!aPath.match(urlRegexp);
+    return aPath.charAt(0) === '/' || urlRegexp.test(aPath);
   };
 
   /**
@@ -9443,7 +9581,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/util.js', [], true, function ($
    * stubbed out mapping.
    */
   function compareByOriginalPositions(mappingA, mappingB, onlyCompareOriginal) {
-    var cmp = mappingA.source - mappingB.source;
+    var cmp = strcmp(mappingA.source, mappingB.source);
     if (cmp !== 0) {
       return cmp;
     }
@@ -9468,7 +9606,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/util.js', [], true, function ($
       return cmp;
     }
 
-    return mappingA.name - mappingB.name;
+    return strcmp(mappingA.name, mappingB.name);
   }
   exports.compareByOriginalPositions = compareByOriginalPositions;
 
@@ -9492,7 +9630,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/util.js', [], true, function ($
       return cmp;
     }
 
-    cmp = mappingA.source - mappingB.source;
+    cmp = strcmp(mappingA.source, mappingB.source);
     if (cmp !== 0) {
       return cmp;
     }
@@ -9507,13 +9645,21 @@ System.registerDynamic('npm:source-map@0.5.6/lib/util.js', [], true, function ($
       return cmp;
     }
 
-    return mappingA.name - mappingB.name;
+    return strcmp(mappingA.name, mappingB.name);
   }
   exports.compareByGeneratedPositionsDeflated = compareByGeneratedPositionsDeflated;
 
   function strcmp(aStr1, aStr2) {
     if (aStr1 === aStr2) {
       return 0;
+    }
+
+    if (aStr1 === null) {
+      return 1; // aStr2 !== null
+    }
+
+    if (aStr2 === null) {
+      return -1; // aStr1 !== null
     }
 
     if (aStr1 > aStr2) {
@@ -9556,8 +9702,71 @@ System.registerDynamic('npm:source-map@0.5.6/lib/util.js', [], true, function ($
     return strcmp(mappingA.name, mappingB.name);
   }
   exports.compareByGeneratedPositionsInflated = compareByGeneratedPositionsInflated;
+
+  /**
+   * Strip any JSON XSSI avoidance prefix from the string (as documented
+   * in the source maps specification), and then parse the string as
+   * JSON.
+   */
+  function parseSourceMapInput(str) {
+    return JSON.parse(str.replace(/^\)]}'[^\n]*\n/, ''));
+  }
+  exports.parseSourceMapInput = parseSourceMapInput;
+
+  /**
+   * Compute the URL of a source given the the source root, the source's
+   * URL, and the source map's URL.
+   */
+  function computeSourceURL(sourceRoot, sourceURL, sourceMapURL) {
+    sourceURL = sourceURL || '';
+
+    if (sourceRoot) {
+      // This follows what Chrome does.
+      if (sourceRoot[sourceRoot.length - 1] !== '/' && sourceURL[0] !== '/') {
+        sourceRoot += '/';
+      }
+      // The spec says:
+      //   Line 4: An optional source root, useful for relocating source
+      //   files on a server or removing repeated values in the
+      //   “sources” entry.  This value is prepended to the individual
+      //   entries in the “source” field.
+      sourceURL = sourceRoot + sourceURL;
+    }
+
+    // Historically, SourceMapConsumer did not take the sourceMapURL as
+    // a parameter.  This mode is still somewhat supported, which is why
+    // this code block is conditional.  However, it's preferable to pass
+    // the source map URL to SourceMapConsumer, so that this function
+    // can implement the source URL resolution algorithm as outlined in
+    // the spec.  This block is basically the equivalent of:
+    //    new URL(sourceURL, sourceMapURL).toString()
+    // ... except it avoids using URL, which wasn't available in the
+    // older releases of node still supported by this library.
+    //
+    // The spec says:
+    //   If the sources are not absolute URLs after prepending of the
+    //   “sourceRoot”, the sources are resolved relative to the
+    //   SourceMap (like resolving script src in a html document).
+    if (sourceMapURL) {
+      var parsed = urlParse(sourceMapURL);
+      if (!parsed) {
+        throw new Error("sourceMapURL could not be parsed");
+      }
+      if (parsed.path) {
+        // Strip the last path component, but keep the "/".
+        var index = parsed.path.lastIndexOf('/');
+        if (index >= 0) {
+          parsed.path = parsed.path.substring(0, index + 1);
+        }
+      }
+      sourceURL = join(urlGenerate(parsed), sourceURL);
+    }
+
+    return normalize(sourceURL);
+  }
+  exports.computeSourceURL = computeSourceURL;
 });
-System.registerDynamic('npm:source-map@0.5.6/lib/source-node.js', ['./source-map-generator', './util'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:source-map@0.6.1/lib/source-node.js', ['./source-map-generator', './util'], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -9621,13 +9830,18 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-node.js', ['./source-map
     // All even indices of this array are one line of the generated code,
     // while all odd indices are the newlines between two adjacent lines
     // (since `REGEX_NEWLINE` captures its match).
-    // Processed fragments are removed from this array, by calling `shiftNextLine`.
+    // Processed fragments are accessed by calling `shiftNextLine`.
     var remainingLines = aGeneratedCode.split(REGEX_NEWLINE);
+    var remainingLinesIndex = 0;
     var shiftNextLine = function () {
-      var lineContents = remainingLines.shift();
+      var lineContents = getNextLine();
       // The last line of a file might not have a newline.
-      var newLine = remainingLines.shift() || "";
+      var newLine = getNextLine() || "";
       return lineContents + newLine;
+
+      function getNextLine() {
+        return remainingLinesIndex < remainingLines.length ? remainingLines[remainingLinesIndex++] : undefined;
+      }
     };
 
     // We need to remember the position of "remainingLines"
@@ -9653,9 +9867,9 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-node.js', ['./source-map
           // There is no new line in between.
           // Associate the code between "lastGeneratedColumn" and
           // "mapping.generatedColumn" with "lastMapping"
-          var nextLine = remainingLines[0];
+          var nextLine = remainingLines[remainingLinesIndex] || '';
           var code = nextLine.substr(0, mapping.generatedColumn - lastGeneratedColumn);
-          remainingLines[0] = nextLine.substr(mapping.generatedColumn - lastGeneratedColumn);
+          remainingLines[remainingLinesIndex] = nextLine.substr(mapping.generatedColumn - lastGeneratedColumn);
           lastGeneratedColumn = mapping.generatedColumn;
           addMappingWithCode(lastMapping, code);
           // No more remaining code, continue
@@ -9671,21 +9885,21 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-node.js', ['./source-map
         lastGeneratedLine++;
       }
       if (lastGeneratedColumn < mapping.generatedColumn) {
-        var nextLine = remainingLines[0];
+        var nextLine = remainingLines[remainingLinesIndex] || '';
         node.add(nextLine.substr(0, mapping.generatedColumn));
-        remainingLines[0] = nextLine.substr(mapping.generatedColumn);
+        remainingLines[remainingLinesIndex] = nextLine.substr(mapping.generatedColumn);
         lastGeneratedColumn = mapping.generatedColumn;
       }
       lastMapping = mapping;
     }, this);
     // We have processed all mappings.
-    if (remainingLines.length > 0) {
+    if (remainingLinesIndex < remainingLines.length) {
       if (lastMapping) {
         // Associate the remaining code in the current line with "lastMapping"
         addMappingWithCode(lastMapping, shiftNextLine());
       }
       // and add the remaining lines without any mapping
-      node.add(remainingLines.join(""));
+      node.add(remainingLines.splice(remainingLinesIndex).join(""));
     }
 
     // Copy sourcesContent into SourceNode
@@ -9942,7 +10156,7 @@ System.registerDynamic('npm:source-map@0.5.6/lib/source-node.js', ['./source-map
 
   exports.SourceNode = SourceNode;
 });
-System.registerDynamic("npm:source-map@0.5.6.json", [], true, function() {
+System.registerDynamic("npm:source-map@0.6.1.json", [], true, function() {
   return {
     "main": "source-map.js",
     "format": "cjs",
@@ -9954,7 +10168,7 @@ System.registerDynamic("npm:source-map@0.5.6.json", [], true, function() {
   };
 });
 
-System.registerDynamic('npm:source-map@0.5.6/source-map.js', ['./lib/source-map-generator', './lib/source-map-consumer', './lib/source-node'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:source-map@0.6.1/source-map.js', ['./lib/source-map-generator', './lib/source-map-consumer', './lib/source-node'], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   /*
@@ -9966,7 +10180,7 @@ System.registerDynamic('npm:source-map@0.5.6/source-map.js', ['./lib/source-map-
   exports.SourceMapConsumer = $__require('./lib/source-map-consumer').SourceMapConsumer;
   exports.SourceNode = $__require('./lib/source-node').SourceNode;
 });
-System.registerDynamic("npm:base64-js@1.2.1.json", [], true, function() {
+System.registerDynamic("npm:base64-js@1.3.1.json", [], true, function() {
   return {
     "main": "index.js",
     "format": "cjs",
@@ -9978,7 +10192,7 @@ System.registerDynamic("npm:base64-js@1.2.1.json", [], true, function() {
   };
 });
 
-System.registerDynamic('npm:base64-js@1.2.1/index.js', [], true, function ($__require, exports, module) {
+System.registerDynamic('npm:base64-js@1.3.1/index.js', [], true, function ($__require, exports, module) {
   'use strict';
 
   var global = this || self,
@@ -9997,54 +10211,70 @@ System.registerDynamic('npm:base64-js@1.2.1/index.js', [], true, function ($__re
     revLookup[code.charCodeAt(i)] = i;
   }
 
+  // Support decoding URL-safe base64 strings, as Node.js does.
+  // See: https://en.wikipedia.org/wiki/Base64#URL_applications
   revLookup['-'.charCodeAt(0)] = 62;
   revLookup['_'.charCodeAt(0)] = 63;
 
-  function placeHoldersCount(b64) {
+  function getLens(b64) {
     var len = b64.length;
+
     if (len % 4 > 0) {
       throw new Error('Invalid string. Length must be a multiple of 4');
     }
 
-    // the number of equal signs (place holders)
-    // if there are two placeholders, than the two characters before it
-    // represent one byte
-    // if there is only one, then the three characters before it represent 2 bytes
-    // this is just a cheap hack to not do indexOf twice
-    return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0;
+    // Trim off extra bytes after placeholder bytes are found
+    // See: https://github.com/beatgammit/base64-js/issues/42
+    var validLen = b64.indexOf('=');
+    if (validLen === -1) validLen = len;
+
+    var placeHoldersLen = validLen === len ? 0 : 4 - validLen % 4;
+
+    return [validLen, placeHoldersLen];
   }
 
+  // base64 is 4/3 + up to two characters of the original data
   function byteLength(b64) {
-    // base64 is 4/3 + up to two characters of the original data
-    return b64.length * 3 / 4 - placeHoldersCount(b64);
+    var lens = getLens(b64);
+    var validLen = lens[0];
+    var placeHoldersLen = lens[1];
+    return (validLen + placeHoldersLen) * 3 / 4 - placeHoldersLen;
+  }
+
+  function _byteLength(b64, validLen, placeHoldersLen) {
+    return (validLen + placeHoldersLen) * 3 / 4 - placeHoldersLen;
   }
 
   function toByteArray(b64) {
-    var i, l, tmp, placeHolders, arr;
-    var len = b64.length;
-    placeHolders = placeHoldersCount(b64);
+    var tmp;
+    var lens = getLens(b64);
+    var validLen = lens[0];
+    var placeHoldersLen = lens[1];
 
-    arr = new Arr(len * 3 / 4 - placeHolders);
+    var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen));
+
+    var curByte = 0;
 
     // if there are placeholders, only get up to the last complete 4 chars
-    l = placeHolders > 0 ? len - 4 : len;
+    var len = placeHoldersLen > 0 ? validLen - 4 : validLen;
 
-    var L = 0;
-
-    for (i = 0; i < l; i += 4) {
+    var i;
+    for (i = 0; i < len; i += 4) {
       tmp = revLookup[b64.charCodeAt(i)] << 18 | revLookup[b64.charCodeAt(i + 1)] << 12 | revLookup[b64.charCodeAt(i + 2)] << 6 | revLookup[b64.charCodeAt(i + 3)];
-      arr[L++] = tmp >> 16 & 0xFF;
-      arr[L++] = tmp >> 8 & 0xFF;
-      arr[L++] = tmp & 0xFF;
+      arr[curByte++] = tmp >> 16 & 0xFF;
+      arr[curByte++] = tmp >> 8 & 0xFF;
+      arr[curByte++] = tmp & 0xFF;
     }
 
-    if (placeHolders === 2) {
+    if (placeHoldersLen === 2) {
       tmp = revLookup[b64.charCodeAt(i)] << 2 | revLookup[b64.charCodeAt(i + 1)] >> 4;
-      arr[L++] = tmp & 0xFF;
-    } else if (placeHolders === 1) {
+      arr[curByte++] = tmp & 0xFF;
+    }
+
+    if (placeHoldersLen === 1) {
       tmp = revLookup[b64.charCodeAt(i)] << 10 | revLookup[b64.charCodeAt(i + 1)] << 4 | revLookup[b64.charCodeAt(i + 2)] >> 2;
-      arr[L++] = tmp >> 8 & 0xFF;
-      arr[L++] = tmp & 0xFF;
+      arr[curByte++] = tmp >> 8 & 0xFF;
+      arr[curByte++] = tmp & 0xFF;
     }
 
     return arr;
@@ -10058,7 +10288,7 @@ System.registerDynamic('npm:base64-js@1.2.1/index.js', [], true, function ($__re
     var tmp;
     var output = [];
     for (var i = start; i < end; i += 3) {
-      tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + uint8[i + 2];
+      tmp = (uint8[i] << 16 & 0xFF0000) + (uint8[i + 1] << 8 & 0xFF00) + (uint8[i + 2] & 0xFF);
       output.push(tripletToBase64(tmp));
     }
     return output.join('');
@@ -10068,7 +10298,6 @@ System.registerDynamic('npm:base64-js@1.2.1/index.js', [], true, function ($__re
     var tmp;
     var len = uint8.length;
     var extraBytes = len % 3; // if we have 1 byte left, pad 2 bytes
-    var output = '';
     var parts = [];
     var maxChunkLength = 16383; // must be multiple of 3
 
@@ -10080,40 +10309,28 @@ System.registerDynamic('npm:base64-js@1.2.1/index.js', [], true, function ($__re
     // pad the end with zeros, but make sure to not forget the extra bytes
     if (extraBytes === 1) {
       tmp = uint8[len - 1];
-      output += lookup[tmp >> 2];
-      output += lookup[tmp << 4 & 0x3F];
-      output += '==';
+      parts.push(lookup[tmp >> 2] + lookup[tmp << 4 & 0x3F] + '==');
     } else if (extraBytes === 2) {
       tmp = (uint8[len - 2] << 8) + uint8[len - 1];
-      output += lookup[tmp >> 10];
-      output += lookup[tmp >> 4 & 0x3F];
-      output += lookup[tmp << 2 & 0x3F];
-      output += '=';
+      parts.push(lookup[tmp >> 10] + lookup[tmp >> 4 & 0x3F] + lookup[tmp << 2 & 0x3F] + '=');
     }
-
-    parts.push(output);
 
     return parts.join('');
   }
 });
-System.registerDynamic("npm:ieee754@1.1.8.json", [], true, function() {
+System.registerDynamic("npm:ieee754@1.1.13.json", [], true, function() {
   return {
     "main": "index.js",
     "format": "cjs",
     "meta": {
       "*.json": {
         "format": "json"
-      },
-      "test/*": {
-        "globals": {
-          "Buffer": "buffer/global"
-        }
       }
     }
   };
 });
 
-System.registerDynamic("npm:ieee754@1.1.8/index.js", [], true, function ($__require, exports, module) {
+System.registerDynamic("npm:ieee754@1.1.13/index.js", [], true, function ($__require, exports, module) {
   var global = this || self,
       GLOBAL = global;
   exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -10201,28 +10418,23 @@ System.registerDynamic("npm:ieee754@1.1.8/index.js", [], true, function ($__requ
     buffer[offset + i - d] |= s * 128;
   };
 });
-System.registerDynamic("npm:buffer@5.0.7.json", [], true, function() {
+System.registerDynamic("npm:buffer@5.4.3.json", [], true, function() {
   return {
     "main": "index.js",
     "format": "cjs",
     "meta": {
       "*.json": {
         "format": "json"
-      },
-      "test/node/*": {
-        "globals": {
-          "Buffer": "buffer/global"
-        }
       }
     }
   };
 });
 
-System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:buffer@5.4.3/index.js', ['base64-js', 'ieee754'], true, function ($__require, exports, module) {
   /*!
    * The buffer module from node.js, for the browser.
    *
-   * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+   * @author   Feross Aboukhadijeh <https://feross.org>
    * @license  MIT
    */
   /* eslint-disable no-proto */
@@ -10233,6 +10445,7 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
       GLOBAL = global;
   var base64 = $__require('base64-js');
   var ieee754 = $__require('ieee754');
+  var customInspectSymbol = typeof Symbol === 'function' && typeof Symbol.for === 'function' ? Symbol.for('nodejs.util.inspect.custom') : null;
 
   exports.Buffer = Buffer;
   exports.SlowBuffer = SlowBuffer;
@@ -10265,22 +10478,40 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
     // Can typed array instances can be augmented?
     try {
       var arr = new Uint8Array(1);
-      arr.__proto__ = { __proto__: Uint8Array.prototype, foo: function () {
+      var proto = { foo: function () {
           return 42;
         } };
+      Object.setPrototypeOf(proto, Uint8Array.prototype);
+      Object.setPrototypeOf(arr, proto);
       return arr.foo() === 42;
     } catch (e) {
       return false;
     }
   }
 
+  Object.defineProperty(Buffer.prototype, 'parent', {
+    enumerable: true,
+    get: function () {
+      if (!Buffer.isBuffer(this)) return undefined;
+      return this.buffer;
+    }
+  });
+
+  Object.defineProperty(Buffer.prototype, 'offset', {
+    enumerable: true,
+    get: function () {
+      if (!Buffer.isBuffer(this)) return undefined;
+      return this.byteOffset;
+    }
+  });
+
   function createBuffer(length) {
     if (length > K_MAX_LENGTH) {
-      throw new RangeError('Invalid typed array length');
+      throw new RangeError('The value "' + length + '" is invalid for option "size"');
     }
     // Return an augmented `Uint8Array` instance
     var buf = new Uint8Array(length);
-    buf.__proto__ = Buffer.prototype;
+    Object.setPrototypeOf(buf, Buffer.prototype);
     return buf;
   }
 
@@ -10298,7 +10529,7 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
     // Common case.
     if (typeof arg === 'number') {
       if (typeof encodingOrOffset === 'string') {
-        throw new Error('If encoding is specified then the first argument must be a string');
+        throw new TypeError('The "string" argument must be of type string. Received type number');
       }
       return allocUnsafe(arg);
     }
@@ -10306,7 +10537,7 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
   }
 
   // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
-  if (typeof Symbol !== 'undefined' && Symbol.species && Buffer[Symbol.species] === Buffer) {
+  if (typeof Symbol !== 'undefined' && Symbol.species != null && Buffer[Symbol.species] === Buffer) {
     Object.defineProperty(Buffer, Symbol.species, {
       value: null,
       configurable: true,
@@ -10318,19 +10549,39 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
   Buffer.poolSize = 8192; // not used by this implementation
 
   function from(value, encodingOrOffset, length) {
-    if (typeof value === 'number') {
-      throw new TypeError('"value" argument must not be a number');
-    }
-
-    if (isArrayBuffer(value)) {
-      return fromArrayBuffer(value, encodingOrOffset, length);
-    }
-
     if (typeof value === 'string') {
       return fromString(value, encodingOrOffset);
     }
 
-    return fromObject(value);
+    if (ArrayBuffer.isView(value)) {
+      return fromArrayLike(value);
+    }
+
+    if (value == null) {
+      throw new TypeError('The first argument must be one of type string, Buffer, ArrayBuffer, Array, ' + 'or Array-like Object. Received type ' + typeof value);
+    }
+
+    if (isInstance(value, ArrayBuffer) || value && isInstance(value.buffer, ArrayBuffer)) {
+      return fromArrayBuffer(value, encodingOrOffset, length);
+    }
+
+    if (typeof value === 'number') {
+      throw new TypeError('The "value" argument must not be of type number. Received type number');
+    }
+
+    var valueOf = value.valueOf && value.valueOf();
+    if (valueOf != null && valueOf !== value) {
+      return Buffer.from(valueOf, encodingOrOffset, length);
+    }
+
+    var b = fromObject(value);
+    if (b) return b;
+
+    if (typeof Symbol !== 'undefined' && Symbol.toPrimitive != null && typeof value[Symbol.toPrimitive] === 'function') {
+      return Buffer.from(value[Symbol.toPrimitive]('string'), encodingOrOffset, length);
+    }
+
+    throw new TypeError('The first argument must be one of type string, Buffer, ArrayBuffer, Array, ' + 'or Array-like Object. Received type ' + typeof value);
   }
 
   /**
@@ -10347,14 +10598,14 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
 
   // Note: Change prototype *after* Buffer.from is defined to workaround Chrome bug:
   // https://github.com/feross/buffer/pull/148
-  Buffer.prototype.__proto__ = Uint8Array.prototype;
-  Buffer.__proto__ = Uint8Array;
+  Object.setPrototypeOf(Buffer.prototype, Uint8Array.prototype);
+  Object.setPrototypeOf(Buffer, Uint8Array);
 
   function assertSize(size) {
     if (typeof size !== 'number') {
-      throw new TypeError('"size" argument must be a number');
+      throw new TypeError('"size" argument must be of type number');
     } else if (size < 0) {
-      throw new RangeError('"size" argument must not be negative');
+      throw new RangeError('The value "' + size + '" is invalid for option "size"');
     }
   }
 
@@ -10404,7 +10655,7 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
     }
 
     if (!Buffer.isEncoding(encoding)) {
-      throw new TypeError('"encoding" must be a valid string encoding');
+      throw new TypeError('Unknown encoding: ' + encoding);
     }
 
     var length = byteLength(string, encoding) | 0;
@@ -10433,11 +10684,11 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
 
   function fromArrayBuffer(array, byteOffset, length) {
     if (byteOffset < 0 || array.byteLength < byteOffset) {
-      throw new RangeError('\'offset\' is out of bounds');
+      throw new RangeError('"offset" is outside of buffer bounds');
     }
 
     if (array.byteLength < byteOffset + (length || 0)) {
-      throw new RangeError('\'length\' is out of bounds');
+      throw new RangeError('"length" is outside of buffer bounds');
     }
 
     var buf;
@@ -10450,7 +10701,8 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
     }
 
     // Return an augmented `Uint8Array` instance
-    buf.__proto__ = Buffer.prototype;
+    Object.setPrototypeOf(buf, Buffer.prototype);
+
     return buf;
   }
 
@@ -10467,20 +10719,16 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
       return buf;
     }
 
-    if (obj) {
-      if (isArrayBufferView(obj) || 'length' in obj) {
-        if (typeof obj.length !== 'number' || numberIsNaN(obj.length)) {
-          return createBuffer(0);
-        }
-        return fromArrayLike(obj);
+    if (obj.length !== undefined) {
+      if (typeof obj.length !== 'number' || numberIsNaN(obj.length)) {
+        return createBuffer(0);
       }
-
-      if (obj.type === 'Buffer' && Array.isArray(obj.data)) {
-        return fromArrayLike(obj.data);
-      }
+      return fromArrayLike(obj);
     }
 
-    throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.');
+    if (obj.type === 'Buffer' && Array.isArray(obj.data)) {
+      return fromArrayLike(obj.data);
+    }
   }
 
   function checked(length) {
@@ -10501,12 +10749,14 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
   }
 
   Buffer.isBuffer = function isBuffer(b) {
-    return b != null && b._isBuffer === true;
+    return b != null && b._isBuffer === true && b !== Buffer.prototype; // so Buffer.isBuffer(Buffer.prototype) will be false
   };
 
   Buffer.compare = function compare(a, b) {
+    if (isInstance(a, Uint8Array)) a = Buffer.from(a, a.offset, a.byteLength);
+    if (isInstance(b, Uint8Array)) b = Buffer.from(b, b.offset, b.byteLength);
     if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
-      throw new TypeError('Arguments must be Buffers');
+      throw new TypeError('The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array');
     }
 
     if (a === b) return 0;
@@ -10567,6 +10817,9 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
     var pos = 0;
     for (i = 0; i < list.length; ++i) {
       var buf = list[i];
+      if (isInstance(buf, Uint8Array)) {
+        buf = Buffer.from(buf);
+      }
       if (!Buffer.isBuffer(buf)) {
         throw new TypeError('"list" argument must be an Array of Buffers');
       }
@@ -10580,15 +10833,16 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
     if (Buffer.isBuffer(string)) {
       return string.length;
     }
-    if (isArrayBufferView(string) || isArrayBuffer(string)) {
+    if (ArrayBuffer.isView(string) || isInstance(string, ArrayBuffer)) {
       return string.byteLength;
     }
     if (typeof string !== 'string') {
-      string = '' + string;
+      throw new TypeError('The "string" argument must be one of type string, Buffer, or ArrayBuffer. ' + 'Received type ' + typeof string);
     }
 
     var len = string.length;
-    if (len === 0) return 0;
+    var mustMatch = arguments.length > 2 && arguments[2] === true;
+    if (!mustMatch && len === 0) return 0;
 
     // Use a for loop to avoid recursion
     var loweredCase = false;
@@ -10600,7 +10854,6 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
           return len;
         case 'utf8':
         case 'utf-8':
-        case undefined:
           return utf8ToBytes(string).length;
         case 'ucs2':
         case 'ucs-2':
@@ -10612,7 +10865,9 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
         case 'base64':
           return base64ToBytes(string).length;
         default:
-          if (loweredCase) return utf8ToBytes(string).length; // assume utf8
+          if (loweredCase) {
+            return mustMatch ? -1 : utf8ToBytes(string).length; // assume utf8
+          }
           encoding = ('' + encoding).toLowerCase();
           loweredCase = true;
       }
@@ -10748,6 +11003,8 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
     return slowToString.apply(this, arguments);
   };
 
+  Buffer.prototype.toLocaleString = Buffer.prototype.toString;
+
   Buffer.prototype.equals = function equals(b) {
     if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer');
     if (this === b) return true;
@@ -10757,16 +11014,20 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
   Buffer.prototype.inspect = function inspect() {
     var str = '';
     var max = exports.INSPECT_MAX_BYTES;
-    if (this.length > 0) {
-      str = this.toString('hex', 0, max).match(/.{2}/g).join(' ');
-      if (this.length > max) str += ' ... ';
-    }
+    str = this.toString('hex', 0, max).replace(/(.{2})/g, '$1 ').trim();
+    if (this.length > max) str += ' ... ';
     return '<Buffer ' + str + '>';
   };
+  if (customInspectSymbol) {
+    Buffer.prototype[customInspectSymbol] = Buffer.prototype.inspect;
+  }
 
   Buffer.prototype.compare = function compare(target, start, end, thisStart, thisEnd) {
+    if (isInstance(target, Uint8Array)) {
+      target = Buffer.from(target, target.offset, target.byteLength);
+    }
     if (!Buffer.isBuffer(target)) {
-      throw new TypeError('Argument must be a Buffer');
+      throw new TypeError('The "target" argument must be one of type Buffer or Uint8Array. ' + 'Received type ' + typeof target);
     }
 
     if (start === undefined) {
@@ -10965,9 +11226,7 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
       }
     }
 
-    // must be an even number of digits
     var strLen = string.length;
-    if (strLen % 2 !== 0) throw new TypeError('Invalid hex string');
 
     if (length > strLen / 2) {
       length = strLen / 2;
@@ -11202,7 +11461,7 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
 
     var out = '';
     for (var i = start; i < end; ++i) {
-      out += toHex(buf[i]);
+      out += hexSliceLookupTable[buf[i]];
     }
     return out;
   }
@@ -11239,7 +11498,8 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
 
     var newBuf = this.subarray(start, end);
     // Return an augmented `Uint8Array` instance
-    newBuf.__proto__ = Buffer.prototype;
+    Object.setPrototypeOf(newBuf, Buffer.prototype);
+
     return newBuf;
   };
 
@@ -11640,6 +11900,7 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
 
   // copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
   Buffer.prototype.copy = function copy(target, targetStart, start, end) {
+    if (!Buffer.isBuffer(target)) throw new TypeError('argument should be a Buffer');
     if (!start) start = 0;
     if (!end && end !== 0) end = this.length;
     if (targetStart >= target.length) targetStart = target.length;
@@ -11654,7 +11915,7 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
     if (targetStart < 0) {
       throw new RangeError('targetStart out of bounds');
     }
-    if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds');
+    if (start < 0 || start >= this.length) throw new RangeError('Index out of range');
     if (end < 0) throw new RangeError('sourceEnd out of bounds');
 
     // Are we oob?
@@ -11664,20 +11925,17 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
     }
 
     var len = end - start;
-    var i;
 
-    if (this === target && start < targetStart && targetStart < end) {
+    if (this === target && typeof Uint8Array.prototype.copyWithin === 'function') {
+      // Use built-in when available, missing from IE11
+      this.copyWithin(targetStart, start, end);
+    } else if (this === target && start < targetStart && targetStart < end) {
       // descending copy from end
-      for (i = len - 1; i >= 0; --i) {
-        target[i + targetStart] = this[i + start];
-      }
-    } else if (len < 1000) {
-      // ascending copy from start
-      for (i = 0; i < len; ++i) {
+      for (var i = len - 1; i >= 0; --i) {
         target[i + targetStart] = this[i + start];
       }
     } else {
-      Uint8Array.prototype.set.call(target, this.subarray(start, start + len), targetStart);
+      Uint8Array.prototype.set.call(target, this.subarray(start, end), targetStart);
     }
 
     return len;
@@ -11698,20 +11956,23 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
         encoding = end;
         end = this.length;
       }
-      if (val.length === 1) {
-        var code = val.charCodeAt(0);
-        if (code < 256) {
-          val = code;
-        }
-      }
       if (encoding !== undefined && typeof encoding !== 'string') {
         throw new TypeError('encoding must be a string');
       }
       if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
         throw new TypeError('Unknown encoding: ' + encoding);
       }
+      if (val.length === 1) {
+        var code = val.charCodeAt(0);
+        if (encoding === 'utf8' && code < 128 || encoding === 'latin1') {
+          // Fast path: If `val` fits into a single byte, use that numeric value.
+          val = code;
+        }
+      }
     } else if (typeof val === 'number') {
       val = val & 255;
+    } else if (typeof val === 'boolean') {
+      val = Number(val);
     }
 
     // Invalid ranges are not set to a default, so can range check early.
@@ -11734,8 +11995,11 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
         this[i] = val;
       }
     } else {
-      var bytes = Buffer.isBuffer(val) ? val : new Buffer(val, encoding);
+      var bytes = Buffer.isBuffer(val) ? val : Buffer.from(val, encoding);
       var len = bytes.length;
+      if (len === 0) {
+        throw new TypeError('The value "' + val + '" is invalid for argument "value"');
+      }
       for (i = 0; i < end - start; ++i) {
         this[i + start] = bytes[i % len];
       }
@@ -11750,6 +12014,8 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
   var INVALID_BASE64_RE = /[^+/0-9A-Za-z-_]/g;
 
   function base64clean(str) {
+    // Node takes equal signs as end of the Base64 encoding
+    str = str.split('=')[0];
     // Node strips out invalid characters like \n and \t from the string, base64-js does not
     str = str.trim().replace(INVALID_BASE64_RE, '');
     // Node converts strings with length < 2 to ''
@@ -11759,11 +12025,6 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
       str = str + '=';
     }
     return str;
-  }
-
-  function toHex(n) {
-    if (n < 16) return '0' + n.toString(16);
-    return n.toString(16);
   }
 
   function utf8ToBytes(string, units) {
@@ -11871,20 +12132,30 @@ System.registerDynamic('npm:buffer@5.0.7/index.js', ['base64-js', 'ieee754'], tr
     return i;
   }
 
-  // ArrayBuffers from another context (i.e. an iframe) do not pass the `instanceof` check
-  // but they should be treated as valid. See: https://github.com/feross/buffer/issues/166
-  function isArrayBuffer(obj) {
-    return obj instanceof ArrayBuffer || obj != null && obj.constructor != null && obj.constructor.name === 'ArrayBuffer' && typeof obj.byteLength === 'number';
+  // ArrayBuffer or Uint8Array objects from other contexts (i.e. iframes) do not pass
+  // the `instanceof` check but they should be treated as of that type.
+  // See: https://github.com/feross/buffer/issues/166
+  function isInstance(obj, type) {
+    return obj instanceof type || obj != null && obj.constructor != null && obj.constructor.name != null && obj.constructor.name === type.name;
   }
-
-  // Node 0.10 supports `ArrayBuffer` but lacks `ArrayBuffer.isView`
-  function isArrayBufferView(obj) {
-    return typeof ArrayBuffer.isView === 'function' && ArrayBuffer.isView(obj);
-  }
-
   function numberIsNaN(obj) {
+    // For IE11 support
     return obj !== obj; // eslint-disable-line no-self-compare
   }
+
+  // Create lookup table for `toString('hex')`
+  // See: https://github.com/feross/buffer/issues/219
+  var hexSliceLookupTable = function () {
+    var alphabet = '0123456789abcdef';
+    var table = new Array(256);
+    for (var i = 0; i < 16; ++i) {
+      var i16 = i * 16;
+      for (var j = 0; j < 16; ++j) {
+        table[i16 + j] = alphabet[i] + alphabet[j];
+      }
+    }
+    return table;
+  }();
 });
 System.registerDynamic("npm:jspm-nodelibs-buffer@0.2.3.json", [], true, function() {
   return {
@@ -11902,7 +12173,7 @@ System.registerDynamic('npm:jspm-nodelibs-buffer@0.2.3/global.js', ['./buffer.js
       GLOBAL = global;
   module.exports = $__require('./buffer.js').Buffer;
 });
-System.registerDynamic("npm:postcss@6.0.8/lib/previous-map.js", ["source-map", "path", "fs", "process", "buffer/global"], true, function ($__require, exports, module) {
+System.registerDynamic("npm:postcss@6.0.23/lib/previous-map.js", ["source-map", "path", "fs", "process", "buffer/global"], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require("process"), Buffer = $__require("buffer/global");
@@ -12315,13 +12586,19 @@ System.registerDynamic('npm:jspm-nodelibs-path@0.2.3/path.js', ['process'], true
     return str.substr(start, len);
   };
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/input.js', ['./css-syntax-error', './previous-map', 'path', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic("npm:postcss@6.0.23/lib/input.js", ["./css-syntax-error", "./previous-map", "path", "process"], true, function ($__require, exports, module) {
     'use strict';
 
-    var process = $__require('process');
+    var process = $__require("process");
     var global = this || self,
         GLOBAL = global;
     exports.__esModule = true;
+
+    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+        return typeof obj;
+    } : function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
 
     var _createClass = function () {
         function defineProperties(target, props) {
@@ -12375,6 +12652,10 @@ System.registerDynamic('npm:postcss@6.0.8/lib/input.js', ['./css-syntax-error', 
             var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
             _classCallCheck(this, Input);
+
+            if (css === null || (typeof css === 'undefined' ? 'undefined' : _typeof(css)) === 'object' && !css.toString) {
+                throw new Error('PostCSS received ' + css + ' instead of CSS string');
+            }
 
             /**
              * @member {string} - input CSS source
@@ -12529,7 +12810,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/input.js', ['./css-syntax-error', 
 
     module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/parse.js', ['./parser', './input', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/parse.js', ['./parser', './input', 'process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -12576,7 +12857,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/parse.js', ['./parser', './input',
     }
     module.exports = exports['default'];
 });
-System.registerDynamic("npm:postcss@6.0.8/lib/lazy-result.js", ["./map-generator", "./stringify", "./result", "./parse", "process"], true, function ($__require, exports, module) {
+System.registerDynamic("npm:postcss@6.0.23/lib/lazy-result.js", ["./map-generator", "./stringify", "./warn-once", "./result", "./parse", "process"], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require("process");
@@ -12607,6 +12888,10 @@ System.registerDynamic("npm:postcss@6.0.8/lib/lazy-result.js", ["./map-generator
     var _stringify2 = $__require('./stringify');
 
     var _stringify3 = _interopRequireDefault(_stringify2);
+
+    var _warnOnce = $__require('./warn-once');
+
+    var _warnOnce2 = _interopRequireDefault(_warnOnce);
 
     var _result = $__require('./result');
 
@@ -12647,7 +12932,7 @@ System.registerDynamic("npm:postcss@6.0.8/lib/lazy-result.js", ["./map-generator
             this.processed = false;
 
             var root = void 0;
-            if ((typeof css === 'undefined' ? 'undefined' : _typeof(css)) === 'object' && css.type === 'root') {
+            if ((typeof css === 'undefined' ? 'undefined' : _typeof(css)) === 'object' && css !== null && css.type === 'root') {
                 root = css;
             } else if (css instanceof LazyResult || css instanceof _result2.default) {
                 root = css.root;
@@ -12715,12 +13000,15 @@ System.registerDynamic("npm:postcss@6.0.8/lib/lazy-result.js", ["./map-generator
          * @return {Promise} Promise API to make queue
          *
          * @example
-         * postcss([cssnext]).process(css).then(result => {
+         * postcss([cssnext]).process(css, { from: cssPath }).then(result => {
          *   console.log(result.css);
          * });
          */
 
         LazyResult.prototype.then = function then(onFulfilled, onRejected) {
+            if (!('from' in this.opts)) {
+                (0, _warnOnce2.default)('Without `from` option PostCSS could generate wrong ' + 'source map and will not find Browserslist config. ' + 'Set it to CSS file path or to `undefined` to prevent ' + 'this warning.');
+            }
             return this.async().then(onFulfilled, onRejected);
         };
 
@@ -12760,7 +13048,7 @@ System.registerDynamic("npm:postcss@6.0.8/lib/lazy-result.js", ["./map-generator
                     var b = runtimeVer.split('.');
 
                     if (a[0] !== b[0] || parseInt(a[1]) > parseInt(b[1])) {
-                        console.error('Your current PostCSS version ' + 'is ' + runtimeVer + ', but ' + pluginName + ' ' + 'uses ' + pluginVer + '. Perhaps this is ' + 'the source of the error below.');
+                        console.error('Unknown error from PostCSS plugin. ' + 'Your current PostCSS version ' + 'is ' + runtimeVer + ', but ' + pluginName + ' ' + 'uses ' + pluginVer + '. Perhaps this is ' + 'the source of the error below.');
                     }
                 }
             } catch (err) {
@@ -13022,7 +13310,7 @@ System.registerDynamic("npm:postcss@6.0.8/lib/lazy-result.js", ["./map-generator
 
     module.exports = exports['default'];
 });
-System.registerDynamic("npm:postcss@6.0.8/lib/processor.js", ["./lazy-result", "process"], true, function ($__require, exports, module) {
+System.registerDynamic("npm:postcss@6.0.23/lib/processor.js", ["./lazy-result", "process"], true, function ($__require, exports, module) {
   'use strict';
 
   var process = $__require("process");
@@ -13078,7 +13366,7 @@ System.registerDynamic("npm:postcss@6.0.8/lib/processor.js", ["./lazy-result", "
        *   throw new Error('This plugin works only with PostCSS 6');
        * }
        */
-      this.version = '6.0.8';
+      this.version = '6.0.23';
       /**
        * @member {pluginFunction[]} - Plugins added to this processor.
        *
@@ -13274,7 +13562,7 @@ System.registerDynamic("npm:postcss@6.0.8/lib/processor.js", ["./lazy-result", "
 
   module.exports = exports['default'];
 });
-System.registerDynamic('npm:postcss@6.0.8/lib/root.js', ['./container', './lazy-result', './processor', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/root.js', ['./container', './lazy-result', './processor', 'process'], true, function ($__require, exports, module) {
     'use strict';
 
     var process = $__require('process');
@@ -13420,7 +13708,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/root.js', ['./container', './lazy-
     exports.default = Root;
     module.exports = exports['default'];
 });
-System.registerDynamic("npm:postcss@6.0.8.json", [], true, function() {
+System.registerDynamic("npm:postcss@6.0.23.json", [], true, function() {
   return {
     "main": "lib/postcss.js",
     "format": "cjs",
@@ -13445,14 +13733,23 @@ System.registerDynamic("npm:postcss@6.0.8.json", [], true, function() {
       }
     },
     "map": {
+      "./package": "./package.json",
+      "chalk": {
+        "browser": "@empty",
+        "default": "node-chalk"
+      },
       "fs": {
         "browser": "@empty"
+      },
+      "supports-color": {
+        "browser": "@empty",
+        "default": "node-supports-color"
       }
     }
   };
 });
 
-System.registerDynamic('npm:postcss@6.0.8/lib/postcss.js', ['./declaration', './processor', './stringify', './comment', './at-rule', './vendor', './parse', './list', './rule', './root', 'process'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss@6.0.23/lib/postcss.js', ['./declaration', './processor', './stringify', './comment', './at-rule', './vendor', './parse', './list', './rule', './root', 'process'], true, function ($__require, exports, module) {
   'use strict';
 
   var process = $__require('process');
@@ -13588,7 +13885,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/postcss.js', ['./declaration', './
    * ```js
    * postcss.plugin('postcss-caniuse-test', () => {
    *   return (root, result) => {
-   *     css.walkDecls(decl => {
+   *     root.walkDecls(decl => {
    *       if ( !caniuse.support(decl.prop) ) {
    *         decl.warn(result, 'Some browsers do not support ' + decl.prop);
    *       }
@@ -13750,7 +14047,7 @@ System.registerDynamic('npm:postcss@6.0.8/lib/postcss.js', ['./declaration', './
   exports.default = postcss;
   module.exports = exports['default'];
 });
-System.registerDynamic("npm:extend@3.0.1.json", [], true, function() {
+System.registerDynamic("npm:extend@3.0.2.json", [], true, function() {
   return {
     "main": "index.js",
     "format": "cjs",
@@ -13762,13 +14059,15 @@ System.registerDynamic("npm:extend@3.0.1.json", [], true, function() {
   };
 });
 
-System.registerDynamic('npm:extend@3.0.1/index.js', [], true, function ($__require, exports, module) {
+System.registerDynamic('npm:extend@3.0.2/index.js', [], true, function ($__require, exports, module) {
 	'use strict';
 
 	var global = this || self,
 	    GLOBAL = global;
 	var hasOwn = Object.prototype.hasOwnProperty;
 	var toStr = Object.prototype.toString;
+	var defineProperty = Object.defineProperty;
+	var gOPD = Object.getOwnPropertyDescriptor;
 
 	var isArray = function isArray(arr) {
 		if (typeof Array.isArray === 'function') {
@@ -13798,6 +14097,35 @@ System.registerDynamic('npm:extend@3.0.1/index.js', [], true, function ($__requi
 		return typeof key === 'undefined' || hasOwn.call(obj, key);
 	};
 
+	// If name is '__proto__', and Object.defineProperty is available, define __proto__ as an own property on target
+	var setProperty = function setProperty(target, options) {
+		if (defineProperty && options.name === '__proto__') {
+			defineProperty(target, options.name, {
+				enumerable: true,
+				configurable: true,
+				value: options.newValue,
+				writable: true
+			});
+		} else {
+			target[options.name] = options.newValue;
+		}
+	};
+
+	// Return undefined instead of __proto__ if '__proto__' is not an own property
+	var getProperty = function getProperty(obj, name) {
+		if (name === '__proto__') {
+			if (!hasOwn.call(obj, name)) {
+				return void 0;
+			} else if (gOPD) {
+				// In early versions of node, obj['__proto__'] is buggy when obj has
+				// __proto__ as an own property. Object.getOwnPropertyDescriptor() works.
+				return gOPD(obj, name).value;
+			}
+		}
+
+		return obj[name];
+	};
+
 	module.exports = function extend() {
 		var options, name, src, copy, copyIsArray, clone;
 		var target = arguments[0];
@@ -13822,8 +14150,8 @@ System.registerDynamic('npm:extend@3.0.1/index.js', [], true, function ($__requi
 			if (options != null) {
 				// Extend the base object
 				for (name in options) {
-					src = target[name];
-					copy = options[name];
+					src = getProperty(target, name);
+					copy = getProperty(options, name);
 
 					// Prevent never-ending loop
 					if (target !== copy) {
@@ -13837,11 +14165,11 @@ System.registerDynamic('npm:extend@3.0.1/index.js', [], true, function ($__requi
 							}
 
 							// Never move original objects, clone them
-							target[name] = extend(deep, clone, copy);
+							setProperty(target, { name: name, newValue: extend(deep, clone, copy) });
 
 							// Don't bring in undefined values
 						} else if (typeof copy !== 'undefined') {
-							target[name] = copy;
+							setProperty(target, { name: name, newValue: copy });
 						}
 					}
 				}
@@ -13852,9 +14180,87 @@ System.registerDynamic('npm:extend@3.0.1/index.js', [], true, function ($__requi
 		return target;
 	};
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-value.js', ['./generate-scope-list', './is-node-under-scope', './gather-variable-dependencies', './find-node-ancestor-with-selector', './clone-splice-parent-onto-node-when'], true, function ($__require, exports, module) {
+System.registerDynamic("npm:balanced-match@1.0.0.json", [], true, function() {
+  return {
+    "main": "index.js",
+    "format": "cjs",
+    "meta": {
+      "*.json": {
+        "format": "json"
+      }
+    }
+  };
+});
+
+System.registerDynamic('npm:balanced-match@1.0.0/index.js', [], true, function ($__require, exports, module) {
+  'use strict';
+
+  var global = this || self,
+      GLOBAL = global;
+  module.exports = balanced;
+  function balanced(a, b, str) {
+    if (a instanceof RegExp) a = maybeMatch(a, str);
+    if (b instanceof RegExp) b = maybeMatch(b, str);
+
+    var r = range(a, b, str);
+
+    return r && {
+      start: r[0],
+      end: r[1],
+      pre: str.slice(0, r[0]),
+      body: str.slice(r[0] + a.length, r[1]),
+      post: str.slice(r[1] + b.length)
+    };
+  }
+
+  function maybeMatch(reg, str) {
+    var m = str.match(reg);
+    return m ? m[0] : null;
+  }
+
+  balanced.range = range;
+  function range(a, b, str) {
+    var begs, beg, left, right, result;
+    var ai = str.indexOf(a);
+    var bi = str.indexOf(b, ai + 1);
+    var i = ai;
+
+    if (ai >= 0 && bi > 0) {
+      begs = [];
+      left = str.length;
+
+      while (i >= 0 && !result) {
+        if (i == ai) {
+          begs.push(i);
+          ai = str.indexOf(a, i + 1);
+        } else if (begs.length == 1) {
+          result = [begs.pop(), bi];
+        } else {
+          beg = begs.pop();
+          if (beg < left) {
+            left = beg;
+            right = bi;
+          }
+
+          bi = str.indexOf(b, i + 1);
+        }
+
+        i = ai < bi && ai >= 0 ? ai : bi;
+      }
+
+      if (begs.length) {
+        result = [left, right];
+      }
+    }
+
+    return result;
+  }
+});
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/resolve-value.js', ['balanced-match', './generate-scope-list', './is-node-under-scope', './gather-variable-dependencies', './find-node-ancestor-with-selector', './clone-splice-parent-onto-node-when'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
+	var balanced = $__require('balanced-match');
+
 	var generateScopeList = $__require('./generate-scope-list');
 	var isNodeUnderScope = $__require('./is-node-under-scope');
 	var gatherVariableDependencies = $__require('./gather-variable-dependencies');
@@ -13862,10 +14268,12 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-value.js', [
 	var findNodeAncestorWithSelector = $__require('./find-node-ancestor-with-selector');
 	var cloneSpliceParentOntoNodeWhen = $__require('./clone-splice-parent-onto-node-when');
 
-	// var() = var( <custom-property-name> [, <any-value> ]? )
-	// matches `name[, fallback]`, captures "name" and "fallback"
-	// See: http://dev.w3.org/csswg/css-variables/#funcdef-var
-	var RE_VAR_FUNC = /var\((--[^,\s]+?)(?:\s*,\s*(.+))?\)/;
+	// Regexp to capture variable names
+	var RE_VAR_FUNC = /var\(\s*(--[^,\s)]+)/;
+
+	function toString(value) {
+		return String(value);
+	}
 
 	// Pass in a value string to parse/resolve and a map of available values
 	// and we can figure out the final value
@@ -13876,36 +14284,66 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-value.js', [
 	// Note: Resolving a declaration value without any `var(...)` does not harm the final value.
 	//		This means, feel free to run everything through this function
 	var resolveValue = function (decl, map, /*optional*/ignorePseudoScope, /*internal debugging*/_debugIsInternal) {
+		var debugIndent = _debugIsInternal ? '\t' : '';
 
-		var resultantValue = decl.value;
+		var matchingVarDecl = undefined;
+		var resultantValue = toString(decl.value);
 		var warnings = [];
 
+		// Match all variables first so we can later on if there are circular dependencies
 		var variablesUsedInValueMap = {};
-		// Use `replace` as a loop to go over all occurrences with the `g` flag
-		resultantValue.replace(new RegExp(RE_VAR_FUNC.source, 'g'), function (match, variableName, fallback) {
+		// Create a temporary variable, storing resultantValue variable value
+		var remainingVariableValue = resultantValue;
+		// Use balanced lib to find var() declarations and store variable names
+		while (matchingVarDecl = balanced('var(', ')', remainingVariableValue)) {
+			// Split at the comma to find variable name and fallback value
+			// There may be other commas in the values so this isn't necessarily just 2 pieces
+			var variableFallbackSplitPieces = matchingVarDecl.body.split(',');
+
+			// Get variable name and fallback, filtering empty items
+			var variableName = variableFallbackSplitPieces[0].trim();
+
+			// add variable found in the object
 			variablesUsedInValueMap[variableName] = true;
-		});
+
+			// Replace variable name (first occurence only) from result, to avoid circular loop
+			remainingVariableValue = (matchingVarDecl.pre || '') + matchingVarDecl.body.replace(variableName, '') + (matchingVarDecl.post || '');
+		}
+		// clear temporary variable
+		remainingVariableValue = undefined;
+
 		var variablesUsedInValue = Object.keys(variablesUsedInValueMap);
+
+		//console.log(debugIndent, (_debugIsInternal ? '' : 'Try resolving'), generateScopeList(decl.parent, true), `ignorePseudoScope=${ignorePseudoScope}`, '------------------------');
 
 		// Resolve any var(...) substitutons
 		var isResultantValueUndefined = false;
-		resultantValue = resultantValue.replace(new RegExp(RE_VAR_FUNC.source, 'g'), function (match, variableName, fallback) {
-			// Loop through the list of declarations for that value and find the one that best matches
-			// By best match, we mean, the variable actually applies. Criteria:
-			//		- is under the same scope
-			//		- The latest defined `!important` if any
-			var matchingVarDeclMapItem;
+
+		// var() = var( <custom-property-name> [, <any-value> ]? )
+		// matches `name[, fallback]`, captures "name" and "fallback"
+		// See: http://dev.w3.org/csswg/css-variables/#funcdef-var
+		while (matchingVarDecl = balanced('var(', ')', resultantValue)) {
+			var matchingVarDeclMapItem = undefined;
+
+			// Split at the comma to find variable name and fallback value
+			// There may be other commas in the values so this isn't necessarily just 2 pieces
+			var variableFallbackSplitPieces = matchingVarDecl.body.split(',');
+
+			// Get variable name and fallback, filtering empty items
+			var variableName = variableFallbackSplitPieces[0].trim();
+			var fallback = variableFallbackSplitPieces.length > 1 ? variableFallbackSplitPieces.slice(1).join(',').trim() : undefined;
+
 			(map[variableName] || []).forEach(function (varDeclMapItem) {
 				// Make sure the variable declaration came from the right spot
 				// And if the current matching variable is already important, a new one to replace it has to be important
 				var isRoot = varDeclMapItem.parent.type === 'root' || varDeclMapItem.parent.selectors[0] === ':root';
 
-				//var debugIndent = _debugIsInternal ? '\t' : '';
-				//console.log(debugIndent, generateScopeList(decl.parent, true));
-				//console.log(debugIndent, generateScopeList(varDeclMapItem.parent, true));
-				//console.log(debugIndent, 'isNodeUnderScope', isNodeUnderScope(decl.parent, varDeclMapItem.parent), varDeclMapItem.decl.value);
+				var underScope = isNodeUnderScope(decl.parent, varDeclMapItem.parent);
+				var underScsopeIgnorePseudo = isNodeUnderScope(decl.parent, varDeclMapItem.parent, ignorePseudoScope);
 
-				if (isNodeUnderScope(decl.parent, varDeclMapItem.parent, ignorePseudoScope) && (
+				//console.log(debugIndent, 'isNodeUnderScope', underScope, underScsopeIgnorePseudo, generateScopeList(varDeclMapItem.parent, true), varDeclMapItem.decl.value);
+
+				if (underScsopeIgnorePseudo && (
 				// And if the currently matched declaration is `!important`, it will take another `!important` to override it
 				!(matchingVarDeclMapItem || {}).isImportant || varDeclMapItem.isImportant)) {
 					matchingVarDeclMapItem = varDeclMapItem;
@@ -13918,7 +14356,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-value.js', [
 				var fallbackValue = fallback;
 				if (fallback) {
 					var fallbackDecl = decl.clone({ parent: decl.parent, value: fallback });
-					fallbackValue = resolveValue(fallbackDecl, map, false, true).value;
+					fallbackValue = resolveValue(fallbackDecl, map, false, /*internal*/true).value;
 				}
 
 				return fallbackValue;
@@ -13943,8 +14381,9 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-value.js', [
 				warnings.push(['variable ' + variableName + ' is undefined and used without a fallback', { node: decl }]);
 			}
 
-			return replaceValue;
-		});
+			// Replace original declaration with found value
+			resultantValue = (matchingVarDecl.pre || '') + replaceValue + (matchingVarDecl.post || '');
+		}
 
 		return {
 			// The resolved value
@@ -13960,7 +14399,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-value.js', [
 
 	module.exports = resolveValue;
 });
-System.registerDynamic("npm:postcss-css-variables@0.8.0/lib/gather-variable-dependencies.js", [], true, function ($__require, exports, module) {
+System.registerDynamic("npm:postcss-css-variables@0.14.0/lib/gather-variable-dependencies.js", [], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	// Variables that referenced in some way by the target variable
@@ -14040,7 +14479,7 @@ System.registerDynamic('npm:escape-string-regexp@1.0.5/index.js', [], true, func
 		return str.replace(matchOperatorsRe, '\\$&');
 	};
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/is-piece-always-ancestor-selector.js', [], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/is-piece-always-ancestor-selector.js', [], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	var alwaysAncestorSelector = {
@@ -14056,7 +14495,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/is-piece-always-ance
 
 	module.exports = isPieceIsAlwaysAncestorSelector;
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/generate-direct-descendant-pieces-from-selector.js', [], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/generate-direct-descendant-pieces-from-selector.js', [], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	// Unit Tests: https://regex101.com/r/oS4zJ8/3
@@ -14078,7 +14517,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/generate-direct-desc
 
 	module.exports = generateDirectDescendantPiecesFromSelector;
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/is-under-scope.js', ['escape-string-regexp', './is-piece-always-ancestor-selector', './generate-direct-descendant-pieces-from-selector'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/is-under-scope.js', ['escape-string-regexp', './is-piece-always-ancestor-selector', './generate-direct-descendant-pieces-from-selector'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	var escapeStringRegexp = $__require('escape-string-regexp');
@@ -14221,7 +14660,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/is-under-scope.js', 
 
 	module.exports = isUnderScope;
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/is-node-under-scope.js', ['./is-under-scope', './generate-scope-list'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/is-node-under-scope.js', ['./is-under-scope', './generate-scope-list'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	var isUnderScope = $__require('./is-under-scope');
@@ -14236,7 +14675,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/is-node-under-scope.
 
 	module.exports = isNodeUnderScope;
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/generate-descendant-pieces-from-selector.js', [], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/generate-descendant-pieces-from-selector.js', [], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	// Unit Tests: https://regex101.com/r/oP0fM9/15
@@ -14260,7 +14699,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/generate-descendant-
 
 	module.exports = generateDescendantPiecesFromSelector;
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/generate-scope-list.js', ['./generate-descendant-pieces-from-selector'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/generate-scope-list.js', ['./generate-descendant-pieces-from-selector'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 
@@ -14285,7 +14724,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/generate-scope-list.
 
 			// If it is a at-rule, then we need to construct the proper piece
 			if (currentNodeParent.type === 'atrule') {
-				scopePieces = [].concat(currentNodeParent.params).map(function (param, index) {
+				scopePieces = [].concat(currentNodeParent.params).map(function (param) {
 					return {
 						value: '@' + currentNodeParent.name + ' ' + param,
 						type: 'atrule'
@@ -14333,7 +14772,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/generate-scope-list.
 
 	module.exports = generateScopeList;
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/find-node-ancestor-with-selector.js', ['./generate-scope-list'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/find-node-ancestor-with-selector.js', ['./generate-scope-list'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	var generateScopeList = $__require('./generate-scope-list');
@@ -14369,7 +14808,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/find-node-ancestor-w
 
 	module.exports = findNodeAncestorWithSelector;
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/shallow-clone-node.js', [], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/shallow-clone-node.js', [], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	// Inspired by the PostCSS clone: https://github.com/postcss/postcss/blob/caba908d0f4e362466252202e6be84660c33d8a5/lib/node.js#L17
@@ -14412,7 +14851,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/shallow-clone-node.j
 
 	module.exports = shallowCloneNode;
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/clone-splice-parent-onto-node-when.js', ['./shallow-clone-node'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/clone-splice-parent-onto-node-when.js', ['./shallow-clone-node'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 
@@ -14480,7 +14919,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/clone-splice-parent-
 
 	module.exports = cloneSpliceParentOntoNodeWhen;
 });
-System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-decl.js', ['./resolve-value', './generate-scope-list', './gather-variable-dependencies', './is-under-scope', './is-node-under-scope', './shallow-clone-node', './find-node-ancestor-with-selector', './clone-splice-parent-onto-node-when'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/lib/resolve-decl.js', ['./resolve-value', './generate-scope-list', './gather-variable-dependencies', './is-under-scope', './is-node-under-scope', './shallow-clone-node', './find-node-ancestor-with-selector', './clone-splice-parent-onto-node-when'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	var resolveValue = $__require('./resolve-value');
@@ -14550,8 +14989,9 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-decl.js', ['
 
 	// Resolve the decl with the computed value
 	// Also add in any media queries that change the value as necessary
-	function resolveDecl(decl, map, /*optional*/shouldPreserve, /*optional*/logResolveValueResult) {
+	function resolveDecl(decl, map, /*optional*/shouldPreserve, /*optional*/preserveAtRulesOrder, /*optional*/logResolveValueResult) {
 		shouldPreserve = shouldPreserve || false;
+		preserveAtRulesOrder = preserveAtRulesOrder || false;
 
 		// Make it chainable
 		var _logResolveValueResult = function (valueResults) {
@@ -14563,10 +15003,13 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-decl.js', ['
 		};
 
 		// Grab the balue for this declarations
+		//console.log('resolveDecl 1');
 		var valueResults = _logResolveValueResult(resolveValue(decl, map));
 
 		// Resolve the cascade dependencies
 		// Now find any at-rule declarations that need to be added below each rule
+		//console.log('resolveDecl 2');
+		var previousAtRuleNode;
 		eachMapItemDependencyOfDecl(valueResults.variablesUsed, map, decl, function (mimicDecl, mapItem) {
 			var ruleClone = shallowCloneNode(decl.parent);
 			var declClone = decl.clone();
@@ -14602,13 +15045,18 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-decl.js', ['
 					currentAtRuleNode = currentAtRuleNode.parent;
 				}
 
-				// Put the atRuleStructure after the declaration's rule
-				decl.parent.parent.insertAfter(decl.parent, parentAtRuleNode);
+				// Put the first atRuleStructure after the declaration's rule,
+				// and after that, put them right after the previous one
+				decl.parent.parent.insertAfter(preserveAtRulesOrder && previousAtRuleNode || decl.parent, parentAtRuleNode);
+
+				// Save referance of previous atRuleStructure
+				previousAtRuleNode = parentAtRuleNode;
 			} else {
 				ruleClone.selector = mimicDecl.parent.selector;
 
-				// Put the atRuleStructure after the declaration's rule
-				decl.parent.parent.insertAfter(decl.parent, ruleClone);
+				// Put the first atRuleStructure after the declaration's rule,
+				// and after that, put them right after the previous one
+				decl.parent.parent.insertAfter(preserveAtRulesOrder && previousAtRuleNode || decl.parent, ruleClone);
 			}
 		});
 
@@ -14629,7 +15077,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/lib/resolve-decl.js', ['
 
 	module.exports = resolveDecl;
 });
-System.registerDynamic("npm:postcss-css-variables@0.8.0.json", [], true, function() {
+System.registerDynamic("npm:postcss-css-variables@0.14.0.json", [], true, function() {
   return {
     "main": "index.js",
     "format": "cjs",
@@ -14641,7 +15089,7 @@ System.registerDynamic("npm:postcss-css-variables@0.8.0.json", [], true, functio
   };
 });
 
-System.registerDynamic('npm:postcss-css-variables@0.8.0/index.js', ['postcss', 'extend', './lib/shallow-clone-node', './lib/resolve-value', './lib/resolve-decl'], true, function ($__require, exports, module) {
+System.registerDynamic('npm:postcss-css-variables@0.14.0/index.js', ['postcss', 'extend', './lib/shallow-clone-node', './lib/resolve-value', './lib/resolve-decl'], true, function ($__require, exports, module) {
 	var global = this || self,
 	    GLOBAL = global;
 	// PostCSS CSS Variables (postcss-css-variables)
@@ -14700,7 +15148,13 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/index.js', ['postcss', '
 		// Define variables via JS
 		// Simple key-value pair
 		// or an object with a `value` property and an optional `isImportant` bool property
-		variables: {}
+		variables: {},
+		// Preserve variables injected via JS with the `variables` option above
+		// before serializing to CSS (`false` will remove these variables from output)
+		preserveInjectedVariables: true,
+		// Will write media queries in the same order as in the original file.
+		// Currently defaulted to false for legacy behavior. We can update to `true` in a major version
+		preserveAtRulesOrder: false
 	};
 
 	module.exports = postcss.plugin('postcss-css-variables', function (options) {
@@ -14720,6 +15174,10 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/index.js', ['postcss', '
 			// We use this because we don't want to modify the AST when we still need to reference these later on
 			var nodesToRemoveAtEnd = [];
 
+			// Keep track of the injected from `opts.variables` to remove at the end
+			// if user passes `opts.preserveInjectedVariables = false`
+			var injectedDeclsToRemoveAtEnd = [];
+
 			// Map of variable names to a list of declarations
 			var map = {};
 
@@ -14737,9 +15195,15 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/index.js', ['postcss', '
 				// Add the variable decl to the root node
 				var varDecl = postcss.decl({
 					prop: variableName,
-					value: variableValue
+					value: variableValue,
+					important: isImportant
 				});
 				variableRootRule.append(varDecl);
+
+				// Collect JS-injected variables for removal if `opts.preserveInjectedVariables = false`
+				if (!opts.preserveInjectedVariables) {
+					injectedDeclsToRemoveAtEnd.push(varDecl);
+				}
 
 				// Add the entry to the map
 				prevVariableMap[variableName] = (prevVariableMap[variableName] || []).concat({
@@ -14771,6 +15235,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/index.js', ['postcss', '
 			// Collect all of the variables defined
 			// ---------------------------------------------------------
 			// ---------------------------------------------------------
+			//console.log('Collecting variables defined START');
 			eachCssVariableDeclaration(css, function (decl) {
 				var declParentRule = decl.parent;
 
@@ -14815,6 +15280,8 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/index.js', ['postcss', '
 					nodesToRemoveAtEnd.push(declParentRule);
 				}
 			});
+			//console.log('Collecting variables defined END');
+
 
 			// Resolve variables everywhere
 			// ---------------------------------------------------------
@@ -14862,7 +15329,7 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/index.js', ['postcss', '
 					ruleToWorkOn.nodes.slice(0).forEach(function (node) {
 						if (node.type === 'decl') {
 							var decl = node;
-							resolveDecl(decl, map, opts.preserve);
+							resolveDecl(decl, map, opts.preserve, opts.preserveAtRulesOrder, logResolveValueResult);
 						}
 					});
 				});
@@ -14871,6 +15338,11 @@ System.registerDynamic('npm:postcss-css-variables@0.8.0/index.js', ['postcss', '
 			// Clean up any nodes we don't want anymore
 			// We clean up at the end because we don't want to modify the AST when we still need to reference these later on
 			nodesToRemoveAtEnd.forEach(cleanUpNode);
+
+			// Clean up JS-injected variables marked for removal
+			injectedDeclsToRemoveAtEnd.forEach(function (injectedDecl) {
+				injectedDecl.remove();
+			});
 
 			//console.log('map', map);
 
