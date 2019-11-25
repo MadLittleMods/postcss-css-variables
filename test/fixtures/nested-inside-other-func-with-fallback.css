@@ -1,0 +1,9 @@
+:root {
+	--some-color: red;
+}
+.box-foo {
+	background-color: color(var(--missing, white));
+}
+.box-foo {
+	background-color: color(var(--some-color, white));
+}

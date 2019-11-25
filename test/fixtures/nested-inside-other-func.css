@@ -1,3 +1,16 @@
+:root {
+	--some-color: red;
+	--some-opacity: 0.3;
+}
+
 .box-foo {
-	background-color: color(var(--some-color, white));
+	background-color: color(var(--some-color));
+}
+
+.box-foo {
+	background-color: rgba(255, 0, 0, var(--some-opacity));
+}
+
+.box-foo {
+	background-color: hsla(120,100%,50%, var(--missing-opacity));
 }

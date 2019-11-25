@@ -259,6 +259,10 @@ describe('postcss-css-variables', function() {
 		test('should use fallback variable if provided with missing variables calc', 'missing-variable-should-fallback-calc');
 		test('should use fallback variable if provided with missing variables nested', 'missing-variable-should-fallback-nested');
 		test('should not mangle outer function parentheses', 'nested-inside-other-func');
+		test('should not mangle outer function parentheses - with fallback', 'nested-inside-other-func-with-fallback');
+		test('should not mangle outer function parentheses - calc', 'nested-inside-calc-func');
+		test('should not mangle outer function parentheses - calc with fallback', 'nested-inside-calc-func-with-fallback');
+		test('should not mangle outer function parentheses - calc with fallback var()', 'nested-inside-calc-func-with-fallback-var');
 	});
 
 	test('should accept whitespace in var() declarations', 'whitespace-in-var-declaration' )

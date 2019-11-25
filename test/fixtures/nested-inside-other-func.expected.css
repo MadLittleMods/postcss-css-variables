@@ -1,3 +1,11 @@
 .box-foo {
-	background-color: color(white);
+	background-color: color(red);
+}
+
+.box-foo {
+	background-color: rgba(255, 0, 0, 0.3);
+}
+
+.box-foo {
+	background-color: undefined;
 }
