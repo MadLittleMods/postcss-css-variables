@@ -1,3 +1,8 @@
+# v0.14.0 - 2019-11-24
+
+ - Fix regex in `resolve-value.js` to allow nested CSS functions
+    - Thank you to [@juliovedovatto](https://github.com/juliovedovatto) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/97)
+
 # v0.13.0 - 2019-6-17
 
  - Add `options.preserveAtRulesOrder` so media queries are outputted in the order they are defined (as expected)
