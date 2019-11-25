@@ -196,85 +196,87 @@ SystemJS.config({
         "npm:object-assign@4.1.1/index.js",
         "npm:object-assign@4.1.1.json",
         "postcss-css-variables-playground/js/stores/PlaygroundStore.js",
-        "npm:postcss-css-variables@0.8.0/index.js",
-        "npm:postcss-css-variables@0.8.0.json",
-        "npm:postcss-css-variables@0.8.0/lib/resolve-decl.js",
-        "npm:postcss-css-variables@0.8.0/lib/clone-splice-parent-onto-node-when.js",
-        "npm:postcss-css-variables@0.8.0/lib/shallow-clone-node.js",
-        "npm:postcss-css-variables@0.8.0/lib/find-node-ancestor-with-selector.js",
-        "npm:postcss-css-variables@0.8.0/lib/generate-scope-list.js",
-        "npm:postcss-css-variables@0.8.0/lib/generate-descendant-pieces-from-selector.js",
-        "npm:postcss-css-variables@0.8.0/lib/is-node-under-scope.js",
-        "npm:postcss-css-variables@0.8.0/lib/is-under-scope.js",
-        "npm:postcss-css-variables@0.8.0/lib/generate-direct-descendant-pieces-from-selector.js",
-        "npm:postcss-css-variables@0.8.0/lib/is-piece-always-ancestor-selector.js",
+        "npm:postcss-css-variables@0.14.0/index.js",
+        "npm:postcss-css-variables@0.14.0.json",
+        "npm:postcss-css-variables@0.14.0/lib/resolve-decl.js",
+        "npm:postcss-css-variables@0.14.0/lib/clone-splice-parent-onto-node-when.js",
+        "npm:postcss-css-variables@0.14.0/lib/shallow-clone-node.js",
+        "npm:postcss-css-variables@0.14.0/lib/find-node-ancestor-with-selector.js",
+        "npm:postcss-css-variables@0.14.0/lib/generate-scope-list.js",
+        "npm:postcss-css-variables@0.14.0/lib/generate-descendant-pieces-from-selector.js",
+        "npm:postcss-css-variables@0.14.0/lib/is-node-under-scope.js",
+        "npm:postcss-css-variables@0.14.0/lib/is-under-scope.js",
+        "npm:postcss-css-variables@0.14.0/lib/generate-direct-descendant-pieces-from-selector.js",
+        "npm:postcss-css-variables@0.14.0/lib/is-piece-always-ancestor-selector.js",
         "npm:escape-string-regexp@1.0.5/index.js",
         "npm:escape-string-regexp@1.0.5.json",
-        "npm:postcss-css-variables@0.8.0/lib/gather-variable-dependencies.js",
-        "npm:postcss-css-variables@0.8.0/lib/resolve-value.js",
-        "npm:extend@3.0.1/index.js",
-        "npm:extend@3.0.1.json",
-        "npm:postcss@6.0.8/lib/postcss.js",
-        "npm:postcss@6.0.8.json",
-        "npm:postcss@6.0.8/lib/root.js",
-        "npm:postcss@6.0.8/lib/processor.js",
-        "npm:postcss@6.0.8/lib/lazy-result.js",
-        "npm:postcss@6.0.8/lib/parse.js",
-        "npm:postcss@6.0.8/lib/input.js",
+        "npm:postcss-css-variables@0.14.0/lib/gather-variable-dependencies.js",
+        "npm:postcss-css-variables@0.14.0/lib/resolve-value.js",
+        "npm:balanced-match@1.0.0/index.js",
+        "npm:balanced-match@1.0.0.json",
+        "npm:extend@3.0.2/index.js",
+        "npm:extend@3.0.2.json",
+        "npm:postcss@6.0.23/lib/postcss.js",
+        "npm:postcss@6.0.23.json",
+        "npm:postcss@6.0.23/lib/root.js",
+        "npm:postcss@6.0.23/lib/processor.js",
+        "npm:postcss@6.0.23/lib/lazy-result.js",
+        "npm:postcss@6.0.23/lib/parse.js",
+        "npm:postcss@6.0.23/lib/input.js",
         "npm:jspm-nodelibs-path@0.2.3/path.js",
         "npm:jspm-nodelibs-path@0.2.3.json",
-        "npm:postcss@6.0.8/lib/previous-map.js",
+        "npm:postcss@6.0.23/lib/previous-map.js",
         "npm:jspm-nodelibs-buffer@0.2.3/global.js",
         "npm:jspm-nodelibs-buffer@0.2.3.json",
-        "npm:buffer@5.0.7/index.js",
-        "npm:buffer@5.0.7.json",
-        "npm:ieee754@1.1.8/index.js",
-        "npm:ieee754@1.1.8.json",
-        "npm:base64-js@1.2.1/index.js",
-        "npm:base64-js@1.2.1.json",
-        "npm:source-map@0.5.6/source-map.js",
-        "npm:source-map@0.5.6.json",
-        "npm:source-map@0.5.6/lib/source-node.js",
-        "npm:source-map@0.5.6/lib/util.js",
-        "npm:source-map@0.5.6/lib/source-map-generator.js",
-        "npm:source-map@0.5.6/lib/mapping-list.js",
-        "npm:source-map@0.5.6/lib/array-set.js",
-        "npm:source-map@0.5.6/lib/base64-vlq.js",
-        "npm:source-map@0.5.6/lib/base64.js",
-        "npm:source-map@0.5.6/lib/source-map-consumer.js",
-        "npm:source-map@0.5.6/lib/quick-sort.js",
-        "npm:source-map@0.5.6/lib/binary-search.js",
-        "npm:postcss@6.0.8/lib/css-syntax-error.js",
-        "npm:postcss@6.0.8/lib/terminal-highlight.js",
-        "npm:postcss@6.0.8/lib/tokenize.js",
-        "npm:chalk@2.1.0/index.js",
-        "npm:chalk@2.1.0.json",
-        "npm:chalk@2.1.0/templates.js",
-        "npm:supports-color@4.2.1/browser.js",
-        "npm:supports-color@4.2.1.json",
-        "npm:ansi-styles@3.2.0/index.js",
-        "npm:ansi-styles@3.2.0.json",
-        "npm:color-convert@1.9.0/index.js",
-        "npm:color-convert@1.9.0.json",
-        "npm:color-convert@1.9.0/route.js",
-        "npm:color-convert@1.9.0/conversions.js",
+        "npm:buffer@5.4.3/index.js",
+        "npm:buffer@5.4.3.json",
+        "npm:ieee754@1.1.13/index.js",
+        "npm:ieee754@1.1.13.json",
+        "npm:base64-js@1.3.1/index.js",
+        "npm:base64-js@1.3.1.json",
+        "npm:source-map@0.6.1/source-map.js",
+        "npm:source-map@0.6.1.json",
+        "npm:source-map@0.6.1/lib/source-node.js",
+        "npm:source-map@0.6.1/lib/util.js",
+        "npm:source-map@0.6.1/lib/source-map-generator.js",
+        "npm:source-map@0.6.1/lib/mapping-list.js",
+        "npm:source-map@0.6.1/lib/array-set.js",
+        "npm:source-map@0.6.1/lib/base64-vlq.js",
+        "npm:source-map@0.6.1/lib/base64.js",
+        "npm:source-map@0.6.1/lib/source-map-consumer.js",
+        "npm:source-map@0.6.1/lib/quick-sort.js",
+        "npm:source-map@0.6.1/lib/binary-search.js",
+        "npm:postcss@6.0.23/lib/css-syntax-error.js",
+        "npm:postcss@6.0.23/lib/terminal-highlight.js",
+        "npm:postcss@6.0.23/lib/tokenize.js",
+        "npm:chalk@2.4.2/index.js",
+        "npm:chalk@2.4.2.json",
+        "npm:chalk@2.4.2/templates.js",
+        "npm:supports-color@5.5.0/browser.js",
+        "npm:supports-color@5.5.0.json",
+        "npm:ansi-styles@3.2.1/index.js",
+        "npm:ansi-styles@3.2.1.json",
+        "npm:color-convert@1.9.3/index.js",
+        "npm:color-convert@1.9.3.json",
+        "npm:color-convert@1.9.3/route.js",
+        "npm:color-convert@1.9.3/conversions.js",
         "npm:color-name@1.1.3/index.js",
         "npm:color-name@1.1.3.json",
-        "npm:postcss@6.0.8/lib/parser.js",
-        "npm:postcss@6.0.8/lib/rule.js",
-        "npm:postcss@6.0.8/lib/list.js",
-        "npm:postcss@6.0.8/lib/container.js",
-        "npm:postcss@6.0.8/lib/at-rule.js",
-        "npm:postcss@6.0.8/lib/node.js",
-        "npm:postcss@6.0.8/lib/warn-once.js",
-        "npm:postcss@6.0.8/lib/stringify.js",
-        "npm:postcss@6.0.8/lib/stringifier.js",
-        "npm:postcss@6.0.8/lib/comment.js",
-        "npm:postcss@6.0.8/lib/declaration.js",
-        "npm:postcss@6.0.8/lib/result.js",
-        "npm:postcss@6.0.8/lib/warning.js",
-        "npm:postcss@6.0.8/lib/map-generator.js",
-        "npm:postcss@6.0.8/lib/vendor.js",
+        "npm:postcss@6.0.23/lib/parser.js",
+        "npm:postcss@6.0.23/lib/rule.js",
+        "npm:postcss@6.0.23/lib/list.js",
+        "npm:postcss@6.0.23/lib/container.js",
+        "npm:postcss@6.0.23/lib/at-rule.js",
+        "npm:postcss@6.0.23/lib/node.js",
+        "npm:postcss@6.0.23/lib/warn-once.js",
+        "npm:postcss@6.0.23/lib/stringify.js",
+        "npm:postcss@6.0.23/lib/stringifier.js",
+        "npm:postcss@6.0.23/lib/comment.js",
+        "npm:postcss@6.0.23/lib/declaration.js",
+        "npm:postcss@6.0.23/lib/result.js",
+        "npm:postcss@6.0.23/lib/warning.js",
+        "npm:postcss@6.0.23/lib/map-generator.js",
+        "npm:postcss@6.0.23/lib/vendor.js",
         "npm:jspm-nodelibs-events@0.2.2/events.js",
         "npm:jspm-nodelibs-events@0.2.2.json",
         "postcss-css-variables-playground/js/stores/PlaygroundSettingsStore.js",
@@ -352,9 +354,6 @@ SystemJS.config({
           }
         }
       }
-    },
-    "npm:es6-promise@2.3.0": {
-      "map": {}
     }
   },
   map: {
@@ -396,8 +395,8 @@ SystemJS.config({
     "object-assign": "npm:object-assign@4.1.1",
     "os": "npm:jspm-nodelibs-os@0.2.2",
     "path": "npm:jspm-nodelibs-path@0.2.3",
-    "postcss": "npm:postcss@6.0.8",
-    "postcss-css-variables": "npm:postcss-css-variables@0.8.0",
+    "postcss": "npm:postcss@6.0.23",
+    "postcss-css-variables": "npm:postcss-css-variables@0.14.0",
     "postcss-inline-comment": "npm:postcss-inline-comment@3.0.0",
     "postcss-mixins": "npm:postcss-mixins@6.0.1",
     "postcss-nested": "npm:postcss-nested@2.1.0",
@@ -430,11 +429,6 @@ SystemJS.config({
     "npm:amdefine@1.0.1": {
       "map": {}
     },
-    "npm:ansi-styles@3.2.0": {
-      "map": {
-        "color-convert": "npm:color-convert@1.9.0"
-      }
-    },
     "npm:array-union@1.0.2": {
       "map": {
         "array-uniq": "npm:array-uniq@1.0.3"
@@ -456,7 +450,7 @@ SystemJS.config({
         "caniuse-lite": "npm:caniuse-lite@1.0.30000712",
         "normalize-range": "npm:normalize-range@0.1.2",
         "num2fraction": "npm:num2fraction@1.2.2",
-        "postcss": "npm:postcss@6.0.8",
+        "postcss": "npm:postcss@6.0.23",
         "postcss-value-parser": "npm:postcss-value-parser@3.3.0"
       }
     },
@@ -532,12 +526,6 @@ SystemJS.config({
         "systemjs-json": "github:systemjs/plugin-json@0.1.2"
       }
     },
-    "npm:buffer@5.0.7": {
-      "map": {
-        "base64-js": "npm:base64-js@1.2.1",
-        "ieee754": "npm:ieee754@1.1.8"
-      }
-    },
     "npm:chalk@1.1.3": {
       "map": {
         "ansi-styles": "npm:ansi-styles@2.2.1",
@@ -547,22 +535,10 @@ SystemJS.config({
         "supports-color": "npm:supports-color@2.0.0"
       }
     },
-    "npm:chalk@2.1.0": {
-      "map": {
-        "ansi-styles": "npm:ansi-styles@3.2.0",
-        "escape-string-regexp": "npm:escape-string-regexp@1.0.5",
-        "supports-color": "npm:supports-color@4.2.1"
-      }
-    },
     "npm:cipher-base@1.0.4": {
       "map": {
         "inherits": "npm:inherits@2.0.3",
         "safe-buffer": "npm:safe-buffer@5.1.1"
-      }
-    },
-    "npm:color-convert@1.9.0": {
-      "map": {
-        "color-name": "npm:color-name@1.1.3"
       }
     },
     "npm:color-name@1.1.3": {
@@ -804,9 +780,6 @@ SystemJS.config({
     "npm:has-flag@1.0.0": {
       "map": {}
     },
-    "npm:has-flag@2.0.0": {
-      "map": {}
-    },
     "npm:hash-base@2.0.2": {
       "map": {
         "inherits": "npm:inherits@2.0.3"
@@ -956,13 +929,6 @@ SystemJS.config({
         "pinkie": "npm:pinkie@2.0.4"
       }
     },
-    "npm:postcss-css-variables@0.8.0": {
-      "map": {
-        "escape-string-regexp": "npm:escape-string-regexp@1.0.5",
-        "extend": "npm:extend@3.0.1",
-        "postcss": "npm:postcss@6.0.8"
-      }
-    },
     "npm:postcss-inline-comment@3.0.0": {
       "map": {
         "postcss": "npm:postcss@5.2.17"
@@ -971,13 +937,13 @@ SystemJS.config({
     "npm:postcss-js@1.0.0": {
       "map": {
         "camelcase-css": "npm:camelcase-css@1.0.1",
-        "postcss": "npm:postcss@6.0.8"
+        "postcss": "npm:postcss@6.0.23"
       }
     },
     "npm:postcss-mixins@6.0.1": {
       "map": {
         "globby": "npm:globby@6.1.0",
-        "postcss": "npm:postcss@6.0.8",
+        "postcss": "npm:postcss@6.0.23",
         "postcss-js": "npm:postcss-js@1.0.0",
         "postcss-simple-vars": "npm:postcss-simple-vars@4.0.0",
         "sugarss": "npm:sugarss@1.0.0"
@@ -1008,13 +974,13 @@ SystemJS.config({
     },
     "npm:postcss-nested@2.1.0": {
       "map": {
-        "postcss": "npm:postcss@6.0.8",
+        "postcss": "npm:postcss@6.0.23",
         "postcss-selector-parser": "npm:postcss-selector-parser@2.2.3"
       }
     },
     "npm:postcss-safe-parser@3.0.1": {
       "map": {
-        "postcss": "npm:postcss@6.0.8"
+        "postcss": "npm:postcss@6.0.23"
       }
     },
     "npm:postcss-selector-parser@2.2.3": {
@@ -1026,7 +992,7 @@ SystemJS.config({
     },
     "npm:postcss-simple-vars@4.0.0": {
       "map": {
-        "postcss": "npm:postcss@6.0.8"
+        "postcss": "npm:postcss@6.0.23"
       }
     },
     "npm:postcss@5.2.17": {
@@ -1042,13 +1008,6 @@ SystemJS.config({
         "chalk": "npm:chalk@1.1.3",
         "source-map": "npm:source-map@0.5.6",
         "supports-color": "npm:supports-color@3.2.3"
-      }
-    },
-    "npm:postcss@6.0.8": {
-      "map": {
-        "chalk": "npm:chalk@2.1.0",
-        "source-map": "npm:source-map@0.5.6",
-        "supports-color": "npm:supports-color@4.2.1"
       }
     },
     "npm:process-nextick-args@1.0.7": {
@@ -1184,7 +1143,7 @@ SystemJS.config({
     },
     "npm:sugarss@1.0.0": {
       "map": {
-        "postcss": "npm:postcss@6.0.8"
+        "postcss": "npm:postcss@6.0.23"
       }
     },
     "npm:supports-color@2.0.0": {
@@ -1193,11 +1152,6 @@ SystemJS.config({
     "npm:supports-color@3.2.3": {
       "map": {
         "has-flag": "npm:has-flag@1.0.0"
-      }
-    },
-    "npm:supports-color@4.2.1": {
-      "map": {
-        "has-flag": "npm:has-flag@2.0.0"
       }
     },
     "npm:through2@0.6.5": {
@@ -1475,7 +1429,7 @@ SystemJS.config({
     },
     "npm:color@0.11.4": {
       "map": {
-        "color-convert": "npm:color-convert@1.9.0",
+        "color-convert": "npm:color-convert@1.9.3",
         "color-string": "npm:color-string@0.3.0",
         "clone": "npm:clone@1.0.2"
       }
@@ -1566,7 +1520,7 @@ SystemJS.config({
     },
     "npm:jspm-nodelibs-buffer@0.2.3": {
       "map": {
-        "buffer": "npm:buffer@5.0.7"
+        "buffer": "npm:buffer@5.4.3"
       }
     },
     "npm:sort-keys@1.1.2": {
@@ -1617,6 +1571,51 @@ SystemJS.config({
     "npm:jspm-nodelibs-crypto@0.2.1": {
       "map": {
         "crypto-browserify": "npm:crypto-browserify@3.11.1"
+      }
+    },
+    "npm:postcss@6.0.23": {
+      "map": {
+        "supports-color": "npm:supports-color@5.5.0",
+        "chalk": "npm:chalk@2.4.2",
+        "source-map": "npm:source-map@0.6.1",
+        "node-supports-color": "npm:supports-color@5.5.0",
+        "node-chalk": "npm:chalk@2.4.2"
+      }
+    },
+    "npm:chalk@2.4.2": {
+      "map": {
+        "escape-string-regexp": "npm:escape-string-regexp@1.0.5",
+        "supports-color": "npm:supports-color@5.5.0",
+        "ansi-styles": "npm:ansi-styles@3.2.1"
+      }
+    },
+    "npm:supports-color@5.5.0": {
+      "map": {
+        "has-flag": "npm:has-flag@3.0.0"
+      }
+    },
+    "npm:ansi-styles@3.2.1": {
+      "map": {
+        "color-convert": "npm:color-convert@1.9.3"
+      }
+    },
+    "npm:color-convert@1.9.3": {
+      "map": {
+        "color-name": "npm:color-name@1.1.3"
+      }
+    },
+    "npm:buffer@5.4.3": {
+      "map": {
+        "base64-js": "npm:base64-js@1.3.1",
+        "ieee754": "npm:ieee754@1.1.13"
+      }
+    },
+    "npm:postcss-css-variables@0.14.0": {
+      "map": {
+        "balanced-match": "npm:balanced-match@1.0.0",
+        "extend": "npm:extend@3.0.2",
+        "escape-string-regexp": "npm:escape-string-regexp@1.0.5",
+        "postcss": "npm:postcss@6.0.23"
       }
     }
   }
