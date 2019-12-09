@@ -89,6 +89,7 @@ describe('postcss-css-variables', function() {
 
 
 	test('should work with variables declared in root', 'root-variable');
+	test('should work with variables with parenthesis in fallback', 'fallback-with-parenthesis');
 
 	test('should work with locally scoped variable in a non-root rule', 'local-variable-non-root');
 
