@@ -1,0 +1,6 @@
+:root {
+  --box-shadow: 0px 2px 2px 0px #fff;
+}
+.box {
+  box-shadow: var(--box-shadow, 0px 2px 8px 0px rgba(0, 0, 0, 0.5));
+}
