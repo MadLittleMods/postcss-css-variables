@@ -355,6 +355,7 @@ Possible values:
  - `false`: Removes `--var` declarations and replaces `var()` with their resolved/computed values.
  - `true`: Keeps `var()` declarations in the output and has the computed value as a fallback declaration. Also keeps computed `--var` declarations.
  - `'computed'`: Keeps computed `--var` declarations in the output. Handy to make them available to your JavaScript.
+ - `(declaration) => boolean|'computed'` : Handles preservation behavior based on the respective declaration.
 
 ### `variables` (default: `{}`)
 
