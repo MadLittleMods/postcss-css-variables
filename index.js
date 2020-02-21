@@ -183,12 +183,18 @@ module.exports = postcss.plugin('postcss-css-variables', function(options) {
 				});
 			});
 
+			let preserveDecl;
+			if (typeof opts.preserve === "function") {
+				preserveDecl = opts.preserve(decl);
+			} else {
+				preserveDecl = opts.preserve;
+			}
 			// Remove the variable declaration because they are pretty much useless after we resolve them
-			if(!opts.preserve) {
+			if(!preserveDecl) {
 				decl.remove();
 			}
 			// Or we can also just show the computed value used for that variable
-			else if(opts.preserve === 'computed') {
+			else if(preserveDecl === 'computed') {
 				decl.value = valueResults.value;
 			}
 			// Otherwise just keep them as var declarations
