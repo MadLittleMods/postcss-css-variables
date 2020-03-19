@@ -1,30 +1,30 @@
 button {
-    --width-small: 50px;
+	--width-small: 50px;
 }
 
 button.custom {
-    --width-small: 100px;
-    --width-medium: 200px;
-    --width-large: 300px;
-    --font-size: 12px;
+	--width-small: 100px;
+	--width-medium: 200px;
+	--width-large: 300px;
+	--font-size: 12px;
 }
 
 button.rounded.small {
-    width: var(--width-small);
+	width: var(--width-small);
 }
 
 button.custom.large {
-    width: var(--width-large);
+	width: var(--width-large);
 }
 
 button.rounded.custom.medium {
-    width: var(--width-medium);
+	width: var(--width-medium);
 }
 
 button#id.rounded.custom.medium {
-    width: var(--width-medium);
+	width: var(--width-medium);
 }
 
 button.small.pill.custom {
-    width: var(--width-small);
+	width: var(--width-small);
 }

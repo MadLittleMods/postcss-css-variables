@@ -1,19 +1,19 @@
 button.rounded.small {
-    width: 50px;
+	width: 50px;
 }
 
 button.custom.large {
-    width: 300px;
+	width: 300px;
 }
 
 button.rounded.custom.medium {
-    width: 200px;
+	width: 200px;
 }
 
 button#id.rounded.custom.medium {
-    width: 200px;
+	width: 200px;
 }
 
 button.small.pill.custom {
-    width: 100px;
+	width: 100px;
 }
