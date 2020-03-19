@@ -129,6 +129,7 @@ describe('postcss-css-variables', function() {
 
 	test('should work with `!important` variable declarations', 'important-variable-declaration');
 
+	test('should work with chained selectors', 'chained-selector');
 
 
 	describe('with at-rules', function() {
