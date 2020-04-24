@@ -1,3 +1,8 @@
+# v0.16.0 - 2020-4-24
+
+- Add ability to pass callback function to `options.preserve` to determine whether to preserve declaration
+  - Thank you to [@ekatioz](https://github.com/ekatioz) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/116)
+
 # v0.15.0 - 2020-4-24
 
 - Fix algorithm to find balanced `var()` pairs and nested parenthesis
