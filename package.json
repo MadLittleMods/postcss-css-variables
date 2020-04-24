@@ -1,6 +1,6 @@
 {
   "name": "postcss-css-variables",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "PostCSS plugin to transform CSS Custom Properties(CSS variables) syntax into a static representation",
   "keywords": [
     "postcss",
