@@ -1,7 +1,7 @@
 # v0.15.0 - 2020-4-24
 
 - Fix algorithm to find balanced `var()` pairs and nested parenthesis
-  - Thank you to [@Poetro](https://github.com/juliovedovatto) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/112)
+  - Thank you to [@Poetro](https://github.com/Poetro) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/112)
 
 # v0.14.0 - 2019-11-24
 
