@@ -1,22 +1,22 @@
 :root {
-	--color-two: #00ff00;
-	--color-three: var(--color-two);
+  --color-foo: #00ff00;
+  --color-bar: var(--color-two);
 }
 
 .before {
-	prop: before;
-	color: #0000ff;
+  prop: before;
+  color: #0000ff;
 }
 
 .after {
-	color: #00ff00;
-	color: var(--color-two);
-	prop: after;
+  color: #00ff00;
+  color: var(--color-foo);
+  prop: after;
 }
 
 .before-and-after {
-	prop: before;
-	color: #ff0000;
-	color: var(--missing, #ff0000);
-	otherprop: after;
+  prop: before;
+  color: #ff0000;
+  color: var(--missing, #ff0000);
+  otherprop: after;
 }

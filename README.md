@@ -12,52 +12,38 @@ npm install postcss-css-variables --save-dev
 
 ### Table of Contents
 
- - [Code Playground](#code-playground)
- - [Usage](#usage)
- - [Syntax](#syntax)
-	 - [Defining Custom Properties with `--*`](#defining-custom-properties-with---)
-	 - [Using Variables/Custom Properties with `var()`](#using-variables-custom-properties-with-var)
- - [Features](#features)
-	 - [At-rules like `@media`, `@support`, etc.](#at-rules-like-media-support-etc)
-	 - [Pseudo-classes and Elements](#pseudo-classes-and-elements)
-	 - [Nested Rules](#nested-rules)
- - [Why?](#why)
-	 - [Interoperability](#interoperability)
-	 - [Differences from `postcss-custom-properties`](#differences-from-postcss-custom-properties)
- - [Caveats](#caveats)
- - [Options](#options)
- - [Quick Reference/Notes](#quick-referencenotes)
- - [Testing](#testing)
- - [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
-
+- [Code Playground](#code-playground)
+- [Usage](#usage)
+- [Syntax](#syntax) - [Defining Custom Properties with `--*`](#defining-custom-properties-with---) - [Using Variables/Custom Properties with `var()`](#using-variables-custom-properties-with-var)
+- [Features](#features) - [At-rules like `@media`, `@support`, etc.](#at-rules-like-media-support-etc) - [Pseudo-classes and Elements](#pseudo-classes-and-elements) - [Nested Rules](#nested-rules)
+- [Why?](#why) - [Interoperability](#interoperability) - [Differences from `postcss-custom-properties`](#differences-from-postcss-custom-properties)
+- [Caveats](#caveats)
+- [Options](#options)
+- [Quick Reference/Notes](#quick-referencenotes)
+- [Testing](#testing)
+- [Changelog](https://github.com/MadLittleMods/postcss-css-variables/blob/master/CHANGELOG.md)
 
 # [Code Playground](https://madlittlemods.github.io/postcss-css-variables/playground/)
 
 [Try it in the playground](https://madlittlemods.github.io/postcss-css-variables/playground/) and see what you think! Just add some CSS and see to see the final transformed/compiled CSS. You can try anything here in the playground, too.
 
-
 # Usage
 
-[*For more general PostCSS usage, look here.*](https://github.com/postcss/postcss#usage)
+[_For more general PostCSS usage, look here._](https://github.com/postcss/postcss#usage)
 
 ```js
-var postcss = require('postcss');
-var cssvariables = require('postcss-css-variables');
+var postcss = require("postcss");
+var cssvariables = require("postcss-css-variables");
 
-var fs = require('fs');
+var fs = require("fs");
 
-var mycss = fs.readFileSync('input.css', 'utf8');
+var mycss = fs.readFileSync("input.css", "utf8");
 
 // Process your CSS with postcss-css-variables
-var output = postcss([
-		cssvariables(/*options*/)
-	])
-	.process(mycss)
-	.css;
+var output = postcss([cssvariables(/*options*/)]).process(mycss).css;
 
 console.log(output);
 ```
-
 
 # Syntax
 
@@ -65,17 +51,17 @@ console.log(output);
 
 A custom property is any property whose name starts with two dashes `--`. A property must be in a rule.
 
-*Note: `:root` is nothing more than the selector for the root DOM node. Any other selector like `.class`, `#id`, or even `#foo ~ .bar > span.baz` works.*
+_Note: `:root` is nothing more than the selector for the root DOM node. Any other selector like `.class`, `#id`, or even `#foo ~ .bar > span.baz` works._
 
 ```css
 :root {
-	--foo-width: 100px;
-	--foo-bg-color: rgba(255, 0, 0, 0.85);
+  --foo-width: 100px;
+  --foo-bg-color: rgba(255, 0, 0, 0.85);
 }
 
 .foo {
-	--foo-width: 100px;
-	--foo-bg-color: rgba(255, 0, 0, 0.85);
+  --foo-width: 100px;
+  --foo-bg-color: rgba(255, 0, 0, 0.85);
 }
 ```
 
@@ -83,41 +69,39 @@ Custom properties can be declared multiple times, but like variable scope in oth
 
 ```css
 :root {
-    --some-color: red;
+  --some-color: red;
 }
 
 .foo {
-    /* red */
-    color: var(--some-color);
+  /* red */
+  color: var(--some-color);
 }
 
-
 .bar {
-    --some-color: blue;
-    /* blue */
-    color: var(--some-color);
+  --some-color: blue;
+  /* blue */
+  color: var(--some-color);
 }
 
 .bar:hover {
-    --some-color: green;
-    /* Automatically gets a `color: green;` declaration because we `--some-color` used within scope elsewhere */
+  --some-color: green;
+  /* Automatically gets a `color: green;` declaration because we `--some-color` used within scope elsewhere */
 }
 ```
 
-*[W3C Draft: CSS Custom Properties for Cascading Variables, section 2](http://dev.w3.org/csswg/css-variables/#defining-variables)*
+_[W3C Draft: CSS Custom Properties for Cascading Variables, section 2](http://dev.w3.org/csswg/css-variables/#defining-variables)_
 
 ### Using Variables/Custom Properties with `var()`
 
 ```css
 .foo {
-	width: var(--foo-width);
-	/* You can even provide a fallback */
-	background: var(--foo-bg-color, #ff0000);
+  width: var(--foo-width);
+  /* You can even provide a fallback */
+  background: var(--foo-bg-color, #ff0000);
 }
 ```
 
-*[W3C Draft: CSS Custom Properties for Cascading Variables, section 3](http://dev.w3.org/csswg/css-variables/#using-variables)*
-
+_[W3C Draft: CSS Custom Properties for Cascading Variables, section 3](http://dev.w3.org/csswg/css-variables/#using-variables)_
 
 # Features
 
@@ -127,17 +111,17 @@ It's perfectly okay to declare CSS variables inside media queries and the like. 
 
 ```css
 :root {
-	--width: 100px;
+  --width: 100px;
 }
 
 @media (max-width: 1000px) {
-	:root {
-		--width: 200px;
-	}
+  :root {
+    --width: 200px;
+  }
 }
 
 .box {
-	width: var(--width);
+  width: var(--width);
 }
 ```
 
@@ -145,13 +129,13 @@ Will be transformed to:
 
 ```css
 .box {
-	width: 100px;
+  width: 100px;
 }
 
 @media (max-width: 1000px) {
-	.box {
-		width: 200px;
-	}
+  .box {
+    width: 200px;
+  }
 }
 ```
 
@@ -161,12 +145,12 @@ Psuedo-classes are also dealt with correctly, because it's easy to statically de
 
 ```css
 .foo {
-	--foo-color: red;
-	color: var(--foo-color);
+  --foo-color: red;
+  color: var(--foo-color);
 }
 
 .foo:hover {
-	--foo-color: green;
+  --foo-color: green;
 }
 ```
 
@@ -174,11 +158,11 @@ Will be transformed to:
 
 ```css
 .foo {
-	color: red;
+  color: red;
 }
 
 .foo:hover {
-	color: green;
+  color: green;
 }
 ```
 
@@ -186,24 +170,21 @@ Will be transformed to:
 
 This pairs very well with [`postcss-nested`](https://github.com/postcss/postcss-nested) or [`postcss-nesting`](https://github.com/jonathantneal/postcss-nesting), adding support for nested rules. For either, you must put the plugin before `postcss-css-variables` in the plugin stack so that the `&` references are expanded first (`postcss-css-variables` doesn't understand them). For example, with `postcss-nested`, your PostCSS setup would look like this:
 
-
 ```js
-var postcss = require('postcss');
-var cssvariables = require('postcss-css-variables');
-var nested = require('postcss-nested');
+var postcss = require("postcss");
+var cssvariables = require("postcss-css-variables");
+var nested = require("postcss-nested");
 
-var fs = require('fs');
+var fs = require("fs");
 
-var mycss = fs.readFileSync('input.css', 'utf8');
+var mycss = fs.readFileSync("input.css", "utf8");
 
 var output = postcss([
-		// Flatten/unnest rules
-		nested,
-		// Then process any CSS variables
-		cssvariables(/*options*/)
-	])
-	.process(mycss)
-	.css;
+  // Flatten/unnest rules
+  nested,
+  // Then process any CSS variables
+  cssvariables(/*options*/)
+]).process(mycss).css;
 
 console.log(output);
 ```
@@ -212,12 +193,12 @@ For a simple example with nesting:
 
 ```css
 .box-foo {
-	--some-width: 150px;
-	width: var(--some-width);
+  --some-width: 150px;
+  width: var(--some-width);
 
-	.box-bar {
-		width: var(--some-width);
-	}
+  .box-bar {
+    width: var(--some-width);
+  }
 }
 ```
 
@@ -225,11 +206,11 @@ With also `postcss-nesting`, this will be transformed to:
 
 ```css
 .box-foo {
-	width: 150px;
+  width: 150px;
 }
 
 .box-foo .box-bar {
-	width: 150px;
+  width: 150px;
 }
 ```
 
@@ -237,21 +218,21 @@ For a more complex example with a media query:
 
 ```css
 :root {
-	--some-width: 150px;
+  --some-width: 150px;
 }
 
 .box-foo {
-	width: var(--some-width);
+  width: var(--some-width);
 
-	.box-bar {
-		width: var(--some-width);
-	}
+  .box-bar {
+    width: var(--some-width);
+  }
 }
 
 @media (max-width: 800px) {
-	.box-foo {
-		--some-width: 300px;
-	}
+  .box-foo {
+    --some-width: 300px;
+  }
 }
 ```
 
@@ -259,25 +240,23 @@ Will be transformed to:
 
 ```css
 .box-foo {
-	width: 150px;
+  width: 150px;
 }
 
 .box-foo .box-bar {
-	width: 150px;
+  width: 150px;
 }
 
 @media (max-width: 800px) {
-	.box-foo {
-		width: 300px;
-	}
+  .box-foo {
+    width: 300px;
+  }
 
-	.box-foo .box-bar {
-		width: 300px;
-	}
+  .box-foo .box-bar {
+    width: 300px;
+  }
 }
 ```
-
-
 
 # Why?
 
@@ -295,13 +274,12 @@ In `postcss-css-variables`, this is not the case and they may be declared inside
 
 Here's a quick overview of the differences:
 
- - CSS variables may be declared in any selector like `.foo` or `.foo .bar:hover`, and is not limited to just `:root`
- - CSS variables may be declared in `@media`, `@support`, and other at-rules.
- - CSS variables may be declared in `:hover` and other psuedo-classes, which get expanded properly.
- - Variables in nested rules can be deduced with the help of [`postcss-nested`](https://github.com/postcss/postcss-nested) or [`postcss-nesting`](https://github.com/jonathantneal/postcss-nesting).
+- CSS variables may be declared in any selector like `.foo` or `.foo .bar:hover`, and is not limited to just `:root`
+- CSS variables may be declared in `@media`, `@support`, and other at-rules.
+- CSS variables may be declared in `:hover` and other psuedo-classes, which get expanded properly.
+- Variables in nested rules can be deduced with the help of [`postcss-nested`](https://github.com/postcss/postcss-nested) or [`postcss-nesting`](https://github.com/jonathantneal/postcss-nesting).
 
 Continue to the next section to see where some of these might be unsafe to do. There are reasons behind the ethos of why the other plugin, [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), is very limited in what it supports, due to differing opinions on what is okay to support.
-
 
 # Caveats
 
@@ -311,17 +289,17 @@ Note the nested markup below. We only know about the DOM's inheritance from your
 
 ```html
 <div class="component">
-    Black
+  Black
 
-    <div class="title">
-        Blue
+  <div class="title">
+    Blue
 
-        <div class="decoration">
-            Green
+    <div class="decoration">
+      Green
 
-            <div class="title">Blue with this plugin, but green per spec</div>
-        </div>
+      <div class="title">Blue with this plugin, but green per spec</div>
     </div>
+  </div>
 </div>
 ```
 
@@ -340,9 +318,7 @@ Note the nested markup below. We only know about the DOM's inheritance from your
 }
 ```
 
-
 [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties) avoids this problem entirely by restricting itself to just the `:root` selector. This is because the developers there would prefer to not support a feature instead of something almost-spec-compliant like what `postcss-css-variables` does.
-
 
 # Options
 
@@ -352,10 +328,10 @@ Allows you to preserve custom properties & var() usage in output.
 
 Possible values:
 
- - `false`: Removes `--var` declarations and replaces `var()` with their resolved/computed values.
- - `true`: Keeps `var()` declarations in the output and has the computed value as a fallback declaration. Also keeps computed `--var` declarations.
- - `'computed'`: Keeps computed `--var` declarations in the output. Handy to make them available to your JavaScript.
- - `(declaration) => boolean|'computed'` : Handles preservation behavior based on the respective declaration.
+- `false`: Removes `--var` declarations and replaces `var()` with their resolved/computed values.
+- `true`: Keeps `var()` declarations in the output and has the computed value as a fallback declaration. Also keeps computed `--var` declarations.
+- `'computed'`: Keeps computed `--var` declarations in the output. Handy to make them available to your JavaScript.
+- `(declaration) => boolean|'computed'` : function/callback to programmatically return whether preserve the respective declaration
 
 ### `variables` (default: `{}`)
 
@@ -374,26 +350,24 @@ repeating custom property definitions in every module passed through this plugin
 prevents JS-injected variables from appearing in output CSS.
 
 ```js
-var postcss = require('postcss');
-var cssvariables = require('postcss-css-variables');
+var postcss = require("postcss");
+var cssvariables = require("postcss-css-variables");
 
 postcss([
-	cssvariables({
-		variables: {
-			'--some-var': '100px',
-			'--other-var': {
-				value: '#00ff00'
-			},
-			'--important-var': {
-				value: '#ff0000',
-				isImportant: true
-			}
-		}
-	})
-])
-.process(css, opts);
+  cssvariables({
+    variables: {
+      "--some-var": "100px",
+      "--other-var": {
+        value: "#00ff00"
+      },
+      "--important-var": {
+        value: "#ff0000",
+        isImportant: true
+      }
+    }
+  })
+]).process(css, opts);
 ```
-
 
 ### `preserveAtRulesOrder` (default: `false`)
 
@@ -401,16 +375,11 @@ Keeps your at-rules like media queries in the order to defined them.
 
 Ideally, this would be defaulted to `true` and it will be in the next major version. All of the tests expecations need to be updated and probably just drop support for `preserveAtRulesOrder: false`
 
-
 # Quick Reference/Notes
 
- - This plugin was spawned out of a [discussion on the `cssnext` repo](https://github.com/cssnext/cssnext/issues/99).
- - We provide a larger CSS variable feature subset than [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties).
- - Related links and issues:
- 	 - [var declared in media query should pull in properties that use/reference that var *on `cssnext/cssnext`*](https://github.com/cssnext/cssnext/issues/99)
- 	 - [Investigate support for media-query scoped properties *on `postcss/postcss-custom-properties`*](https://github.com/postcss/postcss-custom-properties/issues/9)
- 	 - [remove `:root` limitation by injecting rules with new declarations that just contains modified properties. *on `postcss/postcss-custom-properties`*](https://github.com/postcss/postcss-custom-properties/issues/1)
-
+- This plugin was spawned out of a [discussion on the `cssnext` repo](https://github.com/cssnext/cssnext/issues/99).
+- We provide a larger CSS variable feature subset than [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties).
+- Related links and issues: - [var declared in media query should pull in properties that use/reference that var _on `cssnext/cssnext`_](https://github.com/cssnext/cssnext/issues/99) - [Investigate support for media-query scoped properties _on `postcss/postcss-custom-properties`_](https://github.com/postcss/postcss-custom-properties/issues/9) - [remove `:root` limitation by injecting rules with new declarations that just contains modified properties. _on `postcss/postcss-custom-properties`_](https://github.com/postcss/postcss-custom-properties/issues/1)
 
 # Testing
 
