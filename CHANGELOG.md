@@ -1,3 +1,9 @@
+# v0.17.0 - 2020-4-24
+
+- Expand variables in AtRule properties
+  - Thank you to [@pvande](https://github.com/pvande) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/104)
+  - Merged via https://github.com/MadLittleMods/postcss-css-variables/pull/121
+
 # v0.16.0 - 2020-4-24
 
 - Add ability to pass callback function to `options.preserve` to determine whether to preserve declaration
