@@ -228,6 +228,19 @@ describe('postcss-css-variables', function() {
 			'preserve-computed',
 			{ preserve: 'computed' }
 		);
+
+		test(
+			'preserves variables when `preserve` function applies',
+			'preserve-variables-conditionally',
+			{
+				preserve: function (declaration) {
+					return !(
+						declaration.value.includes("--color-one")
+						|| declaration.prop.includes("--color-one")
+					)
+				}
+			}
+		);
 	});
 
 
