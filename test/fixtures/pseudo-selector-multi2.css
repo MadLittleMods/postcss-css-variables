@@ -1,0 +1,13 @@
+
+.bar a {
+	--color: pink;
+	color: var(--color);
+}
+
+.bar:active {
+	--color: green;
+}
+
+.bar:active:hover {
+	--color: blue;
+}

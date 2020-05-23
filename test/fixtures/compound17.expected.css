@@ -1,0 +1,24 @@
+
+#foo1 ul > li {
+	color: #ffffff;
+}
+
+#foo1.bar ul > li {
+	color: #111111;
+}
+
+#foo2 ul ~ li {
+	color: #ffffff;
+}
+
+#foo2.bar ul ~ li {
+	color: #222222;
+}
+
+#foo3 ul + li {
+	color: #ffffff;
+}
+
+#foo3.bar ul + li {
+	color: #333333;
+}

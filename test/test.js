@@ -79,6 +79,7 @@ var test = function(message, fixtureName, options) {
   });
 };
 
+
 describe("postcss-css-variables", function() {
   // Just make sure it doesn't mangle anything
   test(
@@ -128,13 +129,16 @@ describe("postcss-css-variables", function() {
     "should work with direct descendant selector where variables are scoped in a direct descendant selector",
     "direct-descendant-selector-direct-descendant-scope"
   );
-
   test("should work with pseudo selectors", "pseudo-selector");
-  //test('should work with multiple pseudo selectors', 'pseudo-multi');
+
   test(
     "should work with variables declared in pseudo selectors",
     "pseudo-selector-declare-variable"
   );
+
+  test("should work with top level pseudo selectors", "pseudo-selector-nested");
+  test("should work with multiple pseudo selectors", "pseudo-selector-multi");
+  test("should work with multiple pseudo selectors", "pseudo-selector-multi2");
 
   test(
     "should work with variables defined in comma separated selector",
@@ -369,6 +373,15 @@ describe("postcss-css-variables", function() {
         "./test/fixtures/malformed-variable-usage.expected.css"
       )
     ).to.eventually.be.rejected;
+  });
+
+  describe("compound selectors", function() {
+    for(var i = 1; i <= 19; i++) {
+      test(
+        "should support compound selectors #"+i,
+        "compound"+i
+      );
+    }
   });
 
   describe("rule clean up", function() {

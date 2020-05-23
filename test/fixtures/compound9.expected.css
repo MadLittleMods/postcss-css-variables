@@ -1,0 +1,12 @@
+
+#foo a c li {
+	color: #ffffff;
+}
+
+#bar #foo.bar a a c b c d li {
+	color: #000000;
+}
+
+#baz #foo.bar a a c b c d li {
+	color: #fff000;
+}

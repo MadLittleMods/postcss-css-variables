@@ -1,0 +1,41 @@
+
+:root
+{
+	--color: #ffffff;
+}
+
+#foo1 ul > li {
+	color: var(--color);
+}
+
+#foo2 ul ~ li {
+	color: var(--color);
+}
+
+#foo3 ul + li {
+	color: var(--color);
+}
+
+#foo1.bar ul > li {
+	--color: #111111;
+}
+
+#foo2.bar ul ~ li {
+	--color: #222222;
+}
+
+#foo3.bar ul + li {
+	--color: #333333;
+}
+
+#foo1 ul ~ li {
+	--color: #444444;
+}
+
+#foo1 ul + li {
+	--color: #555555;
+}
+
+#foo2 ul + li {
+	--color: #666666;
+}

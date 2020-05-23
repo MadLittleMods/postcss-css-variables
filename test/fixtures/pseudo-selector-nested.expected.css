@@ -1,0 +1,9 @@
+
+#test .foo {
+	color: '#ffffff';
+}
+
+#test:hover .foo {
+    color: '#ffff00';
+}
+

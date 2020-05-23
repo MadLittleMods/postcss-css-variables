@@ -1,0 +1,37 @@
+
+/*
+ * wrong order
+ *
+
+.bar {
+	color: pink;
+}
+
+.bar:active {
+	color: blue;
+}
+
+.bar:hover {
+	color: red;
+}
+
+.bar:focus {
+	color: green;
+}
+*/
+
+.bar {
+	color: pink;
+}
+
+.bar:focus {
+	color: green;
+}
+
+.bar:hover {
+	color: red;
+}
+
+.bar:active {
+	color: blue;
+}

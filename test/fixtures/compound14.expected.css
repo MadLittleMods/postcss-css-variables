@@ -1,0 +1,28 @@
+
+#foo li {
+	color: #ffffff;
+}
+
+#foo.bar ul:hover li {
+	color: #000000;
+}
+
+#foo.bar ul:hover {
+	color: #000000;
+}
+
+#bar li {
+	color: #ffffff;
+}
+
+#bar.bar li:hover {
+	color: #000000;
+}
+
+#baz li {
+	color: #ffffff;
+}
+
+#baz.foo.bar:not(.hello) li {
+	color: #000000;
+}

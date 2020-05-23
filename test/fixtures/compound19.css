@@ -1,0 +1,21 @@
+
+:root
+{
+	--color: #ffffff;
+}
+
+#foo li {
+	color: var(--color);
+}
+
+#foo[bar] li {
+	--color: #111111;
+}
+
+#foo li[bar] {
+	--color: #222222;
+}
+
+#foo:not(.bar) li[bar] {
+	--color: #333333;
+}

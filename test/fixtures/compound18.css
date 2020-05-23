@@ -1,0 +1,13 @@
+
+:root
+{
+	--color: #ffffff;
+}
+
+#foo > * li {
+	color: var(--color);
+}
+
+#foo.bar > * li {
+	--color: #111111;
+}
