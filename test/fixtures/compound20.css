@@ -1,0 +1,16 @@
+
+:root {
+	--color: #000000;
+}
+
+body.bar * {
+	--color: #ffffff;
+}
+
+body.bar *:hover {
+	--color: #111111;
+}
+
+#foo {
+	color: var(--color);
+}

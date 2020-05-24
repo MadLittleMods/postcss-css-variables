@@ -79,7 +79,6 @@ var test = function(message, fixtureName, options) {
   });
 };
 
-
 describe("postcss-css-variables", function() {
   // Just make sure it doesn't mangle anything
   test(
@@ -376,7 +375,7 @@ describe("postcss-css-variables", function() {
   });
 
   describe("compound selectors", function() {
-    for(var i = 1; i <= 19; i++) {
+    for(var i = 1; i <= 20; i++) {
       test(
         "should support compound selectors #"+i,
         "compound"+i

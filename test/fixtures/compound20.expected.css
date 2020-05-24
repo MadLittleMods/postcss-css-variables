@@ -1,0 +1,8 @@
+
+#foo {
+	color: #000000;
+}
+
+body.bar #foo {
+	color: #ffffff;
+}
