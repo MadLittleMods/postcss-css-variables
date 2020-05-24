@@ -1,0 +1,16 @@
+
+:root {
+	--padding: 25px;
+}
+
+#foo {
+	max-width: calc(5px + var(--padding) + var(--padding));
+}
+
+body.bar * {
+	--padding: 10px;
+}
+
+#bar #foo {
+	--padding: 5px;
+}

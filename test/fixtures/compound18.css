@@ -4,6 +4,8 @@
 	--color: #ffffff;
 }
 
+/* getScopeMatchResults fails */
+
 #foo > * li {
 	color: var(--color);
 }

@@ -2,6 +2,10 @@
 	color: #ff0000;
 }
 
+.bar:hover + .foo {
+	color: #f0f000;
+}
+
 .foo:hover {
 	color: #00ff00;
 }

@@ -20,6 +20,14 @@
 	--color: #111111;
 }
 
+#foo1.bar ul div > li {
+	--color: #777777;
+}
+
+#foo1.bar ul > div li {
+	--color: #888888;
+}
+
 #foo2.bar ul ~ li {
 	--color: #222222;
 }
