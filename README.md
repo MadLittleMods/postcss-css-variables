@@ -262,7 +262,7 @@ Will be transformed to:
 
 This plugin was spawned out of a [discussion on the `cssnext` repo](https://github.com/cssnext/cssnext/issues/99) and a personal need.
 
-There is another similar plugin available, [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), although it restricts itself much more than this plugin, preferring partial spec conformance. This plugin has the same capabilities but also adds imperfect feature support which stem from not being to know what the DOM will look like when you compile your CSS. We instead look at the explicit structure of your CSS selectors.
+There is another similar plugin available, [`postcss-custom-properties`](https://github.com/postcss/postcss-custom-properties), although it restricts itself much more than this plugin, preferring partial spec conformance. This plugin has the same capabilities but also adds imperfect feature support which stem from not being able to know what the DOM will look like when you compile your CSS. We instead look at the explicit structure of your CSS selectors.
 
 ### Interoperability and differences from `postcss-custom-properties`
 
