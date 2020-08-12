@@ -1,0 +1,9 @@
+
+#foo a c li {
+	--color: #ffffff;
+	color: var(--color);
+}
+
+#bar #foo.bar a b c d {
+	--color: #000000;
+}

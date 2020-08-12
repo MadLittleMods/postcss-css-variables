@@ -1,0 +1,12 @@
+
+#foo a li {
+	color: #ffffff;
+}
+
+#bar a + li {
+	color: #ffffff;
+}
+
+#bar.bar a + li {
+	color: #000000;
+}

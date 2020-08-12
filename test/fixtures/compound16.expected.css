@@ -1,0 +1,15 @@
+
+#foo li
+{
+	color: #fff000;
+}
+
+#foo div ul li:hover
+{
+	color: #aaaaaa;
+}
+
+#foo:hover li
+{
+	color: #000000;
+}

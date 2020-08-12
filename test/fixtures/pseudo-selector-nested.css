@@ -1,0 +1,10 @@
+
+#test .foo {
+    --foo-color: '#ffffff';
+	color: var(--foo-color);
+}
+
+#test:hover {
+    --foo-color: '#ffff00';
+}
+

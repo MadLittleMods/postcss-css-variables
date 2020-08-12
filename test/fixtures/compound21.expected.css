@@ -1,0 +1,12 @@
+
+#foo {
+	max-width: calc(5px + 25px + 25px);
+}
+
+#bar #foo {
+	max-width: calc(5px + 5px + 5px);
+}
+
+body.bar #foo {
+	max-width: calc(5px + 10px + 10px);
+}

@@ -1,0 +1,29 @@
+
+/*
+ * wrong order
+ *
+
+.bar a {
+	color: pink;
+}
+
+.bar:active a {
+	color: green;
+}
+
+.bar:active:hover a {
+	color: blue;
+}
+*/
+
+.bar a {
+	color: pink;
+}
+
+.bar:active:hover a {
+	color: blue;
+}
+
+.bar:active a {
+	color: green;
+}

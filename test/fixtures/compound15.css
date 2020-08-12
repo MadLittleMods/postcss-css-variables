@@ -1,0 +1,12 @@
+
+:root {
+	--color2: #ffffff;
+}
+
+#bar {
+	--color2: #000000;
+}
+
+#bar:hover li {
+	color: var(--color2);
+}

@@ -1,0 +1,31 @@
+
+:root {
+	--color: #ffffff;
+	--color2: #ffffff;
+	--color3: #ffffff;
+}
+
+#foo li {
+	color: var(--color);
+}
+
+#foo.bar ul:hover {
+	--color: #000000;
+	color: var(--color);
+}
+
+#bar li {
+	color: var(--color2);
+}
+
+#bar.bar li:hover {
+	--color2: #000000;
+}
+
+#baz li {
+	color: var(--color3);
+}
+
+#baz.foo.bar:not(.hello) li {
+	--color3: #000000;
+}

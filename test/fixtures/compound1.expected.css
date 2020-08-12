@@ -1,0 +1,8 @@
+
+.foo {
+	color: #ffffff;
+}
+
+.foo.bar {
+	color: #000000;
+}

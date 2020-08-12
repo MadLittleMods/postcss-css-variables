@@ -1,0 +1,8 @@
+
+#foo li {
+	color: #ffffff;
+}
+
+#foo.bar ul li {
+	color: #000000;
+}

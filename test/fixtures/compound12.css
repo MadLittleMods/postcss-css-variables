@@ -1,0 +1,18 @@
+
+#foo a b + c d li {
+	--color: #ffffff;
+	color: var(--color);
+}
+
+#foo.bar a c b + c d e {
+	--color: #000000;
+}
+
+#bar a b + c d li {
+	--color2: #ffffff;
+	color: var(--color2);
+}
+
+#bar.bar a c b c + d e {
+	--color: #000000;
+}

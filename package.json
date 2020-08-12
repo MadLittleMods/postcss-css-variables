@@ -17,7 +17,8 @@
     "balanced-match": "^1.0.0",
     "escape-string-regexp": "^1.0.3",
     "extend": "^3.0.1",
-    "postcss": "^6.0.8"
+    "postcss": "^6.0.8",
+    "postcss-selector-parser": "^6.0.2"
   },
   "devDependencies": {
     "bluebird": "^3.5.0",
@@ -28,7 +29,8 @@
     "eslint-plugin-react": "^7.1.0",
     "mocha": "^5.2.0",
     "postcss-discard-comments": "^4.0.0",
-    "postcss-normalize-whitespace": "^4.0.0"
+    "postcss-normalize-whitespace": "^4.0.0",
+    "debug": "*"
   },
   "scripts": {
     "test": "mocha",

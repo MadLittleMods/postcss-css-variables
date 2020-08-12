@@ -1,0 +1,22 @@
+
+:root {
+	--color: #fff000;
+}
+
+#foo li {
+	color: var(--color);
+}
+
+#foo:hover
+{
+	--color: #000000;
+}
+
+#foo div ul li:hover {
+	--color: #aaaaaa;
+}
+
+/* no selector created */
+#foo li:hover a {
+	--color: #bbbbbb;
+}

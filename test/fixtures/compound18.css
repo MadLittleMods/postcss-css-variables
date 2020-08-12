@@ -1,0 +1,15 @@
+
+:root
+{
+	--color: #ffffff;
+}
+
+/* getScopeMatchResults fails */
+
+#foo > * li {
+	color: var(--color);
+}
+
+#foo.bar > * li {
+	--color: #111111;
+}

@@ -1,0 +1,16 @@
+
+#foo li {
+	color: #ffffff;
+}
+
+#foo:not(.bar) li[bar] {
+	color: #333333;
+}
+
+#foo li[bar] {
+	color: #222222;
+}
+
+#foo[bar] li {
+	color: #111111;
+}
