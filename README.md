@@ -7,7 +7,7 @@
 ### Install
 
 ```
-npm install postcss-css-variables --save-dev
+npm install postcss postcss-css-variables --save-dev
 ```
 
 ### Table of Contents
