@@ -1,0 +1,87 @@
+.a {
+    width: 150px;
+
+    .simple {
+        color: #FFF
+    }
+}
+
+.b {
+    width: 150px;
+
+    .simple {
+        color: #FFF
+    }
+}
+
+.a {
+    width: 150px;
+
+    a {
+        color: #FFF
+    }
+
+    label {
+        color: #FFF
+    }
+
+    &:after {
+        color: #FFF
+    }
+}
+
+.a {
+    width: 150px;
+
+    a {
+        background: #FFF;
+
+        ol {
+            width: 150px;
+        }
+
+        ul {
+            width: 150px;
+        }
+    }
+
+    label {
+        background: #FFF;
+
+        ol {
+            width: 150px;
+        }
+
+        ul {
+            width: 150px;
+        }
+    }
+}
+
+.b {
+    width: 150px;
+
+    a {
+        background: #FFF;
+
+        ol {
+            width: 150px;
+        }
+
+        ul {
+            width: 150px;
+        }
+    }
+
+    label {
+        background: #FFF;
+
+        ol {
+            width: 150px;
+        }
+
+        ul {
+            width: 150px;
+        }
+    }
+}

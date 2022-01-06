@@ -186,6 +186,8 @@ describe("postcss-css-variables", function() {
 
     test("should cascade to nested rules", "cascade-on-nested-rules");
 
+    test("should cascade to nested multiple rules", "cascade-and-multiple-on-nested-rules");
+
     test(
       "should cascade with calc-expression to nested rules",
       "cascade-with-calc-expression-on-nested-rules"

@@ -234,40 +234,38 @@ module.exports = (options = {}) => {
         });
 
         if (doesRuleUseVariables) {
-          rulesThatHaveDeclarationsWithVariablesList.push(rule);
+          if (rule.type === "rule" && rule.selectors.length > 1) {
+            // Split out the rule into each comma separated selector piece
+            // We only need to split if it's actually a Rule with multiple selectors (comma separated)
+            // duplicate rules would be probably merged with cssnano (cannot be sure about nested)
+            rule.selectors.reverse().forEach(function(selector) {
+              var ruleClone = rule.cloneAfter();
+              ruleClone.selector = selector;
+
+              return ruleClone;
+            });
+
+            // Rules will be added to list in the next traverse
+            rule.remove();
+          } else {
+            rulesThatHaveDeclarationsWithVariablesList.push(rule);
+          }
         }
       });
 
       rulesThatHaveDeclarationsWithVariablesList.forEach(function(rule) {
-        var rulesToWorkOn = [].concat(rule);
-        // Split out the rule into each comma separated selector piece
-        // We only need to split if it's actually a Rule with multiple selectors (comma separated)
-        if (rule.type === "rule" && rule.selectors.length > 1) {
-          // Reverse the selectors so that we can cloneAfter in the same comma separated order
-          rulesToWorkOn = rule.selectors.reverse().map(function(selector) {
-            var ruleClone = rule.cloneAfter();
-            ruleClone.selector = selector;
-
-            return ruleClone;
-          });
-
-          rule.remove();
-        }
-
         // Resolve the declarations
-        rulesToWorkOn.forEach(function(ruleToWorkOn) {
-          ruleToWorkOn.nodes.slice(0).forEach(function(node) {
-            if (node.type === "decl") {
-              var decl = node;
-              resolveDecl(
-                decl,
-                map,
-                opts.preserve,
-                opts.preserveAtRulesOrder,
-                logResolveValueResult
-              );
-            }
-          });
+        rule.nodes.slice(0).forEach(function(node) {
+          if (node.type === "decl") {
+            var decl = node;
+            resolveDecl(
+              decl,
+              map,
+              opts.preserve,
+              opts.preserveAtRulesOrder,
+              logResolveValueResult
+            );
+          }
         });
       });
 
