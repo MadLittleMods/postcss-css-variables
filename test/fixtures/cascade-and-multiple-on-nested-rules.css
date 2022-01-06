@@ -1,0 +1,37 @@
+:root {
+	--some-width: 150px;
+}
+:root {
+	--White1: #FFF;
+}
+
+.a, .b {
+	width: var(--some-width);
+
+	.simple {
+		color: var(--White1);
+	}
+}
+
+.a {
+	width: var(--some-width);
+
+	a, label, &:after {
+		color: var(--White1);
+	}
+}
+
+/* postcss-nested double parent selector case */
+.a, .b {
+	/* here variable */
+	width: var(--some-width);
+
+	/* and here another */
+	a, label {
+		background: var(--White1);
+
+		ol, ul {
+			width: var(--some-width);
+		}
+	}
+}
