@@ -181,6 +181,9 @@
       }
     }
   },
+  "overrides": {
+    "graceful-fs": "^4.2.10"
+  },
   "devDependencies": {
     "bluebird": "^3.5.0",
     "del": "^3.0.0",
