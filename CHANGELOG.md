@@ -1,3 +1,8 @@
+# v0.19.0 - 2023-04-12
+
+- Fix nesting edge case with comma separated selectors
+  - Thank you to [@marapper](https://github.com/marapper) for the [contribution](https://github.com/MadLittleMods/postcss-css-variables/pull/131)
+
 # v0.18.0 - 2021-05-11
 
 - [breaking] Add basic postcss 8 support (older versions of PostCSS no longer compatible)
