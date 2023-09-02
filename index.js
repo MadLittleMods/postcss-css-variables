@@ -60,7 +60,9 @@ var defaults = {
   preserveInjectedVariables: true,
   // Will write media queries in the same order as in the original file.
   // Currently defaulted to false for legacy behavior. We can update to `true` in a major version
-  preserveAtRulesOrder: false
+  preserveAtRulesOrder: false,
+  // Preserve undefined variables as is in final output.
+  preserveUndefinedVariables: false
 };
 
 module.exports = (options = {}) => {
@@ -158,7 +160,7 @@ module.exports = (options = {}) => {
       eachCssVariableDeclaration(css, function(decl) {
         var declParentRule = decl.parent;
 
-        var valueResults = logResolveValueResult(resolveValue(decl, map));
+        var valueResults = logResolveValueResult(resolveValue(decl, map, opts.preserveUndefinedVariables));
         // Split out each selector piece into its own declaration for easier logic down the road
         decl.parent.selectors.forEach(function(selector) {
           // Create a detached clone
@@ -263,6 +265,7 @@ module.exports = (options = {}) => {
               map,
               opts.preserve,
               opts.preserveAtRulesOrder,
+              opts.preserveUndefinedVariables,
               logResolveValueResult
             );
           }
