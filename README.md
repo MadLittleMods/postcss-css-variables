@@ -375,6 +375,12 @@ Keeps your at-rules like media queries in the order to defined them.
 
 Ideally, this would be defaulted to `true` and it will be in the next major version. All of the tests expecations need to be updated and probably just drop support for `preserveAtRulesOrder: false`
 
+### `preserveUndefinedVariables` (default: `false`)
+
+Whether to preserve the undefined variables in final output.
+
+Setting this option to `true` leaves any undefined variables as is in output CSS.
+
 # Quick Reference/Notes
 
 - This plugin was spawned out of a [discussion on the `cssnext` repo](https://github.com/cssnext/cssnext/issues/99).
